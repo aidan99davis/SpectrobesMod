@@ -1,14 +1,13 @@
-package com.spectrobes.spectrobesmod.client.models;
+package com.spectrobes.spectrobesmod.client.entity.model;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import com.spectrobes.spectrobesmod.common.entities.EntityKomainu;
+import com.spectrobes.spectrobesmod.SpectrobesMod;
+import com.spectrobes.spectrobesmod.common.entities.komainu.EntityKomainu;
 import net.minecraft.util.ResourceLocation;
 import software.bernie.geckolib.animation.model.AnimatedEntityModel;
 import software.bernie.geckolib.animation.model.AnimatedModelRenderer;
 
 // Made with Blockbench 3.5.4
-// Exported for Minecraft version 1.12.2 or 1.15.2 (same format for both) for entity models animated with GeckoLib
+// Exported for Minecraft version 1.12.2 or 1.15.2 (same format for both) for entity model animated with GeckoLib
 // Paste this class into your mod and follow the documentation for GeckoLib to use animations. You can find the documentation here: https://github.com/bernie-g/geckolib
 // Blockbench plugin created by Gecko
 public class KomainuModel extends AnimatedEntityModel<EntityKomainu> {
@@ -89,25 +88,8 @@ public class KomainuModel extends AnimatedEntityModel<EntityKomainu> {
 	}
 
 	@Override
-	public void setRotationAngles(EntityKomainu entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch){
-		//previously the render function, render code was moved to a method below
-	}
-
-	@Override
-	public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha){
-		head.render(matrixStack, buffer, packedLight, packedOverlay);
-		body.render(matrixStack, buffer, packedLight, packedOverlay);
-		mane.render(matrixStack, buffer, packedLight, packedOverlay);
-		leg1.render(matrixStack, buffer, packedLight, packedOverlay);
-		leg2.render(matrixStack, buffer, packedLight, packedOverlay);
-		leg3.render(matrixStack, buffer, packedLight, packedOverlay);
-		leg4.render(matrixStack, buffer, packedLight, packedOverlay);
-		tail.render(matrixStack, buffer, packedLight, packedOverlay);
-	}
-
-	@Override
     public ResourceLocation getAnimationFileLocation()
     {
-        return new ResourceLocation("MODID", "animations/ANIMATIONFILE.json");
+        return new ResourceLocation(SpectrobesMod.MOD_ID, "animations/spectrobe/komainu.json");
     }
 }

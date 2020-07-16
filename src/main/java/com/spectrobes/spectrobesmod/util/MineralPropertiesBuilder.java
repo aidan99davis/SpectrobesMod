@@ -1,4 +1,6 @@
-package com.spectrobes.spectrobesmod.common.items.minerals;
+package com.spectrobes.spectrobesmod.util;
+
+import com.spectrobes.spectrobesmod.common.items.minerals.MineralProperties;
 
 public class MineralPropertiesBuilder {
     private int hpOffset = 0;

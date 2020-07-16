@@ -1,10 +1,8 @@
 package com.spectrobes.spectrobesmod.common.items;
 
 import com.spectrobes.spectrobesmod.SpectrobesMod;
-import net.minecraft.item.Food;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
+import com.spectrobes.spectrobesmod.common.items.fossils.KomainuFossilItem;
+import net.minecraft.item.*;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -15,6 +13,7 @@ import net.minecraftforge.registries.ObjectHolder;
 @ObjectHolder(SpectrobesMod.MOD_ID)
 public class SpectrobesItems {
     public static final Item mineral_item = null;
+    public static final Item komainu_fossil_item = null;
 
     @SubscribeEvent
     public static void registerItems(final RegistryEvent.Register<Item> event) {
@@ -28,6 +27,12 @@ public class SpectrobesItems {
                                     .saturation(1)
                                     .build()))
                 .setRegistryName("mineral_item"));
+
+        event.getRegistry().register(
+                new KomainuFossilItem(
+                        new Item.Properties()
+                                .group(SpectrobesItemGroup.Instance))
+                        .setRegistryName("komainu_fossil_item"));
     }
 
     public static class SpectrobesItemGroup extends ItemGroup {

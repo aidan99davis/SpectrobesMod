@@ -1,32 +1,67 @@
 package com.spectrobes.spectrobesmod.common.entities;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
+import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
+import net.minecraft.entity.*;
+import net.minecraft.entity.ai.goal.BreedGoal;
+import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import com.spectrobes.spectrobesmod.common.entities.SpectrobeProperties.Nature;
-import com.spectrobes.spectrobesmod.common.entities.SpectrobeProperties.Stage;
+import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties.Nature;
+import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties.Stage;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
+import software.bernie.geckolib.animation.AnimationBuilder;
+import software.bernie.geckolib.animation.AnimationTestEvent;
+import software.bernie.geckolib.animation.model.AnimationController;
 import software.bernie.geckolib.animation.model.AnimationControllerCollection;
 import software.bernie.geckolib.entity.IAnimatedEntity;
 
 import javax.annotation.Nullable;
 
 
-public abstract class EntitySpectrobe extends Entity implements IEntityAdditionalSpawnData, IAnimatedEntity {
+public abstract class EntitySpectrobe extends AnimalEntity implements IEntityAdditionalSpawnData, IAnimatedEntity {
     SpectrobeProperties spectrobeProperties = null;
     @Nullable
     EntitySpectrobe evolution;
 
-    public EntitySpectrobe(EntityType<?> entityTypeIn,
+    private BreedGoal BreedGoal = new BreedGoal(this, 100);
+
+    public AnimationControllerCollection animationControllers = new AnimationControllerCollection();
+    private AnimationController moveController = new AnimationController(this, "moveController", 10F, this::moveController);
+
+
+    public EntitySpectrobe(EntityType<? extends EntitySpectrobe> entityTypeIn,
                            World worldIn,
                            SpectrobeProperties spectrobeProperties) {
         super(entityTypeIn, worldIn);
         this.spectrobeProperties = spectrobeProperties;
         setInvulnerable(true);
+        registerAnimationControllers();
+    }
+
+    public void registerAnimationControllers()
+    {
+        if(world.isRemote)
+        {
+            this.animationControllers.addAnimationController(moveController);
+        }
+    }
+
+    private <ENTITY extends Entity> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent)
+    {
+        moveController.transitionLength = 10;
+        if(entityAnimationTestEvent.getEntity().getMotion() != Vec3d.ZERO)
+        {
+            moveController.setAnimation(new AnimationBuilder().addAnimation("komainu.jump", true));
+        }
+        else {
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -38,12 +73,12 @@ public abstract class EntitySpectrobe extends Entity implements IEntityAdditiona
     }
 
     @Override
-    protected void readAdditional(CompoundNBT compound) {
+    public void readAdditional(CompoundNBT compound) {
 
     }
 
     @Override
-    protected void writeAdditional(CompoundNBT compound) {
+    public void writeAdditional(CompoundNBT compound) {
 
     }
 
@@ -72,18 +107,14 @@ public abstract class EntitySpectrobe extends Entity implements IEntityAdditiona
      * Called to update the entity's position/logic.
      */
     @Override
-    public void tick() {
-        super.tick();
+    public void livingTick() {
+        super.livingTick();
 
-        //check if the spectrobe has an evolution
-        if(this.hasEvolution()){
-            //check if the spectrobe meets the evolution requirements
-            if(this.canEvolve()){
-                //evolve the spectrobe
-                this.evolve();
-            }
+        //check if the spectrobe has an evolution, and meets the requirements to evolve.
+        if(this.hasEvolution() && this.canEvolve()){
+            //evolve the spectrobe
+            this.evolve();
         }
-
     }
 
     public void tryEvolve() {
@@ -100,10 +131,20 @@ public abstract class EntitySpectrobe extends Entity implements IEntityAdditiona
         return evolution;
     }
 
-    abstract boolean canEvolve();
+    protected abstract boolean canEvolve();
 
     private void evolve() {
-
+        //at the moment just evolve directly into the next level
+        evolution.onInitialSpawn(
+                this.world,
+                this.world.getDifficultyForLocation(new BlockPos(this)),
+                SpawnReason.MOB_SUMMONED,
+                (ILivingEntityData)null,
+                (CompoundNBT)null);
+        //should store all the spectrobes data in an object, then create a
+        // cocoon entity which holds this, the cocoon will "hatch"
+        // after a predefined time. it will then spawn the next form of spectrobe with
+        //the correct variation of skin, part and data for atk, hp and def etc.
     }
 
     //Checks if the attacker should have the attack multiplier bonus applied.
@@ -157,4 +198,5 @@ public abstract class EntitySpectrobe extends Entity implements IEntityAdditiona
     public AnimationControllerCollection getAnimationControllers() {
         return null;
     }
+
 }

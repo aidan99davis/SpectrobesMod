@@ -1,0 +1,27 @@
+package com.spectrobes.spectrobesmod.client.entity.renderer;
+
+import com.spectrobes.spectrobesmod.SpectrobesMod;
+import com.spectrobes.spectrobesmod.client.entity.model.KomainuModel;
+import com.spectrobes.spectrobesmod.common.entities.komainu.EntityKomainu;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nullable;
+
+@OnlyIn(Dist.CLIENT)
+public class KomainuRenderer extends MobRenderer<EntityKomainu, KomainuModel> {
+
+    public KomainuRenderer(EntityRendererManager renderManagerIn) {
+        super(renderManagerIn, new KomainuModel(), 0.5f);
+    }
+
+    @Nullable
+    @Override
+    public ResourceLocation getEntityTexture(EntityKomainu entity)
+    {
+        return new ResourceLocation(SpectrobesMod.MOD_ID + ":textures/models/spectrobe/komainu.png");
+    }
+}

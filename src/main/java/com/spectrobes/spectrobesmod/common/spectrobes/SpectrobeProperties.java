@@ -1,11 +1,13 @@
-package com.spectrobes.spectrobesmod.common.entities;
+package com.spectrobes.spectrobesmod.common.spectrobes;
 
 public class SpectrobeProperties{
+
     private Nature nature;
     private Stage stage;
 
-    public SpectrobeProperties() {
-
+    public SpectrobeProperties(Nature nature, Stage stage) {
+        this.nature = nature;
+        this.stage = stage;
     }
 
     public Nature getNature() {
@@ -14,6 +16,14 @@ public class SpectrobeProperties{
 
     public Stage getStage() {
         return stage;
+    }
+
+    public void setNature(Nature nature) {
+        this.nature = nature;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 
     public enum Nature {

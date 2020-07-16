@@ -1,0 +1,13 @@
+package com.spectrobes.spectrobesmod.common.registry;
+
+import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
+import com.spectrobes.spectrobesmod.util.SpectrobeBuilder;
+
+public class SpectrobeRegistry {
+    private static final Spectrobe Komainu
+            = new SpectrobeBuilder()
+            .withName("Komainu")
+            .withProperties(SpectrobePropertyRegistry.KOMAINU)
+            .withInitialStats(25,5,5)
+            .build();
+}
