@@ -8,6 +8,6 @@ public class SpectrobeRegistry {
             = new SpectrobeBuilder()
             .withName("Komainu")
             .withProperties(SpectrobePropertyRegistry.KOMAINU)
-            .withInitialStats(25,5,5)
+            .withStats(25,5,5)
             .build();
 }
