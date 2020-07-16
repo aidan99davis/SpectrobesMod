@@ -1,5 +1,9 @@
 package com.spectrobes.spectrobesmod.common.spectrobes;
 
+import com.spectrobes.spectrobesmod.common.items.minerals.MineralProperties;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+
 public class SpectrobeStats {
     private int atkLevel;
     private int defLevel;
@@ -19,7 +23,7 @@ public class SpectrobeStats {
     }
 
     //returns true if levelled up.
-    public boolean addXp(int xp_to_add) {
+    boolean addXp(int xp_to_add) {
         xp += xp_to_add;
         if(xp > xp_required) {
             xp -= xp_required;
@@ -28,5 +32,48 @@ public class SpectrobeStats {
             return true;
         }
         return false;
+    }
+
+    public void applyMineral(MineralProperties properties) {
+        addXp(properties.getXpWorth());
+        atkLevel += properties.getAtkOffset();
+        defLevel += properties.getDefOffset();
+        hpLevel += properties.getHpOffset();
+    }
+    public int getAtkLevel() {
+        return atkLevel;
+    }
+
+    public int getDefLevel() {
+        return defLevel;
+    }
+
+    public int getHpLevel() {
+        return hpLevel;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public int getXp_required() {
+        return xp_required;
+    }
+
+    public int getXp() {
+        return xp;
+    }
+
+    public CompoundNBT write() {
+        CompoundNBT statsNbt = new CompoundNBT();
+
+        statsNbt.putInt("atk", getAtkLevel());
+        statsNbt.putInt("def", getDefLevel());
+        statsNbt.putInt("hp", getHpLevel());
+        statsNbt.putInt("xp", getXp());
+        statsNbt.putInt("xp_required", getXp_required());
+        statsNbt.putInt("level", getLevel());
+
+        return statsNbt;
     }
 }

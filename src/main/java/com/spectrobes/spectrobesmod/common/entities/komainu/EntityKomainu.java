@@ -1,18 +1,18 @@
 package com.spectrobes.spectrobesmod.common.entities.komainu;
 
+import com.spectrobes.spectrobesmod.client.entity.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.common.entities.EntitySpectrobe;
+import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobePropertyRegistry;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
+import software.bernie.geckolib.animation.model.AnimationControllerCollection;
 
 public class EntityKomainu extends EntitySpectrobe {
 
-    Spectrobe spectrobeInstance;
 
     public EntityKomainu(EntityType<EntityKomainu> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn, SpectrobePropertyRegistry.KOMAINU);
@@ -23,8 +23,14 @@ public class EntityKomainu extends EntitySpectrobe {
         return false;
     }
 
-    public void setSpectrobeInstance(Spectrobe spectrobe) {
-        this.spectrobeInstance = spectrobe;
+    @Override
+    public EntitySpectrobe getEvolutionRegistry() {
+        return SpectrobesEntities.ENTITY_KOMANOTO.get().create(world);
+    }
+
+    @Override
+    protected AgeableEntity getChildForLineage() {
+        return this;
     }
 
     @Override
@@ -33,10 +39,9 @@ public class EntityKomainu extends EntitySpectrobe {
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20);
     }
 
-    @Nullable
+
     @Override
-    public AgeableEntity createChild(AgeableEntity ageable) {
-        //children cant have children, duh.
-        return null;
+    public AnimationControllerCollection getAnimationControllers() {
+        return animationControllers;
     }
 }

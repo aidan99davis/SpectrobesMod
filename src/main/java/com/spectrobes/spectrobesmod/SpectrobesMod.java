@@ -25,7 +25,7 @@ public class SpectrobesMod
 {
     public static final String MOD_ID = "spectrobesmod";
     // Directly reference a log4j logger.
-    private static final Logger LOGGER = LogManager.getLogger();
+    public static final Logger LOGGER = LogManager.getLogger();
     public static SpectrobesMod Instance;
 
     public SpectrobesMod() {

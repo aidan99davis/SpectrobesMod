@@ -4,7 +4,7 @@ import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.util.SpectrobeBuilder;
 
 public class SpectrobeRegistry {
-    private static final Spectrobe Komainu
+    public static final Spectrobe Komainu
             = new SpectrobeBuilder()
             .withName("Komainu")
             .withProperties(SpectrobePropertyRegistry.KOMAINU)

@@ -1,5 +1,7 @@
 package com.spectrobes.spectrobesmod.common.spectrobes;
 
+import net.minecraft.nbt.CompoundNBT;
+
 public class SpectrobeProperties{
 
     private Nature nature;
@@ -26,10 +28,19 @@ public class SpectrobeProperties{
         this.stage = stage;
     }
 
+    public CompoundNBT write() {
+        CompoundNBT compoundnbt = new CompoundNBT();
+        compoundnbt.putString("nature", nature.toString());
+        compoundnbt.putString("stage", stage.toString());
+
+        return compoundnbt;
+    }
+
     public enum Nature {
         CORONA,
         AURORA,
-        FLASH
+        FLASH,
+        OTHER
     }
 
     public enum Stage {
