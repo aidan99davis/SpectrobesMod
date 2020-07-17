@@ -1,6 +1,7 @@
 package com.spectrobes.spectrobesmod.common.spectrobes;
 
 import net.minecraft.nbt.CompoundNBT;
+import org.lwjgl.system.CallbackI;
 
 public class SpectrobeProperties{
 
@@ -34,6 +35,10 @@ public class SpectrobeProperties{
         compoundnbt.putString("stage", stage.toString());
 
         return compoundnbt;
+    }
+
+    public SpectrobeProperties copy() {
+        return new SpectrobeProperties(nature,stage);
     }
 
     public enum Nature {

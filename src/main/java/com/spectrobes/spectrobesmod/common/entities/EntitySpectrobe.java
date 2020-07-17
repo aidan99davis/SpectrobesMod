@@ -1,7 +1,9 @@
 package com.spectrobes.spectrobesmod.common.entities;
 
+import com.spectrobes.spectrobesmod.SpectrobesMod;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
+import com.spectrobes.spectrobesmod.util.SpectrobeUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
@@ -140,13 +142,18 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
                 this.setTamed(false);
             }
         }
+
+        spectrobeInstance = SpectrobeUtils.readFromNbt((CompoundNBT) compound.get("SpectrobeData"));
     }
 
     @Override
     public void writeAdditional(CompoundNBT compound) {
         super.writeAdditional(compound);
         compound.put("SpectrobeData", spectrobeInstance.write());
+
     }
+
+
 
     @Override
     public IPacket<?> createSpawnPacket() {

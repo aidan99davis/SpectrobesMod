@@ -39,7 +39,11 @@ public class SpectrobeBuilder {
 
     public Spectrobe buildFrom(Spectrobe spectrobe) {
         Spectrobe newSpectrobe = new Spectrobe();
-        return new Spectrobe();
+        newSpectrobe.setMasterUUID(spectrobe.MasterUUID);
+        newSpectrobe.setName(spectrobe.name);
+        newSpectrobe.setProperties(spectrobe.properties.copy());
+        newSpectrobe.setStats(spectrobe.stats.copy());
+        return newSpectrobe;
     }
 
     public Spectrobe build() {

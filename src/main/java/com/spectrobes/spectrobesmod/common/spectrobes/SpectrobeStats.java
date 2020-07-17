@@ -17,9 +17,18 @@ public class SpectrobeStats {
         this.hpLevel = hpStat;
         this.atkLevel = atkStat;
         this.defLevel = defStat;
-        xp_required = 100;
-        xp = 0;
-        level = 1;
+        this.xp_required = 100;
+        this.xp = 0;
+        this.level = 1;
+    }
+
+    public SpectrobeStats(int hpStat, int atkStat, int defStat, int xp_required, int xp, int level) {
+        this.hpLevel = hpStat;
+        this.atkLevel = atkStat;
+        this.defLevel = defStat;
+        this.xp_required = xp_required;
+        this.xp = xp;
+        this.level = level;
     }
 
     //returns true if levelled up.
@@ -75,5 +84,9 @@ public class SpectrobeStats {
         statsNbt.putInt("level", getLevel());
 
         return statsNbt;
+    }
+
+    public SpectrobeStats copy() {
+        return new SpectrobeStats(hpLevel, atkLevel, defLevel, xp_required, xp, level);
     }
 }
