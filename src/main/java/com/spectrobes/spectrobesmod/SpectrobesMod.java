@@ -1,6 +1,7 @@
 package com.spectrobes.spectrobesmod;
 
 import com.spectrobes.spectrobesmod.client.entity.SpectrobesEntities;
+import com.spectrobes.spectrobesmod.common.registry.MineralRegistry;
 import com.spectrobes.spectrobesmod.util.SpectrobesWorldData;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -56,6 +57,7 @@ public class SpectrobesMod
     public void doClientStuff(final FMLClientSetupEvent event)
     {
         SpectrobesEntities.init();
+        MineralRegistry.init();
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event)

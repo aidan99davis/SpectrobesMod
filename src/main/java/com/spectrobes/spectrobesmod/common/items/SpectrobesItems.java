@@ -18,6 +18,7 @@ public class SpectrobesItems {
 
     @SubscribeEvent
     public static void registerItems(final RegistryEvent.Register<Item> event) {
+
         event.getRegistry().register(
                 new MineralItem(
                     new Item.Properties()

@@ -1,9 +1,7 @@
 package com.spectrobes.spectrobesmod.common.entities;
 
-import com.spectrobes.spectrobesmod.SpectrobesMod;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
-import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import com.spectrobes.spectrobesmod.util.SpectrobeUtils;
 import com.spectrobes.spectrobesmod.util.SpectrobesWorldData;
 import net.minecraft.client.Minecraft;
@@ -18,12 +16,9 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.server.management.PreYggdrasilConverter;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties.Nature;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties.Stage;
@@ -36,7 +31,6 @@ import software.bernie.geckolib.animation.model.AnimationControllerCollection;
 import software.bernie.geckolib.entity.IAnimatedEntity;
 
 import javax.annotation.Nullable;
-
 
 public abstract class EntitySpectrobe extends TameableEntity implements IEntityAdditionalSpawnData, IAnimatedEntity{
     @Nullable
@@ -62,17 +56,6 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         registerAnimationControllers();
         setSpectrobeId(SpectrobesWorldData.nextEntityId());
     }
-
-/*    @Override
-    public ILivingEntityData onInitialSpawn(IWorld worldIn,
-                                            DifficultyInstance difficultyIn,
-                                            SpawnReason reason,
-                                            @Nullable ILivingEntityData spawnDataIn,
-                                            @Nullable CompoundNBT dataTag) {
-        readAdditional(dataTag);
-        return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
-    }*/
-
 
     public void setSpectrobeInstance(Spectrobe spectrobe) {
         this.spectrobeInstance = spectrobe;
@@ -139,15 +122,12 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     public void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
         setSpectrobeId(compound.getInt("SpectrobeId"));
-        setSpectrobeInstance(SpectrobeUtils.readFromNbt((CompoundNBT) compound.get("SpectrobeData")));
     }
 
     @Override
     public void writeAdditional(CompoundNBT compound) {
         super.writeAdditional(compound);
         compound.putInt("SpectrobeId", getSpectrobeId());
-        compound.put("SpectrobeData", spectrobeInstance.write());
-
     }
 
     public int getSpectrobeId() {
