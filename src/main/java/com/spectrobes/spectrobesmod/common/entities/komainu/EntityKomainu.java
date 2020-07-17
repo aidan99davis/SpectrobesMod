@@ -15,7 +15,7 @@ public class EntityKomainu extends EntitySpectrobe {
 
 
     public EntityKomainu(EntityType<EntityKomainu> entityTypeIn, World worldIn) {
-        super(entityTypeIn, worldIn, SpectrobePropertyRegistry.KOMAINU);
+        super(entityTypeIn, worldIn, SpectrobeRegistry.Komainu.copy());
     }
 
     @Override

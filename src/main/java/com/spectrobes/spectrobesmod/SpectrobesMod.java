@@ -1,6 +1,7 @@
 package com.spectrobes.spectrobesmod;
 
 import com.spectrobes.spectrobesmod.client.entity.SpectrobesEntities;
+import com.spectrobes.spectrobesmod.util.SpectrobesWorldData;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
@@ -37,6 +38,8 @@ public class SpectrobesMod
         modEventBus.addListener(this::enqueueIMC);
         modEventBus.addListener(this::processIMC);
         modEventBus.addListener(this::doClientStuff);
+        MinecraftForge.EVENT_BUS.addListener(SpectrobesWorldData::onWorldLoaded);
+        MinecraftForge.EVENT_BUS.addListener(SpectrobesWorldData::onWorldSaved);
 
         SpectrobesEntities.ENTITY_TYPES.register(modEventBus);
         // Register ourselves for server and other game events we are interested in

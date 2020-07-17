@@ -17,6 +17,7 @@ public class KomainuFossilItem extends Item {
 
     public KomainuFossilItem(Properties properties) {
         super(properties);
+        setRegistryName("komainu_fossil_item");
     }
 
     @Override
@@ -30,7 +31,6 @@ public class KomainuFossilItem extends Item {
                     SpawnReason.MOB_SUMMONED,
                     true,true
             );
-            komainu.setSpectrobeInstance(SpectrobeRegistry.Komainu.copy());
         }
 
         return new ActionResult<>(ActionResultType.SUCCESS, itemStack);
