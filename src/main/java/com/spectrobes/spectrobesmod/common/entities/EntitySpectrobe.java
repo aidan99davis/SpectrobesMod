@@ -1,5 +1,6 @@
 package com.spectrobes.spectrobesmod.common.entities;
 
+import com.spectrobes.spectrobesmod.SpectrobesMod;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
@@ -21,10 +22,11 @@ import net.minecraft.server.management.PreYggdrasilConverter;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties.Nature;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties.Stage;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 import software.bernie.geckolib.animation.AnimationBuilder;
@@ -34,7 +36,6 @@ import software.bernie.geckolib.animation.model.AnimationControllerCollection;
 import software.bernie.geckolib.entity.IAnimatedEntity;
 
 import javax.annotation.Nullable;
-import java.util.UUID;
 
 
 public abstract class EntitySpectrobe extends TameableEntity implements IEntityAdditionalSpawnData, IAnimatedEntity{
@@ -47,7 +48,6 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
             EntityDataManager.createKey(EntitySpectrobe.class,
             DataSerializers.VARINT);
 
-
     private Spectrobe spectrobeInstance;
 
     public AnimationControllerCollection animationControllers = new AnimationControllerCollection();
@@ -55,19 +55,30 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
 
 
     public EntitySpectrobe(EntityType<? extends EntitySpectrobe> entityTypeIn,
-                           World worldIn,
-                           Spectrobe spectrobeInstance) {
+                           World worldIn) {
         super(entityTypeIn, worldIn);
 
         setInvulnerable(true);
         registerAnimationControllers();
-        setSpectrobeInstance(spectrobeInstance);
-//        setSpectrobeId(SpectrobesWorldData.nextEntityId());
+        setSpectrobeId(SpectrobesWorldData.nextEntityId());
     }
+
+/*    @Override
+    public ILivingEntityData onInitialSpawn(IWorld worldIn,
+                                            DifficultyInstance difficultyIn,
+                                            SpawnReason reason,
+                                            @Nullable ILivingEntityData spawnDataIn,
+                                            @Nullable CompoundNBT dataTag) {
+        readAdditional(dataTag);
+        return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+    }*/
+
 
     public void setSpectrobeInstance(Spectrobe spectrobe) {
         this.spectrobeInstance = spectrobe;
-        SpectrobesWorldData.AddSpectrobe(getSpectrobeId(), spectrobe);
+        if(SpectrobesWorldData.GetSpectrobe(getSpectrobeId()) == null) {
+            SpectrobesWorldData.AddSpectrobe(getSpectrobeId(), spectrobe);
+        }
     }
 
     @Override
@@ -105,6 +116,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
                         .equals(mineralItem.mineralProperties.getNature())
                         || mineralItem.mineralProperties.getNature().equals(Nature.OTHER)) {
                     spectrobeInstance.applyMineral(mineralItem.mineralProperties);
+                    SpectrobesWorldData.AddSpectrobe(getSpectrobeId(), spectrobeInstance);
 
                 } else {
                     Minecraft.getInstance().player.sendChatMessage("his mineral is the wrong nature.");
@@ -127,40 +139,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     public void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
         setSpectrobeId(compound.getInt("SpectrobeId"));
-        String s;
-        if (!compound.getString("OwnerUUID").isEmpty())
-        {
-            s = compound.getString("OwnerUUID");
-        }
-        else
-        {
-            String s1 = compound.getString("Owner");
-            s = PreYggdrasilConverter.convertMobOwnerIfNeeded(this.getServer(), s1);
-        }
-
-        if (!s.isEmpty())
-        {
-            try
-            {
-                this.setOwnerId(UUID.fromString(s));
-                this.setTamed(true);
-            }
-            catch (Throwable var4)
-            {
-                this.setTamed(false);
-            }
-        }
-
-        //setSpectrobeInstance(SpectrobeUtils.readFromNbt((CompoundNBT) compound.get("SpectrobeData")));
-    }
-
-    public int getSpectrobeId() {
-        return dataManager.get(SYNC_ID);
-    }
-
-    private void setSpectrobeId(int id) {
-        dataManager.set(SYNC_ID, id);
-        setSpectrobeInstance(SpectrobesWorldData.GetSpectrobe(id));
+        setSpectrobeInstance(SpectrobeUtils.readFromNbt((CompoundNBT) compound.get("SpectrobeData")));
     }
 
     @Override
@@ -171,6 +150,23 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
 
     }
 
+    public int getSpectrobeId() {
+        return dataManager.get(SYNC_ID);
+    }
+
+    private void setSpectrobeId(int id) {
+        dataManager.set(SYNC_ID, id);
+        if(SpectrobesWorldData.GetSpectrobe(id) != null) {
+            spectrobeInstance = SpectrobesWorldData.GetSpectrobe(id);
+        } else {
+            spectrobeInstance = GetNewSpectrobeInstance();
+        }
+    }
+
+    public abstract Spectrobe GetNewSpectrobeInstance();
+
+
+
     @Override
     public IPacket<?> createSpawnPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
@@ -180,9 +176,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     protected void registerData() {
         super.registerData();
 
-        dataManager.register(SYNC_ID,
-                world.isRemote ? -1 : SpectrobesWorldData.get((ServerWorld) world).nextEntityId());
-        //dataManager.register(SYNC_OWNER, Optional.absent());
+        dataManager.register(SYNC_ID, 0);
     }
 
     /**

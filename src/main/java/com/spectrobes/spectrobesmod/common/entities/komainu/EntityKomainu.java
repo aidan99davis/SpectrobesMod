@@ -4,7 +4,6 @@ import com.spectrobes.spectrobesmod.client.entity.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.common.entities.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
-import com.spectrobes.spectrobesmod.common.registry.SpectrobePropertyRegistry;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -15,12 +14,17 @@ public class EntityKomainu extends EntitySpectrobe {
 
 
     public EntityKomainu(EntityType<EntityKomainu> entityTypeIn, World worldIn) {
-        super(entityTypeIn, worldIn, SpectrobeRegistry.Komainu.copy());
+        super(entityTypeIn, worldIn);
     }
 
     @Override
     protected boolean canEvolve() {
         return false;
+    }
+
+
+    public Spectrobe GetNewSpectrobeInstance() {
+        return SpectrobeRegistry.Komainu.copy();
     }
 
     @Override

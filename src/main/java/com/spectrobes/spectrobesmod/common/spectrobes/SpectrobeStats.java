@@ -13,6 +13,8 @@ public class SpectrobeStats {
     private int xp_required;
     private int xp;
 
+    public SpectrobeStats() {}
+
     public SpectrobeStats(int hpStat, int atkStat, int defStat) {
         this.hpLevel = hpStat;
         this.atkLevel = atkStat;
@@ -84,6 +86,15 @@ public class SpectrobeStats {
         statsNbt.putInt("level", getLevel());
 
         return statsNbt;
+    }
+
+    public void read(CompoundNBT statsNbt) {
+        this.atkLevel = statsNbt.getInt("atk");
+        this.defLevel = statsNbt.getInt("def");
+        this.hpLevel = statsNbt.getInt("hp");
+        this.xp = statsNbt.getInt("xp");
+        this.xp_required = statsNbt.getInt("xp_required");
+        this.level = statsNbt.getInt("level");
     }
 
     public SpectrobeStats copy() {

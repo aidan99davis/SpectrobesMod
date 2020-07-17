@@ -12,7 +12,10 @@ public class SpectrobeUtils {
         s.name = nbtData.get("name").getString();
         s.SpectrobeUUID = nbtData.getUniqueId("UUID");
         s.properties = nbtToProperties((CompoundNBT) nbtData.get("SpectrobeProperties"));
-        s.stats = nbtToStats((CompoundNBT) nbtData.get("SpectrobeStats"));
+
+        SpectrobeStats stats = new SpectrobeStats();
+        stats.read((CompoundNBT) nbtData.get("SpectrobeStats"));
+        s.stats = stats;
 
         return s;
     }

@@ -68,7 +68,7 @@ public class SpectrobesWorldData extends WorldSavedData implements Supplier {
     }
 
     public static int nextEntityId() {
-        return ++nextEntityId;
+        return nextEntityId++;
     }
 
     /**
@@ -116,7 +116,7 @@ public class SpectrobesWorldData extends WorldSavedData implements Supplier {
             myData.put("SpectrobesData", spectrobesData);
             saver.data = myData;
             saver.markDirty();
-            SpectrobesMod.LOGGER.debug("Put my data in!");
+            SpectrobesMod.LOGGER.info("Put my data in!");
         }
     }
 }
