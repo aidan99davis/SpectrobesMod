@@ -23,6 +23,7 @@ public class SpectrobeBuilder {
         return this;
     }
 
+
     public SpectrobeBuilder withProperties(SpectrobeProperties.Nature nature, SpectrobeProperties.Stage stage) {
         this.properties = new SpectrobeProperties(nature, stage);
         return this;
@@ -34,6 +35,11 @@ public class SpectrobeBuilder {
     }
     public SpectrobeBuilder withStats(int hpStat, int atkStat, int defStat) {
         this.stats = new SpectrobeStats(hpStat,atkStat,defStat);
+        return this;
+    }
+
+    public SpectrobeBuilder withEvolution(Spectrobe evolution) {
+        this.evolution = evolution;
         return this;
     }
 

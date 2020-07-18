@@ -1,11 +1,10 @@
 package com.spectrobes.spectrobesmod.common.entities;
 
-import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.SpectrobesMod;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
-import com.spectrobes.spectrobesmod.util.SpectrobeUtils;
-import com.spectrobes.spectrobesmod.util.SpectrobesWorldData;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+import io.netty.util.ByteProcessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
@@ -33,6 +32,15 @@ import software.bernie.geckolib.animation.model.AnimationControllerCollection;
 import software.bernie.geckolib.entity.IAnimatedEntity;
 
 import javax.annotation.Nullable;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.channels.FileChannel;
+import java.nio.channels.GatheringByteChannel;
+import java.nio.channels.ScatteringByteChannel;
+import java.nio.charset.Charset;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -47,7 +55,9 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
             EntityDataManager.createKey(EntitySpectrobe.class,
             DataSerializers.OPTIONAL_UNIQUE_ID);
 
-    private Spectrobe spectrobeInstance;
+    private static final DataParameter<Spectrobe> SPECTROBE_DATA =
+            EntityDataManager.createKey(EntitySpectrobe.class,
+                    Spectrobe.SpectrobeSerializer);
 
     public AnimationControllerCollection animationControllers = new AnimationControllerCollection();
     private AnimationController moveController = new AnimationController(this, "moveController", 10F, this::moveController);
@@ -59,21 +69,6 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
 
         setInvulnerable(true);
         registerAnimationControllers();
-        setSpectrobeInstance(GetNewSpectrobeInstance());
-    }
-
-    public void setSpectrobeInstance(Spectrobe spectrobe) {
-        if(spectrobe == null) {
-            this.spectrobeInstance = GetNewSpectrobeInstance();
-        }else {
-            this.spectrobeInstance = spectrobe;
-        }
-        if(SpectrobesWorldData.get(world).GetSpectrobe(getSpectrobeId()) == null) {
-            SpectrobesWorldData.get(world).AddSpectrobe(getSpectrobeId(), spectrobe);
-        }
-
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(
-                this.spectrobeInstance.stats.getHpLevel());
     }
 
     @Override
@@ -89,13 +84,14 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     @Override
     public boolean processInteract(PlayerEntity player, Hand hand) {
         ItemStack itemstack = player.getHeldItem(hand);
-        if(!recentInteract && itemstack.isEmpty()) {
-            printSpectrobeToChat();
-        } else if (itemstack.getItem() instanceof MineralItem){
-            MineralItem mineralItem = (MineralItem)itemstack.getItem();
-            applyMineral(mineralItem);
+        if(getSpectrobeData() != null) {
+            if(!recentInteract && itemstack.isEmpty()) {
+                printSpectrobeToChat();
+            } else if (itemstack.getItem() instanceof MineralItem){
+                MineralItem mineralItem = (MineralItem)itemstack.getItem();
+                applyMineral(mineralItem);
+            }
         }
-
         return super.processInteract(player, hand);
     }
 
@@ -110,31 +106,24 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     @Override
     public void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
-        setSpectrobeId(compound.getUniqueId("SpectrobeId"));
+        setSpectrobeData(Spectrobe.read((CompoundNBT) compound.get("SpectrobeData")));
+        if(getSpectrobeData() == null)
+            setSpectrobeData(GetNewSpectrobeInstance());
     }
 
     @Override
     public void writeAdditional(CompoundNBT compound) {
         super.writeAdditional(compound);
-        compound.putUniqueId("SpectrobeId", getSpectrobeId());
 
-//        compound.put("SpectrobeData", spectrobeInstance.write());
+        compound.put("SpectrobeData", getSpectrobeData().write());
 
     }
 
-    public UUID getSpectrobeId() {
-        return dataManager.get(SYNC_ID).orElse(entityUniqueID);
+    public Spectrobe getSpectrobeData() {
+        return dataManager.get(SPECTROBE_DATA);
     }
-
-    private void setSpectrobeId(UUID id) {
-        dataManager.set(SYNC_ID, Optional.of(id));
-        if(SpectrobesWorldData.get(world).GetSpectrobe(id) != null) {
-            spectrobeInstance = SpectrobesWorldData.get(world).GetSpectrobe(id);
-        } else {
-            SpectrobesInfo.LOGGER.info("Uh oh couldnt find the spectrobes data!");
-            spectrobeInstance = GetNewSpectrobeInstance();
-            SpectrobesWorldData.get(world).AddSpectrobe(id, spectrobeInstance);
-        }
+    public void setSpectrobeData(Spectrobe spectrobe) {
+        dataManager.set(SPECTROBE_DATA, spectrobe);
     }
 
     @Override
@@ -145,7 +134,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     @Override
     protected void registerData() {
         super.registerData();
-        dataManager.register(SYNC_ID, Optional.empty());
+        dataManager.register(SPECTROBE_DATA, GetNewSpectrobeInstance());
     }
 
     /**
@@ -154,10 +143,6 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     @Override
     public void livingTick() {
         super.livingTick();
-        if(needToSync) {
-            setSpectrobeInstance(SpectrobesWorldData.get(world).GetSpectrobe(getSpectrobeId()));
-            needToSync = false;
-        }
         if(ticksTillInteract > 0)
             ticksTillInteract--;
         if(ticksTillInteract == 0)
@@ -170,14 +155,15 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     @Override
     public void writeSpawnData(PacketBuffer buffer) {
         if(!world.isRemote) {
-            buffer.writeCompoundTag(spectrobeInstance.write());
+            if(getSpectrobeData() != null)
+                buffer.writeCompoundTag(getSpectrobeData().write());
         }
     }
 
     @Override
     public void readSpawnData(PacketBuffer additionalData) {
         if(!world.isRemote) {
-            spectrobeInstance = SpectrobeUtils.readFromNbt(additionalData.readCompoundTag());
+            setSpectrobeData(Spectrobe.read(additionalData.readCompoundTag()));
         }
     }
 
@@ -237,9 +223,9 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
                 this.world.getDifficultyForLocation(new BlockPos(this)),
                 SpawnReason.MOB_SUMMONED,
                 (ILivingEntityData)null,
-                spectrobeInstance.write());
+                getSpectrobeData().write());
         dead = true;
-        SpectrobesWorldData.get(world).removeSpectrobe(getSpectrobeId());
+        //SpectrobesWorldData.get(world).removeSpectrobe(getSpectrobeId());
         //should store all the spectrobes data in an object, then create a
         // cocoon entity which holds this, the cocoon will "hatch"
         // after a predefined time. it will then spawn the next form of spectrobe with
@@ -285,10 +271,10 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     }
 
     public Nature getNature() {
-        return spectrobeInstance.properties.getNature();
+        return getSpectrobeData().properties.getNature();
     }
     public Stage getStage() {
-        return spectrobeInstance.properties.getStage();
+        return getSpectrobeData().properties.getStage();
     }
 
     public void setEvolution(Spectrobe evolution) {
@@ -299,7 +285,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
 
     @Override
     public boolean isInLove() {
-        if(spectrobeInstance == null || getStage() == Stage.CHILD)
+        if(getSpectrobeData() == null || getStage() == Stage.CHILD)
             return false;
 
         return true;
@@ -317,6 +303,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     }
 
     private void printSpectrobeToChat() {
+        Spectrobe spectrobeInstance = getSpectrobeData();
         StringBuilder builder1 = new StringBuilder();
         StringBuilder builder2 = new StringBuilder();
         builder1.append("Nature: " + getNature() + ", ");
@@ -334,17 +321,17 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     }
 
     private void applyMineral(MineralItem mineralItem) {
+        Spectrobe spectrobeInstance = getSpectrobeData();
         if(spectrobeInstance.properties.getNature()
                 .equals(mineralItem.mineralProperties.getNature())
                 || mineralItem.mineralProperties.getNature().equals(Nature.OTHER)) {
             spectrobeInstance.applyMineral(mineralItem.mineralProperties);
-            SpectrobesWorldData.get(world).AddSpectrobe(getSpectrobeId(), spectrobeInstance);
 
             this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(
-                    this.spectrobeInstance.stats.getHpLevel());
+                    spectrobeInstance.stats.getHpLevel());
 
             this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(
-                    this.spectrobeInstance.stats.getAtkLevel());
+                    spectrobeInstance.stats.getAtkLevel());
         } else {
             Minecraft.getInstance().player.sendChatMessage("his mineral is the wrong nature.");
         }

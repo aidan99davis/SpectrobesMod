@@ -63,8 +63,8 @@ public class SpectrobesWorldData extends WorldSavedData implements Supplier {
             List<UUID> spectrobeIds = new ArrayList<>();
             spectrobeData.keySet().forEach(s -> spectrobeIds.add(UUID.fromString(s)));
             for (UUID spectrobeId : spectrobeIdMap.keySet()) {
-                spectrobeIdMap.put(spectrobeId, SpectrobeUtils
-                        .readFromNbt((CompoundNBT) spectrobeData.get(String.valueOf(spectrobeId))));
+                spectrobeIdMap.put(spectrobeId, Spectrobe
+                        .read((CompoundNBT) spectrobeData.get(String.valueOf(spectrobeId))));
             }
         }
     }

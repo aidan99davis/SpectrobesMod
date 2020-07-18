@@ -13,6 +13,14 @@ public class SpectrobeProperties{
         this.stage = stage;
     }
 
+    public static SpectrobeProperties read(CompoundNBT spectrobeProperties) {
+
+        return new SpectrobeProperties(
+                SpectrobeProperties.Nature.valueOf(spectrobeProperties.get("nature").getString()),
+                SpectrobeProperties.Stage.valueOf(spectrobeProperties.get("stage").getString()));
+
+    }
+
     public Nature getNature() {
         return nature;
     }
