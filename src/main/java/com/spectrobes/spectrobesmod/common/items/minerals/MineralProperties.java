@@ -1,6 +1,7 @@
 package com.spectrobes.spectrobesmod.common.items.minerals;
 
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
+import com.spectrobes.spectrobesmod.util.MineralPropertiesBuilder;
 
 public class MineralProperties {
     private int hpOffset;
@@ -47,5 +48,9 @@ public class MineralProperties {
 
     public int getXpWorth() {
         return this.xp_worth;
+    }
+
+    public MineralProperties copy() {
+        return new MineralPropertiesBuilder().buildFrom(this);
     }
 }

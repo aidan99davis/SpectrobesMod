@@ -5,16 +5,11 @@ import com.spectrobes.spectrobesmod.util.MineralPropertiesBuilder;
 import net.minecraft.item.Item;
 
 public class MineralItem extends Item {
-    public MineralProperties mineralProperties = new MineralPropertiesBuilder()
-            .setAtkOffset(2)
-            .setDefOffset(2)
-            .setHpOffset(2)
-            .setNature(SpectrobeProperties.Nature.CORONA)
-            .setXpWorth(10)
-            .build();
+    public MineralProperties mineralProperties = null;
 
-    public MineralItem(Properties properties) {
+    public MineralItem(Properties properties, String registryName, MineralProperties mineralProperties) {
         super(properties);
-        setRegistryName("mineral_item");
+        setRegistryName(registryName);
+        this.mineralProperties = mineralProperties;
     }
 }
