@@ -71,6 +71,9 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         if(SpectrobesWorldData.GetSpectrobe(getSpectrobeId()) == null) {
             SpectrobesWorldData.AddSpectrobe(getSpectrobeId(), spectrobe);
         }
+
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(
+                this.spectrobeInstance.stats.getHpLevel());
     }
 
     @Override
@@ -337,6 +340,11 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
             spectrobeInstance.applyMineral(mineralItem.mineralProperties);
             SpectrobesWorldData.AddSpectrobe(getSpectrobeId(), spectrobeInstance);
 
+            this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(
+                    this.spectrobeInstance.stats.getHpLevel());
+
+            this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(
+                    this.spectrobeInstance.stats.getAtkLevel());
         } else {
             Minecraft.getInstance().player.sendChatMessage("his mineral is the wrong nature.");
         }
