@@ -22,9 +22,11 @@ import java.util.List;
 @ObjectHolder(SpectrobesInfo.MOD_ID)
 public class SpectrobesItems {
     public static final Item mineral_item_power_c = null;
+    public static final Item mineral_item_power_b = null;
     public static final Item komainu_fossil_item = null;
     public static final Item[] ALL_MINERALS = new Item[] {
-            mineral_item_power_c
+            mineral_item_power_c,
+            mineral_item_power_b
     };
 
     @SubscribeEvent
@@ -32,10 +34,16 @@ public class SpectrobesItems {
         MineralRegistry.init();
         event.getRegistry().register(
                 new MineralItem(
-                    new Item.Properties()
-                    .group(SpectrobesItemGroup.Instance),
-                        "mineral_item_power_c",
+                        new Item.Properties()
+                                .group(SpectrobesMineralItemGroup.Instance),
+                        MineralRegistry.MINERAL_POWER_C.name,
                         MineralRegistry.MINERAL_POWER_C.properties.copy()));
+        event.getRegistry().register(
+                new MineralItem(
+                        new Item.Properties()
+                                .group(SpectrobesMineralItemGroup.Instance),
+                        MineralRegistry.MINERAL_POWER_B.name,
+                        MineralRegistry.MINERAL_POWER_B.properties.copy()));
 
         event.getRegistry().register(
                 new KomainuFossilItem(
@@ -48,6 +56,20 @@ public class SpectrobesItems {
         public static final SpectrobesItemGroup Instance = new SpectrobesItemGroup(ItemGroup.GROUPS.length, "spectrobestab");
 
         public SpectrobesItemGroup(int index, String label) {
+            super(index, label);
+        }
+
+        @Override
+        public ItemStack createIcon() {
+            return SpectrobesItems.komainu_fossil_item.getDefaultInstance();
+        }
+    }
+
+    public static class SpectrobesMineralItemGroup extends ItemGroup {
+
+        public static final SpectrobesMineralItemGroup Instance = new SpectrobesMineralItemGroup(ItemGroup.GROUPS.length, "spectrobestab.minerals");
+
+        public SpectrobesMineralItemGroup(int index, String label) {
             super(index, label);
         }
 

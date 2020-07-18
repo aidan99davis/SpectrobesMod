@@ -7,13 +7,19 @@ import com.spectrobes.spectrobesmod.util.MineralPropertiesBuilder;
 
 public class MineralRegistry {
     public static Mineral MINERAL_POWER_C = null;
+    public static Mineral MINERAL_POWER_B = null;
 
     public static void init()
     {
-        MINERAL_POWER_C = (new MineralBuilder().withName("mineral_power_c").withMineralProperties(
+        MINERAL_POWER_C = (new MineralBuilder().withName("mineral_item_power_c").withMineralProperties(
                 new MineralPropertiesBuilder()
-                .setAtkOffset(2)
+                .setAtkOffset(8)
                 .setNature(SpectrobeProperties.Nature.OTHER)
                 .setXpWorth(10)).build());
+        MINERAL_POWER_B = (new MineralBuilder().withName("mineral_item_power_b").withMineralProperties(
+                new MineralPropertiesBuilder()
+                        .setAtkOffset(16)
+                        .setNature(SpectrobeProperties.Nature.OTHER)
+                        .setXpWorth(10)).build());
     }
 }

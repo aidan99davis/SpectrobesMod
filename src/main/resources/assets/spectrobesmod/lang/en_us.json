@@ -3,5 +3,6 @@
     "item.spectrobesmod.komainu_fossil_item": "Komainu Fossil",
     "block.spectrobesmod.mineral_block": "Mineral Block",
     "block.spectrobesmod.fossil_block": "Fossil Block",
-    "itemGroup.spectrobestab": "Spectrobes"
+    "itemGroup.spectrobestab": "Spectrobes",
+    "itemGroup.spectrobestab.minerals": "Minerals"
 }

@@ -68,8 +68,8 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         }else {
             this.spectrobeInstance = spectrobe;
         }
-        if(SpectrobesWorldData.GetSpectrobe(getSpectrobeId()) == null) {
-            SpectrobesWorldData.AddSpectrobe(getSpectrobeId(), spectrobe);
+        if(SpectrobesWorldData.get(world).GetSpectrobe(getSpectrobeId()) == null) {
+            SpectrobesWorldData.get(world).AddSpectrobe(getSpectrobeId(), spectrobe);
         }
 
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(
@@ -110,7 +110,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     @Override
     public void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
-        setSpectrobeId(compound.getUniqueId("UUID"));
+        setSpectrobeId(compound.getUniqueId("SpectrobeId"));
     }
 
     @Override
@@ -128,12 +128,12 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
 
     private void setSpectrobeId(UUID id) {
         dataManager.set(SYNC_ID, Optional.of(id));
-        if(SpectrobesWorldData.GetSpectrobe(id) != null) {
-            spectrobeInstance = SpectrobesWorldData.GetSpectrobe(id);
+        if(SpectrobesWorldData.get(world).GetSpectrobe(id) != null) {
+            spectrobeInstance = SpectrobesWorldData.get(world).GetSpectrobe(id);
         } else {
             SpectrobesInfo.LOGGER.info("Uh oh couldnt find the spectrobes data!");
             spectrobeInstance = GetNewSpectrobeInstance();
-            SpectrobesWorldData.AddSpectrobe(id, spectrobeInstance);
+            SpectrobesWorldData.get(world).AddSpectrobe(id, spectrobeInstance);
         }
     }
 
@@ -155,7 +155,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     public void livingTick() {
         super.livingTick();
         if(needToSync) {
-            setSpectrobeInstance(SpectrobesWorldData.GetSpectrobe(getSpectrobeId()));
+            setSpectrobeInstance(SpectrobesWorldData.get(world).GetSpectrobe(getSpectrobeId()));
             needToSync = false;
         }
         if(ticksTillInteract > 0)
@@ -239,7 +239,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
                 (ILivingEntityData)null,
                 spectrobeInstance.write());
         dead = true;
-        SpectrobesWorldData.removeSpectrobe(getSpectrobeId());
+        SpectrobesWorldData.get(world).removeSpectrobe(getSpectrobeId());
         //should store all the spectrobes data in an object, then create a
         // cocoon entity which holds this, the cocoon will "hatch"
         // after a predefined time. it will then spawn the next form of spectrobe with
@@ -338,7 +338,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
                 .equals(mineralItem.mineralProperties.getNature())
                 || mineralItem.mineralProperties.getNature().equals(Nature.OTHER)) {
             spectrobeInstance.applyMineral(mineralItem.mineralProperties);
-            SpectrobesWorldData.AddSpectrobe(getSpectrobeId(), spectrobeInstance);
+            SpectrobesWorldData.get(world).AddSpectrobe(getSpectrobeId(), spectrobeInstance);
 
             this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(
                     this.spectrobeInstance.stats.getHpLevel());
