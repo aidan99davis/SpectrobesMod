@@ -1,6 +1,6 @@
 package com.spectrobes.spectrobesmod.common.blocks;
 
-import com.spectrobes.spectrobesmod.SpectrobesMod;
+import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
@@ -11,8 +11,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.registries.ObjectHolder;
 
-@Mod.EventBusSubscriber(modid = SpectrobesMod.MOD_ID, bus = Bus.MOD)
-@ObjectHolder(SpectrobesMod.MOD_ID)
+@Mod.EventBusSubscriber(modid = SpectrobesInfo.MOD_ID, bus = Bus.MOD)
+@ObjectHolder(SpectrobesInfo.MOD_ID)
 public class SpectrobesBlocks {
 
     public static final Block mineral_block = null;

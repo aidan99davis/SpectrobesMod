@@ -1,5 +1,6 @@
 package com.spectrobes.spectrobesmod.common.entities;
 
+import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.SpectrobesMod;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
@@ -127,7 +128,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         if(SpectrobesWorldData.GetSpectrobe(id) != null) {
             spectrobeInstance = SpectrobesWorldData.GetSpectrobe(id);
         } else {
-            SpectrobesMod.LOGGER.info("Uh oh couldnt find the spectrobes data!");
+            SpectrobesInfo.LOGGER.info("Uh oh couldnt find the spectrobes data!");
             spectrobeInstance = GetNewSpectrobeInstance();
             SpectrobesWorldData.AddSpectrobe(id, spectrobeInstance);
         }
@@ -234,6 +235,8 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
                 SpawnReason.MOB_SUMMONED,
                 (ILivingEntityData)null,
                 spectrobeInstance.write());
+        dead = true;
+        SpectrobesWorldData.removeSpectrobe(getSpectrobeId());
         //should store all the spectrobes data in an object, then create a
         // cocoon entity which holds this, the cocoon will "hatch"
         // after a predefined time. it will then spawn the next form of spectrobe with

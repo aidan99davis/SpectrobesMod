@@ -1,5 +1,6 @@
 package com.spectrobes.spectrobesmod.common.items;
 
+import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.SpectrobesMod;
 import com.spectrobes.spectrobesmod.common.items.fossils.KomainuFossilItem;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
@@ -17,8 +18,8 @@ import net.minecraftforge.registries.ObjectHolder;
 import java.util.ArrayList;
 import java.util.List;
 
-@Mod.EventBusSubscriber(modid = SpectrobesMod.MOD_ID, bus = Bus.MOD)
-@ObjectHolder(SpectrobesMod.MOD_ID)
+@Mod.EventBusSubscriber(modid = SpectrobesInfo.MOD_ID, bus = Bus.MOD)
+@ObjectHolder(SpectrobesInfo.MOD_ID)
 public class SpectrobesItems {
     public static final Item mineral_item_power_c = null;
     public static final Item komainu_fossil_item = null;

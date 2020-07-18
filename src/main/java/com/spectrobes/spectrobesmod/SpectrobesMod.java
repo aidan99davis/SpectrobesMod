@@ -16,8 +16,6 @@ import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.stream.Collectors;
 
@@ -25,9 +23,6 @@ import java.util.stream.Collectors;
 @Mod("spectrobesmod")
 public class SpectrobesMod
 {
-    public static final String MOD_ID = "spectrobesmod";
-    // Directly reference a log4j logger.
-    public static final Logger LOGGER = LogManager.getLogger();
     public static SpectrobesMod Instance;
 
     public SpectrobesMod() {
@@ -62,12 +57,12 @@ public class SpectrobesMod
 
     private void enqueueIMC(final InterModEnqueueEvent event)
     {
-        InterModComms.sendTo("examplemod", "helloworld", () -> { LOGGER.info("Hello world from the MDK"); return "Hello world";});
+        InterModComms.sendTo("examplemod", "helloworld", () -> { SpectrobesInfo.LOGGER.info("Hello world from the MDK"); return "Hello world";});
     }
 
     private void processIMC(final InterModProcessEvent event)
     {
-        LOGGER.info("Got IMC {}", event.getIMCStream().
+        SpectrobesInfo.LOGGER.info("Got IMC {}", event.getIMCStream().
                 map(m->m.getMessageSupplier().get()).
                 collect(Collectors.toList()));
     }
@@ -76,7 +71,7 @@ public class SpectrobesMod
     @SubscribeEvent
     public void onServerStarting(FMLServerStartingEvent event) {
         // do something when the server starts
-        LOGGER.info("HELLO from server starting");
+        SpectrobesInfo.LOGGER.info("HELLO from server starting");
     }
 
 }

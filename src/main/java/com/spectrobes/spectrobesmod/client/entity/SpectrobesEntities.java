@@ -1,6 +1,6 @@
 package com.spectrobes.spectrobesmod.client.entity;
 
-import com.spectrobes.spectrobesmod.SpectrobesMod;
+import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.entity.renderer.KomainuRenderer;
 import com.spectrobes.spectrobesmod.common.entities.komainu.EntityKomainu;
 import net.minecraft.entity.Entity;
@@ -14,7 +14,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class SpectrobesEntities {
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES
-            = new DeferredRegister<>(ForgeRegistries.ENTITIES, SpectrobesMod.MOD_ID);
+            = new DeferredRegister<>(ForgeRegistries.ENTITIES, SpectrobesInfo.MOD_ID);
 
 
     public static final RegistryObject<EntityType<EntityKomainu>> ENTITY_KOMANOTO = null;
@@ -23,7 +23,7 @@ public class SpectrobesEntities {
             () -> EntityType.Builder.create(EntityKomainu::new,
                     EntityClassification.CREATURE)
                     .size(0.6f, 1f)
-                    .build(new ResourceLocation(SpectrobesMod.MOD_ID, "komainu").toString()));
+                    .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "komainu").toString()));
 
     public static <T extends Entity> RegistryObject<EntityType<T>> BuildEntity(EntityType.IFactory<T> entity, Class<T> entityClass, float width, float height)
     {

@@ -1,5 +1,6 @@
 package com.spectrobes.spectrobesmod.util;
 
+import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.SpectrobesMod;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.nbt.CompoundNBT;
@@ -22,7 +23,7 @@ public class SpectrobesWorldData extends WorldSavedData implements Supplier {
     public static SpectrobesWorldData get(ServerWorld world) {
         DimensionSavedDataManager storage = world.getSavedData();
         Supplier<SpectrobesWorldData> sup = new SpectrobesWorldData();
-        SpectrobesWorldData saver = storage.getOrCreate(sup, SpectrobesMod.MOD_ID);
+        SpectrobesWorldData saver = storage.getOrCreate(sup, SpectrobesInfo.MOD_ID);
 
         if (saver == null)
         {
@@ -33,12 +34,16 @@ public class SpectrobesWorldData extends WorldSavedData implements Supplier {
     }
 
     public SpectrobesWorldData() {
-        super(SpectrobesMod.MOD_ID);
+        super(SpectrobesInfo.MOD_ID);
         nextEntityId = 1;
     }
 
     public SpectrobesWorldData(String key) {
         this();
+    }
+
+    public static void removeSpectrobe(UUID spectrobeId) {
+        spectrobeIdMap.remove(spectrobeId);
     }
 
     /**
@@ -88,7 +93,7 @@ public class SpectrobesWorldData extends WorldSavedData implements Supplier {
 
             if(saver.data.contains("SpectrobesData"))
             {
-                SpectrobesMod.LOGGER.info("Found my data: " + saver.data.get("SpectrobesData"));
+                SpectrobesInfo.LOGGER.info("Found my data: " + saver.data.get("SpectrobesData"));
                 CompoundNBT spectrobeData = (CompoundNBT) saver.data.get("SpectrobesData");
 
                 List<UUID> spectrobeIds = new ArrayList<>();
@@ -116,7 +121,7 @@ public class SpectrobesWorldData extends WorldSavedData implements Supplier {
             myData.put("SpectrobesData", spectrobesData);
             saver.data = myData;
             saver.markDirty();
-            SpectrobesMod.LOGGER.info("Put my data in!");
+            SpectrobesInfo.LOGGER.info("Put my data in!");
         }
     }
 }
