@@ -20,10 +20,10 @@ import java.util.List;
 @Mod.EventBusSubscriber(modid = SpectrobesMod.MOD_ID, bus = Bus.MOD)
 @ObjectHolder(SpectrobesMod.MOD_ID)
 public class SpectrobesItems {
-    public static final Item mineral_item = null;
+    public static final Item mineral_item_power_c = null;
     public static final Item komainu_fossil_item = null;
     public static final Item[] ALL_MINERALS = new Item[] {
-            mineral_item
+            mineral_item_power_c
     };
 
     @SubscribeEvent
@@ -33,7 +33,7 @@ public class SpectrobesItems {
                 new MineralItem(
                     new Item.Properties()
                     .group(SpectrobesItemGroup.Instance),
-                        "mineral_item",
+                        "mineral_item_power_c",
                         MineralRegistry.MINERAL_POWER_C.properties.copy()));
 
         event.getRegistry().register(
@@ -52,7 +52,7 @@ public class SpectrobesItems {
 
         @Override
         public ItemStack createIcon() {
-            return SpectrobesItems.mineral_item.getDefaultInstance();
+            return SpectrobesItems.mineral_item_power_c.getDefaultInstance();
         }
     }
 }

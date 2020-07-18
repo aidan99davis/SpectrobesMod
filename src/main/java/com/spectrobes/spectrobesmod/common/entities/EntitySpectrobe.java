@@ -87,11 +87,9 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         ItemStack itemstack = player.getHeldItem(hand);
         if(!recentInteract && itemstack.isEmpty()) {
             printSpectrobeToChat();
-        } else {
-            if(itemstack.getItem() instanceof MineralItem) {
-                MineralItem mineralItem = (MineralItem)itemstack.getItem();
-                applyMineral(mineralItem);
-            }
+        } else if (itemstack.getItem() instanceof MineralItem){
+            MineralItem mineralItem = (MineralItem)itemstack.getItem();
+            applyMineral(mineralItem);
         }
 
         return super.processInteract(player, hand);
@@ -310,7 +308,9 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         else {
             return this.getChildForLineage();
         }
-    }    private void printSpectrobeToChat() {
+    }
+
+    private void printSpectrobeToChat() {
         StringBuilder builder1 = new StringBuilder();
         StringBuilder builder2 = new StringBuilder();
         builder1.append("Nature: " + getNature() + ", ");
