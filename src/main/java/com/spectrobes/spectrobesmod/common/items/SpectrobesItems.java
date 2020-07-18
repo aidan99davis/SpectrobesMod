@@ -23,27 +23,40 @@ import java.util.List;
 public class SpectrobesItems {
     public static final Item mineral_item_power_c = null;
     public static final Item mineral_item_power_b = null;
+    public static final Item mineral_item_power_a = null;
     public static final Item komainu_fossil_item = null;
     public static final Item[] ALL_MINERALS = new Item[] {
             mineral_item_power_c,
-            mineral_item_power_b
+            mineral_item_power_b,
+            mineral_item_power_a
     };
 
-    @SubscribeEvent
-    public static void registerItems(final RegistryEvent.Register<Item> event) {
-        MineralRegistry.init();
+    static void registerMineral(final RegistryEvent.Register<Item> event) {
         event.getRegistry().register(
                 new MineralItem(
                         new Item.Properties()
                                 .group(SpectrobesMineralItemGroup.Instance),
                         MineralRegistry.MINERAL_POWER_C.name,
                         MineralRegistry.MINERAL_POWER_C.properties.copy()));
+    }
+
+    @SubscribeEvent
+    public static void registerItems(final RegistryEvent.Register<Item> event) {
+        MineralRegistry.init();
+
+        registerMineral(event);
         event.getRegistry().register(
                 new MineralItem(
                         new Item.Properties()
                                 .group(SpectrobesMineralItemGroup.Instance),
                         MineralRegistry.MINERAL_POWER_B.name,
                         MineralRegistry.MINERAL_POWER_B.properties.copy()));
+        event.getRegistry().register(
+                new MineralItem(
+                        new Item.Properties()
+                                .group(SpectrobesMineralItemGroup.Instance),
+                        MineralRegistry.MINERAL_POWER_A.name,
+                        MineralRegistry.MINERAL_POWER_A.properties.copy()));
 
         event.getRegistry().register(
                 new KomainuFossilItem(
