@@ -21,6 +21,7 @@ public class MineralRegistry {
     public static Mineral MINERAL_HEALTH_B = null;
     public static Mineral MINERAL_HEALTH_A = null;
     public static Mineral MINERAL_HEALTH_A_PLUS = null;
+    public static Mineral MINERAL_AGATE = null;
     public static List<Mineral> ALL_MINERALS = new ArrayList<>();
 
     public static void init()
@@ -105,5 +106,12 @@ public class MineralRegistry {
                         .setNature(SpectrobeProperties.Nature.OTHER)
                         .setXpWorth(30)).build());
         ALL_MINERALS.add(MINERAL_HEALTH_A_PLUS);
+        MINERAL_AGATE = (new MineralBuilder().withName("mineral_item_agate").withMineralProperties(
+                new MineralPropertiesBuilder()
+                        .setAtkOffset(8)
+                        .setDefOffset(8)
+                        .setNature(SpectrobeProperties.Nature.OTHER)
+                        .setXpWorth(15)).build());
+        ALL_MINERALS.add(MINERAL_AGATE);
     }
 }
