@@ -14,31 +14,31 @@ import software.bernie.geckolib.animation.AnimationBuilder;
 import software.bernie.geckolib.animation.AnimationTestEvent;
 import software.bernie.geckolib.animation.model.AnimationControllerCollection;
 
-public class EntityKomainu extends EntityMammalSpectrobe {
+public class EntityKomanoto extends EntityMammalSpectrobe {
 
 
-    public EntityKomainu(EntityType<EntityKomainu> entityTypeIn, World worldIn) {
+    public EntityKomanoto(EntityType<EntityKomanoto> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
     }
 
     @Override
     protected boolean canEvolve() {
-        return getSpectrobeData().stats.getLevel() > 5;
+        return false;
     }
 
 
     public Spectrobe GetNewSpectrobeInstance() {
-        return SpectrobeRegistry.Komainu.copy();
+        return SpectrobeRegistry.Komanoto.copy();
     }
 
     @Override
     public EntityType<? extends EntitySpectrobe> getEvolutionRegistry() {
-        return SpectrobesEntities.ENTITY_KOMANOTO.get();
+        return null;
     }
 
     @Override
     protected EntitySpectrobe getChildForLineage() {
-        return this;
+        return SpectrobesEntities.ENTITY_KOMAINU.get().create(world);
     }
 
     @Override
@@ -56,18 +56,23 @@ public class EntityKomainu extends EntityMammalSpectrobe {
     }
 
     @Override
-    public <ENTITY extends Entity> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent) {
+    public <ENTITY extends Entity> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent)
+    {
         moveController.transitionLength = 2;
         if(!(limbSwingAmount > -0.15F && limbSwingAmount < 0.15F))
         {
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.komainu.jump", true));
+            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.komanoto.walking", true));
             return true;
         }
         else if(this.isSitting()) {
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.komainu.sit", false));
+            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.komanoto.sit", false));
             return true;
+        } else {
+            if(this.getAttackingEntity() != null) {
+                moveController.setAnimation(new AnimationBuilder().addAnimation("animation.komanoto.attack", true));
+                return true;
+            }
         }
         return false;
-
     }
 }
