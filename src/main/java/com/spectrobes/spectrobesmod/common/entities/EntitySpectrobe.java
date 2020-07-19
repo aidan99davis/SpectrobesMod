@@ -2,9 +2,6 @@ package com.spectrobes.spectrobesmod.common.entities;
 
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
-import io.netty.util.ByteProcessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
@@ -32,15 +29,6 @@ import software.bernie.geckolib.animation.model.AnimationControllerCollection;
 import software.bernie.geckolib.entity.IAnimatedEntity;
 
 import javax.annotation.Nullable;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.channels.FileChannel;
-import java.nio.channels.GatheringByteChannel;
-import java.nio.channels.ScatteringByteChannel;
-import java.nio.charset.Charset;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -49,11 +37,10 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     public Spectrobe evolution;
     private boolean recentInteract = false;
     private int ticksTillInteract = 0;
-    private boolean needToSync = true;
 
-    private static final DataParameter<Optional<UUID>> SYNC_ID =
+    private static final DataParameter<Integer> TICKS_TILL_MATE =
             EntityDataManager.createKey(EntitySpectrobe.class,
-            DataSerializers.OPTIONAL_UNIQUE_ID);
+            DataSerializers.VARINT);
 
     private static final DataParameter<Spectrobe> SPECTROBE_DATA =
             EntityDataManager.createKey(EntitySpectrobe.class,
@@ -126,6 +113,14 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         dataManager.set(SPECTROBE_DATA, spectrobe);
     }
 
+    public int getTicksTillMate() {
+        return dataManager.get(TICKS_TILL_MATE);
+    }
+    public void setTicksTillMate(int ticksTillMate) {
+        dataManager.set(TICKS_TILL_MATE, ticksTillMate);
+    }
+
+
     @Override
     public IPacket<?> createSpawnPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
@@ -135,6 +130,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     protected void registerData() {
         super.registerData();
         dataManager.register(SPECTROBE_DATA, GetNewSpectrobeInstance());
+        dataManager.register(TICKS_TILL_MATE, 15000);
     }
 
     /**
@@ -148,6 +144,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         if(ticksTillInteract == 0)
             recentInteract = false;
         //check if the spectrobe has an evolution, and meets the requirements to evolve.
+        tryMate();
         tryEvolve();
 
     }
@@ -204,6 +201,18 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
             evolve();
         }
     }
+
+    public void tryMate() {
+        if(getStage() != Stage.CHILD) {
+            if(getTicksTillMate() == 0) {
+                mate();
+            } else {
+                setTicksTillMate(getTicksTillMate() - 1);
+            }
+        }
+    }
+
+    public abstract void mate();
 
     private boolean hasEvolution() {
         return getEvolution() != null? true : false;
@@ -291,15 +300,14 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         return true;
     }
 
+
+
     @Nullable
     @Override
-    public AgeableEntity createChild(AgeableEntity ageable) {
-        //children cant have children, duh.
-        if(getStage() == Stage.CHILD)
-            return null;
-        else {
-            return this.getChildForLineage();
-        }
+    public AgeableEntity createChild(AgeableEntity ageable)
+    {
+        //gonna handle this myself
+        return null;
     }
 
     private void printSpectrobeToChat() {

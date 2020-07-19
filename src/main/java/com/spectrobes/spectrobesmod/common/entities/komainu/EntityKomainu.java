@@ -1,6 +1,7 @@
 package com.spectrobes.spectrobesmod.common.entities.komainu;
 
 import com.spectrobes.spectrobesmod.client.entity.SpectrobesEntities;
+import com.spectrobes.spectrobesmod.common.entities.EntityMammalSpectrobe;
 import com.spectrobes.spectrobesmod.common.entities.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
@@ -10,7 +11,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.world.World;
 import software.bernie.geckolib.animation.model.AnimationControllerCollection;
 
-public class EntityKomainu extends EntitySpectrobe {
+public class EntityKomainu extends EntityMammalSpectrobe {
 
 
     public EntityKomainu(EntityType<EntityKomainu> entityTypeIn, World worldIn) {

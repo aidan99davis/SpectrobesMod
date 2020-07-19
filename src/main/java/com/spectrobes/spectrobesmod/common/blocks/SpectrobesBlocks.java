@@ -27,11 +27,11 @@ public class SpectrobesBlocks {
     @SubscribeEvent
     public static void registerBlockItems(final RegistryEvent.Register<Item> event) {
         event.getRegistry().register(new BlockItem(mineral_block,
-                new Item.Properties().group(SpectrobesItems.SpectrobesItemGroup.Instance))
+                new Item.Properties().group(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
                 .setRegistryName("mineral_block"));
 
         event.getRegistry().register(new BlockItem(fossil_block,
-                new Item.Properties().group(SpectrobesItems.SpectrobesItemGroup.Instance))
+                new Item.Properties().group(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
                 .setRegistryName("fossil_block"));
 
     }

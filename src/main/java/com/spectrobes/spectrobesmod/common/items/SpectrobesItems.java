@@ -1,23 +1,17 @@
 package com.spectrobes.spectrobesmod.common.items;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.SpectrobesMod;
+import com.spectrobes.spectrobesmod.common.blocks.SpectrobesBlocks;
 import com.spectrobes.spectrobesmod.common.items.fossils.KomainuFossilItem;
 import com.spectrobes.spectrobesmod.common.items.minerals.Mineral;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
-import com.spectrobes.spectrobesmod.common.items.minerals.MineralProperties;
 import com.spectrobes.spectrobesmod.common.registry.MineralRegistry;
-import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
-import com.spectrobes.spectrobesmod.util.MineralPropertiesBuilder;
 import net.minecraft.item.*;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.registries.ObjectHolder;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Mod.EventBusSubscriber(modid = SpectrobesInfo.MOD_ID, bus = Bus.MOD)
 @ObjectHolder(SpectrobesInfo.MOD_ID)
@@ -36,6 +30,30 @@ public class SpectrobesItems {
     public static final Item mineral_item_health_a = null;
     public static final Item mineral_item_health_a_plus = null;
     public static final Item mineral_item_agate = null;
+    public static final Item mineral_item_amber = null;
+    public static final Item mineral_item_azurite = null;
+    public static final Item mineral_item_citrine = null;
+    public static final Item mineral_item_cobalt = null;
+    public static final Item mineral_item_coral = null;
+    public static final Item mineral_item_diamond = null;
+    public static final Item mineral_item_emerald = null;
+    public static final Item mineral_item_fluorite = null;
+    public static final Item mineral_item_garnet = null;
+    public static final Item mineral_item_gold = null;
+    public static final Item mineral_item_graphite = null;
+    public static final Item mineral_item_jade = null;
+    public static final Item mineral_item_lazuli = null;
+    public static final Item mineral_item_onyx = null;
+    public static final Item mineral_item_opal = null;
+    public static final Item mineral_item_pearl = null;
+    public static final Item mineral_item_platinum = null;
+    public static final Item mineral_item_quartz = null;
+    public static final Item mineral_item_ruby = null;
+    public static final Item mineral_item_sapphire = null;
+    public static final Item mineral_item_spinal = null;
+    public static final Item mineral_item_sylvite = null;
+    public static final Item mineral_item_topaz = null;
+    public static final Item mineral_item_zircon = null;
 
     //Fossils
     public static final Item komainu_fossil_item = null;
@@ -52,7 +70,7 @@ public class SpectrobesItems {
         event.getRegistry().register(
                 new KomainuFossilItem(
                         new Item.Properties()
-                                .group(SpectrobesItemGroup.Instance)));
+                                .group(SpectrobesFossilsItemGroup.Instance)));
     }
 
     static void registerMineral(final RegistryEvent.Register<Item> event, Mineral mineral) {
@@ -66,11 +84,25 @@ public class SpectrobesItems {
 
     //Creative Tabs
 
-    public static class SpectrobesItemGroup extends ItemGroup {
+    public static class SpectrobesBlocksItemGroup extends ItemGroup {
 
-        public static final SpectrobesItemGroup Instance = new SpectrobesItemGroup(ItemGroup.GROUPS.length, "spectrobestab");
+        public static final SpectrobesBlocksItemGroup Instance = new SpectrobesBlocksItemGroup(ItemGroup.GROUPS.length, "spectrobestab.blocks");
 
-        public SpectrobesItemGroup(int index, String label) {
+        public SpectrobesBlocksItemGroup(int index, String label) {
+            super(index, label);
+        }
+
+        @Override
+        public ItemStack createIcon() {
+            return SpectrobesBlocks.fossil_block.asItem().getDefaultInstance();
+        }
+    }
+
+    public static class SpectrobesFossilsItemGroup extends ItemGroup {
+
+        public static final SpectrobesFossilsItemGroup Instance = new SpectrobesFossilsItemGroup(ItemGroup.GROUPS.length, "spectrobestab.fossils");
+
+        public SpectrobesFossilsItemGroup(int index, String label) {
             super(index, label);
         }
 

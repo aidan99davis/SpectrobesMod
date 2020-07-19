@@ -21,8 +21,6 @@ public class FossilBlock extends SpectrobesBlock {
         setRegistryName("fossil_block");
     }
 
-
-
     @Override
     public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
         super.onBlockHarvested(worldIn,pos,state,player);
