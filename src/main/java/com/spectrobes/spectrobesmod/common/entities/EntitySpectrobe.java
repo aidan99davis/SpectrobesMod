@@ -63,7 +63,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         this.goalSelector.addGoal(3, new RandomWalkingGoal(this, 0.2d));
         this.goalSelector.addGoal(2, new LookAtGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.addGoal(2, new LookRandomlyGoal(this));
-        this.goalSelector.addGoal(1, new FollowOwnerGoal(this,1 , 1, 20, true));
+        this.goalSelector.addGoal(1, new FollowOwnerGoal(this,0.7f , 3, 6, true));
     }
 
     @Override
