@@ -30,6 +30,10 @@ public class SpectrobesItems {
     public static final Item mineral_item_defence_b = null;
     public static final Item mineral_item_defence_a = null;
     public static final Item mineral_item_defence_a_plus = null;
+    public static final Item mineral_item_health_c = null;
+    public static final Item mineral_item_health_b = null;
+    public static final Item mineral_item_health_a = null;
+    public static final Item mineral_item_health_a_plus = null;
 
     public static final Item komainu_fossil_item = null;
 

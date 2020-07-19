@@ -17,10 +17,16 @@ public class MineralRegistry {
     public static Mineral MINERAL_DEFENCE_B = null;
     public static Mineral MINERAL_DEFENCE_A = null;
     public static Mineral MINERAL_DEFENCE_A_PLUS = null;
+    public static Mineral MINERAL_HEALTH_C = null;
+    public static Mineral MINERAL_HEALTH_B = null;
+    public static Mineral MINERAL_HEALTH_A = null;
+    public static Mineral MINERAL_HEALTH_A_PLUS = null;
     public static List<Mineral> ALL_MINERALS = new ArrayList<>();
 
     public static void init()
     {
+        // Attack Minerals
+
         MINERAL_POWER_C = (new MineralBuilder().withName("mineral_item_power_c").withMineralProperties(
                 new MineralPropertiesBuilder()
                 .setAtkOffset(8)
@@ -45,6 +51,9 @@ public class MineralRegistry {
                         .setNature(SpectrobeProperties.Nature.OTHER)
                         .setXpWorth(30)).build());
         ALL_MINERALS.add(MINERAL_POWER_A_PLUS);
+
+        // Defence Minerals
+
         MINERAL_DEFENCE_C = (new MineralBuilder().withName("mineral_item_defence_c").withMineralProperties(
                 new MineralPropertiesBuilder()
                         .setDefOffset(8)
@@ -69,5 +78,32 @@ public class MineralRegistry {
                         .setNature(SpectrobeProperties.Nature.OTHER)
                         .setXpWorth(30)).build());
         ALL_MINERALS.add(MINERAL_DEFENCE_A_PLUS);
+
+        //Health Minerals
+
+        MINERAL_HEALTH_C = (new MineralBuilder().withName("mineral_item_health_c").withMineralProperties(
+                new MineralPropertiesBuilder()
+                        .setHpOffset(8)
+                        .setNature(SpectrobeProperties.Nature.OTHER)
+                        .setXpWorth(10)).build());
+        ALL_MINERALS.add(MINERAL_HEALTH_C);
+        MINERAL_HEALTH_B = (new MineralBuilder().withName("mineral_item_health_b").withMineralProperties(
+                new MineralPropertiesBuilder()
+                        .setHpOffset(16)
+                        .setNature(SpectrobeProperties.Nature.OTHER)
+                        .setXpWorth(15)).build());
+        ALL_MINERALS.add(MINERAL_HEALTH_B);
+        MINERAL_HEALTH_A = (new MineralBuilder().withName("mineral_item_health_a").withMineralProperties(
+                new MineralPropertiesBuilder()
+                        .setHpOffset(24)
+                        .setNature(SpectrobeProperties.Nature.OTHER)
+                        .setXpWorth(20)).build());
+        ALL_MINERALS.add(MINERAL_HEALTH_A);
+        MINERAL_HEALTH_A_PLUS = (new MineralBuilder().withName("mineral_item_health_a_plus").withMineralProperties(
+                new MineralPropertiesBuilder()
+                        .setHpOffset(32)
+                        .setNature(SpectrobeProperties.Nature.OTHER)
+                        .setXpWorth(30)).build());
+        ALL_MINERALS.add(MINERAL_HEALTH_A_PLUS);
     }
 }
