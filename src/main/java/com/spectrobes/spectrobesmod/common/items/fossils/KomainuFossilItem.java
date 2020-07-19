@@ -2,8 +2,6 @@ package com.spectrobes.spectrobesmod.common.items.fossils;
 
 import com.spectrobes.spectrobesmod.client.entity.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.common.entities.EntitySpectrobe;
-import com.spectrobes.spectrobesmod.common.entities.komainu.EntityKomainu;
-import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -32,7 +30,7 @@ public class KomainuFossilItem extends Item {
                     true,true
             );
 
-            komainu.setSpectrobeInstance(SpectrobeRegistry.Komainu.copy());
+//            komainu.setSpectrobeInstance(SpectrobeRegistry.Komainu.copy());
         }
 
         return new ActionResult<>(ActionResultType.SUCCESS, itemStack);

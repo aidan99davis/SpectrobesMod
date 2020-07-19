@@ -88,13 +88,16 @@ public class SpectrobeStats {
         return statsNbt;
     }
 
-    public void read(CompoundNBT statsNbt) {
-        this.atkLevel = statsNbt.getInt("atk");
-        this.defLevel = statsNbt.getInt("def");
-        this.hpLevel = statsNbt.getInt("hp");
-        this.xp = statsNbt.getInt("xp");
-        this.xp_required = statsNbt.getInt("xp_required");
-        this.level = statsNbt.getInt("level");
+    public static SpectrobeStats read(CompoundNBT statsNbt) {
+        SpectrobeStats stats = new SpectrobeStats();
+        stats.atkLevel = statsNbt.getInt("atk");
+        stats.defLevel = statsNbt.getInt("def");
+        stats.hpLevel = statsNbt.getInt("hp");
+        stats.xp = statsNbt.getInt("xp");
+        stats.xp_required = statsNbt.getInt("xp_required");
+        stats.level = statsNbt.getInt("level");
+
+        return stats;
     }
 
     public SpectrobeStats copy() {

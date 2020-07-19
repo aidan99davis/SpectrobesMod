@@ -1,45 +1,49 @@
 package com.spectrobes.spectrobesmod.util;
 
-import com.spectrobes.spectrobesmod.SpectrobesMod;
+import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.ListNBT;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.DimensionSavedDataManager;
 import net.minecraft.world.storage.WorldSavedData;
-import net.minecraftforge.event.world.WorldEvent;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class SpectrobesWorldData extends WorldSavedData implements Supplier {
 
-    public CompoundNBT data = new CompoundNBT();
-    private static Map<Integer, Spectrobe> spectrobeIdMap = new HashMap<>();
+    private static final SpectrobesWorldData CLIENT_DUMMY = new SpectrobesWorldData();
+
+    private Map<UUID, Spectrobe> spectrobeIdMap = new HashMap<>();
     private static int nextEntityId;
 
-    public static SpectrobesWorldData get(ServerWorld world) {
-        DimensionSavedDataManager storage = world.getSavedData();
+    public static SpectrobesWorldData get(IWorld world) {
+        if (!(world instanceof ServerWorld))
+        {
+            return CLIENT_DUMMY;
+        }
+        DimensionSavedDataManager storage = ((ServerWorld)world).getSavedData();
         Supplier<SpectrobesWorldData> sup = new SpectrobesWorldData();
-        SpectrobesWorldData saver = storage.getOrCreate(sup, SpectrobesMod.MOD_ID);
+        SpectrobesWorldData saver = storage.getOrCreate(sup, SpectrobesInfo.MOD_ID);
 
         if (saver == null)
         {
             saver = new SpectrobesWorldData();
-            storage.set(saver);
         }
+
+        storage.set(saver);
         return saver;
     }
 
     public SpectrobesWorldData() {
-        super(SpectrobesMod.MOD_ID);
-        nextEntityId = 0;
+        super(SpectrobesInfo.MOD_ID);
+        nextEntityId = 1;
     }
 
-    public SpectrobesWorldData(String key) {
-        this();
+    public void removeSpectrobe(UUID spectrobeId) {
+        spectrobeIdMap.remove(spectrobeId);
+        this.markDirty();
     }
 
     /**
@@ -51,24 +55,45 @@ public class SpectrobesWorldData extends WorldSavedData implements Supplier {
     public void read(CompoundNBT nbt) {
         nextEntityId = nbt.getInt("NextEntityId");
 
+        if(nbt.contains("SpectrobesData"))
+        {
+            SpectrobesInfo.LOGGER.info("Found my data: " + nbt.get("SpectrobesData"));
+            CompoundNBT spectrobeData = (CompoundNBT) nbt.get("SpectrobesData");
+
+            List<UUID> spectrobeIds = new ArrayList<>();
+            spectrobeData.keySet().forEach(s -> spectrobeIds.add(UUID.fromString(s)));
+            for (UUID spectrobeId : spectrobeIdMap.keySet()) {
+                spectrobeIdMap.put(spectrobeId, Spectrobe
+                        .read((CompoundNBT) spectrobeData.get(String.valueOf(spectrobeId))));
+            }
+        }
     }
 
-    public static void AddSpectrobe(int spectrobeId, Spectrobe instance) {
+    public void AddSpectrobe(UUID spectrobeId, Spectrobe instance) {
         spectrobeIdMap.put(spectrobeId, instance);
+        this.markDirty();
     }
 
-    public static Spectrobe GetSpectrobe(int spectrobeId) {
+    public Spectrobe GetSpectrobe(UUID spectrobeId) {
         return spectrobeIdMap.get(spectrobeId);
     }
 
     @Override
     public CompoundNBT write(CompoundNBT compound) {
         compound.putInt("NextEntityId", nextEntityId);
+        CompoundNBT spectrobesData = new CompoundNBT();
+        if(spectrobeIdMap.keySet().size() > 0) {
+            for (UUID id : spectrobeIdMap.keySet()) {
+                spectrobesData.put(String.valueOf(id), spectrobeIdMap.get(id).write());
+            }
+        }
+        compound.put("SpectrobesData", spectrobesData);
+        SpectrobesInfo.LOGGER.info("Put my data in!");
         return compound;
     }
 
-    public static int nextEntityId() {
-        return nextEntityId++;
+    public int nextEntityId() {
+        return ++nextEntityId;
     }
 
     /**
@@ -81,42 +106,4 @@ public class SpectrobesWorldData extends WorldSavedData implements Supplier {
         return this;
     }
 
-    public static void onWorldLoaded(WorldEvent.Load event)
-    {
-        if (!event.getWorld().isRemote() && event.getWorld() instanceof ServerWorld)
-        {
-            SpectrobesWorldData saver = SpectrobesWorldData.get((ServerWorld) event.getWorld());
-
-            if(saver.data.contains("SpectrobesData"))
-            {
-                SpectrobesMod.LOGGER.debug("Found my data: " + saver.data.get("SpectrobesData"));
-                ListNBT spectrobeData = (ListNBT) saver.data.get("SpectrobesData");
-                int id = 0;
-                for (INBT nbt : spectrobeData) {
-                    id++;
-                    spectrobeIdMap.put(id, SpectrobeUtils.readFromNbt((CompoundNBT) nbt));
-                }
-
-            }
-        }
-    }
-
-    public static void onWorldSaved(WorldEvent.Save event)
-    {
-        if (!event.getWorld().isRemote() && event.getWorld() instanceof ServerWorld)
-        {
-            SpectrobesWorldData saver = SpectrobesWorldData.get((ServerWorld) event.getWorld());
-            CompoundNBT myData = new CompoundNBT();
-            ListNBT spectrobesData = new ListNBT();
-            if(spectrobeIdMap.keySet().size() > 0) {
-                for (int id : spectrobeIdMap.keySet()) {
-                    spectrobesData.add(id, spectrobeIdMap.get(id).write());
-                }
-            }
-            myData.put("SpectrobesData", spectrobesData);
-            saver.data = myData;
-            saver.markDirty();
-            SpectrobesMod.LOGGER.info("Put my data in!");
-        }
-    }
 }

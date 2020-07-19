@@ -1,4 +1,4 @@
-package com.spectrobes.spectrobesmod.common.utility;
+package com.spectrobes.spectrobesmod.common.blocks;
 
 import net.minecraft.block.Block;
 
