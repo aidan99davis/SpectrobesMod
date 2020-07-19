@@ -30,6 +30,8 @@ public class KomainuFossilItem extends Item {
                     true,true
             );
 
+            komainu.setOwnerId(playerIn.getUniqueID());
+
 //            komainu.setSpectrobeInstance(SpectrobeRegistry.Komainu.copy());
         }
 

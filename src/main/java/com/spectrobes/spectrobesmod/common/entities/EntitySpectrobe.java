@@ -1,10 +1,8 @@
 package com.spectrobes.spectrobesmod.common.entities;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.client.entity.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
-import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeStats;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
@@ -17,6 +15,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
@@ -62,8 +61,9 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         this.goalSelector.addGoal(4, new BreatheAirGoal(this));
         this.goalSelector.addGoal(5, new BreedGoal(this,10));
         this.goalSelector.addGoal(3, new RandomWalkingGoal(this, 0.2d));
-        this.goalSelector.addGoal(1, new LookAtGoal(this, PlayerEntity.class, 6.0F));
+        this.goalSelector.addGoal(2, new LookAtGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.addGoal(2, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(1, new FollowOwnerGoal(this,1 , 1, 20, true));
     }
 
     @Override
@@ -214,12 +214,17 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     protected abstract boolean canEvolve();
 
     private void evolve() {
+        Minecraft MINECRAFT = Minecraft.getInstance();
+        MINECRAFT.world.addParticle(ParticleTypes.FLASH, getPosX() + 0.5D, getPosY() + 1.0D, getPosZ() + 0.5D, 0.0D, 0.0D, 0.0D);
         if(!world.isRemote) {
             EntitySpectrobe spectrobe = getEvolutionRegistry().create(world);
             spectrobe.setLocationAndAngles(getPosX(), getPosY(), getPosZ(), 0.0F, 0.0F);
             this.world.addEntity(spectrobe);
             spectrobe.setPosition(getPosX(), getPosY(), getPosZ());
             spectrobe.addStats(getSpectrobeData());
+            if(getOwner() != null) {
+                spectrobe.setOwnerId(getOwnerId());
+            }
         }
 
         this.remove();
@@ -283,11 +288,10 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     //ageable entity stuff
 
     @Override
-    public boolean isInLove() {
-        if(getSpectrobeData() == null || getStage() == Stage.CHILD)
-            return false;
-
-        return true;
+    public boolean isInLove()
+    {
+        //gonna handle it myself
+        return false;
     }
 
     @Nullable
@@ -302,8 +306,9 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         Spectrobe spectrobeInstance = getSpectrobeData();
         StringBuilder builder1 = new StringBuilder();
         StringBuilder builder2 = new StringBuilder();
-        builder1.append("Name: " + getName() + ", ");
-        builder1.append("Nature: " + getLevel() + ", ");
+        StringBuilder builder3 = new StringBuilder();
+        builder3.append("Name: " + spectrobeInstance.name + ", ");
+        builder3.append("Level: " + getLevel() + ", ");
         builder1.append("Nature: " + getNature() + ", ");
         builder1.append("Stage: " + getStage());
 
@@ -311,6 +316,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         builder2.append("Atk: " + spectrobeInstance.stats.getAtkLevel() + ", ");
         builder2.append("Def: " + spectrobeInstance.stats.getDefLevel() + ", ");
         if(world.isRemote()) {
+            Minecraft.getInstance().player.sendChatMessage(builder3.toString());
             Minecraft.getInstance().player.sendChatMessage(builder1.toString());
             Minecraft.getInstance().player.sendChatMessage(builder2.toString());
         }
