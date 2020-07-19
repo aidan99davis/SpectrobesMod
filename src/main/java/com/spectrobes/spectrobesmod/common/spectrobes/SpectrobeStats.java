@@ -103,4 +103,13 @@ public class SpectrobeStats {
     public SpectrobeStats copy() {
         return new SpectrobeStats(hpLevel, atkLevel, defLevel, xp_required, xp, level);
     }
+
+    public void addStats(SpectrobeStats stats) {
+        this.hpLevel += stats.getHpLevel();
+        this.atkLevel += stats.getAtkLevel();
+        this.defLevel += stats.getDefLevel();
+        this.level = stats.getLevel();
+        this.xp = stats.getXp();
+        this.xp_required = stats.getXp_required();
+    }
 }

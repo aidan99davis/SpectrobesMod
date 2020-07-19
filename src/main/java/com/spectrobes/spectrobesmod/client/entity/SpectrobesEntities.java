@@ -2,7 +2,9 @@ package com.spectrobes.spectrobesmod.client.entity;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.entity.renderer.KomainuRenderer;
+import com.spectrobes.spectrobesmod.client.entity.renderer.KomanotoRenderer;
 import com.spectrobes.spectrobesmod.common.entities.komainu.EntityKomainu;
+import com.spectrobes.spectrobesmod.common.entities.komainu.EntityKomanoto;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
@@ -17,7 +19,11 @@ public class SpectrobesEntities {
             = new DeferredRegister<>(ForgeRegistries.ENTITIES, SpectrobesInfo.MOD_ID);
 
 
-    public static final RegistryObject<EntityType<EntityKomainu>> ENTITY_KOMANOTO = null;
+    public static final RegistryObject<EntityType<EntityKomanoto>> ENTITY_KOMANOTO = ENTITY_TYPES.register("entity_komanoto",
+            () -> EntityType.Builder.create(EntityKomanoto::new,
+                    EntityClassification.CREATURE)
+                    .size(0.6f, 1f)
+                    .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "komanoto").toString()));
     public static final RegistryObject<EntityType<EntityKomainu>> ENTITY_KOMAINU
             = ENTITY_TYPES.register("entity_komainu",
             () -> EntityType.Builder.create(EntityKomainu::new,
@@ -35,5 +41,6 @@ public class SpectrobesEntities {
 
     public static void init() {
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_KOMAINU.get(), manager -> new KomainuRenderer(manager));
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_KOMANOTO.get(), manager -> new KomanotoRenderer(manager));
     }
 }

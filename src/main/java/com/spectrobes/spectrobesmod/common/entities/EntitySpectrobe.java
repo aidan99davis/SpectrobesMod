@@ -1,7 +1,10 @@
 package com.spectrobes.spectrobesmod.common.entities;
 
+import com.spectrobes.spectrobesmod.SpectrobesInfo;
+import com.spectrobes.spectrobesmod.client.entity.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
+import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeStats;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
@@ -198,6 +201,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
 
     public void tryEvolve() {
         if(hasEvolution() && canEvolve()) {
+            SpectrobesInfo.LOGGER.info("HAS AN EVOLUTION AND CAN EVOLVE");
             evolve();
         }
     }
@@ -206,6 +210,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         if(getStage() != Stage.CHILD) {
             if(getTicksTillMate() == 0) {
                 mate();
+                setTicksTillMate(16000);
             } else {
                 setTicksTillMate(getTicksTillMate() - 1);
             }
@@ -218,28 +223,36 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         return getEvolution() != null? true : false;
     }
 
-    private Spectrobe getEvolution() {
-        return evolution;
+    private EntityType<? extends EntitySpectrobe> getEvolution() {
+        return getEvolutionRegistry();
     }
 
     protected abstract boolean canEvolve();
 
     private void evolve() {
-        //at the moment just evolve directly into the next level
+        if(!world.isRemote) {
+            EntitySpectrobe spectrobe = getEvolutionRegistry().create(world);
+            spectrobe.setLocationAndAngles(getPosX(), getPosY(), getPosZ(), 0.0F, 0.0F);
+            this.world.addEntity(spectrobe);
+            spectrobe.setPosition(getPosX(), getPosY(), getPosZ());
+            spectrobe.addStats(getSpectrobeData());
+        }
 
-        getEvolutionRegistry().onInitialSpawn(
-                this.world,
-                this.world.getDifficultyForLocation(new BlockPos(this)),
-                SpawnReason.MOB_SUMMONED,
-                (ILivingEntityData)null,
-                getSpectrobeData().write());
-        dead = true;
-        //SpectrobesWorldData.get(world).removeSpectrobe(getSpectrobeId());
+        this.remove();
         //should store all the spectrobes data in an object, then create a
         // cocoon entity which holds this, the cocoon will "hatch"
         // after a predefined time. it will then spawn the next form of spectrobe with
         //the correct variation of skin, part and data for atk, hp and def etc.
     }
+
+    private void addStats(Spectrobe spectrobeData) {
+        Spectrobe spectrobeInstance = getSpectrobeData();
+        spectrobeInstance.stats.addStats(spectrobeData.stats);
+    }
+
+//    public void addSpectrobeStats(SpectrobeStats stats) {
+//        setSpectrobeData(getSpectrobeData().addStats());
+//    }
 
 
     //Checks if the attacker should have the attack multiplier bonus applied.
@@ -286,6 +299,8 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         return getSpectrobeData().properties.getStage();
     }
 
+    public int getLevel() { return getSpectrobeData().stats.getLevel(); }
+
     public void setEvolution(Spectrobe evolution) {
         this.evolution = evolution;
     }
@@ -314,6 +329,8 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         Spectrobe spectrobeInstance = getSpectrobeData();
         StringBuilder builder1 = new StringBuilder();
         StringBuilder builder2 = new StringBuilder();
+        builder1.append("Name: " + getName() + ", ");
+        builder1.append("Nature: " + getLevel() + ", ");
         builder1.append("Nature: " + getNature() + ", ");
         builder1.append("Stage: " + getStage());
 
@@ -347,5 +364,5 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
 
     protected abstract AgeableEntity getChildForLineage();
     public abstract Spectrobe GetNewSpectrobeInstance();
-    public abstract EntitySpectrobe getEvolutionRegistry();
+    public abstract EntityType<? extends EntitySpectrobe> getEvolutionRegistry();
 }

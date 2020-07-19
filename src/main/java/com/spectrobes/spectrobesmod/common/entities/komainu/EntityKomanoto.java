@@ -11,31 +11,31 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.world.World;
 import software.bernie.geckolib.animation.model.AnimationControllerCollection;
 
-public class EntityKomainu extends EntityMammalSpectrobe {
+public class EntityKomanoto extends EntityMammalSpectrobe {
 
 
-    public EntityKomainu(EntityType<EntityKomainu> entityTypeIn, World worldIn) {
+    public EntityKomanoto(EntityType<EntityKomanoto> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
     }
 
     @Override
     protected boolean canEvolve() {
-        return getSpectrobeData().stats.getLevel() > 5;
+        return false;
     }
 
 
     public Spectrobe GetNewSpectrobeInstance() {
-        return SpectrobeRegistry.Komainu.copy();
+        return SpectrobeRegistry.Komanoto.copy();
     }
 
     @Override
     public EntityType<? extends EntitySpectrobe> getEvolutionRegistry() {
-        return SpectrobesEntities.ENTITY_KOMANOTO.get();
+        return null;
     }
 
     @Override
     protected EntitySpectrobe getChildForLineage() {
-        return this;
+        return SpectrobesEntities.ENTITY_KOMAINU.get().create(world);
     }
 
     @Override
