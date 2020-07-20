@@ -14,6 +14,8 @@ public class PlayerSpectrobeMaster {
     /** The maximum number of owned spectrobes to track. todo: Configurable */
     public static final int MAX_OWNED_SPECTROBES = 50;
 
+    private List<Spectrobe> currentTeam = new ArrayList<>(6);
+
     private HashMap<String, List<Spectrobe>>
         ownedSpectrobes;
 
@@ -39,9 +41,34 @@ public class PlayerSpectrobeMaster {
         return false;
     }
 
+    public void setTeamMember(int index, Spectrobe member) {
+        currentTeam.add(index, member);
+    }
+
+    public void removeTeamMember(int index) {
+        currentTeam.remove(index);
+    }
+
+    public List<Spectrobe> getCurrentTeam() {
+        return currentTeam;
+    }
+
+    public List<Spectrobe> getOwnedSpectrobes() {
+        List<Spectrobe> allOwned =  new ArrayList<>();
+
+        if(ownedSpectrobes.keySet().size() > 0) {
+            for(List<Spectrobe> spectrobeList : ownedSpectrobes.values()) {
+                allOwned.addAll(spectrobeList);
+            }
+        }
+
+        return allOwned;
+    }
+
     public CompoundNBT serializeNBT() {
         CompoundNBT myData = new CompoundNBT();
         CompoundNBT ownedSpectrobesNbt = new CompoundNBT();
+        ListNBT currentTeamNbt = new ListNBT();
         for (String key : ownedSpectrobes.keySet()) {
             ListNBT spectrobes = new ListNBT();
             for(Spectrobe s : ownedSpectrobes.get(key)) {
@@ -49,12 +76,18 @@ public class PlayerSpectrobeMaster {
             }
             ownedSpectrobesNbt.put(key, spectrobes);
         }
+
+        for(Spectrobe s : currentTeam) {
+            currentTeamNbt.add(currentTeam.indexOf(s), s.write());
+        }
+        myData.put("currentTeam", currentTeamNbt);
         myData.put("spectrobesOwned", ownedSpectrobesNbt);
         return myData;
     }
 
     public void deserializeNBT(CompoundNBT nbt) {
         CompoundNBT ownedSpectrobesNbt = (CompoundNBT) nbt.get("spectrobesOwned");
+        ListNBT currentTeamNbt = (ListNBT) nbt.get("currentTeam");
         for(String key : ownedSpectrobesNbt.keySet()) {
             List<Spectrobe> spectrobes = new ArrayList<>();
             for(INBT spectrobeNbt : (ListNBT)ownedSpectrobesNbt.get(key)) {
@@ -62,10 +95,19 @@ public class PlayerSpectrobeMaster {
             }
             ownedSpectrobes.put(key, spectrobes);
         }
+        for(int i = 0; (i < currentTeamNbt.size() && i < 6); i++) {
+            Spectrobe spectrobe = Spectrobe.read((CompoundNBT) currentTeamNbt.get(i));
+
+            currentTeam.add(spectrobe);
+        }
 
     }
 
     public void copyFrom(PlayerSpectrobeMaster oldStore) {
         ownedSpectrobes = oldStore.ownedSpectrobes;
+    }
+
+    public int getOwnedSpectrobesCount() {
+        return ownedSpectrobes.values().size();
     }
 }

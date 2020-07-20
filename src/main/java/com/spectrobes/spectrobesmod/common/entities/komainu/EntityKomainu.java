@@ -37,6 +37,11 @@ public class EntityKomainu extends EntityMammalSpectrobe {
     }
 
     @Override
+    public String getRegistryName() {
+        return "entity_komainu";
+    }
+
+    @Override
     protected EntitySpectrobe getChildForLineage() {
         return this;
     }

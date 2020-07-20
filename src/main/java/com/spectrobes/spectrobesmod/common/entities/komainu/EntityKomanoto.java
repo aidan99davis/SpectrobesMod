@@ -37,6 +37,11 @@ public class EntityKomanoto extends EntityMammalSpectrobe {
     }
 
     @Override
+    public String getRegistryName() {
+        return "entity_komanoto";
+    }
+
+    @Override
     protected EntitySpectrobe getChildForLineage() {
         return SpectrobesEntities.ENTITY_KOMAINU.get().create(world);
     }

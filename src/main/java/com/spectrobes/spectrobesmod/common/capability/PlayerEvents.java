@@ -15,7 +15,7 @@ public class PlayerEvents {
     public void onEntityConstructing(AttachCapabilitiesEvent<Entity> event){
         if (event.getObject() instanceof PlayerEntity) {
             if (!event.getObject().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).isPresent()) {
-                event.addCapability(new ResourceLocation(SpectrobesInfo.MOD_ID, "SpectrobesMasters"),
+                event.addCapability(new ResourceLocation(SpectrobesInfo.MOD_ID, "spectrobesmasters"),
                         new PlayerSpectrobeMasterDispatcher());
             }
         }

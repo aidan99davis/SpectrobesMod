@@ -40,9 +40,6 @@ public class SpectrobesMod
         modEventBus.addListener(this::enqueueIMC);
         modEventBus.addListener(this::processIMC);
         modEventBus.addListener(this::doClientStuff);
-        //modEventBus.addListener(this::initialiseCapabilities);
-//        MinecraftForge.EVENT_BUS.addListener(SpectrobesWorldData.onWorldLoaded);
-//        MinecraftForge.EVENT_BUS.addListener(SpectrobesWorldData::onWorldSaved);
 
         SpectrobesEntities.ENTITY_TYPES.register(modEventBus);
         // Register ourselves for server and other game events we are interested in

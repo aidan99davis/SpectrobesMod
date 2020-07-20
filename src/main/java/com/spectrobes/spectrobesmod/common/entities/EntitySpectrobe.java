@@ -344,4 +344,6 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     protected abstract AgeableEntity getChildForLineage();
     public abstract Spectrobe GetNewSpectrobeInstance();
     public abstract EntityType<? extends EntitySpectrobe> getEvolutionRegistry();
+
+    public abstract String getRegistryName();
 }
