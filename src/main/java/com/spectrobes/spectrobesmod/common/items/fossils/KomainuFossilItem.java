@@ -29,7 +29,6 @@ public class KomainuFossilItem extends Item {
                     SpawnReason.MOB_SUMMONED,
                     true,true
             );
-
 //            komainu.setSpectrobeInstance(SpectrobeRegistry.Komainu.copy());
         }
 
