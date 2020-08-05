@@ -5,6 +5,7 @@ import com.spectrobes.spectrobesmod.common.blocks.SpectrobesBlocks;
 import com.spectrobes.spectrobesmod.common.items.fossils.KomainuFossilItem;
 import com.spectrobes.spectrobesmod.common.items.minerals.Mineral;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
+import com.spectrobes.spectrobesmod.common.items.tools.PrizmodItem;
 import com.spectrobes.spectrobesmod.common.registry.MineralRegistry;
 import net.minecraft.item.*;
 import net.minecraftforge.event.RegistryEvent;
@@ -57,6 +58,7 @@ public class SpectrobesItems {
 
     //Fossils
     public static final Item komainu_fossil_item = null;
+    public static final Item prizmod_item = null;
 
 
     @SubscribeEvent
@@ -69,6 +71,10 @@ public class SpectrobesItems {
 
         event.getRegistry().register(
                 new KomainuFossilItem(
+                        new Item.Properties()
+                                .group(SpectrobesFossilsItemGroup.Instance)));
+        event.getRegistry().register(
+                new PrizmodItem(
                         new Item.Properties()
                                 .group(SpectrobesFossilsItemGroup.Instance)));
     }

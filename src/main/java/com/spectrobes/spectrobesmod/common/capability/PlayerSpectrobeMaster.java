@@ -8,16 +8,24 @@ import net.minecraft.nbt.ListNBT;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 public class PlayerSpectrobeMaster {
 
     /** The maximum number of owned spectrobes to track. todo: Configurable */
     public static final int MAX_OWNED_SPECTROBES = 50;
 
-    private List<Spectrobe> currentTeam = new ArrayList<>(6);
+    //index 0 & 1 : current fighting spectrobes
+    //index 2-6 : 4 back up fighting spectrobes
+    //index 7 : child form
+    private List<UUID> currentTeam = new ArrayList<>(7);
 
     private HashMap<String, List<Spectrobe>>
         ownedSpectrobes;
+
+    public boolean canFight() {
+        return currentTeam.size() > 2;
+    }
 
     public PlayerSpectrobeMaster() {
         this.ownedSpectrobes = new HashMap<>();
@@ -42,15 +50,11 @@ public class PlayerSpectrobeMaster {
     }
 
     public void setTeamMember(int index, Spectrobe member) {
-        currentTeam.add(index, member);
+        currentTeam.add(index, member.SpectrobeUUID);
     }
 
     public void removeTeamMember(int index) {
         currentTeam.remove(index);
-    }
-
-    public List<Spectrobe> getCurrentTeam() {
-        return currentTeam;
     }
 
     public List<Spectrobe> getOwnedSpectrobes() {
@@ -68,7 +72,7 @@ public class PlayerSpectrobeMaster {
     public CompoundNBT serializeNBT() {
         CompoundNBT myData = new CompoundNBT();
         CompoundNBT ownedSpectrobesNbt = new CompoundNBT();
-        ListNBT currentTeamNbt = new ListNBT();
+        CompoundNBT currentTeamNbt = new CompoundNBT();
         for (String key : ownedSpectrobes.keySet()) {
             ListNBT spectrobes = new ListNBT();
             for(Spectrobe s : ownedSpectrobes.get(key)) {
@@ -76,9 +80,10 @@ public class PlayerSpectrobeMaster {
             }
             ownedSpectrobesNbt.put(key, spectrobes);
         }
-
-        for(Spectrobe s : currentTeam) {
-            currentTeamNbt.add(currentTeam.indexOf(s), s.write());
+        int index = 0;
+        for(UUID s : currentTeam) {
+            currentTeamNbt.putUniqueId(String.valueOf(index), s);
+            index++;
         }
         myData.put("currentTeam", currentTeamNbt);
         myData.put("spectrobesOwned", ownedSpectrobesNbt);
@@ -87,7 +92,7 @@ public class PlayerSpectrobeMaster {
 
     public void deserializeNBT(CompoundNBT nbt) {
         CompoundNBT ownedSpectrobesNbt = (CompoundNBT) nbt.get("spectrobesOwned");
-        ListNBT currentTeamNbt = (ListNBT) nbt.get("currentTeam");
+        CompoundNBT currentTeamNbt = (CompoundNBT) nbt.get("currentTeam");
         for(String key : ownedSpectrobesNbt.keySet()) {
             List<Spectrobe> spectrobes = new ArrayList<>();
             for(INBT spectrobeNbt : (ListNBT)ownedSpectrobesNbt.get(key)) {
@@ -95,10 +100,10 @@ public class PlayerSpectrobeMaster {
             }
             ownedSpectrobes.put(key, spectrobes);
         }
-        for(int i = 0; (i < currentTeamNbt.size() && i < 6); i++) {
-            Spectrobe spectrobe = Spectrobe.read((CompoundNBT) currentTeamNbt.get(i));
-
-            currentTeam.add(spectrobe);
+        if(currentTeamNbt != null) {
+            for(int i = 0; (i < currentTeamNbt.keySet().size() && i <= 6); i++) {
+                currentTeam.add(currentTeamNbt.getUniqueId(String.valueOf(i)));
+            }
         }
 
     }
@@ -109,5 +114,9 @@ public class PlayerSpectrobeMaster {
 
     public int getOwnedSpectrobesCount() {
         return ownedSpectrobes.values().size();
+    }
+
+    public List<UUID> getCurrentTeamUuids() {
+        return currentTeam;
     }
 }
