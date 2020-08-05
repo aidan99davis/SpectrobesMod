@@ -2,6 +2,7 @@ package com.spectrobes.spectrobesmod.common.entities;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
+import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.*;
@@ -27,6 +28,7 @@ import software.bernie.geckolib.animation.AnimationTestEvent;
 import software.bernie.geckolib.animation.model.AnimationController;
 import software.bernie.geckolib.animation.model.AnimationControllerCollection;
 import software.bernie.geckolib.entity.IAnimatedEntity;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.annotation.Nullable;
 
@@ -211,7 +213,15 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         return getEvolutionRegistry();
     }
 
-    protected abstract boolean canEvolve();
+    protected abstract EvolutionRequirements getEvolutionRequirements();
+
+    protected boolean canEvolve() {
+        EvolutionRequirements requirements = getEvolutionRequirements();
+        if(requirements == null)
+            return false;
+
+        return getSpectrobeData().canEvolve(getEvolutionRequirements());
+    }
 
     private void evolve() {
         Minecraft MINECRAFT = Minecraft.getInstance();
