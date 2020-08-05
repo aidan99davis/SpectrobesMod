@@ -43,6 +43,7 @@ public class SpectrobeBuilder {
         return this;
     }
 
+
     public Spectrobe buildFrom(Spectrobe spectrobe) {
         Spectrobe newSpectrobe = new Spectrobe();
         newSpectrobe.setMasterUUID(spectrobe.MasterUUID);
