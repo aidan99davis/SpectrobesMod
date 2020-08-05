@@ -73,6 +73,7 @@ public class EntityKomanoto extends EntityMammalSpectrobe {
 
     @Override
     protected EvolutionRequirements getEvolutionRequirements() {
+        //returning null makes canEvolve always evaluate to false.
         return null;
     }
 }
