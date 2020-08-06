@@ -6,30 +6,33 @@ import com.spectrobes.spectrobesmod.common.entities.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
-import net.minecraft.entity.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.world.World;
 import software.bernie.geckolib.animation.AnimationBuilder;
 import software.bernie.geckolib.animation.AnimationTestEvent;
 import software.bernie.geckolib.animation.model.AnimationControllerCollection;
 
-public class EntitySpiko extends EntityMammalSpectrobe {
+public class EntitySpikan extends EntityMammalSpectrobe {
 
-    public EntitySpiko(EntityType<EntitySpiko> entityTypeIn, World worldIn) {
+
+    public EntitySpikan(EntityType<EntitySpikan> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
     }
 
     public Spectrobe GetNewSpectrobeInstance() {
-        return SpectrobeRegistry.Spiko.copy();
+        return SpectrobeRegistry.Spikan.copy();
     }
 
     @Override
     public EntityType<? extends EntitySpectrobe> getEvolutionRegistry() {
-        return SpectrobesEntities.ENTITY_SPIKAN.get();
+        return null;
     }
 
     @Override
     protected EntitySpectrobe getChildForLineage() {
-        return this;
+        return SpectrobesEntities.ENTITY_SPIKO.get().create(world);
     }
 
     @Override
@@ -47,34 +50,29 @@ public class EntitySpiko extends EntityMammalSpectrobe {
     }
 
     @Override
-    public <ENTITY extends Entity> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent) {
+    public <ENTITY extends Entity> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent)
+    {
         moveController.transitionLength = 2;
         if(!(limbSwingAmount > -0.15F && limbSwingAmount < 0.15F))
         {
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.spiko.walk", true));
+            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.spikan.walk", true));
             return true;
         }
         else if(this.isSitting()) {
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.spiko.sit", false));
+            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.spikan.sit", false));
             return true;
+        } else {
+            if(this.getAttackingEntity() != null) {
+                moveController.setAnimation(new AnimationBuilder().addAnimation("animation.spikan.walk", true));
+                return true;
+            }
         }
-        else if(isJumping) {
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.spiko.jump", true));
-            return true;
-        }
-        else {
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.spiko.idle", true));
-            return true;
-        }
+        return false;
     }
 
     @Override
     protected EvolutionRequirements getEvolutionRequirements() {
-        return new EvolutionRequirements(10, 5, 0);
-    }
-
-    @Override
-    public EntitySize getSize(Pose poseIn) {
-        return super.getSize(poseIn).scale(0.5F, 0.5F);
+        //returning null makes canEvolve always evaluate to false.
+        return null;
     }
 }

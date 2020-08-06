@@ -26,4 +26,11 @@ public class SpectrobeRegistry {
             .withProperties(SpectrobePropertyRegistry.SPIKO)
             .withStats(25,5,5)
             .build();
+
+    public static final Spectrobe Spikan
+            = new SpectrobeBuilder()
+            .withName("Spikan")
+            .withProperties(SpectrobePropertyRegistry.SPIKAN)
+            .withStats(100,45,30)
+            .build();
 }

@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "spectrobesmod:items/komainu_fossil"
+    "layer0": "spectrobesmod:items/spiko_fossil"
   }
 }

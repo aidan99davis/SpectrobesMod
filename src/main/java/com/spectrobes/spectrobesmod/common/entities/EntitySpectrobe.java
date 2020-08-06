@@ -62,10 +62,10 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         this.goalSelector.addGoal(6, new SwimGoal(this));
         this.goalSelector.addGoal(4, new BreatheAirGoal(this));
         this.goalSelector.addGoal(5, new BreedGoal(this,10));
-        this.goalSelector.addGoal(3, new RandomWalkingGoal(this, 0.2d));
-        this.goalSelector.addGoal(2, new LookAtGoal(this, PlayerEntity.class, 6.0F));
-        this.goalSelector.addGoal(2, new LookRandomlyGoal(this));
-        this.goalSelector.addGoal(1, new FollowOwnerGoal(this,0.7f , 3, 6, true));
+        this.goalSelector.addGoal(2, new RandomWalkingGoal(this, 0.2d));
+        this.goalSelector.addGoal(5, new LookAtGoal(this, PlayerEntity.class, 6.0F));
+        this.goalSelector.addGoal(5, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(3, new FollowOwnerGoal(this,0.3f , 4, 12, true));
     }
 
     @Override
@@ -225,8 +225,8 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
 
     private void evolve() {
         Minecraft MINECRAFT = Minecraft.getInstance();
-        MINECRAFT.world.addParticle(ParticleTypes.FLASH, getPosX() + 0.5D, getPosY() + 1.0D, getPosZ() + 0.5D, 0.0D, 0.0D, 0.0D);
         if(!world.isRemote) {
+            MINECRAFT.world.addParticle(ParticleTypes.FLASH, getPosX() + 0.5D, getPosY() + 1.0D, getPosZ() + 0.5D, 0.0D, 0.0D, 0.0D);
             EntitySpectrobe spectrobe = getEvolutionRegistry().create(world);
             spectrobe.setLocationAndAngles(getPosX(), getPosY(), getPosZ(), 0.0F, 0.0F);
             this.world.addEntity(spectrobe);
