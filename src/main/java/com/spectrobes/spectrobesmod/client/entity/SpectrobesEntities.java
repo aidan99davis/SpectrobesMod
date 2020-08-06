@@ -3,8 +3,10 @@ package com.spectrobes.spectrobesmod.client.entity;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.entity.renderer.KomainuRenderer;
 import com.spectrobes.spectrobesmod.client.entity.renderer.KomanotoRenderer;
+import com.spectrobes.spectrobesmod.client.entity.renderer.SpikoRenderer;
 import com.spectrobes.spectrobesmod.common.entities.komainu.EntityKomainu;
 import com.spectrobes.spectrobesmod.common.entities.komainu.EntityKomanoto;
+import com.spectrobes.spectrobesmod.common.entities.spiko.EntitySpiko;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
@@ -30,6 +32,12 @@ public class SpectrobesEntities {
                     EntityClassification.CREATURE)
                     .size(0.6f, 1f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "komainu").toString()));
+    public static final RegistryObject<EntityType<EntitySpiko>> ENTITY_SPIKO
+            = ENTITY_TYPES.register("entity_spiko",
+            () -> EntityType.Builder.create(EntitySpiko::new,
+                    EntityClassification.CREATURE)
+                    .size(0.6f, 1f)
+                    .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "spiko").toString()));
 
     public static <T extends Entity> RegistryObject<EntityType<T>> BuildEntity(EntityType.IFactory<T> entity, Class<T> entityClass, float width, float height)
     {
@@ -41,6 +49,7 @@ public class SpectrobesEntities {
 
     public static void init() {
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_KOMAINU.get(), manager -> new KomainuRenderer(manager));
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SPIKO.get(), manager -> new SpikoRenderer(manager));
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_KOMANOTO.get(), manager -> new KomanotoRenderer(manager));
     }
 }
