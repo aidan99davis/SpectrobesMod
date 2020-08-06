@@ -4,6 +4,7 @@ import com.spectrobes.spectrobesmod.client.entity.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.common.entities.EntityMammalSpectrobe;
 import com.spectrobes.spectrobesmod.common.entities.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
+import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -15,16 +16,9 @@ import software.bernie.geckolib.animation.model.AnimationControllerCollection;
 
 public class EntitySpiko extends EntityMammalSpectrobe {
 
-
     public EntitySpiko(EntityType<EntitySpiko> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
     }
-
-    @Override
-    protected boolean canEvolve() {
-        return false;
-    }
-
 
     public Spectrobe GetNewSpectrobeInstance() {
         return SpectrobeRegistry.Spiko.copy();
@@ -70,6 +64,11 @@ public class EntitySpiko extends EntityMammalSpectrobe {
             moveController.setAnimation(new AnimationBuilder().addAnimation("animation.spiko.idle", true));
             return true;
         }
+    }
+
+    @Override
+    protected EvolutionRequirements getEvolutionRequirements() {
+        return null;
     }
 
     @Override
