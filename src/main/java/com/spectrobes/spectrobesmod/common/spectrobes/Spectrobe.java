@@ -9,6 +9,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.IDataSerializer;
 import org.apache.logging.log4j.core.config.plugins.validation.constraints.Required;
 import org.apache.logging.log4j.core.util.UuidUtil;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -45,6 +46,11 @@ public class Spectrobe {
     public void setStats(SpectrobeStats stats) {
         this.stats = stats;
     }
+
+    public boolean canEvolve(EvolutionRequirements requirements) {
+        return requirements.canEvolve(this);
+    }
+
 
     public void applyMineral(MineralProperties properties) {
         this.stats.applyMineral(properties);

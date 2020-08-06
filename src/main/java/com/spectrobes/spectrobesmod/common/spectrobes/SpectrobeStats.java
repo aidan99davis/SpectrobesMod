@@ -1,6 +1,7 @@
 package com.spectrobes.spectrobesmod.common.spectrobes;
 
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralProperties;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 
@@ -47,9 +48,16 @@ public class SpectrobeStats {
 
     public void applyMineral(MineralProperties properties) {
         addXp(properties.getXpWorth());
-        atkLevel += properties.getAtkOffset();
-        defLevel += properties.getDefOffset();
-        hpLevel += properties.getHpOffset();
+        if(atkLevel + properties.getAtkOffset() > 0
+                && defLevel + properties.getDefOffset() > 0
+                && hpLevel + properties.getHpOffset() > 0) {
+            atkLevel += properties.getAtkOffset();
+            defLevel += properties.getDefOffset();
+            hpLevel += properties.getHpOffset();
+        } else {
+            Minecraft.getInstance().player.sendChatMessage("Your spectrobe cannot eat this mineral");
+        }
+
     }
     public int getAtkLevel() {
         return atkLevel;

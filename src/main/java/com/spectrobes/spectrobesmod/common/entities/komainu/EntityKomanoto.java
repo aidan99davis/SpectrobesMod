@@ -4,6 +4,7 @@ import com.spectrobes.spectrobesmod.client.entity.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.common.entities.EntityMammalSpectrobe;
 import com.spectrobes.spectrobesmod.common.entities.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
+import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.Entity;
@@ -20,12 +21,6 @@ public class EntityKomanoto extends EntityMammalSpectrobe {
     public EntityKomanoto(EntityType<EntityKomanoto> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
     }
-
-    @Override
-    protected boolean canEvolve() {
-        return false;
-    }
-
 
     public Spectrobe GetNewSpectrobeInstance() {
         return SpectrobeRegistry.Komanoto.copy();
@@ -74,5 +69,11 @@ public class EntityKomanoto extends EntityMammalSpectrobe {
             }
         }
         return false;
+    }
+
+    @Override
+    protected EvolutionRequirements getEvolutionRequirements() {
+        //returning null makes canEvolve always evaluate to false.
+        return null;
     }
 }
