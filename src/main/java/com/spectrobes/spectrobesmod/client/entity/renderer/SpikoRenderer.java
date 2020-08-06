@@ -1,11 +1,11 @@
 package com.spectrobes.spectrobesmod.client.entity.renderer;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.entity.model.KomainuModel;
-import com.spectrobes.spectrobesmod.client.entity.model.KomanotoModel;
+import com.spectrobes.spectrobesmod.client.entity.model.SpikoModel;
 import com.spectrobes.spectrobesmod.common.entities.komainu.EntityKomainu;
-import com.spectrobes.spectrobesmod.common.entities.komainu.EntityKomanoto;
 import com.spectrobes.spectrobesmod.common.entities.spiko.EntitySpiko;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -17,24 +17,25 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 
 @OnlyIn(Dist.CLIENT)
-public class KomanotoRenderer extends MobRenderer<EntityKomanoto, KomanotoModel> {
+public class SpikoRenderer extends MobRenderer<EntitySpiko, SpikoModel> {
 
-    public KomanotoRenderer(EntityRendererManager renderManagerIn) {
-        super(renderManagerIn, new KomanotoModel(), 0.5f);
+    public SpikoRenderer(EntityRendererManager renderManagerIn) {
+        super(renderManagerIn, new SpikoModel(), 0.5f);
     }
 
     @Nullable
     @Override
-    public ResourceLocation getEntityTexture(EntityKomanoto entity)
+    public ResourceLocation getEntityTexture(EntitySpiko entity)
     {
-        return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/komanoto.png");
+        return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/spiko.png");
     }
 
     @Override
-    public void render(EntityKomanoto entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
-        matrixStackIn.scale(0.75f, 0.75f, 0.75f);
+    public void render(EntitySpiko entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
+        matrixStackIn.scale(0.5f, 0.5f, 0.5f);
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
         /*matrixStackIn.pop();
         matrixStackIn.push();*/
     }
+
 }
