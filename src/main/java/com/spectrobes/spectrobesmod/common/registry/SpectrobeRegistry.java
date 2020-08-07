@@ -18,4 +18,19 @@ public class SpectrobeRegistry {
             .withEvolution(Komanoto.copy())
             .withStats(25,5,5)
             .build();
+
+
+    public static final Spectrobe Spiko
+            = new SpectrobeBuilder()
+            .withName("Spiko")
+            .withProperties(SpectrobePropertyRegistry.SPIKO)
+            .withStats(25,5,5)
+            .build();
+
+    public static final Spectrobe Spikan
+            = new SpectrobeBuilder()
+            .withName("Spikan")
+            .withProperties(SpectrobePropertyRegistry.SPIKAN)
+            .withStats(100,45,30)
+            .build();
 }

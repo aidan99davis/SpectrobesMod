@@ -4,6 +4,7 @@ import com.spectrobes.spectrobesmod.client.entity.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.common.entities.EntityMammalSpectrobe;
 import com.spectrobes.spectrobesmod.common.entities.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
+import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.Entity;
@@ -16,16 +17,9 @@ import software.bernie.geckolib.animation.model.AnimationControllerCollection;
 
 public class EntityKomainu extends EntityMammalSpectrobe {
 
-
     public EntityKomainu(EntityType<EntityKomainu> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
     }
-
-    @Override
-    protected boolean canEvolve() {
-        return getSpectrobeData().stats.getLevel() > 5;
-    }
-
 
     public Spectrobe GetNewSpectrobeInstance() {
         return SpectrobeRegistry.Komainu.copy();
@@ -74,5 +68,10 @@ public class EntityKomainu extends EntityMammalSpectrobe {
         }
         return false;
 
+    }
+
+    @Override
+    protected EvolutionRequirements getEvolutionRequirements() {
+        return new EvolutionRequirements(5, 7, 0);
     }
 }

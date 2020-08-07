@@ -2,6 +2,7 @@ package com.spectrobes.spectrobesmod.common.entities;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
+import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.*;
@@ -27,6 +28,7 @@ import software.bernie.geckolib.animation.AnimationTestEvent;
 import software.bernie.geckolib.animation.model.AnimationController;
 import software.bernie.geckolib.animation.model.AnimationControllerCollection;
 import software.bernie.geckolib.entity.IAnimatedEntity;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.annotation.Nullable;
 
@@ -60,10 +62,10 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         this.goalSelector.addGoal(6, new SwimGoal(this));
         this.goalSelector.addGoal(4, new BreatheAirGoal(this));
         this.goalSelector.addGoal(5, new BreedGoal(this,10));
-        this.goalSelector.addGoal(3, new RandomWalkingGoal(this, 0.2d));
-        this.goalSelector.addGoal(2, new LookAtGoal(this, PlayerEntity.class, 6.0F));
-        this.goalSelector.addGoal(2, new LookRandomlyGoal(this));
-        this.goalSelector.addGoal(1, new FollowOwnerGoal(this,0.7f , 3, 6, true));
+        this.goalSelector.addGoal(2, new RandomWalkingGoal(this, 0.2d));
+        this.goalSelector.addGoal(5, new LookAtGoal(this, PlayerEntity.class, 6.0F));
+        this.goalSelector.addGoal(5, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(3, new FollowOwnerGoal(this,0.3f , 4, 12, true));
     }
 
     @Override
@@ -211,12 +213,20 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         return getEvolutionRegistry();
     }
 
-    protected abstract boolean canEvolve();
+    protected abstract EvolutionRequirements getEvolutionRequirements();
+
+    protected boolean canEvolve() {
+        EvolutionRequirements requirements = getEvolutionRequirements();
+        if(requirements == null)
+            return false;
+
+        return getSpectrobeData().canEvolve(getEvolutionRequirements());
+    }
 
     private void evolve() {
         Minecraft MINECRAFT = Minecraft.getInstance();
-        MINECRAFT.world.addParticle(ParticleTypes.FLASH, getPosX() + 0.5D, getPosY() + 1.0D, getPosZ() + 0.5D, 0.0D, 0.0D, 0.0D);
         if(!world.isRemote) {
+            MINECRAFT.world.addParticle(ParticleTypes.FLASH, getPosX() + 0.5D, getPosY() + 1.0D, getPosZ() + 0.5D, 0.0D, 0.0D, 0.0D);
             EntitySpectrobe spectrobe = getEvolutionRegistry().create(world);
             spectrobe.setLocationAndAngles(getPosX(), getPosY(), getPosZ(), 0.0F, 0.0F);
             this.world.addEntity(spectrobe);

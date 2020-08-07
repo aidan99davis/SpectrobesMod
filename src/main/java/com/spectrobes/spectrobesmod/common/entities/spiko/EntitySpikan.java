@@ -1,4 +1,4 @@
-package com.spectrobes.spectrobesmod.common.entities.komainu;
+package com.spectrobes.spectrobesmod.common.entities.spiko;
 
 import com.spectrobes.spectrobesmod.client.entity.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.common.entities.EntityMammalSpectrobe;
@@ -6,7 +6,6 @@ import com.spectrobes.spectrobesmod.common.entities.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
-import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -15,15 +14,15 @@ import software.bernie.geckolib.animation.AnimationBuilder;
 import software.bernie.geckolib.animation.AnimationTestEvent;
 import software.bernie.geckolib.animation.model.AnimationControllerCollection;
 
-public class EntityKomanoto extends EntityMammalSpectrobe {
+public class EntitySpikan extends EntityMammalSpectrobe {
 
 
-    public EntityKomanoto(EntityType<EntityKomanoto> entityTypeIn, World worldIn) {
+    public EntitySpikan(EntityType<EntitySpikan> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
     }
 
     public Spectrobe GetNewSpectrobeInstance() {
-        return SpectrobeRegistry.Komanoto.copy();
+        return SpectrobeRegistry.Spikan.copy();
     }
 
     @Override
@@ -32,13 +31,8 @@ public class EntityKomanoto extends EntityMammalSpectrobe {
     }
 
     @Override
-    public String getRegistryName() {
-        return "entity_komanoto";
-    }
-
-    @Override
     protected EntitySpectrobe getChildForLineage() {
-        return SpectrobesEntities.ENTITY_KOMAINU.get().create(world);
+        return SpectrobesEntities.ENTITY_SPIKO.get().create(world);
     }
 
     @Override
@@ -61,15 +55,15 @@ public class EntityKomanoto extends EntityMammalSpectrobe {
         moveController.transitionLength = 2;
         if(!(limbSwingAmount > -0.15F && limbSwingAmount < 0.15F))
         {
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.komanoto.walking", true));
+            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.spikan.walk", true));
             return true;
         }
         else if(this.isSitting()) {
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.komanoto.sit", false));
+            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.spikan.sit", false));
             return true;
         } else {
             if(this.getAttackingEntity() != null) {
-                moveController.setAnimation(new AnimationBuilder().addAnimation("animation.komanoto.attack", true));
+                moveController.setAnimation(new AnimationBuilder().addAnimation("animation.spikan.walk", true));
                 return true;
             }
         }
