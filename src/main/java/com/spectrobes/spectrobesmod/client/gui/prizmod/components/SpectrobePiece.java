@@ -10,30 +10,21 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.RenderState;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.lwjgl.opengl.GL11;
 
-import java.security.interfaces.RSAKey;
 import java.util.List;
 
 public class SpectrobePiece {
 
     @OnlyIn(Dist.CLIENT)
     private static RenderType layer;
-    private static final String TAG_KEY_LEGACY = "spellKey";
 
-    private static final String TAG_KEY = "key";
-    private static final String TAG_PARAMS = "params";
-    private static final String TAG_COMMENT = "comment";
-
-    private static final String PSI_PREFIX = "psi.spellparam.";
-
-    public final ResourceLocation registryKey;
     public final Spectrobe spell;
 
     public boolean isInGrid = false;
@@ -43,7 +34,6 @@ public class SpectrobePiece {
 
     public SpectrobePiece(Spectrobe spell) {
         this.spell = spell;
-        registryKey = PsiAPI.getSpellPieceKey(getClass());
     }
 
 
@@ -60,10 +50,6 @@ public class SpectrobePiece {
 
     public String getSortingName() {
         return new TranslationTextComponent(getUnlocalizedName()).getString();
-    }
-
-    public String getUnlocalizedDesc() {
-        return registryKey.getNamespace() + ".spellpiece." + registryKey.getPath() + ".desc";
     }
 
     /**
@@ -94,7 +80,7 @@ public class SpectrobePiece {
                     .alpha(new RenderState.AlphaState(0.004F))
                     .cull(new RenderState.CullState(false))
                     .build(false);
-            layer = RenderType.of(PsiAPI.PSI_PIECE_TEXTURE_ATLAS.toString(), DefaultVertexFormats.POSITION_COLOR_TEXTURE_LIGHT, GL11.GL_QUADS, 64, glState);
+            layer = RenderType.makeType(PrizmodMenu.SPECTROBE_SLOT_TEXTURE.toString(), DefaultVertexFormats.POSITION_COLOR_TEX_LIGHTMAP, GL11.GL_QUADS, 64, glState);
         }
         return layer;
     }
@@ -104,6 +90,7 @@ public class SpectrobePiece {
      */
     @OnlyIn(Dist.CLIENT)
     public void drawBackground(IRenderTypeBuffer buffers, int light) {
+        spell.getMaterial();
         RenderMaterial material = PsiAPI.getSpellPieceMaterial(registryKey);
         IVertexBuilder buffer = material.getVertexConsumer(buffers, ignored -> getLayer());
         Matrix4f mat = ms.peek().getModel();
@@ -139,7 +126,7 @@ public class SpectrobePiece {
      */
     @OnlyIn(Dist.CLIENT)
     public void drawTooltip(int tooltipX, int tooltipY, List<ITextComponent> tooltip, Screen screen) {
-        PsiAPI.internalHandler.renderTooltip(tooltipX, tooltipY, tooltip, 0x505000ff, 0xf0100010, screen.width, screen.height);
+        //PsiAPI.internalHandler.renderTooltip(tooltipX, tooltipY, tooltip, 0x505000ff, 0xf0100010, screen.width, screen.height);
     }
 
     /**
@@ -147,16 +134,14 @@ public class SpectrobePiece {
      */
     @OnlyIn(Dist.CLIENT)
     public void drawCommentText(int tooltipX, int tooltipY, List<ITextComponent> commentText, Screen screen) {
-        PsiAPI.internalHandler.renderTooltip(tooltipX, tooltipY - 9 - commentText.size() * 10, commentText, 0x5000a000, 0xf0001e00, screen.width, screen.height);
+        //PsiAPI.internalHandler.renderTooltip(tooltipX, tooltipY - 9 - commentText.size() * 10, commentText, 0x5000a000, 0xf0001e00, screen.width, screen.height);
     }
 
     @OnlyIn(Dist.CLIENT)
     public void getTooltip(List<ITextComponent> tooltip) {
         tooltip.add(new TranslationTextComponent(getUnlocalizedName()));
-        tooltip.add(new TranslationTextComponent(getUnlocalizedDesc()).setStyle(Style.EMPTY.withColor(TextFormatting.GRAY)));
-        TooltipHelper.tooltipIfShift(tooltip, () -> addToTooltipAfterShift(tooltip));
-
-        String addon = registryKey.getNamespace();
+        //tooltip.add(new TranslationTextComponent(getUnlocalizedDesc()).setStyle(Style.EMPTY.withColor(TextFormatting.GRAY)));
+        //TooltipHelper.tooltipIfShift(tooltip, () -> addToTooltipAfterShift(tooltip));
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -196,7 +181,7 @@ public class SpectrobePiece {
 
     public static SpectrobePiece create(Class<? extends SpectrobePiece> clazz, Spectrobe spell) {
         try {
-            return clazz.getConstructor(Spectrobe.class).newInstance(spell);
+            return clazz.getConstructor(SpectrobePiece.class).newInstance(spell);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

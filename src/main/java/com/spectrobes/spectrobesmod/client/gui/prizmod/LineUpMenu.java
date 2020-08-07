@@ -1,9 +1,7 @@
 package com.spectrobes.spectrobesmod.client.gui.prizmod;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.spectrobes.spectrobesmod.client.gui.prizmod.components.GuiButtonPage;
-import com.spectrobes.spectrobesmod.client.gui.prizmod.components.GuiButtonSpectrobePiece;
-import com.spectrobes.spectrobesmod.client.gui.prizmod.components.SpectrobePiece;
+import com.spectrobes.spectrobesmod.client.gui.prizmod.components.*;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.client.gui.IGuiEventListener;
@@ -28,6 +26,9 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
     public final List<Button> panelButtons = new ArrayList<>();
     public int panelCursor;
     public TextFieldWidget searchField;
+    private AllSpectrobesList allSpectrobesList;
+    private SpectrobesTeamList spectrobesTeamList;
+    private SpectrobePiece childForm;
     public int page = 0;
     private static final int PIECES_PER_PAGE = 25;
     public final List<GuiButtonSpectrobePiece> visibleButtons = new ArrayList<>();

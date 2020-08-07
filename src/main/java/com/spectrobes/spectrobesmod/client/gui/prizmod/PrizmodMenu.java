@@ -5,11 +5,15 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.components.SpectrobePiece;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderState;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.client.util.InputMappings;
@@ -22,6 +26,7 @@ import net.minecraftforge.fml.client.gui.GuiUtils;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import org.lwjgl.glfw.GLFW;
 
+import javax.sound.sampled.Line;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -117,6 +122,7 @@ public class PrizmodMenu extends Screen {
 
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
+        FontRenderer textRenderer = getMinecraft().fontRenderer;
         if (player != null && (player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER) != null)) {
             getMinecraft().displayGuiScreen(null);
             return;
@@ -146,9 +152,9 @@ public class PrizmodMenu extends Screen {
         RenderSystem.pushMatrix();
         tooltip.clear();
         RenderSystem.translatef(gridLeft, gridTop, 0);
-        IRenderTypeBuffer.Impl buffers = IRenderTypeBuffer.immediate(Tessellator.getInstance().getBuffer());
-        spell.draw(buffers, 0xF000F0);
-        buffers.draw();
+        IRenderTypeBuffer.Impl buffers = IRenderTypeBuffer.getImpl(Tessellator.getInstance().getBuffer());
+        piece.draw(buffers, 0xF000F0);
+        buffers.finish();
 
         RenderSystem.popMatrix();
         RenderSystem.color3f(1f, 1f, 1f);
@@ -189,18 +195,13 @@ public class PrizmodMenu extends Screen {
             int topYText = topY;
             if (spectator) {
                 String spectator = TextFormatting.RED + I18n.format("psimisc.spectator");
-                textRenderer.drawWithShadow(spectator, left + xSize / 2f - textRenderer.getStringWidth(spectator) / 2f, topYText, 0xFFFFFF);
+                textRenderer.drawStringWithShadow(spectator, left + xSize / 2f - textRenderer.getStringWidth(spectator) / 2f, topYText, 0xFFFFFF);
                 topYText -= 10;
             }
             if (piece != null) {
                 String pieceName = I18n.format(piece.getUnlocalizedName());
-                textRenderer.drawWithShadow(pieceName, left + xSize / 2f - textRenderer.getStringWidth(pieceName) / 2f, topYText, 0xFFFFFF);
+                textRenderer.drawStringWithShadow(pieceName, left + xSize / 2f - textRenderer.getStringWidth(pieceName) / 2f, topYText, 0xFFFFFF);
                 topYText -= 10;
-            }
-            if (LibMisc.BETA_TESTING) {
-                String betaTest = TextFormatting.GOLD + I18n.format("psimisc.wip");
-                textRenderer.drawWithShadow(betaTest, left + xSize / 2f - textRenderer.getStringWidth(betaTest) / 2f, topYText, 0xFFFFFF);
-
             }
 
             String coords;
@@ -209,10 +210,10 @@ public class PrizmodMenu extends Screen {
             } else {
                 coords = I18n.format("psimisc.programmer_coords_no_cursor", selectedX + 1, selectedY + 1);
             }
-            textRenderer.draw(coords, left + 4, topY + ySize + 24, 0x44FFFFFF);
+            textRenderer.drawString(coords, left + 4, topY + ySize + 24, 0x44FFFFFF);
         }
 
-        textRenderer.drawWithShadow(I18n.format("psimisc.name"), left + padLeft, spellNameField.y + 1, color);
+        textRenderer.drawStringWithShadow(I18n.format("psimisc.name"), left + padLeft, spellNameField.y + 1, color);
 
         List<ITextComponent> legitTooltip = null;
         if (hasAltDown()) {
@@ -225,10 +226,6 @@ public class PrizmodMenu extends Screen {
 
         super.render(mouseX, mouseY, partialTicks);
 
-        if (!takingScreenshot && tooltip != null && !tooltip.isEmpty() && pieceAtCursor == null) {
-            GuiUtils.drawHoveringText(tooltip, mouseX, mouseY, width, height, -1, textRenderer);
-
-        }
         if (!takingScreenshot && pieceAtCursor != null) {
             if (tooltip != null && !tooltip.isEmpty()) {
                 pieceAtCursor.drawTooltip(mouseX, mouseY, tooltip, this);
@@ -346,20 +343,6 @@ public class PrizmodMenu extends Screen {
             this.onClose();
             return true;
         }
-        if (spectator) {
-            return true;
-        }
-
-        if (commentEnabled) {
-            switch (keyCode) {
-                case GLFW.GLFW_KEY_ENTER:
-                    closeComment(true);
-                    return true;
-                case GLFW.GLFW_KEY_ESCAPE:
-                    closeComment(false);
-                    return true;
-            }
-        }
         SpectrobePiece piece = null;
         if (selectedX != -1 && selectedY != -1) {
             piece = spell.grid.gridData[selectedX][selectedY];
@@ -372,12 +355,7 @@ public class PrizmodMenu extends Screen {
                 }
             }
         }
-        if (spellNameField.isFocused() && keyCode == GLFW.GLFW_KEY_TAB) {
-            spellNameField.setFocused2(false);
-            setFocusedDefault(null);
-            return true;
-        }
-        if (!spellNameField.isFocused() && !panelWidget.panelEnabled && !commentEnabled) {
+        if (!panelWidget.panelEnabled && !commentEnabled) {
             int param = -1;
             for (int i = 0; i < 4; i++) {
                 if (InputMappings.isKeyDown(getMinecraft().getMainWindow().getHandle(), GLFW.GLFW_KEY_1 + i)) {
@@ -540,10 +518,9 @@ public class PrizmodMenu extends Screen {
     }
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        if (programmer != null) {
-            spell = programmer.spell;
+        if (player != null) {
+            panelWidget.mouseClicked(mouseX,mouseY,mouseButton);
         }
-
         if (!commentEnabled) {
             spellNameField.mouseClicked(mouseX, mouseY, mouseButton);
             if (commentField.getVisible()) {

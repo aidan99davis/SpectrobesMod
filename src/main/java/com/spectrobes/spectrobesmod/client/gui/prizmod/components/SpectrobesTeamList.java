@@ -5,7 +5,7 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class AllSpectrobesList {
+public class SpectrobesTeamList {
 
     public static final int GRID_SIZE = 10;
 
@@ -98,7 +98,7 @@ public class AllSpectrobesList {
     }
 
 
-    public AllSpectrobesList() {
+    public SpectrobesTeamList() {
         gridData = new SpectrobePiece[GRID_SIZE][GRID_SIZE / 2];
     }
 
