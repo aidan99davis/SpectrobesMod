@@ -1,6 +1,5 @@
 package com.spectrobes.spectrobesmod.client.gui.prizmod;
 
-import com.google.common.collect.ImmutableSet;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.components.SpectrobePiece;
@@ -108,9 +107,6 @@ public class PrizmodMenu extends Screen {
 //            panelWidget.updatePanelButtons();
 //        }));
 
-        panelWidget.searchField.setEnabled(false);
-        panelWidget.searchField.setVisible(false);
-        panelWidget.searchField.setEnableBackgroundDrawing(false);
 
         //spellNameField.setText(player.getDisplayName().getFormattedText());
 
