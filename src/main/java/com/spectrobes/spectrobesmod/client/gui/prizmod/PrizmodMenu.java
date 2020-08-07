@@ -109,47 +109,39 @@ public class PrizmodMenu extends Screen {
         }
 
         RenderSystem.pushMatrix();
-        SpectrobesInfo.LOGGER.info("GOT TO HERE 1");
         renderBackground();
-        SpectrobesInfo.LOGGER.info("GOT TO HERE 2");
-
 
         RenderSystem.color3f(1F, 1F, 1F);
         getMinecraft().getTextureManager().bindTexture(texture);
-        SpectrobesInfo.LOGGER.info("GOT TO HERE 3");
 
         blit(left, top, 0, 0, xSize, ySize);
-        SpectrobesInfo.LOGGER.info("GOT TO HERE 4");
 
         //Currently selected piece
         SpectrobePiece piece = null;
         if (panelWidget.allSpectrobesList.exists(selectedX, selectedY)) {
             piece = panelWidget.allSpectrobesList.gridData[selectedX][selectedY];
         }
-        SpectrobesInfo.LOGGER.info("GOT TO HERE 5");
 
         cursorX = (mouseX - gridLeft) / 18;
         cursorY = (mouseY - gridTop) / 18;
 
         RenderSystem.pushMatrix();
-        SpectrobesInfo.LOGGER.info("GOT TO HERE 6");
+
         tooltip.clear();
-        SpectrobesInfo.LOGGER.info("GOT TO HERE 7");
+
         RenderSystem.translatef(gridLeft, gridTop, 0);
+
         panelWidget.render(mouseX, mouseY, partialTicks);
-        SpectrobesInfo.LOGGER.info("GOT TO HERE 8");
 
         RenderSystem.popMatrix();
-        SpectrobesInfo.LOGGER.info("GOT TO HERE 9");
+        
         RenderSystem.color3f(1f, 1f, 1f);
         RenderSystem.translatef(0, 0, 1);
         getMinecraft().getTextureManager().bindTexture(texture);
 
-        SpectrobesInfo.LOGGER.info("GOT TO HERE 10");
         if (selectedX != -1 && selectedY != -1 && !takingScreenshot) {
             blit(gridLeft + selectedX * 18, gridTop + selectedY * 18, 32, ySize, 16, 16);
         }
-        SpectrobesInfo.LOGGER.info("GOT TO HERE 11");
 
         if (hasAltDown()) {
             tooltip.clear();
@@ -158,7 +150,6 @@ public class PrizmodMenu extends Screen {
             mouseX = gridLeft + cursorX * 18 + 10;
             mouseY = gridTop + cursorY * 18 + 8;
         }
-        SpectrobesInfo.LOGGER.info("GOT TO HERE 12");
 
         int topY = top - 22;
         SpectrobePiece pieceAtCursor = null;
@@ -190,7 +181,8 @@ public class PrizmodMenu extends Screen {
             textRenderer.drawStringWithShadow(spectator, left + xSize / 2f - textRenderer.getStringWidth(spectator) / 2f, topYText, 0xFFFFFF);
             topYText -= 10;
         }
-        if (piece != null) {
+
+        if (piece.spell != null) {
             String pieceName = I18n.format(piece.getUnlocalizedName());
             textRenderer.drawStringWithShadow(pieceName, left + xSize / 2f - textRenderer.getStringWidth(pieceName) / 2f, topYText, 0xFFFFFF);
             topYText -= 10;
@@ -206,7 +198,6 @@ public class PrizmodMenu extends Screen {
         if (hasAltDown()) {
             tooltip = legitTooltip;
         }
-        SpectrobesInfo.LOGGER.info("GOT TO HERE 13");
 
 
         if (!takingScreenshot && pieceAtCursor != null) {
@@ -216,7 +207,6 @@ public class PrizmodMenu extends Screen {
         }
 
         RenderSystem.popMatrix();
-        SpectrobesInfo.LOGGER.info("GOT TO HERE 14");
     }
 
     public void removeButtons(List<Button> list) {

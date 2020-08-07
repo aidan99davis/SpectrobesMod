@@ -255,9 +255,6 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
                 button.active = false;
             }
         });
-        searchField.visible = false;
-        searchField.setEnabled(false);
-        searchField.setFocused2(false);
         parent.changeFocus(true);
     }
 
