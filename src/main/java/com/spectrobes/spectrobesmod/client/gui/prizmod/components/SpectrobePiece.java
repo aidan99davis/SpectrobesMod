@@ -141,12 +141,4 @@ public class SpectrobePiece {
     public void getShownPieces(List<SpectrobePiece> pieces) {
         pieces.add(this);
     }
-
-    public static SpectrobePiece create(Class<? extends SpectrobePiece> clazz, Spectrobe spell) {
-        try {
-            return clazz.getConstructor(SpectrobePiece.class).newInstance(spell);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

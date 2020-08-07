@@ -10,13 +10,11 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 
 public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener {
@@ -26,11 +24,11 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
     public final List<Button> panelButtons = new ArrayList<>();
     public int panelCursor;
     public TextFieldWidget searchField;
-    private AllSpectrobesList allSpectrobesList;
-    private SpectrobesTeamList spectrobesTeamList;
+    public AllSpectrobesList allSpectrobesList;
+    public SpectrobesTeamList spectrobesTeamList;
     private SpectrobePiece childForm;
     public int page = 0;
-    private static final int PIECES_PER_PAGE = 25;
+    private static final int PIECES_PER_PAGE = 12;
     public final List<GuiButtonSpectrobePiece> visibleButtons = new ArrayList<>();
 
     public LineUpMenu(int xIn, int yIn, String msg, PrizmodMenu parent) {
@@ -127,31 +125,25 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
             //populate the child spectrobe piece
 
             //populate the all spectrobes grid
-            List<SpectrobePiece> shownPieces = new ArrayList<>();
-            MinecraftForge.EVENT_BUS.post(event);
             for (Spectrobe spectrobe : sm.getOwnedSpectrobes()) {
-                Class<? extends SpectrobePiece> clazz = event.getSpellPieceRegistry().getValue(key).get();
 
-                SpectrobePiece piece = SpectrobePiece.create(clazz, spectrobe);
-                piece.getShownPieces(shownPieces);
-                for (SpectrobePiece shownPiece : shownPieces) {
-                    GuiButtonSpectrobePiece spellPieceButton = new GuiButtonSpectrobePiece(parent, shownPiece, 0, 0, button -> {
-                        if (parent.isSpectator()) {
-                            return;
-                        }
-                        SpectrobePiece piece1 = ((GuiButtonSpectrobePiece) button).piece.copyFromSpell(parent.spell);
-                        allSpectrobesList.gridData[PrizmodMenu.selectedX][PrizmodMenu.selectedY] = piece1;
-                        allSpectrobesList.gridData[PrizmodMenu.selectedX][PrizmodMenu.selectedY].isInGrid = true;
-                        allSpectrobesList.gridData[PrizmodMenu.selectedX][PrizmodMenu.selectedY].x = PrizmodMenu.selectedX;
-                        allSpectrobesList.gridData[PrizmodMenu.selectedX][PrizmodMenu.selectedY].y = PrizmodMenu.selectedY;
-                        parent.onSpellChanged(false);
-                        closePanel();
-                    });
-                    spellPieceButton.visible = false;
-                    spellPieceButton.active = false;
-                    panelButtons.add(spellPieceButton);
-                    visibleButtons.add(spellPieceButton);
-                }
+                SpectrobePiece piece = new SpectrobePiece(spectrobe);
+
+                allSpectrobesList.addSpectrobe(piece);
+
+
+                GuiButtonSpectrobePiece spellPieceButton = new GuiButtonSpectrobePiece(parent, piece, 0, 0, button -> {
+                    if (parent.isSpectator()) {
+                        return;
+                    }
+                    ((GuiButtonSpectrobePiece) button).renderActions();
+                    parent.onSpellChanged(false);
+                    closePanel();
+                });
+                spellPieceButton.visible = false;
+                spellPieceButton.active = false;
+                panelButtons.add(spellPieceButton);
+                visibleButtons.add(spellPieceButton);
 
             }
 

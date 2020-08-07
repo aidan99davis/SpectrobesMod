@@ -28,6 +28,11 @@ public class EntitySpiko extends EntityMammalSpectrobe {
     }
 
     @Override
+    public String getRegistryName() {
+        return "entity_spiko";
+    }
+
+    @Override
     protected EntitySpectrobe getChildForLineage() {
         return this;
     }

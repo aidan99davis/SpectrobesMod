@@ -5,7 +5,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.components.SpectrobePiece;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.Widget;
@@ -138,8 +137,8 @@ public class PrizmodMenu extends Screen {
 
         //Currently selected piece
         SpectrobePiece piece = null;
-        if (SpellGrid.exists(selectedX, selectedY)) {
-            piece = spell.grid.gridData[selectedX][selectedY];
+        if (panelWidget.allSpectrobesList.exists(selectedX, selectedY)) {
+            piece = panelWidget.allSpectrobesList.gridData[selectedX][selectedY];
         }
 
         cursorX = (mouseX - gridLeft) / 18;
@@ -175,45 +174,40 @@ public class PrizmodMenu extends Screen {
 
         SpectrobePiece pieceAtCursor = null;
         if (cursorX != -1 && cursorY != -1) {
-            pieceAtCursor = spell.grid.gridData[cursorX][cursorY];
+            pieceAtCursor = panelWidget.allSpectrobesList.gridData[cursorX][cursorY];
             if (pieceAtCursor != null) {
                 pieceAtCursor.getTooltip(tooltip);
             }
 
-            if (!takingScreenshot) {
-                if (cursorX == selectedX && cursorY == selectedY) {
-                    blit(gridLeft + cursorX * 18, gridTop + cursorY * 18, 16, ySize, 8, 16);
-                } else {
-                    blit(gridLeft + cursorX * 18, gridTop + cursorY * 18, 16, ySize, 16, 16);
-                }
+            if (cursorX == selectedX && cursorY == selectedY) {
+                blit(gridLeft + cursorX * 18, gridTop + cursorY * 18, 16, ySize, 8, 16);
+            } else {
+                blit(gridLeft + cursorX * 18, gridTop + cursorY * 18, 16, ySize, 16, 16);
             }
         }
 
         int topY = top - 22;
 
-        if (!takingScreenshot) {
-            int topYText = topY;
-            if (spectator) {
-                String spectator = TextFormatting.RED + I18n.format("psimisc.spectator");
-                textRenderer.drawStringWithShadow(spectator, left + xSize / 2f - textRenderer.getStringWidth(spectator) / 2f, topYText, 0xFFFFFF);
-                topYText -= 10;
-            }
-            if (piece != null) {
-                String pieceName = I18n.format(piece.getUnlocalizedName());
-                textRenderer.drawStringWithShadow(pieceName, left + xSize / 2f - textRenderer.getStringWidth(pieceName) / 2f, topYText, 0xFFFFFF);
-                topYText -= 10;
-            }
-
-            String coords;
-            if (SpellGrid.exists(cursorX, cursorY)) {
-                coords = I18n.format("psimisc.programmer_coords", selectedX + 1, selectedY + 1, cursorX + 1, cursorY + 1);
-            } else {
-                coords = I18n.format("psimisc.programmer_coords_no_cursor", selectedX + 1, selectedY + 1);
-            }
-            textRenderer.drawString(coords, left + 4, topY + ySize + 24, 0x44FFFFFF);
+        String name;
+        if (panelWidget.allSpectrobesList.exists(cursorX, cursorY)) {
+            name = pieceAtCursor.spell.name;
+            textRenderer.drawString(name, left + 4, topY + ySize + 24, 0x44FFFFFF);
         }
 
-        textRenderer.drawStringWithShadow(I18n.format("psimisc.name"), left + padLeft, spellNameField.y + 1, color);
+
+        int topYText = topY;
+        if (spectator) {
+            String spectator = TextFormatting.RED + I18n.format("psimisc.spectator");
+            textRenderer.drawStringWithShadow(spectator, left + xSize / 2f - textRenderer.getStringWidth(spectator) / 2f, topYText, 0xFFFFFF);
+            topYText -= 10;
+        }
+        if (piece != null) {
+            String pieceName = I18n.format(piece.getUnlocalizedName());
+            textRenderer.drawStringWithShadow(pieceName, left + xSize / 2f - textRenderer.getStringWidth(pieceName) / 2f, topYText, 0xFFFFFF);
+            topYText -= 10;
+        }
+
+        textRenderer.drawStringWithShadow("Prizmod", left + padLeft, topY + 1, 1);
 
         List<ITextComponent> legitTooltip = null;
         if (hasAltDown()) {
@@ -250,269 +244,79 @@ public class PrizmodMenu extends Screen {
 
 
     public void onSpellChanged(boolean nameOnly) {
-        if (player != null) {
-            if (!spectator) {
-                MessageSpellModified message = new MessageSpellModified(programmer.getPos(), spell);
-                MessageRegister.HANDLER.sendToServer(message);
-            }
-
-            programmer.onSpellChanged();
-        }
+//        if (player != null) {
+//            if (!spectator) {
+//                MessageSpellModified message = new MessageSpellModified(programmer.getPos(), spell);
+//                MessageRegister.HANDLER.sendToServer(message);
+//            }
+//
+//            programmer.onSpellChanged();
+//        }
 
         onSelectedChanged();
 
-        if (!nameOnly || compiler != null && compiler.getError() != null && compiler.getError().equals(SpellCompilationException.NO_NAME) || spell.name.isEmpty()) {
-            compiler = new SpellCompiler(spell);
-        }
     }
 
     public void onSelectedChanged() {
-        buttons.removeAll(configWidget.configButtons);
-        children.removeAll(configWidget.configButtons);
-        configWidget.configButtons.clear();
-
-        if (selectedX != -1 && selectedY != -1) {
-            SpectrobePiece piece = spell.grid.gridData[selectedX][selectedY];
-            if (piece != null) {
-
-                if (piece.hasConfig()) {
-                    int i = 0;
-                    for (String paramName : piece.params.keySet()) {
-                        SpellParam<?> param = piece.params.get(paramName);
-                        int x = left - 17;
-                        int y = top + 70 + i * 26;
-                        for (SpellParam.Side side : ImmutableSet.of(SpellParam.Side.TOP, SpellParam.Side.BOTTOM, SpellParam.Side.LEFT, SpellParam.Side.RIGHT, SpellParam.Side.OFF)) {
-                            if (!side.isEnabled() && !param.canDisable) {
-                                continue;
-                            }
-
-                            int xp = x + side.offx * 8;
-                            int yp = y + side.offy * 8;
-                            configWidget.configButtons.add(new GuiButtonSideConfig(this, selectedX, selectedY, i, paramName, side, xp, yp, button -> {
-                                if (!spectator) {
-                                    pushState(true);
-                                    GuiButtonSideConfig.performAction(this, selectedX, selectedY, paramName, side);
-                                    onSpellChanged(false);
-                                }
-                            }));
-                        }
-                        i++;
-                    }
-                    configWidget.configButtons.forEach(this::addButton);
-                    configWidget.configEnabled = true;
-                    return;
-                }
-            }
-        }
-        configWidget.configEnabled = false;
-    }
-
-    @Override
-    public boolean charTyped(char character, int keyCode) {
-        if (player != null) {
-            spell = programmer.spell;
-        }
-        if (spectator) {
-            return false;
-        }
-        super.charTyped(character, keyCode);
-        if (!commentEnabled && !spellNameField.isFocused()) {
-            SpectrobePiece piece;
-            if (selectedX != -1 && selectedY != -1) {
-                piece = spell.grid.gridData[selectedX][selectedY];
-                if (piece != null && piece.interceptKeystrokes()) {
-                    if (piece.onCharTyped(character, keyCode, false)) {
-                        pushState(true);
-                        piece.onCharTyped(character, keyCode, true);
-                        onSpellChanged(false);
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
+//        buttons.removeAll(configWidget.configButtons);
+//        children.removeAll(configWidget.configButtons);
+//        configWidget.configButtons.clear();
+//
+//        if (selectedX != -1 && selectedY != -1) {
+//            SpectrobePiece piece = spell.grid.gridData[selectedX][selectedY];
+//            if (piece != null) {
+//
+//                if (piece.hasConfig()) {
+//                    int i = 0;
+//                    for (String paramName : piece.params.keySet()) {
+//                        SpellParam<?> param = piece.params.get(paramName);
+//                        int x = left - 17;
+//                        int y = top + 70 + i * 26;
+//                        for (SpellParam.Side side : ImmutableSet.of(SpellParam.Side.TOP, SpellParam.Side.BOTTOM, SpellParam.Side.LEFT, SpellParam.Side.RIGHT, SpellParam.Side.OFF)) {
+//
+//
+//                            int xp = x + side.offx * 8;
+//                            int yp = y + side.offy * 8;
+//                            configWidget.configButtons.add(new GuiButtonSideConfig(this, selectedX, selectedY, i, paramName, side, xp, yp, button -> {
+//                                if (!spectator) {
+//                                    GuiButtonSideConfig.performAction(this, selectedX, selectedY, paramName, side);
+//                                    onSpellChanged(false);
+//                                }
+//                            }));
+//                        }
+//                        i++;
+//                    }
+//                    configWidget.configButtons.forEach(this::addButton);
+//                    configWidget.configEnabled = true;
+//                    return;
+//                }
+//            }
+//        }
+//        configWidget.configEnabled = false;
     }
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         getMinecraft().keyboardListener.enableRepeatEvents(true);
-        if (programmer != null) {
-            spell = programmer.spell;
-        }
+
         if (keyCode == GLFW.GLFW_KEY_ESCAPE && shouldCloseOnEsc()) {
             this.onClose();
             return true;
         }
         SpectrobePiece piece = null;
         if (selectedX != -1 && selectedY != -1) {
-            piece = spell.grid.gridData[selectedX][selectedY];
-            if (piece != null && piece.interceptKeystrokes()) {
-                if (piece.onKeyPressed(keyCode, scanCode, false)) {
-                    pushState(true);
-                    piece.onKeyPressed(keyCode, scanCode, true);
-                    onSpellChanged(false);
-                    return true;
-                }
+            piece = panelWidget.allSpectrobesList.gridData[selectedX][selectedY];
+            if (piece != null) {
+//                if (piece.onKeyPressed(keyCode, scanCode, false)) {
+//                    piece.onKeyPressed(keyCode, scanCode, true);
+//                    onSpellChanged(false);
+//                    return true;
+//                }
             }
         }
-        if (!panelWidget.panelEnabled && !commentEnabled) {
-            int param = -1;
-            for (int i = 0; i < 4; i++) {
-                if (InputMappings.isKeyDown(getMinecraft().getMainWindow().getHandle(), GLFW.GLFW_KEY_1 + i)) {
-                    param = i;
-                }
-            }
-            switch (keyCode) {
-                case GLFW.GLFW_KEY_DELETE:
-                case GLFW.GLFW_KEY_BACKSPACE:
-                    if (hasControlDown() && hasShiftDown()) {
-                        if (!spell.grid.isEmpty()) {
-                            pushState(true);
-                            spell = new Spell();
-                            spellNameField.setText("");
-                            onSpellChanged(false);
-                            return true;
-                        }
-                    }
-                    if (piece != null) {
-                        pushState(true);
-                        spell.grid.gridData[selectedX][selectedY] = null;
-                        onSpellChanged(false);
-                        return true;
-                    }
-                    break;
-                case GLFW.GLFW_KEY_TAB:
-                    spellNameField.setFocused2(!spellNameField.isFocused());
-                    setFocusedDefault(spellNameField);
-                    return true;
-                case GLFW.GLFW_KEY_UP:
-                    if (hasControlDown()) {
-                        if (hasShiftDown()) {
-                            pushState(true);
-                            spell.grid.mirrorVertical();
-                            onSpellChanged(false);
-                            return true;
-                        } else if (spell.grid.shift(SpellParam.Side.TOP, false)) {
-                            pushState(true);
-                            spell.grid.shift(SpellParam.Side.TOP, true);
-                            onSpellChanged(false);
-                            return true;
-                        }
-                    } else {
-                        if (!onSideButtonKeybind(piece, param, SpellParam.Side.TOP) && selectedY > 0) {
-                            selectedY--;
-                            onSelectedChanged();
-                            return true;
-                        }
-                    }
-                    break;
-                case GLFW.GLFW_KEY_LEFT:
-                    if (hasControlDown()) {
-                        if (hasShiftDown()) {
-                            pushState(true);
-                            spell.grid.rotate(false);
-                            onSpellChanged(false);
-                            return true;
-                        } else if (spell.grid.shift(SpellParam.Side.LEFT, false)) {
-                            pushState(true);
-                            spell.grid.shift(SpellParam.Side.LEFT, true);
-                            onSpellChanged(false);
-                            return true;
-                        }
-                    } else {
-                        if (!onSideButtonKeybind(piece, param, SpellParam.Side.LEFT) && selectedX > 0) {
-                            selectedX--;
-                            onSelectedChanged();
-                            return true;
-                        }
-                    }
-                    break;
-                case GLFW.GLFW_KEY_RIGHT:
-                    if (hasControlDown()) {
-                        if (hasShiftDown()) {
-                            pushState(true);
-                            spell.grid.rotate(true);
-                            onSpellChanged(false);
-                            return true;
-                        } else if (spell.grid.shift(SpellParam.Side.RIGHT, false)) {
-                            pushState(true);
-                            spell.grid.shift(SpellParam.Side.RIGHT, true);
-                            onSpellChanged(false);
-                            return true;
-                        }
-                    } else {
-                        if (!onSideButtonKeybind(piece, param, SpellParam.Side.RIGHT) && selectedX < SpellGrid.GRID_SIZE - 1) {
-                            selectedX++;
-                            onSelectedChanged();
-                            return true;
-                        }
-                    }
-                    break;
-                case GLFW.GLFW_KEY_DOWN:
-                    if (hasControlDown()) {
-                        if (hasShiftDown()) {
-                            pushState(true);
-                            spell.grid.mirrorVertical();
-                            onSpellChanged(false);
-                            return true;
-                        } else if (spell.grid.shift(SpellParam.Side.BOTTOM, false)) {
-                            pushState(true);
-                            spell.grid.shift(SpellParam.Side.BOTTOM, true);
-                            onSpellChanged(false);
-                            return true;
-                        }
-                    } else {
-                        if (!onSideButtonKeybind(piece, param, SpellParam.Side.BOTTOM) && selectedY < SpellGrid.GRID_SIZE - 1) {
-                            selectedY++;
-                            onSelectedChanged();
-                            return true;
-                        }
-                    }
-                    break;
-                case GLFW.GLFW_KEY_D:
-                    if (piece != null && hasControlDown()) {
-                        commentField.setVisible(true);
-                        commentField.setFocused2(true);
-                        commentField.setEnabled(true);
-                        spellNameField.setEnabled(false);
-                        commentField.setText(piece.comment);
-                        commentField.setFocused2(true);
-                        setFocusedDefault(commentField);
-                        commentEnabled = true;
-                        return true;
-                    }
-                    break;
-                case GLFW.GLFW_KEY_G:
-                    if (hasControlDown()) {
-                        shareToReddit = false;
-                        if (hasShiftDown() && hasAltDown()) {
-                            takingScreenshot = true;
-                        }
-                        return true;
-                    }
-                    break;
-                case GLFW.GLFW_KEY_R:
-                    if (hasControlDown()) {
-                        shareToReddit = true;
-                        if (hasShiftDown() && hasAltDown()) {
-                            takingScreenshot = true;
-                        }
-                        return true;
-                    }
-                    break;
-                case GLFW.GLFW_KEY_ENTER:
-                    panelWidget.openPanel();
-                    return true;
-            }
-        }
+
         if (panelWidget.panelEnabled) {
             panelWidget.keyPressed(keyCode, scanCode, modifiers);
-        }
-        if (commentField.isFocused()) {
-            commentField.keyPressed(keyCode, scanCode, modifiers);
-        }
-        if (spellNameField.isFocused()) {
-            spellNameField.keyPressed(keyCode, scanCode, modifiers);
         }
         return false;
     }
@@ -520,12 +324,6 @@ public class PrizmodMenu extends Screen {
     public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
         if (player != null) {
             panelWidget.mouseClicked(mouseX,mouseY,mouseButton);
-        }
-        if (!commentEnabled) {
-            spellNameField.mouseClicked(mouseX, mouseY, mouseButton);
-            if (commentField.getVisible()) {
-                commentField.mouseClicked(mouseX, mouseY, mouseButton);
-            }
         }
         return super.mouseClicked(mouseX, mouseY, mouseButton);
     }

@@ -31,6 +31,11 @@ public class EntitySpikan extends EntityMammalSpectrobe {
     }
 
     @Override
+    public String getRegistryName() {
+        return "entity_spikan";
+    }
+
+    @Override
     protected EntitySpectrobe getChildForLineage() {
         return SpectrobesEntities.ENTITY_SPIKO.get().create(world);
     }

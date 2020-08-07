@@ -114,4 +114,8 @@ public class AllSpectrobesList {
 
         return true;
     }
+
+    public void addSpectrobe(SpectrobePiece piece) {
+
+    }
 }
