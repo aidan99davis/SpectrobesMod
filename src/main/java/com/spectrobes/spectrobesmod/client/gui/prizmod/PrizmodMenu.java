@@ -134,7 +134,7 @@ public class PrizmodMenu extends Screen {
         panelWidget.render(mouseX, mouseY, partialTicks);
 
         RenderSystem.popMatrix();
-        
+
         RenderSystem.color3f(1f, 1f, 1f);
         RenderSystem.translatef(0, 0, 1);
         getMinecraft().getTextureManager().bindTexture(texture);
