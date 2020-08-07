@@ -69,12 +69,17 @@ public class AllSpectrobesList {
     }
 
     public static boolean exists(int x, int y) {
-        return x >= 0 && y >= 0 && x < GRID_SIZE && y < GRID_SIZE / 2;
+        return x >= 0 && y >= 0 && x < GRID_SIZE && y < GRID_SIZE;
     }
 
 
     public AllSpectrobesList() {
-        gridData = new SpectrobePiece[GRID_SIZE][GRID_SIZE / 2];
+        gridData = new SpectrobePiece[GRID_SIZE][GRID_SIZE];
+        for (int i = 0; i < GRID_SIZE; i++) {
+            for (int j = 0; j < GRID_SIZE; j++) {
+                gridData[i][j] = new SpectrobePiece(null);
+            }
+        }
     }
 
     public boolean isEmpty() {

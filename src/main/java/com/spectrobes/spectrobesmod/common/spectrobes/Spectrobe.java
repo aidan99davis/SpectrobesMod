@@ -27,7 +27,7 @@ public class Spectrobe {
     @Required
     public SpectrobeStats stats;
 
-    private ResourceLocation iconRl;
+    private ResourceLocation iconRl = new ResourceLocation("spectrobesmod:textures/gui/samukabu.png");
 
     public Spectrobe copy() {
         return new SpectrobeBuilder().buildFrom(this);

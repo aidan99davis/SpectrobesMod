@@ -1,6 +1,7 @@
 package com.spectrobes.spectrobesmod.common.items.fossils;
 
 import com.spectrobes.spectrobesmod.client.entity.SpectrobesEntities;
+import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.entities.EntitySpectrobe;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
@@ -31,7 +32,9 @@ public class SpikoFossilItem extends Item {
             );
 
             spiko.setOwnerId(playerIn.getUniqueID());
-
+            playerIn.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(playerCap -> {
+                playerCap.addSpectrobe(spiko.getRegistryName(), spiko.getSpectrobeData());
+            });
         }
 
         return new ActionResult<>(ActionResultType.SUCCESS, itemStack);

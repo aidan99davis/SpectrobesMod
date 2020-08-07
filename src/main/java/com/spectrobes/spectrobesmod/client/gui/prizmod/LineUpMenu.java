@@ -34,6 +34,7 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
     public LineUpMenu(int xIn, int yIn, String msg, PrizmodMenu parent) {
         super(xIn, yIn, msg);
         this.parent = parent;
+        allSpectrobesList = new AllSpectrobesList();
     }
 
     public LineUpMenu(int xIn, int yIn, int widthIn, int heightIn, String msg, PrizmodMenu parent) {
@@ -112,7 +113,6 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
                         return true;
                     }
             }
-            searchField.keyPressed(keyCode, scanCode, modifiers);
         }
         return false;
     }
@@ -135,9 +135,6 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
 
 
                 GuiButtonSpectrobePiece spellPieceButton = new GuiButtonSpectrobePiece(parent, piece, 0, 0, button -> {
-                    if (parent.isSpectator()) {
-                        return;
-                    }
                     ((GuiButtonSpectrobePiece) button).renderActions();
                     parent.onSpellChanged(false);
                     //closePanel();
@@ -237,12 +234,12 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        if (parent.cursorX != -1 && parent.cursorY != -1 && !parent.commentEnabled && !parent.isSpectator() && mouseButton == 1 && !panelEnabled) {
+        if (parent.cursorX != -1 && parent.cursorY != -1 && !parent.commentEnabled && mouseButton == 1 && !panelEnabled) {
             openPanel();
             return true;
         }
 
-        if (panelEnabled && (mouseX < x || mouseY < y || mouseX > x + width || mouseY > y + height) && !parent.isSpectator()) {
+        if (panelEnabled && (mouseX < x || mouseY < y || mouseX > x + width || mouseY > y + height)) {
             //closePanel();
             return true;
         }

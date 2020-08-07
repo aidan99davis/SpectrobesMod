@@ -89,11 +89,11 @@ public class SpectrobePiece {
      */
     @OnlyIn(Dist.CLIENT)
     public void drawBackground(IRenderTypeBuffer buffers, int light) {
-        ResourceLocation icon = spell.getIcon();
+        ResourceLocation bg = PrizmodMenu.SPECTROBE_SLOT_TEXTURE;
 
         RenderSystem.pushMatrix();
 
-        Minecraft.getInstance().textureManager.bindTexture(icon);
+        Minecraft.getInstance().textureManager.bindTexture(bg);
         RenderSystem.enableTexture();
 
         RenderSystem.popMatrix();
@@ -126,7 +126,8 @@ public class SpectrobePiece {
 
     @OnlyIn(Dist.CLIENT)
     public void getTooltip(List<ITextComponent> tooltip) {
-        tooltip.add(new TranslationTextComponent(getUnlocalizedName()));
+        if(spell != null)
+            tooltip.add(new TranslationTextComponent(getUnlocalizedName()));
         //tooltip.add(new TranslationTextComponent(getUnlocalizedDesc()).setStyle(Style.EMPTY.withColor(TextFormatting.GRAY)));
         //TooltipHelper.tooltipIfShift(tooltip, () -> addToTooltipAfterShift(tooltip));
     }
