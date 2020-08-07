@@ -28,12 +28,12 @@ public class GuiButtonSpectrobePiece extends Button {
         if (active && visible) {
             boolean hover = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
 
-            IRenderTypeBuffer.Impl buffers = IRenderTypeBuffer.immediate(Tessellator.getInstance().getBuffer());
+            IRenderTypeBuffer.Impl buffers = IRenderTypeBuffer.getImpl(Tessellator.getInstance().getBuffer());
 
             RenderSystem.pushMatrix();
             RenderSystem.translatef(x, y, 0);
             piece.draw(buffers, 0xF000F0);
-            buffers.draw();
+            buffers.finish();
             RenderSystem.popMatrix();
 
             Minecraft.getInstance().getTextureManager().bindTexture(PrizmodMenu.texture);

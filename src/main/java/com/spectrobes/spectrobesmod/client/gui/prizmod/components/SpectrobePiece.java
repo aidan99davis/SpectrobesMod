@@ -1,16 +1,15 @@
 package com.spectrobes.spectrobesmod.client.gui.prizmod.components;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodMenu;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties.Stage;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.Matrix4f;
-import net.minecraft.client.renderer.RenderState;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -45,7 +44,7 @@ public class SpectrobePiece {
     }
 
     public String getUnlocalizedName() {
-        return registryKey.getNamespace() + ".spellpiece." + registryKey.getPath();
+        return SpectrobesInfo.MOD_ID + ".spectrobe." + spell.name;
     }
 
     public String getSortingName() {
@@ -90,26 +89,14 @@ public class SpectrobePiece {
      */
     @OnlyIn(Dist.CLIENT)
     public void drawBackground(IRenderTypeBuffer buffers, int light) {
-        spell.getMaterial();
-        RenderMaterial material = PsiAPI.getSpellPieceMaterial(registryKey);
-        IVertexBuilder buffer = material.getVertexConsumer(buffers, ignored -> getLayer());
-        Matrix4f mat = ms.peek().getModel();
-        // Cannot call .texture() on the chained object because SpriteAwareVertexBuilder is buggy
-        // and does not return itself, it returns the inner buffer
-        // This leads to .texture() using the implementation of the inner buffer,
-        // not of the SpriteAwareVertexBuilder, which is not what we want.
-        // Split the chain apart so that .texture() is called on the original buffer
-        buffer.vertex(mat, 0, 16, 0).color(1F, 1F, 1F, 1F);
-        buffer.texture(0, 1).light(light).endVertex();
+        ResourceLocation icon = spell.getIcon();
 
-        buffer.vertex(mat, 16, 16, 0).color(1F, 1F, 1F, 1F);
-        buffer.texture(1, 1).light(light).endVertex();
+        RenderSystem.pushMatrix();
 
-        buffer.vertex(mat, 16, 0, 0).color(1F, 1F, 1F, 1F);
-        buffer.texture(1, 0).light(light).endVertex();
+        Minecraft.getInstance().textureManager.bindTexture(icon);
+        RenderSystem.enableTexture();
 
-        buffer.vertex(mat, 0, 0, 0).color(1F, 1F, 1F, 1F);
-        buffer.texture(0, 0).light(light).endVertex();
+        RenderSystem.popMatrix();
     }
 
     /**
@@ -148,30 +135,6 @@ public class SpectrobePiece {
     public void addToTooltipAfterShift(List<ITextComponent> tooltip) {
         tooltip.add(new StringTextComponent(""));
 
-    }
-
-    /**
-     * Checks whether this piece should intercept keystrokes in the programmer interface.
-     * This is used for the number constant piece to change its value.
-     */
-    @OnlyIn(Dist.CLIENT)
-    public boolean interceptKeystrokes() {
-        return false;
-    }
-
-    /**
-     * Due to changes on LWJGL, it is no longer easily possible to get a key from a keycode.
-     * It is technically possible but it is unadvisable.
-     */
-
-    @OnlyIn(Dist.CLIENT)
-    public boolean onCharTyped(char character, int keyCode, boolean doit) {
-        return false;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public boolean onKeyPressed(int keyCode, int scanCode, boolean doit) {
-        return false;
     }
 
     @OnlyIn(Dist.CLIENT)

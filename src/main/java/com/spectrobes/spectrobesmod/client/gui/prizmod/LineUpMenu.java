@@ -123,27 +123,27 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
 
     public void populatePanelButtons() {
         parent.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent((sm) -> {
+            //populate the 6 team spectrobes pieces
+            //populate the child spectrobe piece
 
+            //populate the all spectrobes grid
             List<SpectrobePiece> shownPieces = new ArrayList<>();
             MinecraftForge.EVENT_BUS.post(event);
-            for (ResourceLocation key : event.getSpellPieceRegistry().keySet()) {
+            for (Spectrobe spectrobe : sm.getOwnedSpectrobes()) {
                 Class<? extends SpectrobePiece> clazz = event.getSpellPieceRegistry().getValue(key).get();
 
-                SpectrobePiece piece = SpectrobePiece.create(clazz, parent.spell);
-                shownPieces.clear();
+                SpectrobePiece piece = SpectrobePiece.create(clazz, spectrobe);
                 piece.getShownPieces(shownPieces);
                 for (SpectrobePiece shownPiece : shownPieces) {
                     GuiButtonSpectrobePiece spellPieceButton = new GuiButtonSpectrobePiece(parent, shownPiece, 0, 0, button -> {
                         if (parent.isSpectator()) {
                             return;
                         }
-                        parent.pushState(true);
                         SpectrobePiece piece1 = ((GuiButtonSpectrobePiece) button).piece.copyFromSpell(parent.spell);
-
-                        parent.spell.grid.gridData[PrizmodMenu.selectedX][PrizmodMenu.selectedY] = piece1;
-                        parent.spell.grid.gridData[PrizmodMenu.selectedX][PrizmodMenu.selectedY].isInGrid = true;
-                        parent.spell.grid.gridData[PrizmodMenu.selectedX][PrizmodMenu.selectedY].x = PrizmodMenu.selectedX;
-                        parent.spell.grid.gridData[PrizmodMenu.selectedX][PrizmodMenu.selectedY].y = PrizmodMenu.selectedY;
+                        allSpectrobesList.gridData[PrizmodMenu.selectedX][PrizmodMenu.selectedY] = piece1;
+                        allSpectrobesList.gridData[PrizmodMenu.selectedX][PrizmodMenu.selectedY].isInGrid = true;
+                        allSpectrobesList.gridData[PrizmodMenu.selectedX][PrizmodMenu.selectedY].x = PrizmodMenu.selectedX;
+                        allSpectrobesList.gridData[PrizmodMenu.selectedX][PrizmodMenu.selectedY].y = PrizmodMenu.selectedY;
                         parent.onSpellChanged(false);
                         closePanel();
                     });
