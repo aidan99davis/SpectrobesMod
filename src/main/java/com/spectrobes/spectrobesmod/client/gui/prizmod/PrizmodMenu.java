@@ -20,17 +20,15 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.client.gui.GuiUtils;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import org.lwjgl.glfw.GLFW;
 
-import javax.sound.sampled.Line;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PrizmodMenu extends Screen {
-    public static final ResourceLocation texture = new ResourceLocation(SpectrobesInfo.MOD_ID, "");
-    public static final ResourceLocation SPECTROBE_SLOT_TEXTURE = new ResourceLocation(SpectrobesInfo.MOD_ID, "");
+    public static final ResourceLocation texture = new ResourceLocation("spectrobesmod:textures/gui/prizmod_background.png");
+    public static final ResourceLocation SPECTROBE_SLOT_TEXTURE = new ResourceLocation("spectrobesmod:textures/gui/prizmod_background.png");
 
     static {
         RenderState.TransparencyState translucent = ObfuscationReflectionHelper.getPrivateValue(RenderState.class, null, "field_228515_g_");
@@ -69,8 +67,8 @@ public class PrizmodMenu extends Screen {
 
     @Override
     protected void init() {
-        xSize = 174;
-        ySize = 184;
+        xSize = 400;
+        ySize = 260;
         padLeft = 7;
         padTop = 7;
         left = (width - xSize) / 2;
@@ -109,7 +107,6 @@ public class PrizmodMenu extends Screen {
 
 
         //spellNameField.setText(player.getDisplayName().getFormattedText());
-
         panelWidget.populatePanelButtons();
 
         onSelectedChanged();
@@ -117,14 +114,16 @@ public class PrizmodMenu extends Screen {
 
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
+        super.render(mouseX, mouseY, partialTicks);
         FontRenderer textRenderer = getMinecraft().fontRenderer;
-        if (player != null && (player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER) != null)) {
+        if (player == null || (player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER) == null)) {
             getMinecraft().displayGuiScreen(null);
             return;
         }
 
         RenderSystem.pushMatrix();
         renderBackground();
+
 
         RenderSystem.color3f(1F, 1F, 1F);
         getMinecraft().getTextureManager().bindTexture(texture);
@@ -147,9 +146,7 @@ public class PrizmodMenu extends Screen {
         RenderSystem.pushMatrix();
         tooltip.clear();
         RenderSystem.translatef(gridLeft, gridTop, 0);
-        IRenderTypeBuffer.Impl buffers = IRenderTypeBuffer.getImpl(Tessellator.getInstance().getBuffer());
-        piece.draw(buffers, 0xF000F0);
-        buffers.finish();
+        panelWidget.render(mouseX, mouseY, partialTicks);
 
         RenderSystem.popMatrix();
         RenderSystem.color3f(1f, 1f, 1f);
@@ -214,7 +211,6 @@ public class PrizmodMenu extends Screen {
             tooltip = legitTooltip;
         }
 
-        super.render(mouseX, mouseY, partialTicks);
 
         if (!takingScreenshot && pieceAtCursor != null) {
             if (tooltip != null && !tooltip.isEmpty()) {
@@ -291,31 +287,6 @@ public class PrizmodMenu extends Screen {
 //        configWidget.configEnabled = false;
     }
 
-    @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        getMinecraft().keyboardListener.enableRepeatEvents(true);
-
-        if (keyCode == GLFW.GLFW_KEY_ESCAPE && shouldCloseOnEsc()) {
-            this.onClose();
-            return true;
-        }
-        SpectrobePiece piece = null;
-        if (selectedX != -1 && selectedY != -1) {
-            piece = panelWidget.allSpectrobesList.gridData[selectedX][selectedY];
-            if (piece != null) {
-//                if (piece.onKeyPressed(keyCode, scanCode, false)) {
-//                    piece.onKeyPressed(keyCode, scanCode, true);
-//                    onSpellChanged(false);
-//                    return true;
-//                }
-            }
-        }
-
-        if (panelWidget.panelEnabled) {
-            panelWidget.keyPressed(keyCode, scanCode, modifiers);
-        }
-        return false;
-    }
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
         if (player != null) {

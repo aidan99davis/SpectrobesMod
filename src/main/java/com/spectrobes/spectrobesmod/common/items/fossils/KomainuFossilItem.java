@@ -34,7 +34,6 @@ public class KomainuFossilItem extends Item {
             playerIn.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(playerCap -> {
                 playerCap.addSpectrobe(komainu.getRegistryName(), komainu.getSpectrobeData());
             });
-//            komainu.setSpectrobeInstance(SpectrobeRegistry.Komainu.copy());
         }
 
         return new ActionResult<>(ActionResultType.SUCCESS, itemStack);

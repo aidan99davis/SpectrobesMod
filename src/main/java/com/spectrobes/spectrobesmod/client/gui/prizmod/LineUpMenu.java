@@ -39,6 +39,8 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
     public LineUpMenu(int xIn, int yIn, int widthIn, int heightIn, String msg, PrizmodMenu parent) {
         super(xIn, yIn, widthIn, heightIn, msg);
         this.parent = parent;
+        allSpectrobesList = new AllSpectrobesList();
+
     }
 
     @Override
@@ -138,7 +140,7 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
                     }
                     ((GuiButtonSpectrobePiece) button).renderActions();
                     parent.onSpellChanged(false);
-                    closePanel();
+                    //closePanel();
                 });
                 spellPieceButton.visible = false;
                 spellPieceButton.active = false;
@@ -241,7 +243,7 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
         }
 
         if (panelEnabled && (mouseX < x || mouseY < y || mouseX > x + width || mouseY > y + height) && !parent.isSpectator()) {
-            closePanel();
+            //closePanel();
             return true;
         }
         return false;
@@ -269,14 +271,14 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
         x = parent.gridLeft + (PrizmodMenu.selectedX + 1) * 18;
         y = parent.gridTop;
 
-        searchField.x = x + 18;
-        searchField.y = y + 4;
-        searchField.setText("");
-        searchField.setVisible(true);
-        searchField.active = true;
-        searchField.setEnabled(true);
-        searchField.setFocused2(true);
-        parent.setFocused(searchField);
+//        searchField.x = x + 18;
+//        searchField.y = y + 4;
+//        searchField.setText("");
+//        searchField.setVisible(true);
+//        searchField.active = true;
+//        searchField.setEnabled(true);
+//        searchField.setFocused2(true);
+//        parent.setFocused(searchField);
         updatePanelButtons();
     }
 }

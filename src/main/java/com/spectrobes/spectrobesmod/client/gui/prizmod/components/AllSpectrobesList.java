@@ -68,31 +68,6 @@ public class AllSpectrobesList {
         return Math.max(rightmost - leftmost + 1, bottommost - topmost + 1);
     }
 
-    public void mirrorVertical() {
-        recalculateBoundaries();
-        if (empty) {
-            return;
-        }
-
-        SpectrobePiece[][] newGrid = new SpectrobePiece[GRID_SIZE][GRID_SIZE];
-
-        for (int i = 0; i < GRID_SIZE; i++) {
-            for (int j = 0; j < GRID_SIZE; j++) {
-                SpectrobePiece p = gridData[i][j];
-
-                if (p != null) {
-                    int newY = (GRID_SIZE  / 2)- j - 1;
-
-                    newGrid[i][newY] = p;
-                    p.y = newY;
-                }
-            }
-        }
-
-        gridData = newGrid;
-    }
-
-
     public static boolean exists(int x, int y) {
         return x >= 0 && y >= 0 && x < GRID_SIZE && y < GRID_SIZE / 2;
     }
@@ -116,6 +91,15 @@ public class AllSpectrobesList {
     }
 
     public void addSpectrobe(SpectrobePiece piece) {
+        for (int i = 0; i < GRID_SIZE; i++) {
+            for (int j = 0; j < GRID_SIZE; j++) {
+                SpectrobePiece p = gridData[i][j];
+                if (p == null) {
+                    gridData[i][j] = piece;
+                    return;
+                }
+            }
+        }
 
     }
 }
