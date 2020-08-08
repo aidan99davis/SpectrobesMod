@@ -34,14 +34,14 @@ public class GuiButtonSpectrobePiece extends Button {
             RenderSystem.translatef(x, y, 0);
             piece.draw(buffers, 0xF000F0);
             buffers.finish();
-            RenderSystem.popMatrix();
 
-            Minecraft.getInstance().getTextureManager().bindTexture(PrizmodMenu.texture);
+            Minecraft.getInstance().getTextureManager().bindTexture(PrizmodMenu.SPECTROBE_SLOT_TEXTURE);
+            blit(x, y, 16, gui.ySize, 16, 16);
             if (hover) {
                 piece.getTooltip(gui.tooltip);
-                blit(x, y, 16, gui.ySize, 16, 16);
             }
 
+            RenderSystem.popMatrix();
 
         }
     }

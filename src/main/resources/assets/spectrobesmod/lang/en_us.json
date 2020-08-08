@@ -37,10 +37,12 @@
     "item.spectrobesmod.mineral_item_topaz": "Topaz Mineral",
     "item.spectrobesmod.mineral_item_zircon": "Zircon Mineral",
     "item.spectrobesmod.komainu_fossil_item": "Komapod",
-    "item.spectrobesmod.spiko_fossil_item": "Spiko Fossil",
+    "item.spectrobesmod.spiko_fossil_item": "Spikopod",
+    "item.spectrobesmod.prizmod_item": "Prizmod",
     "block.spectrobesmod.mineral_block": "Mineral Block",
     "block.spectrobesmod.fossil_block": "Fossil Block",
     "itemGroup.spectrobestab.fossils": "Spectrobes Fossils",
     "itemGroup.spectrobestab.blocks": "Spectrobes Blocks",
-    "itemGroup.spectrobestab.minerals": "Spectrobes Minerals"
+    "itemGroup.spectrobestab.minerals": "Spectrobes Minerals",
+    "itemGroup.spectrobestab.tools": "Spectrobes Tools"
 }

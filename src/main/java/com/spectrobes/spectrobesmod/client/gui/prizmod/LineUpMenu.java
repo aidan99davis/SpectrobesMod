@@ -5,6 +5,7 @@ import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.components.*;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.IRenderable;
 import net.minecraft.client.gui.screen.Screen;
@@ -46,16 +47,14 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
     }
 
     @Override
-    public void renderButton(int mouseX, int mouseY, float pTicks) {
+    public void render(int mouseX, int mouseY, float pTicks) {
         for(Button b : visibleButtons) {
             b.render(mouseX,mouseY,pTicks);
         }
-        SpectrobesInfo.LOGGER.info("Got here 1");
+
         parent.getMinecraft().getTextureManager().bindTexture(PrizmodMenu.BACKGROUND_LOCATION);
-        SpectrobesInfo.LOGGER.info("Got here 2");
 
         fill(x, y, x + width, y + height, 0x88000000);
-        SpectrobesInfo.LOGGER.info("Got here 3");
 
         if (visibleButtons.size() > 0) {
             Button button = visibleButtons.get(Math.max(0, Math.min(panelCursor, visibleButtons.size() - 1)));
@@ -67,7 +66,6 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
         String s = Math.min(Math.max(getPageCount(), 1), page + 1) + "/" + Math.max(getPageCount(), 1);
         parent.getMinecraft().fontRenderer.drawStringWithShadow(s, x + width / 2f - parent.getMinecraft().fontRenderer.getStringWidth(s) / 2f, y + height - 12, 0xFFFFFF);
 
-        SpectrobesInfo.LOGGER.info("Got here 6");
     }
 
 
@@ -123,25 +121,28 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
             //populate the child spectrobe piece
 
             //populate the all spectrobes grid
+            allSpectrobesList = new AllSpectrobesList();
+            int index = 0;
             for (Spectrobe spectrobe : sm.getOwnedSpectrobes()) {
+                if(index < AllSpectrobesList.GRID_SIZE * AllSpectrobesList.GRID_SIZE) {
 
-                SpectrobePiece piece = new SpectrobePiece(spectrobe);
+                    SpectrobePiece piece = allSpectrobesList.addSpectrobe(spectrobe);
 
-                allSpectrobesList.addSpectrobe(piece);
-
-
-                GuiButtonSpectrobePiece spellPieceButton = new GuiButtonSpectrobePiece(parent, piece, 0, 0, button -> {
-                    ((GuiButtonSpectrobePiece) button).renderActions();
-                    parent.onSpellChanged(false);
-                    //closePanel();
-                });
-                spellPieceButton.visible = false;
-                spellPieceButton.active = false;
-                panelButtons.add(spellPieceButton);
-                visibleButtons.add(spellPieceButton);
-
+                    GuiButtonSpectrobePiece spellPieceButton = new GuiButtonSpectrobePiece(parent, piece, 0, 0, button -> {
+                        //((GuiButtonSpectrobePiece) button).renderActions();
+                        //parent.onSpellChanged(false);
+                        //closePanel();
+                        SpectrobesInfo.LOGGER.info("SPECTROBE SLOT CLICKED");
+                    });
+                    //spellPieceButton.visible = false;
+                    spellPieceButton.active = true;
+                    panelButtons.add(spellPieceButton);
+                    visibleButtons.add(spellPieceButton);
+                    index++;
+                }else {
+                    break;
+                }
             }
-
 
             GuiButtonPage right = new GuiButtonPage(0, 0, true, parent, button -> {
                 int max = getPageCount();
@@ -162,9 +163,9 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
                     updatePanelButtons();
                 }
             });
-            left.visible = false;
+            left.visible = true;
             left.active = false;
-            right.visible = false;
+            right.visible = true;
             right.active = false;
             panelButtons.add(left);
             panelButtons.add(right);

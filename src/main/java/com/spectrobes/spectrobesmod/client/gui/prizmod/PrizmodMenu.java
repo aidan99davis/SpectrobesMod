@@ -43,8 +43,6 @@ public class PrizmodMenu extends Screen {
     public LineUpMenu panelWidget;
     public ITooltipFlag tooltipFlag;
 
-    public boolean takingScreenshot = false;
-    public boolean shareToReddit = false;
     boolean spectator;
 
     public PrizmodMenu(PlayerEntity player) {
@@ -55,7 +53,7 @@ public class PrizmodMenu extends Screen {
     @Override
     protected void init() {
         xSize = 400;
-        ySize = 260;
+        ySize = 600;
         padLeft = 7;
         padTop = 7;
         left = (width - xSize) / 2;
@@ -64,7 +62,6 @@ public class PrizmodMenu extends Screen {
         gridTop = top + padTop;
         cursorX = cursorY = -1;
         tooltipFlag = getMinecraft().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL;
-
 
         //statusWidget = addButton(new StatusWidget(left - 48, top + 5, 48, 30, ITextComponent.func_241827_a_(""), this));
         panelWidget = addButton(new LineUpMenu(0, 0, 100, 125, "", this));
@@ -113,9 +110,9 @@ public class PrizmodMenu extends Screen {
 
         RenderSystem.color3f(1F, 1F, 1F);
         getMinecraft().getTextureManager().bindTexture(texture);
-
+        RenderSystem.translatef(0,0,-1);
         blit(left, top, 0, 0, xSize, ySize);
-
+        panelWidget.allSpectrobesList.draw(null, 0);
         //Currently selected piece
         SpectrobePiece piece = null;
         if (panelWidget.allSpectrobesList.exists(selectedX, selectedY)) {
@@ -139,7 +136,7 @@ public class PrizmodMenu extends Screen {
         RenderSystem.translatef(0, 0, 1);
         getMinecraft().getTextureManager().bindTexture(texture);
 
-        if (selectedX != -1 && selectedY != -1 && !takingScreenshot) {
+        if (selectedX != -1 && selectedY != -1) {
             blit(gridLeft + selectedX * 18, gridTop + selectedY * 18, 32, ySize, 16, 16);
         }
 
@@ -167,25 +164,19 @@ public class PrizmodMenu extends Screen {
 //                pieceAtCursor.getTooltip(tooltip);
 //            }
 
-            if (cursorX == selectedX && cursorY == selectedY) {
-                blit(gridLeft + cursorX * 18, gridTop + cursorY * 18, 16, ySize, 8, 16);
-            } else {
-                blit(gridLeft + cursorX * 18, gridTop + cursorY * 18, 16, ySize, 16, 16);
-            }
+//            if (cursorX == selectedX && cursorY == selectedY) {
+//                blit(gridLeft + cursorX * 18, gridTop + cursorY * 18, 16, ySize, 8, 16);
+//            } else {
+//                blit(gridLeft + cursorX * 18, gridTop + cursorY * 18, 16, ySize, 16, 16);
+//            }
         }
 
 
         int topYText = topY;
-        if (spectator) {
-            String spectator = TextFormatting.RED + I18n.format("psimisc.spectator");
-            textRenderer.drawStringWithShadow(spectator, left + xSize / 2f - textRenderer.getStringWidth(spectator) / 2f, topYText, 0xFFFFFF);
-            topYText -= 10;
-        }
 
         if (piece.spell != null) {
             String pieceName = I18n.format(piece.getUnlocalizedName());
             textRenderer.drawStringWithShadow(pieceName, left + xSize / 2f - textRenderer.getStringWidth(pieceName) / 2f, topYText, 0xFFFFFF);
-            topYText -= 10;
         }
 
         textRenderer.drawStringWithShadow("Prizmod", left + padLeft, topY + 1, 1);
@@ -200,7 +191,7 @@ public class PrizmodMenu extends Screen {
         }
 
 
-        if (!takingScreenshot && pieceAtCursor != null) {
+        if (pieceAtCursor != null) {
             if (tooltip != null && !tooltip.isEmpty()) {
                 pieceAtCursor.drawTooltip(mouseX, mouseY, tooltip, this);
             }

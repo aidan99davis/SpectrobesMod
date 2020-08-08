@@ -1,13 +1,17 @@
 package com.spectrobes.spectrobesmod.client.gui.prizmod.components;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodMenu;
+import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class AllSpectrobesList {
+public class AllSpectrobesList extends Widget {
 
-    public static final int GRID_SIZE = 10;
+    public static final int GRID_SIZE = 5;
 
     public SpectrobePiece[][] gridData;
 
@@ -21,9 +25,12 @@ public class AllSpectrobesList {
                 SpectrobePiece p = gridData[i][j];
                 if (p != null) {
                     RenderSystem.pushMatrix();
-                    RenderSystem.translatef(i * 18, j * 18, 0);
+                    Minecraft.getInstance().textureManager.bindTexture(PrizmodMenu.SPECTROBE_SLOT_TEXTURE);
+                    RenderSystem.translatef(i * 18, j * 18, 2);
                     p.draw(buffers, light);
+                    blit(i * 18, j * 18, 32, 200, 32, 32);
                     RenderSystem.popMatrix();
+
                 }
             }
         }
@@ -74,6 +81,7 @@ public class AllSpectrobesList {
 
 
     public AllSpectrobesList() {
+        super(16, 16, "");
         gridData = new SpectrobePiece[GRID_SIZE][GRID_SIZE];
         for (int i = 0; i < GRID_SIZE; i++) {
             for (int j = 0; j < GRID_SIZE; j++) {
@@ -95,16 +103,25 @@ public class AllSpectrobesList {
         return true;
     }
 
-    public void addSpectrobe(SpectrobePiece piece) {
-        for (int i = 0; i < GRID_SIZE; i++) {
-            for (int j = 0; j < GRID_SIZE; j++) {
+    public SpectrobePiece addSpectrobe(Spectrobe piece) {
+        int i = 0;
+        int j = 0;
+        boolean added = false;
+
+        for (i = 0; i < GRID_SIZE; i++) {
+            for (j = 0; j < GRID_SIZE; j++) {
                 SpectrobePiece p = gridData[i][j];
-                if (p == null) {
-                    gridData[i][j] = piece;
-                    return;
+                if (p.spell == null) {
+                    gridData[i][j].spell = piece;
+                    added = true;
+                    break;
                 }
             }
         }
+        if(added)
+            return gridData[i][j];
+
+        return null;
 
     }
 }

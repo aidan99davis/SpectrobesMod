@@ -24,7 +24,7 @@ public class SpectrobePiece {
     @OnlyIn(Dist.CLIENT)
     private static RenderType layer;
 
-    public final Spectrobe spell;
+    public Spectrobe spell;
 
     public boolean isInGrid = false;
     public int x, y;
@@ -70,19 +70,19 @@ public class SpectrobePiece {
         RenderSystem.popMatrix();
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public static RenderType getLayer() {
-        if (layer == null) {
-            RenderType.State glState = RenderType.State.getBuilder()
-                    .texture(new RenderState.TextureState(PrizmodMenu.SPECTROBE_SLOT_TEXTURE, false, false))
-                    .lightmap(new RenderState.LightmapState(true))
-                    .alpha(new RenderState.AlphaState(0.004F))
-                    .cull(new RenderState.CullState(false))
-                    .build(false);
-            layer = RenderType.makeType(PrizmodMenu.SPECTROBE_SLOT_TEXTURE.toString(), DefaultVertexFormats.POSITION_COLOR_TEX_LIGHTMAP, GL11.GL_QUADS, 64, glState);
-        }
-        return layer;
-    }
+//    @OnlyIn(Dist.CLIENT)
+//    public static RenderType getLayer() {
+//        if (layer == null) {
+//            RenderType.State glState = RenderType.State.getBuilder()
+//                    .texture(new RenderState.TextureState(PrizmodMenu.SPECTROBE_SLOT_TEXTURE, false, false))
+//                    .lightmap(new RenderState.LightmapState(true))
+//                    .alpha(new RenderState.AlphaState(0.004F))
+//                    .cull(new RenderState.CullState(false))
+//                    .build(false);
+//            layer = RenderType.makeType(PrizmodMenu.SPECTROBE_SLOT_TEXTURE.toString(), DefaultVertexFormats.POSITION_COLOR_TEX_LIGHTMAP, GL11.GL_QUADS, 64, glState);
+//        }
+//        return layer;
+//    }
 
     /**
      * Draws this piece's background.
@@ -96,6 +96,7 @@ public class SpectrobePiece {
         Minecraft.getInstance().textureManager.bindTexture(bg);
         RenderSystem.enableTexture();
 
+
         RenderSystem.popMatrix();
     }
 
@@ -105,7 +106,19 @@ public class SpectrobePiece {
      */
     @OnlyIn(Dist.CLIENT)
     public void drawAdditional(IRenderTypeBuffer buffers, int light) {
-        // NO-OP
+        SpectrobesInfo.LOGGER.info("GOT TO HERE");
+        if(spell != null) {
+            ResourceLocation icon = spell.getIcon();
+
+            RenderSystem.pushMatrix();
+
+            Minecraft.getInstance().textureManager.bindTexture(icon);
+            RenderSystem.enableTexture();
+
+
+            RenderSystem.popMatrix();
+
+        }
     }
 
     /**

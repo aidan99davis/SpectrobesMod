@@ -64,7 +64,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         this.goalSelector.addGoal(5, new BreedGoal(this,10));
         this.goalSelector.addGoal(2, new RandomWalkingGoal(this, 0.2d));
         this.goalSelector.addGoal(5, new LookAtGoal(this, PlayerEntity.class, 6.0F));
-        this.goalSelector.addGoal(5, new LookRandomlyGoal(this));
+//        this.goalSelector.addGoal(5, new LookRandomlyGoal(this));
         this.goalSelector.addGoal(3, new FollowOwnerGoal(this,0.3f , 4, 12, true));
     }
 
@@ -119,7 +119,6 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     public void setTicksTillMate(int ticksTillMate) {
         dataManager.set(TICKS_TILL_MATE, ticksTillMate);
     }
-
 
     @Override
     public IPacket<?> createSpawnPacket() {

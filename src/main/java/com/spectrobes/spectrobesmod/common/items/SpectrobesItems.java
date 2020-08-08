@@ -82,7 +82,7 @@ public class SpectrobesItems {
         event.getRegistry().register(
                 new PrizmodItem(
                         new Item.Properties()
-                                .group(SpectrobesFossilsItemGroup.Instance)));
+                                .group(SpectrobesToolsItemGroup.Instance)));
     }
 
     static void registerMineral(final RegistryEvent.Register<Item> event, Mineral mineral) {
@@ -135,6 +135,19 @@ public class SpectrobesItems {
         @Override
         public ItemStack createIcon() {
             return SpectrobesItems.mineral_item_power_c.getDefaultInstance();
+        }
+    }
+    public static class SpectrobesToolsItemGroup extends ItemGroup {
+
+        public static final SpectrobesToolsItemGroup Instance = new SpectrobesToolsItemGroup(ItemGroup.GROUPS.length, "spectrobestab.tools");
+
+        public SpectrobesToolsItemGroup(int index, String label) {
+            super(index, label);
+        }
+
+        @Override
+        public ItemStack createIcon() {
+            return SpectrobesItems.prizmod_item.getDefaultInstance();
         }
     }
 
