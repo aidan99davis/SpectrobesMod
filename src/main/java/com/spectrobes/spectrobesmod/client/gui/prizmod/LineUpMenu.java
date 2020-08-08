@@ -128,7 +128,7 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
 
                     SpectrobePiece piece = allSpectrobesList.addSpectrobe(spectrobe);
 
-                    GuiButtonSpectrobePiece spellPieceButton = new GuiButtonSpectrobePiece(parent, piece, 0, 0, button -> {
+                    GuiButtonSpectrobePiece spellPieceButton = new GuiButtonSpectrobePiece(parent, piece, piece.x, piece.y, button -> {
                         //((GuiButtonSpectrobePiece) button).renderActions();
                         //parent.onSpellChanged(false);
                         //closePanel();
