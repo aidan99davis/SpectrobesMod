@@ -278,7 +278,7 @@ public class PrizmodMenu extends Screen {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
         if (player != null) {
-            panelWidget.mouseClicked(mouseX,mouseY,mouseButton);
+            return panelWidget.mouseClicked(mouseX,mouseY,mouseButton);
         }
         return super.mouseClicked(mouseX, mouseY, mouseButton);
     }

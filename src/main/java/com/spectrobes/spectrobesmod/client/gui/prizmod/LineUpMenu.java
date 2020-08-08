@@ -1,6 +1,7 @@
 package com.spectrobes.spectrobesmod.client.gui.prizmod;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.components.*;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
@@ -46,24 +47,27 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
 
     @Override
     public void renderButton(int mouseX, int mouseY, float pTicks) {
-        if (panelEnabled) {
-            parent.getMinecraft().getTextureManager().bindTexture(PrizmodMenu.BACKGROUND_LOCATION);
-
-            fill(x, y, x + width, y + height, 0x88000000);
-
-            if (visibleButtons.size() > 0) {
-                Button button = visibleButtons.get(Math.max(0, Math.min(panelCursor, visibleButtons.size() - 1)));
-                int panelPieceX = button.x;
-                int panelPieceY = button.y;
-                fill(panelPieceX - 1, panelPieceY - 1, panelPieceX + 17, panelPieceY + 17, 0x559999FF);
-            }
-
-            RenderSystem.color3f(1f, 1f, 1f);
-            blit(searchField.x - 14, searchField.y - 2, 0, parent.ySize + 16, 12, 12);
-
-            String s = Math.min(Math.max(getPageCount(), 1), page + 1) + "/" + Math.max(getPageCount(), 1);
-            parent.getMinecraft().fontRenderer.drawStringWithShadow(s, x + width / 2f - parent.getMinecraft().fontRenderer.getStringWidth(s) / 2f, y + height - 12, 0xFFFFFF);
+        for(Button b : visibleButtons) {
+            b.render(mouseX,mouseY,pTicks);
         }
+        SpectrobesInfo.LOGGER.info("Got here 1");
+        parent.getMinecraft().getTextureManager().bindTexture(PrizmodMenu.BACKGROUND_LOCATION);
+        SpectrobesInfo.LOGGER.info("Got here 2");
+
+        fill(x, y, x + width, y + height, 0x88000000);
+        SpectrobesInfo.LOGGER.info("Got here 3");
+
+        if (visibleButtons.size() > 0) {
+            Button button = visibleButtons.get(Math.max(0, Math.min(panelCursor, visibleButtons.size() - 1)));
+            int panelPieceX = button.x;
+            int panelPieceY = button.y;
+            fill(panelPieceX - 1, panelPieceY - 1, panelPieceX + 17, panelPieceY + 17, 0x559999FF);
+        }
+
+        String s = Math.min(Math.max(getPageCount(), 1), page + 1) + "/" + Math.max(getPageCount(), 1);
+        parent.getMinecraft().fontRenderer.drawStringWithShadow(s, x + width / 2f - parent.getMinecraft().fontRenderer.getStringWidth(s) / 2f, y + height - 12, 0xFFFFFF);
+
+        SpectrobesInfo.LOGGER.info("Got here 6");
     }
 
 
@@ -75,14 +79,6 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
                 page = next;
                 updatePanelButtons();
             }
-        }
-        return false;
-    }
-
-    @Override
-    public boolean charTyped(char p_charTyped_1_, int p_charTyped_2_) {
-        if (panelEnabled) {
-            return searchField.charTyped(p_charTyped_1_, p_charTyped_2_);
         }
         return false;
     }
@@ -182,14 +178,15 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
         visibleButtons.clear();
         parent.getButtons().forEach(button -> {
             if (button instanceof GuiButtonPage || button instanceof GuiButtonSpectrobePiece) {
-                button.active = false;
-                button.visible = false;
+                //button.active = false;
+                //button.visible = false;
             }
         });
 
         parent.getButtons().forEach(button -> {
             if (button instanceof GuiButtonSpectrobePiece) {
-
+                button.visible = true;
+                button.active = true;
                 visibleButtons.add((GuiButtonSpectrobePiece) button);
 
             } else if (button instanceof GuiButtonPage) {
