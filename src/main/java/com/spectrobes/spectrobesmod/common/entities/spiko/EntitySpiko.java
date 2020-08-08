@@ -77,9 +77,4 @@ public class EntitySpiko extends EntityMammalSpectrobe {
     protected EvolutionRequirements getEvolutionRequirements() {
         return new EvolutionRequirements(10, 5, 0);
     }
-
-    @Override
-    public EntitySize getSize(Pose poseIn) {
-        return super.getSize(poseIn).scale(0.5F, 0.5F);
-    }
 }

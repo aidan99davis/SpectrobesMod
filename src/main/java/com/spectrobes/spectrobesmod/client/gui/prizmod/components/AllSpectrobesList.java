@@ -5,7 +5,6 @@ import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodMenu;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -19,19 +18,17 @@ public class AllSpectrobesList extends Widget {
     private int leftmost, rightmost, topmost, bottommost;
 
     @OnlyIn(Dist.CLIENT)
-    public void draw(IRenderTypeBuffer buffers, int light) {
+    public void draw() {
         for (int i = 0; i < GRID_SIZE; i++) {
             for (int j = 0; j < GRID_SIZE; j++) {
                 SpectrobePiece p = gridData[i][j];
-                if (p != null) {
-                    RenderSystem.pushMatrix();
-                    Minecraft.getInstance().textureManager.bindTexture(PrizmodMenu.SPECTROBE_SLOT_TEXTURE);
-                    RenderSystem.translatef(i * 18, j * 18, 2);
-                    p.draw(buffers, light);
-                    blit(i * 18, j * 18, 32, 200, 32, 32);
-                    RenderSystem.popMatrix();
 
-                }
+                RenderSystem.pushMatrix();
+                Minecraft.getInstance().textureManager.bindTexture(PrizmodMenu.SPECTROBE_SLOT_TEXTURE);
+                RenderSystem.translatef(i * 32, j * 32, 2);
+                p.draw();
+                RenderSystem.popMatrix();
+
             }
         }
     }

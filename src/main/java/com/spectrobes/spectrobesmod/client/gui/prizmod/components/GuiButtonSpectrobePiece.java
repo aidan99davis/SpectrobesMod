@@ -31,17 +31,17 @@ public class GuiButtonSpectrobePiece extends Button {
             IRenderTypeBuffer.Impl buffers = IRenderTypeBuffer.getImpl(Tessellator.getInstance().getBuffer());
 
             RenderSystem.pushMatrix();
-            RenderSystem.translatef(x, y, 0);
-            piece.draw(buffers, 0xF000F0);
-            buffers.finish();
+//            RenderSystem.translatef(x * 16, y * 16, 0);
+//            piece.draw();
 
-            Minecraft.getInstance().getTextureManager().bindTexture(PrizmodMenu.SPECTROBE_SLOT_TEXTURE);
-            blit(x, y, 16, gui.ySize, 16, 16);
+            //Minecraft.getInstance().getTextureManager().bindTexture(PrizmodMenu.SPECTROBE_SLOT_TEXTURE);
+            //blit(x, y, 16, gui.ySize, 16, 16);
             if (hover) {
                 piece.getTooltip(gui.tooltip);
             }
 
             RenderSystem.popMatrix();
+            buffers.finish();
 
         }
     }

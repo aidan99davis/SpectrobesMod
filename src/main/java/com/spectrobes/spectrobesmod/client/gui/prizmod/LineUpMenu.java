@@ -232,7 +232,7 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        if (parent.cursorX != -1 && parent.cursorY != -1 && !parent.commentEnabled && mouseButton == 1 && !panelEnabled) {
+        if (parent.cursorX != -1 && parent.cursorY != -1 && mouseButton == 1 && !panelEnabled) {
             openPanel();
             return true;
         }

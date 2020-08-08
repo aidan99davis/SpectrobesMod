@@ -3,6 +3,7 @@ package com.spectrobes.spectrobesmod.client.gui.prizmod;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.components.SpectrobePiece;
+import com.spectrobes.spectrobesmod.client.gui.utils.GuiUtils;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
@@ -111,8 +112,13 @@ public class PrizmodMenu extends Screen {
         RenderSystem.color3f(1F, 1F, 1F);
         getMinecraft().getTextureManager().bindTexture(texture);
         RenderSystem.translatef(0,0,-1);
-        blit(left, top, 0, 0, xSize, ySize);
-        panelWidget.allSpectrobesList.draw(null, 0);
+        int height = getMinecraft().getMainWindow().getHeight();
+        int width = getMinecraft().getMainWindow().getWidth();
+        GuiUtils.blit(left, top,16,0,0,
+                width,
+                height,
+                height /4, width / 4);
+        panelWidget.allSpectrobesList.draw();
         //Currently selected piece
         SpectrobePiece piece = null;
         if (panelWidget.allSpectrobesList.exists(selectedX, selectedY)) {

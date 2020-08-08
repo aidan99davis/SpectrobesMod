@@ -15,13 +15,13 @@ public class SpectrobesTeamList {
     private int leftmost, rightmost, topmost, bottommost;
 
     @OnlyIn(Dist.CLIENT)
-    public void draw(IRenderTypeBuffer buffers, int light) {
+    public void draw() {
         for (int j = 0; j < SIZE; j++) {
             SpectrobePiece p = data[j];
             if (p != null) {
                 RenderSystem.pushMatrix();
                 RenderSystem.translatef(j * 10, 0, 0);
-                p.draw(buffers, light);
+                p.draw();
                 RenderSystem.popMatrix();
             } else {
 
