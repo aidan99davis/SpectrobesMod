@@ -117,7 +117,7 @@ public class PrizmodMenu extends Screen {
         GuiUtils.blit(left, top,16,0,0,
                 width,
                 height,
-                height /4, width / 4);
+                150, 250);
         panelWidget.allSpectrobesList.draw();
         //Currently selected piece
         SpectrobePiece piece = null;
