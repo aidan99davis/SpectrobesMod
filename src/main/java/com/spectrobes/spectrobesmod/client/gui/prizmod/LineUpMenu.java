@@ -46,7 +46,7 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
             b.render(mouseX,mouseY,pTicks);
         }
 
-        parent.getMinecraft().getTextureManager().bindTexture(PrizmodMenu.BACKGROUND_LOCATION);
+        parent.getMinecraft().getTextureManager().bindTexture(PrizmodMenu.SPECTROBE_SLOT_TEXTURE);
 
 //        fill(x, y, x + width, y + height, 0x88000000);
 
@@ -106,13 +106,13 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
 
             //populate the all spectrobes grid
             allSpectrobesList = new AllSpectrobesList();
+            int maxCount = (int) Math.pow(AllSpectrobesList.GRID_SIZE, 2);
             int index = 0;
             for (Spectrobe spectrobe : sm.getOwnedSpectrobes()) {
-                if(index < AllSpectrobesList.GRID_SIZE * AllSpectrobesList.GRID_SIZE) {
-
+                SpectrobesInfo.LOGGER.info("POPULATING SPECTROBE SLOT #" + index);
+                if(index < maxCount) {
                     SpectrobePiece piece = allSpectrobesList.addSpectrobe(spectrobe);
-
-                    GuiButtonSpectrobePiece spellPieceButton = new GuiButtonSpectrobePiece(parent, piece, piece.x, piece.y, button -> {
+                    GuiButtonSpectrobePiece spellPieceButton = new GuiButtonSpectrobePiece(parent, piece, piece.x * 32 + 32, piece.y * 32 + 32, button -> {
                         //((GuiButtonSpectrobePiece) button).renderActions();
                         //parent.onSpellChanged(false);
                         //closePanel();
@@ -198,16 +198,16 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
 
         visibleButtons.sort(comparator);
 
-        for (int i = 0; i < visibleButtons.size(); i++) {
-            int c = i;
-
-            GuiButtonSpectrobePiece piece = visibleButtons.get(i);
-            GuiButtonSpectrobePiece buttonSpellPiece = (GuiButtonSpectrobePiece) parent.getButtons().stream().filter(el -> el.equals(piece)).findFirst().orElse(null);
-            buttonSpellPiece.x = x + 5 + c % 5 * 18;
-            buttonSpellPiece.y = y + 20 + c / 5 * 18;
-            buttonSpellPiece.visible = true;
-            buttonSpellPiece.active = true;
-        }
+//        for (int i = 0; i < visibleButtons.size(); i++) {
+//            int c = i;
+//
+//            GuiButtonSpectrobePiece piece = visibleButtons.get(i);
+//            GuiButtonSpectrobePiece buttonSpellPiece = (GuiButtonSpectrobePiece) parent.getButtons().stream().filter(el -> el.equals(piece)).findFirst().orElse(null);
+//            buttonSpellPiece.x = x + 5 + c % 5 * 18;
+//            buttonSpellPiece.y = y + 20 + c / 5 * 18;
+//            buttonSpellPiece.visible = true;
+//            buttonSpellPiece.active = true;
+//        }
     }
 
     @Override

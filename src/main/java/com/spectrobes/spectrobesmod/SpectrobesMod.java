@@ -3,6 +3,7 @@ package com.spectrobes.spectrobesmod;
 import com.spectrobes.spectrobesmod.client.entity.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.common.capability.PlayerEvents;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
+import com.spectrobes.spectrobesmod.common.registry.IconRegistry;
 import com.spectrobes.spectrobesmod.common.registry.MineralRegistry;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
@@ -53,6 +54,7 @@ public class SpectrobesMod
     private void setup(final FMLCommonSetupEvent event)
     {
         MinecraftForge.EVENT_BUS.register(PlayerEvents.instance);
+        IconRegistry.init();
         CapabilityManager.INSTANCE.register(PlayerSpectrobeMaster.class, new Capability.IStorage<PlayerSpectrobeMaster>() {
             @Nullable
             @Override
