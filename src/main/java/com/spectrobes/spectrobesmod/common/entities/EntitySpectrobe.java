@@ -24,10 +24,11 @@ import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties.Nature
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties.Stage;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
-import software.bernie.geckolib.animation.AnimationTestEvent;
-import software.bernie.geckolib.animation.model.AnimationController;
-import software.bernie.geckolib.animation.model.AnimationControllerCollection;
+import software.bernie.geckolib.animation.controller.AnimationController;
+import software.bernie.geckolib.animation.controller.EntityAnimationController;
 import software.bernie.geckolib.entity.IAnimatedEntity;
+import software.bernie.geckolib.event.AnimationTestEvent;
+import software.bernie.geckolib.manager.EntityAnimationManager;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.annotation.Nullable;
@@ -44,8 +45,8 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
             EntityDataManager.createKey(EntitySpectrobe.class,
                     Spectrobe.SpectrobeSerializer);
 
-    public AnimationControllerCollection animationControllers = new AnimationControllerCollection();
-    protected AnimationController moveController = new AnimationController(this, "moveController", 10F, this::moveController);
+    public EntityAnimationManager animationControllers = new EntityAnimationManager();
+    protected EntityAnimationController moveController = new EntityAnimationController(this, "moveController", 10F, this::moveController);
 
 
     public EntitySpectrobe(EntityType<? extends EntitySpectrobe> entityTypeIn,
@@ -166,7 +167,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     //Animation
 
     @Override
-    public AnimationControllerCollection getAnimationControllers() {
+    public EntityAnimationManager getAnimationManager() {
         return animationControllers;
     }
 

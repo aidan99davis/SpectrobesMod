@@ -8,9 +8,9 @@ import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.entity.*;
 import net.minecraft.world.World;
-import software.bernie.geckolib.animation.AnimationBuilder;
-import software.bernie.geckolib.animation.AnimationTestEvent;
-import software.bernie.geckolib.animation.model.AnimationControllerCollection;
+import software.bernie.geckolib.animation.builder.AnimationBuilder;
+import software.bernie.geckolib.event.AnimationTestEvent;
+import software.bernie.geckolib.manager.EntityAnimationManager;
 
 public class EntitySpiko extends EntityMammalSpectrobe {
 
@@ -47,13 +47,13 @@ public class EntitySpiko extends EntityMammalSpectrobe {
 
 
     @Override
-    public AnimationControllerCollection getAnimationControllers() {
+    public EntityAnimationManager getAnimationManager() {
         return animationControllers;
     }
 
     @Override
     public <ENTITY extends Entity> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent) {
-        moveController.transitionLength = 2;
+        moveController.transitionLengthTicks = 2;
         if(!(limbSwingAmount > -0.15F && limbSwingAmount < 0.15F))
         {
             moveController.setAnimation(new AnimationBuilder().addAnimation("animation.spiko.walk", true));
