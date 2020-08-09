@@ -4,7 +4,7 @@ import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.entities.spiko.EntitySpiko;
 import net.minecraft.util.ResourceLocation;
 import software.bernie.geckolib.animation.model.AnimatedEntityModel;
-import software.bernie.geckolib.animation.model.AnimatedModelRenderer;
+import software.bernie.geckolib.animation.render.AnimatedModelRenderer;
 
 // Made with Blockbench 3.5.4
 // Exported for Minecraft version 1.12.2 or 1.15.2 (same format for both) for entity models animated with GeckoLib
