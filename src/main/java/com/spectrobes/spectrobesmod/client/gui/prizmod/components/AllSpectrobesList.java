@@ -118,6 +118,8 @@ public class AllSpectrobesList extends Widget {
                     jr = j;
                     break;
                 }
+                if(added)
+                    break;
             }
         }
         return gridData[ir][jr];

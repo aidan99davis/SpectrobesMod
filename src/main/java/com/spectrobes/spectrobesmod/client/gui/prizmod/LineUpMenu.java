@@ -25,7 +25,6 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
     public SpectrobesTeamList spectrobesTeamList;
     private SpectrobePiece childForm;
     public int page = 0;
-    private static final int PIECES_PER_PAGE = 12;
     public final List<GuiButtonSpectrobePiece> visibleButtons = new ArrayList<>();
 
     public LineUpMenu(int xIn, int yIn, String msg, PrizmodMenu parent) {
@@ -68,10 +67,10 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
     public boolean mouseScrolled(double par1, double par2, double par3) {
         if (panelEnabled && par3 != 0) {
             int next = (int) (page - par3 / Math.abs(par3));
-            if (next >= 0 && next < getPageCount()) {
-                page = next;
-                updatePanelButtons();
-            }
+//            if (next >= 0 && next < getPageCount()) {
+//                page = next;
+//                updatePanelButtons();
+//            }
         }
         return false;
     }
@@ -98,10 +97,6 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
             }
         }
         return false;
-    }
-
-    public int getPageCount() {
-        return (visibleButtons.size() / PIECES_PER_PAGE) + 1;
     }
 
     public void populatePanelButtons() {
@@ -132,32 +127,32 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
                     break;
                 }
             }
-
-            GuiButtonPage right = new GuiButtonPage(0, 0, true, parent, button -> {
-                int max = getPageCount();
-                int next = page + (((GuiButtonPage) button).right ? 1 : -1);
-
-                if (next >= 0 && next < max) {
-                    page = next;
-                    updatePanelButtons();
-                }
-            });
-
-            GuiButtonPage left = new GuiButtonPage(0, 0, false, parent, button -> {
-                int max = getPageCount();
-                int next = page + (((GuiButtonPage) button).right ? 1 : -1);
-
-                if (next >= 0 && next < max) {
-                    page = next;
-                    updatePanelButtons();
-                }
-            });
-            left.visible = true;
-            left.active = false;
-            right.visible = true;
-            right.active = false;
-            panelButtons.add(left);
-            panelButtons.add(right);
+//
+//            GuiButtonPage right = new GuiButtonPage(0, 0, true, parent, button -> {
+//                int max = getPageCount();
+//                int next = page + (((GuiButtonPage) button).right ? 1 : -1);
+//
+//                if (next >= 0 && next < max) {
+//                    page = next;
+//                    updatePanelButtons();
+//                }
+//            });
+//
+//            GuiButtonPage left = new GuiButtonPage(0, 0, false, parent, button -> {
+//                int max = getPageCount();
+//                int next = page + (((GuiButtonPage) button).right ? 1 : -1);
+//
+//                if (next >= 0 && next < max) {
+//                    page = next;
+//                    updatePanelButtons();
+//                }
+//            });
+//            left.visible = true;
+//            left.active = false;
+//            right.visible = true;
+//            right.active = false;
+//            panelButtons.add(left);
+//            panelButtons.add(right);
             parent.addButtons(panelButtons);
         });
 
@@ -181,7 +176,7 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
 
             } else if (button instanceof GuiButtonPage) {
                 GuiButtonPage page = (GuiButtonPage) button;
-                if (page.isRight() && this.page < getPageCount() - 1) {
+                if (page.isRight() /*&& this.page < getPageCount() - 1*/) {
                     button.x = x + width - 22;
                     button.y = y + height - 15;
                     button.visible = true;
@@ -203,12 +198,8 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
 
         visibleButtons.sort(comparator);
 
-        int start = page * PIECES_PER_PAGE;
-        for (int i = start; i < visibleButtons.size(); i++) {
-            int c = i - start;
-            if (c >= PIECES_PER_PAGE) {
-                break;
-            }
+        for (int i = 0; i < visibleButtons.size(); i++) {
+            int c = i;
 
             GuiButtonSpectrobePiece piece = visibleButtons.get(i);
             GuiButtonSpectrobePiece buttonSpellPiece = (GuiButtonSpectrobePiece) parent.getButtons().stream().filter(el -> el.equals(piece)).findFirst().orElse(null);
@@ -248,7 +239,7 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
     public void openPanel() {
         closePanel();
         panelEnabled = true;
-        page = Math.min(page, Math.max(0, getPageCount() - 1));
+        //page = Math.min(page, Math.max(0, getPageCount() - 1));
         x = parent.gridLeft + (PrizmodMenu.selectedX + 1) * 18;
         y = parent.gridTop;
         parent.getButtons().forEach(button -> {
