@@ -59,10 +59,12 @@ public class EntityKomainu extends EntityMammalSpectrobe {
         moveController.transitionLengthTicks = 2;
         if(!(limbSwingAmount > -0.15F && limbSwingAmount < 0.15F))
         {
+            animationControllers.setAnimationSpeed(2);
             moveController.setAnimation(new AnimationBuilder().addAnimation("animation.komainu.jump", true));
             return true;
         }
         else if(this.isSitting()) {
+            animationControllers.setAnimationSpeed(1);
             moveController.setAnimation(new AnimationBuilder().addAnimation("animation.komainu.sit", false));
             return true;
         }

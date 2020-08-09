@@ -112,16 +112,16 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
                 SpectrobesInfo.LOGGER.info("POPULATING SPECTROBE SLOT #" + index);
                 if(index < maxCount) {
                     SpectrobePiece piece = allSpectrobesList.addSpectrobe(spectrobe);
-                    GuiButtonSpectrobePiece spellPieceButton = new GuiButtonSpectrobePiece(parent, piece, piece.x * 32 + 32, piece.y * 32 + 32, button -> {
+                    GuiButtonSpectrobePiece spectrobeButton = new GuiButtonSpectrobePiece(parent, piece, piece.x * 32 + 32, piece.y * 32 + 32, button -> {
                         //((GuiButtonSpectrobePiece) button).renderActions();
                         //parent.onSpellChanged(false);
                         //closePanel();
                         SpectrobesInfo.LOGGER.info("SPECTROBE SLOT CLICKED");
                     });
                     //spellPieceButton.visible = false;
-                    spellPieceButton.active = true;
-                    panelButtons.add(spellPieceButton);
-                    visibleButtons.add(spellPieceButton);
+                    spectrobeButton.active = true;
+                    panelButtons.add(spectrobeButton);
+                    visibleButtons.add(spectrobeButton);
                     index++;
                 }else {
                     break;
@@ -212,6 +212,12 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+        if(allSpectrobesList.gridData[(int) mouseX / 32][(int) mouseY / 32] != null && mouseButton == 0) {
+            visibleButtons.forEach(button -> {
+                if(button.piece != null)
+                    button.onPress();
+            });
+        }
         if (parent.cursorX != -1 && parent.cursorY != -1 && mouseButton == 1 && !panelEnabled) {
             openPanel();
             return true;
