@@ -5,6 +5,7 @@ import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodMenu;
 import com.spectrobes.spectrobesmod.client.gui.utils.GuiUtils;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
+import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeIconInfo;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties.Stage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
@@ -87,16 +88,28 @@ public class SpectrobePiece {
     @OnlyIn(Dist.CLIENT)
     public void drawAdditional() {
         if(spell != null) {
-            ResourceLocation icon = spell.getIcon();
+            SpectrobeIconInfo iconInfo = spell.getIcon();
+            ResourceLocation icon = iconInfo.icon();
 
             RenderSystem.pushMatrix();
 
             Minecraft.getInstance().textureManager.bindTexture(icon);
 
-            RenderSystem.enableTexture();
+            //RenderSystem.enableTexture();
             //RenderSystem.scalef(0.125f, 0.125f, 0.125f);
+            float scalex = 32 / iconInfo.getWidth();
+            float scaley = 32 / iconInfo.getHeight();
 
-            GuiUtils.blit(x * 32 + 32, y * 32 + 32,32,0,0,32, 32, 32, 32);
+            int marginleft = iconInfo.getWidth() < 31
+                    ? ((32 - iconInfo.getWidth())/2)
+                    : 0;
+            int margintop = iconInfo.getHeight() < 31
+                    ? ((32 - iconInfo.getHeight())/2)
+                    : 0;
+
+            RenderSystem.scalef(scalex, scaley, 0);
+
+            GuiUtils.blit(x * 32 + 32 + marginleft, y * 32 + 32 + margintop,32,0,0,iconInfo.getWidth(), iconInfo.getHeight(), iconInfo.getHeight(), iconInfo.getWidth());
             RenderSystem.popMatrix();
 
 //            RenderSystem.disableTexture();

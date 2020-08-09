@@ -2,6 +2,7 @@ package com.spectrobes.spectrobesmod.common.spectrobes;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralProperties;
+import com.spectrobes.spectrobesmod.common.registry.IconRegistry;
 import com.spectrobes.spectrobesmod.util.SpectrobeBuilder;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
@@ -27,7 +28,8 @@ public class Spectrobe {
     @Required
     public SpectrobeStats stats;
 
-    private ResourceLocation iconRl = new ResourceLocation("spectrobesmod:textures/gui/samukabu.png");
+    @Required
+    private String iconRl;
 
     public Spectrobe copy() {
         return new SpectrobeBuilder().buildFrom(this);
@@ -49,7 +51,7 @@ public class Spectrobe {
         this.stats = stats;
     }
 
-    public void setIcon(ResourceLocation rl) {
+    public void setIcon(String rl) {
         this.iconRl = rl;
     }
 
@@ -86,8 +88,8 @@ public class Spectrobe {
         return s;
     }
 
-    public ResourceLocation getIcon() {
-        return iconRl;
+    public SpectrobeIconInfo getIcon() {
+        return IconRegistry.getInstance().getByName(name);
     }
 
     public static class SpectrobeSerializer implements IDataSerializer<Spectrobe> {

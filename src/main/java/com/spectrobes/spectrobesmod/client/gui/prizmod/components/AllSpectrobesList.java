@@ -108,22 +108,17 @@ public class AllSpectrobesList extends Widget {
         int ir = 0;
         int jr = 0;
 
-        for (i = 0; i < GRID_SIZE; i++) {
-            for (j = 0; j < GRID_SIZE; j++) {
+        for (i = 0; i < GRID_SIZE && !added; i++) {
+            for (j = 0; j < GRID_SIZE && !added; j++) {
                 SpectrobePiece p = gridData[i][j];
                 if (p.spell == null) {
                     gridData[i][j].spell = piece;
                     added = true;
                     ir = i;
                     jr = j;
-                    break;
                 }
-                if(added)
-                    break;
             }
         }
         return gridData[ir][jr];
-
-
     }
 }
