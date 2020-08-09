@@ -87,7 +87,6 @@ public class SpectrobePiece {
     @OnlyIn(Dist.CLIENT)
     public void drawAdditional() {
         if(spell != null) {
-            SpectrobesInfo.LOGGER.info("GOT TO HERE");
             ResourceLocation icon = spell.getIcon();
 
             RenderSystem.pushMatrix();

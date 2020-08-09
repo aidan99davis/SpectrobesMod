@@ -36,7 +36,6 @@ public class PrizmodMenu extends Screen {
     public int xSize, ySize, padLeft, padTop, left, top, gridLeft, gridTop;
     public int cursorX, cursorY;
     public static int selectedX, selectedY;
-    public boolean commentEnabled;
 
     //public GuiButtonHelp helpButton;
     //public TextFieldWidget spellNameField;
@@ -44,7 +43,6 @@ public class PrizmodMenu extends Screen {
     public LineUpMenu panelWidget;
     public ITooltipFlag tooltipFlag;
 
-    boolean spectator;
 
     public PrizmodMenu(PlayerEntity player) {
         super(new StringTextComponent(""));
@@ -53,8 +51,8 @@ public class PrizmodMenu extends Screen {
 
     @Override
     protected void init() {
-        xSize = 400;
-        ySize = 600;
+        xSize = 600;
+        ySize = 400;
         padLeft = 7;
         padTop = 7;
         left = (width - xSize) / 2;
@@ -69,29 +67,6 @@ public class PrizmodMenu extends Screen {
         //helpButton = addButton(new GuiButtonHelp(left + xSize + 2, top + ySize - (spectator ? 32 : 48), this));
         //configWidget = addButton(new SideConfigWidget(left - 81, top + 55, 81, 115, this));
 
-//        spellNameField = addButton(new CallbackTextFieldWidget(textRenderer, left + xSize - 130, top + ySize - 14, 120, 10, button -> {
-//            spell.name = spellNameField.getText();
-//            onSpellChanged(true);
-//        }));
-//        spellNameField.setEnableBackgroundDrawing(false);
-//        spellNameField.setMaxStringLength(20);
-//        spellNameField.setEnabled(!spectator);
-
-//        commentField = addButton(new CallbackTextFieldWidget(textRenderer, left, top + ySize / 2 - 10, xSize, 20, button -> {
-//
-//        }));
-//        commentField.setEnabled(false);
-//        commentField.setVisible(false);
-//        commentField.setMaxStringLength(500);
-
-        //TODO: [AD] - Search for spectrobes by species and/or custom name?
-//        panelWidget.searchField = addButton(new CallbackTextFieldWidget(textRenderer, 0, 0, 70, 10, button -> {
-//            panelWidget.page = 0;
-//            panelWidget.updatePanelButtons();
-//        }));
-
-
-        //spellNameField.setText(player.getDisplayName().getFormattedText());
         panelWidget.populatePanelButtons();
 
         onSelectedChanged();
@@ -111,13 +86,12 @@ public class PrizmodMenu extends Screen {
 
         RenderSystem.color3f(1F, 1F, 1F);
         getMinecraft().getTextureManager().bindTexture(texture);
-        RenderSystem.translatef(0,0,-1);
-        int height = getMinecraft().getMainWindow().getHeight();
-        int width = getMinecraft().getMainWindow().getWidth();
+        //RenderSystem.translatef(0,0,-1);
+
         GuiUtils.blit(left, top,16,0,0,
-                width,
-                height,
-                150, 250);
+                xSize,
+                ySize - top,
+                400, 600);
         panelWidget.allSpectrobesList.draw();
         //Currently selected piece
         SpectrobePiece piece = null;
@@ -140,11 +114,11 @@ public class PrizmodMenu extends Screen {
 
         RenderSystem.color3f(1f, 1f, 1f);
         RenderSystem.translatef(0, 0, 1);
-        getMinecraft().getTextureManager().bindTexture(texture);
+        //getMinecraft().getTextureManager().bindTexture(texture);
 
-        if (selectedX != -1 && selectedY != -1) {
-            blit(gridLeft + selectedX * 18, gridTop + selectedY * 18, 32, ySize, 16, 16);
-        }
+//        if (selectedX != -1 && selectedY != -1) {
+//            blit(gridLeft + selectedX * 18, gridTop + selectedY * 18, 32, ySize, 16, 16);
+//        }
 
         if (hasAltDown()) {
             tooltip.clear();
@@ -274,9 +248,9 @@ public class PrizmodMenu extends Screen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        if (player != null) {
-            return panelWidget.mouseClicked(mouseX,mouseY,mouseButton);
-        }
+//        if (player != null) {
+//            return panelWidget.mouseClicked(mouseX,mouseY,mouseButton);
+//        }
         return super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
@@ -305,7 +279,7 @@ public class PrizmodMenu extends Screen {
 
     @Override
     public boolean shouldCloseOnEsc() {
-        return !panelWidget.panelEnabled && !commentEnabled;
+        return !panelWidget.panelEnabled;
     }
 
     public List<Widget> getButtons() {

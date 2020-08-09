@@ -1,18 +1,14 @@
 package com.spectrobes.spectrobesmod.client.gui.prizmod;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.components.*;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.IRenderable;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
@@ -25,7 +21,6 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
     public boolean panelEnabled = false;
     public final List<Button> panelButtons = new ArrayList<>();
     public int panelCursor;
-    public TextFieldWidget searchField;
     public AllSpectrobesList allSpectrobesList;
     public SpectrobesTeamList spectrobesTeamList;
     private SpectrobePiece childForm;
@@ -54,17 +49,17 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
 
         parent.getMinecraft().getTextureManager().bindTexture(PrizmodMenu.BACKGROUND_LOCATION);
 
-        fill(x, y, x + width, y + height, 0x88000000);
+//        fill(x, y, x + width, y + height, 0x88000000);
 
-        if (visibleButtons.size() > 0) {
-            Button button = visibleButtons.get(Math.max(0, Math.min(panelCursor, visibleButtons.size() - 1)));
-            int panelPieceX = button.x;
-            int panelPieceY = button.y;
-            fill(panelPieceX - 1, panelPieceY - 1, panelPieceX + 17, panelPieceY + 17, 0x559999FF);
-        }
-
-        String s = Math.min(Math.max(getPageCount(), 1), page + 1) + "/" + Math.max(getPageCount(), 1);
-        parent.getMinecraft().fontRenderer.drawStringWithShadow(s, x + width / 2f - parent.getMinecraft().fontRenderer.getStringWidth(s) / 2f, y + height - 12, 0xFFFFFF);
+//        if (visibleButtons.size() > 0) {
+//            Button button = visibleButtons.get(Math.max(0, Math.min(panelCursor, visibleButtons.size() - 1)));
+//            int panelPieceX = button.x;
+//            int panelPieceY = button.y;
+//            fill(panelPieceX - 1, panelPieceY - 1, panelPieceX + 17, panelPieceY + 17, 0x559999FF);
+//        }
+//
+//        String s = Math.min(Math.max(getPageCount(), 1), page + 1) + "/" + Math.max(getPageCount(), 1);
+//        parent.getMinecraft().fontRenderer.drawStringWithShadow(s, x + width / 2f - parent.getMinecraft().fontRenderer.getStringWidth(s) / 2f, y + height - 12, 0xFFFFFF);
 
     }
 
@@ -88,12 +83,6 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
                 case GLFW.GLFW_KEY_ESCAPE:
                     closePanel();
                     return true;
-                case GLFW.GLFW_KEY_ENTER:
-                    if (visibleButtons.size() >= 1) {
-                        visibleButtons.get(panelCursor).onPress();
-                        return true;
-                    }
-                    return false;
                 case GLFW.GLFW_KEY_TAB:
                     if (visibleButtons.size() >= 1) {
                         int newCursor = panelCursor + (Screen.hasAltDown() ? -1 : 1);
@@ -179,8 +168,8 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
         visibleButtons.clear();
         parent.getButtons().forEach(button -> {
             if (button instanceof GuiButtonPage || button instanceof GuiButtonSpectrobePiece) {
-                //button.active = false;
-                //button.visible = false;
+                button.active = false;
+                button.visible = false;
             }
         });
 
@@ -238,7 +227,7 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
         }
 
         if (panelEnabled && (mouseX < x || mouseY < y || mouseX > x + width || mouseY > y + height)) {
-            //closePanel();
+            closePanel();
             return true;
         }
         return false;
@@ -262,15 +251,13 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
         page = Math.min(page, Math.max(0, getPageCount() - 1));
         x = parent.gridLeft + (PrizmodMenu.selectedX + 1) * 18;
         y = parent.gridTop;
-
-//        searchField.x = x + 18;
-//        searchField.y = y + 4;
-//        searchField.setText("");
-//        searchField.setVisible(true);
-//        searchField.active = true;
-//        searchField.setEnabled(true);
-//        searchField.setFocused2(true);
-//        parent.setFocused(searchField);
+        parent.getButtons().forEach(button -> {
+            if (button instanceof GuiButtonSpectrobePiece || button instanceof GuiButtonPage) {
+                button.visible = true;
+                button.active = true;
+            }
+        });
+        parent.changeFocus(false);
         updatePanelButtons();
     }
 }
