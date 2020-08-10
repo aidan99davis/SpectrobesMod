@@ -116,8 +116,5 @@ public class SpectrobeStats {
         this.hpLevel += stats.getHpLevel();
         this.atkLevel += stats.getAtkLevel();
         this.defLevel += stats.getDefLevel();
-        this.level = stats.getLevel();
-        this.xp = stats.getXp();
-        this.xp_required = stats.getXp_required();
     }
 }
