@@ -24,12 +24,10 @@ import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties.Nature
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties.Stage;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
-import software.bernie.geckolib.animation.controller.AnimationController;
 import software.bernie.geckolib.animation.controller.EntityAnimationController;
 import software.bernie.geckolib.entity.IAnimatedEntity;
 import software.bernie.geckolib.event.AnimationTestEvent;
 import software.bernie.geckolib.manager.EntityAnimationManager;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.annotation.Nullable;
 
@@ -74,12 +72,26 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         ItemStack itemstack = player.getHeldItem(hand);
         if(getSpectrobeData() != null) {
             if(!recentInteract && itemstack.isEmpty()) {
-                printSpectrobeToChat();
+                if(player.isSneaking()) {
+                    this.setSitting(!this.isSitting());
+                    if(world.isRemote()) {
+                        Minecraft.getInstance().player.sendChatMessage(
+                                isSitting()?
+                                        "Your spectrobe is now sitting"
+                                        : "Your spectrobe is no longer sitting.");
+                    }
+                } else {
+                    printSpectrobeToChat();
+                }
+
             } else if (itemstack.getItem() instanceof MineralItem){
                 MineralItem mineralItem = (MineralItem)itemstack.getItem();
                 applyMineral(mineralItem);
             }
         }
+
+        recentInteract = true;
+        ticksTillInteract = 15;
         return super.processInteract(player, hand);
     }
 
@@ -88,7 +100,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         if(source.getImmediateSource() instanceof EntitySpectrobe){
             return super.attackEntityFrom(source,amount);
         }
-        return super.attackEntityFrom(source, 0);
+        return false;
     }
 
     @Override
@@ -138,13 +150,16 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
      */
     @Override
     public void livingTick() {
-        super.livingTick();
+        if(!this.isSitting())  {
+            super.livingTick();
+            //check if the spectrobe has an evolution, and meets the requirements to evolve.
+            tryMate();
+
+        }
         if(ticksTillInteract > 0)
             ticksTillInteract--;
         if(ticksTillInteract == 0)
             recentInteract = false;
-        //check if the spectrobe has an evolution, and meets the requirements to evolve.
-        tryMate();
         tryEvolve();
 
     }
@@ -179,7 +194,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         }
     }
 
-    public abstract <ENTITY extends Entity> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent);
+    public abstract <ENTITY extends EntitySpectrobe> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent);
 
     //Spectrobe evolution
 
@@ -330,8 +345,6 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
             Minecraft.getInstance().player.sendChatMessage(builder1.toString());
             Minecraft.getInstance().player.sendChatMessage(builder2.toString());
         }
-        recentInteract = true;
-        ticksTillInteract = 15;
     }
 
     private void applyMineral(MineralItem mineralItem) {

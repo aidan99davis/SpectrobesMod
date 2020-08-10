@@ -1,4 +1,4 @@
-package com.spectrobes.spectrobesmod.common.entities.komainu;
+package com.spectrobes.spectrobesmod.common.entities.samubaku;
 
 import com.spectrobes.spectrobesmod.client.entity.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.common.entities.EntityMammalSpectrobe;
@@ -6,7 +6,6 @@ import com.spectrobes.spectrobesmod.common.entities.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
-import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -15,19 +14,19 @@ import software.bernie.geckolib.animation.builder.AnimationBuilder;
 import software.bernie.geckolib.event.AnimationTestEvent;
 import software.bernie.geckolib.manager.EntityAnimationManager;
 
-public class EntityKomainu extends EntityMammalSpectrobe {
+public class EntitySamubaku extends EntityMammalSpectrobe {
 
-    public EntityKomainu(EntityType<EntityKomainu> entityTypeIn, World worldIn) {
+    public EntitySamubaku(EntityType<EntitySamubaku> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
     }
 
     public Spectrobe GetNewSpectrobeInstance() {
-        return SpectrobeRegistry.Komainu.copy();
+        return SpectrobeRegistry.Samubaku.copy();
     }
 
     @Override
     public EntityType<? extends EntitySpectrobe> getEvolutionRegistry() {
-        return SpectrobesEntities.ENTITY_KOMANOTO.get();
+        return SpectrobesEntities.ENTITY_SAMURITE.get();
     }
 
     @Override
@@ -60,12 +59,12 @@ public class EntityKomainu extends EntityMammalSpectrobe {
         if(entityAnimationTestEvent.isWalking())
         {
             animationControllers.setAnimationSpeed(2);
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.komainu.jump", true));
+            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.samubaku.walk", true));
             return true;
         }
         else if(entityAnimationTestEvent.getEntity().isSitting()) {
             animationControllers.setAnimationSpeed(1);
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.komainu.sit", false));
+            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.samubaku.sitting", true));
             return true;
         }
         return false;

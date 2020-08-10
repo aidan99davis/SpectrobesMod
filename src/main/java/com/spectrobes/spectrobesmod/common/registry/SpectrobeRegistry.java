@@ -37,4 +37,21 @@ public class SpectrobeRegistry {
             .withIconResourceLocation("spikan")
             .withStats(100,45,30)
             .build();
+
+
+    public static final Spectrobe Samubaku
+            = new SpectrobeBuilder()
+            .withName("Samubaku")
+            .withProperties(SpectrobePropertyRegistry.SAMUBAKU)
+            .withIconResourceLocation("samubaku")
+            .withStats(25,5,5)
+            .build();
+
+    public static final Spectrobe Samurite
+            = new SpectrobeBuilder()
+            .withName("Samurite")
+            .withProperties(SpectrobePropertyRegistry.SAMURITE)
+            .withIconResourceLocation("samurite")
+            .withStats(100,45,30)
+            .build();
 }

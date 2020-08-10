@@ -1,12 +1,11 @@
 package com.spectrobes.spectrobesmod.client.entity;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.client.entity.renderer.KomainuRenderer;
-import com.spectrobes.spectrobesmod.client.entity.renderer.KomanotoRenderer;
-import com.spectrobes.spectrobesmod.client.entity.renderer.SpikanRenderer;
-import com.spectrobes.spectrobesmod.client.entity.renderer.SpikoRenderer;
+import com.spectrobes.spectrobesmod.client.entity.renderer.*;
 import com.spectrobes.spectrobesmod.common.entities.komainu.EntityKomainu;
 import com.spectrobes.spectrobesmod.common.entities.komainu.EntityKomanoto;
+import com.spectrobes.spectrobesmod.common.entities.samubaku.EntitySamubaku;
+import com.spectrobes.spectrobesmod.common.entities.samubaku.EntitySamurite;
 import com.spectrobes.spectrobesmod.common.entities.spiko.EntitySpikan;
 import com.spectrobes.spectrobesmod.common.entities.spiko.EntitySpiko;
 import net.minecraft.entity.Entity;
@@ -27,24 +26,41 @@ public class SpectrobesEntities {
                     EntityClassification.CREATURE)
                     .size(1.5f, 1.5f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "komanoto").toString()));
+
     public static final RegistryObject<EntityType<EntityKomainu>> ENTITY_KOMAINU
             = ENTITY_TYPES.register("entity_komainu",
             () -> EntityType.Builder.create(EntityKomainu::new,
                     EntityClassification.CREATURE)
                     .size(0.5f, 0.75f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "komainu").toString()));
+
     public static final RegistryObject<EntityType<EntitySpiko>> ENTITY_SPIKO
             = ENTITY_TYPES.register("entity_spiko",
             () -> EntityType.Builder.create(EntitySpiko::new,
                     EntityClassification.CREATURE)
-                    .size(0.75f, 1f)
+                    .size(0.75f, 0.5f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "spiko").toString()));
+
     public static final RegistryObject<EntityType<EntitySpikan>> ENTITY_SPIKAN
             = ENTITY_TYPES.register("entity_spikan",
             () -> EntityType.Builder.create(EntitySpikan::new,
                     EntityClassification.CREATURE)
                     .size(1f, 2f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "spikan").toString()));
+
+    public static final RegistryObject<EntityType<EntitySamubaku>> ENTITY_SAMUBAKU
+            = ENTITY_TYPES.register("entity_samubaku",
+            () -> EntityType.Builder.create(EntitySamubaku::new,
+                    EntityClassification.CREATURE)
+                    .size(1f, 1f)
+                    .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "samubaku").toString()));
+
+    public static final RegistryObject<EntityType<EntitySamurite>> ENTITY_SAMURITE
+            = ENTITY_TYPES.register("entity_samurite",
+            () -> EntityType.Builder.create(EntitySamurite::new,
+                    EntityClassification.CREATURE)
+                    .size(1f, 2f)
+                    .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "samurite").toString()));
 
     public static <T extends Entity> RegistryObject<EntityType<T>> BuildEntity(EntityType.IFactory<T> entity, Class<T> entityClass, float width, float height)
     {
@@ -59,5 +75,7 @@ public class SpectrobesEntities {
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SPIKO.get(), manager -> new SpikoRenderer(manager));
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_KOMANOTO.get(), manager -> new KomanotoRenderer(manager));
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SPIKAN.get(), manager -> new SpikanRenderer(manager));
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SAMUBAKU.get(), manager -> new SamubakuRenderer(manager));
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SAMURITE.get(), manager -> new SamuriteRenderer(manager));
     }
 }
