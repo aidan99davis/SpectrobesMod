@@ -3,6 +3,7 @@ package com.spectrobes.spectrobesmod.common.items;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.blocks.SpectrobesBlocks;
 import com.spectrobes.spectrobesmod.common.items.fossils.KomainuFossilItem;
+import com.spectrobes.spectrobesmod.common.items.fossils.SamukabuFossilItem;
 import com.spectrobes.spectrobesmod.common.items.fossils.SpikoFossilItem;
 import com.spectrobes.spectrobesmod.common.items.minerals.Mineral;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
@@ -60,6 +61,7 @@ public class SpectrobesItems {
     //Fossils
     public static final Item komainu_fossil_item = null;
     public static final Item spiko_fossil_item = null;
+    public static final Item samukabu_fossil_item = null;
     public static final Item prizmod_item = null;
 
 
@@ -77,6 +79,10 @@ public class SpectrobesItems {
                                 .group(SpectrobesFossilsItemGroup.Instance)));
         event.getRegistry().register(
                 new SpikoFossilItem(
+                        new Item.Properties()
+                                .group(SpectrobesFossilsItemGroup.Instance)));
+        event.getRegistry().register(
+                new SamukabuFossilItem(
                         new Item.Properties()
                                 .group(SpectrobesFossilsItemGroup.Instance)));
         event.getRegistry().register(

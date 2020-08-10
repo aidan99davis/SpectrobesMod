@@ -54,10 +54,10 @@ public class EntitySpikan extends EntityMammalSpectrobe {
     }
 
     @Override
-    public <ENTITY extends Entity> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent)
+    public <ENTITY extends EntitySpectrobe> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent)
     {
         moveController.transitionLengthTicks = 2;
-        if(!(limbSwingAmount > -0.15F && limbSwingAmount < 0.15F))
+        if(entityAnimationTestEvent.isWalking())
         {
             moveController.setAnimation(new AnimationBuilder().addAnimation("animation.spikan.walk", true));
             return true;

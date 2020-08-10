@@ -12,7 +12,6 @@ public class SpectrobeBuilder {
     private String name;
     private SpectrobeProperties properties;
     private SpectrobeStats stats;
-    private String iconRl;
 
     public SpectrobeBuilder withMasterUUID(UUID masterUUID) {
         this.masterUUID = masterUUID;
@@ -21,11 +20,6 @@ public class SpectrobeBuilder {
 
     public SpectrobeBuilder withName(String name) {
         this.name = name;
-        return this;
-    }
-
-    public SpectrobeBuilder withIconResourceLocation(String iconRl) {
-        this.iconRl = iconRl;
         return this;
     }
 
@@ -60,7 +54,6 @@ public class SpectrobeBuilder {
         newSpectrobe.setName(name);
         newSpectrobe.setProperties(properties);
         newSpectrobe.setStats(stats);
-        newSpectrobe.setIcon(iconRl);
         return newSpectrobe;
     }
 }

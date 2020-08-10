@@ -20,6 +20,8 @@ public class IconRegistry {
         icons.put("komanoto", new SpectrobeIconInfo("komanoto", 32, 28));
         icons.put("spiko", new SpectrobeIconInfo("spiko", 30, 32));
         icons.put("spikan", new SpectrobeIconInfo("spikan", 32, 26));
+        icons.put("samukabu", new SpectrobeIconInfo("samukabu", 24, 27));
+        icons.put("samurite", new SpectrobeIconInfo("samurite", 31, 26));
     }
 
     public static IconRegistry getInstance() {

@@ -1,0 +1,69 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.samukabu.sit": {
+			"animation_length": 0.36,
+			"override_previous_animation": true,
+			"bones": {
+				"body": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					},
+					"position": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.16": {
+							"vector": [0, -2.5, 0]
+						}
+					}
+				}
+			}
+		},
+		"animation.samukabu.walk": {
+			"loop": true,
+			"animation_length": 0.28,
+			"bones": {
+				"body": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					},
+					"position": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.04": {
+							"vector": [0, -1, 0]
+						},
+						"0.08": {
+							"vector": [0, 0, 0]
+						},
+						"0.12": {
+							"vector": [0, -1, 0]
+						},
+						"0.16": {
+							"vector": [0, 0, 0]
+						},
+						"0.2": {
+							"vector": [0, -1, 0]
+						},
+						"0.24": {
+							"vector": [0, 0, 0]
+						}
+					}
+				}
+			}
+		},
+		"animation.samukabu.sitting": {
+			"loop": true,
+			"animation_length": 0.36,
+			"bones": {
+				"body": {
+					"position": {
+						"vector": [0, -2.5, 0]
+					}
+				}
+			}
+		}
+	}
+}
