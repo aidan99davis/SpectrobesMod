@@ -6,7 +6,6 @@ import com.spectrobes.spectrobesmod.common.entities.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.world.World;
@@ -14,14 +13,14 @@ import software.bernie.geckolib.animation.builder.AnimationBuilder;
 import software.bernie.geckolib.event.AnimationTestEvent;
 import software.bernie.geckolib.manager.EntityAnimationManager;
 
-public class EntitySamubaku extends EntityMammalSpectrobe {
+public class EntitySamukabu extends EntityMammalSpectrobe {
 
-    public EntitySamubaku(EntityType<EntitySamubaku> entityTypeIn, World worldIn) {
+    public EntitySamukabu(EntityType<EntitySamukabu> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
     }
 
     public Spectrobe GetNewSpectrobeInstance() {
-        return SpectrobeRegistry.Samubaku.copy();
+        return SpectrobeRegistry.Samukabu.copy();
     }
 
     @Override
@@ -31,7 +30,7 @@ public class EntitySamubaku extends EntityMammalSpectrobe {
 
     @Override
     public String getRegistryName() {
-        return "entity_komainu";
+        return "entity_samukabu";
     }
 
     @Override
@@ -59,12 +58,12 @@ public class EntitySamubaku extends EntityMammalSpectrobe {
         if(entityAnimationTestEvent.isWalking())
         {
             animationControllers.setAnimationSpeed(2);
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.samubaku.walk", true));
+            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.samukabu.walk", true));
             return true;
         }
         else if(entityAnimationTestEvent.getEntity().isSitting()) {
             animationControllers.setAnimationSpeed(1);
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.samubaku.sitting", true));
+            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.samukabu.sitting", true));
             return true;
         }
         return false;

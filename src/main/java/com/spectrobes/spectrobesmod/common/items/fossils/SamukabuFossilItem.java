@@ -12,27 +12,27 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
-public class SamubakuFossilItem extends Item {
+public class SamukabuFossilItem extends Item {
 
-    public SamubakuFossilItem(Properties properties) {
+    public SamukabuFossilItem(Properties properties) {
         super(properties);
-        setRegistryName("samubaku_fossil_item");
+        setRegistryName("samukabu_fossil_item");
     }
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack itemStack = new ItemStack(playerIn.getHeldItem(handIn).getItem(), 1);
         if(!worldIn.isRemote) {
-            EntitySpectrobe samubaku = (EntitySpectrobe) SpectrobesEntities.ENTITY_SAMUBAKU.get().spawn(worldIn,
+            EntitySpectrobe samukabu = (EntitySpectrobe) SpectrobesEntities.ENTITY_SAMUKABU.get().spawn(worldIn,
                     itemStack,
                     playerIn,
                     playerIn.getPosition(),
                     SpawnReason.MOB_SUMMONED,
                     true,true
             );
-            samubaku.setOwnerId(playerIn.getUniqueID());
+            samukabu.setOwnerId(playerIn.getUniqueID());
             playerIn.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(playerCap -> {
-                playerCap.addSpectrobe(samubaku.getRegistryName(), samubaku.getSpectrobeData());
+                playerCap.addSpectrobe(samukabu.getRegistryName(), samukabu.getSpectrobeData());
             });
         }
 

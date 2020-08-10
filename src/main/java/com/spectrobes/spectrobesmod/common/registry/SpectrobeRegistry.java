@@ -2,7 +2,6 @@ package com.spectrobes.spectrobesmod.common.registry;
 
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.util.SpectrobeBuilder;
-import net.minecraft.util.ResourceLocation;
 
 public class SpectrobeRegistry {
 
@@ -39,11 +38,11 @@ public class SpectrobeRegistry {
             .build();
 
 
-    public static final Spectrobe Samubaku
+    public static final Spectrobe Samukabu
             = new SpectrobeBuilder()
-            .withName("Samubaku")
-            .withProperties(SpectrobePropertyRegistry.SAMUBAKU)
-            .withIconResourceLocation("samubaku")
+            .withName("Samukabu")
+            .withProperties(SpectrobePropertyRegistry.SAMUKABU)
+            .withIconResourceLocation("samukabu")
             .withStats(25,5,5)
             .build();
 

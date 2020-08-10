@@ -6,7 +6,6 @@ import com.spectrobes.spectrobesmod.common.entities.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.world.World;
@@ -37,7 +36,7 @@ public class EntitySamurite extends EntityMammalSpectrobe {
 
     @Override
     protected EntitySpectrobe getChildForLineage() {
-        return SpectrobesEntities.ENTITY_SAMUBAKU.get().create(world);
+        return SpectrobesEntities.ENTITY_SAMUKABU.get().create(world);
     }
 
     @Override

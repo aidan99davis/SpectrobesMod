@@ -1,7 +1,7 @@
 {
 	"format_version": "1.8.0",
 	"animations": {
-		"animation.samubaku.sit": {
+		"animation.samukabu.sit": {
 			"animation_length": 0.36,
 			"override_previous_animation": true,
 			"bones": {
@@ -20,7 +20,7 @@
 				}
 			}
 		},
-		"animation.samubaku.walk": {
+		"animation.samukabu.walk": {
 			"loop": true,
 			"animation_length": 0.28,
 			"bones": {
@@ -54,7 +54,7 @@
 				}
 			}
 		},
-		"animation.samubaku.sitting": {
+		"animation.samukabu.sitting": {
 			"loop": true,
 			"animation_length": 0.36,
 			"bones": {

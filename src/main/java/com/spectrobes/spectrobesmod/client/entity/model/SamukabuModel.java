@@ -5,12 +5,12 @@
 package com.spectrobes.spectrobesmod.client.entity.model;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.common.entities.samubaku.EntitySamubaku;
+import com.spectrobes.spectrobesmod.common.entities.samubaku.EntitySamukabu;
 import net.minecraft.util.ResourceLocation;
 import software.bernie.geckolib.animation.model.AnimatedEntityModel;
 import software.bernie.geckolib.animation.render.AnimatedModelRenderer;
 
-public class SamubakuModel extends AnimatedEntityModel<EntitySamubaku> {
+public class SamukabuModel extends AnimatedEntityModel<EntitySamukabu> {
 
     private final AnimatedModelRenderer body;
 	private final AnimatedModelRenderer bone;
@@ -24,7 +24,7 @@ public class SamubakuModel extends AnimatedEntityModel<EntitySamubaku> {
 	private final AnimatedModelRenderer tail;
 	private final AnimatedModelRenderer tail_sub_0;
 
-    public SamubakuModel()
+    public SamukabuModel()
     {
         textureWidth = 64;
     textureHeight = 32;
@@ -122,6 +122,6 @@ public class SamubakuModel extends AnimatedEntityModel<EntitySamubaku> {
     @Override
     public ResourceLocation getAnimationFileLocation()
     {
-        return new ResourceLocation(SpectrobesInfo.MOD_ID, "animations/spectrobe/samubaku.json");
+        return new ResourceLocation(SpectrobesInfo.MOD_ID, "animations/spectrobe/samukabu.json");
     }
 }

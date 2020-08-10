@@ -4,7 +4,7 @@ import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.entity.renderer.*;
 import com.spectrobes.spectrobesmod.common.entities.komainu.EntityKomainu;
 import com.spectrobes.spectrobesmod.common.entities.komainu.EntityKomanoto;
-import com.spectrobes.spectrobesmod.common.entities.samubaku.EntitySamubaku;
+import com.spectrobes.spectrobesmod.common.entities.samubaku.EntitySamukabu;
 import com.spectrobes.spectrobesmod.common.entities.samubaku.EntitySamurite;
 import com.spectrobes.spectrobesmod.common.entities.spiko.EntitySpikan;
 import com.spectrobes.spectrobesmod.common.entities.spiko.EntitySpiko;
@@ -48,9 +48,9 @@ public class SpectrobesEntities {
                     .size(1f, 2f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "spikan").toString()));
 
-    public static final RegistryObject<EntityType<EntitySamubaku>> ENTITY_SAMUBAKU
+    public static final RegistryObject<EntityType<EntitySamukabu>> ENTITY_SAMUKABU
             = ENTITY_TYPES.register("entity_samubaku",
-            () -> EntityType.Builder.create(EntitySamubaku::new,
+            () -> EntityType.Builder.create(EntitySamukabu::new,
                     EntityClassification.CREATURE)
                     .size(1f, 1f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "samubaku").toString()));
@@ -75,7 +75,7 @@ public class SpectrobesEntities {
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SPIKO.get(), manager -> new SpikoRenderer(manager));
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_KOMANOTO.get(), manager -> new KomanotoRenderer(manager));
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SPIKAN.get(), manager -> new SpikanRenderer(manager));
-        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SAMUBAKU.get(), manager -> new SamubakuRenderer(manager));
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SAMUKABU.get(), manager -> new SamukabuRenderer(manager));
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SAMURITE.get(), manager -> new SamuriteRenderer(manager));
     }
 }
