@@ -246,7 +246,8 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
             spectrobe.setLocationAndAngles(getPosX(), getPosY(), getPosZ(), 0.0F, 0.0F);
             this.world.addEntity(spectrobe);
             spectrobe.setPosition(getPosX(), getPosY(), getPosZ());
-            spectrobe.addStats(getSpectrobeData());
+            this.getSpectrobeData().evolve(spectrobe.getSpectrobeData());
+            spectrobe.setSpectrobeData(this.getSpectrobeData());
             if(getOwner() != null) {
                 spectrobe.setOwnerId(getOwnerId());
             }

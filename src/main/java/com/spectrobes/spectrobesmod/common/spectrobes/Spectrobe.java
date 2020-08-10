@@ -8,7 +8,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.IDataSerializer;
-import net.minecraft.util.ResourceLocation;
 import org.apache.logging.log4j.core.config.plugins.validation.constraints.Required;
 import org.apache.logging.log4j.core.util.UuidUtil;
 
@@ -27,9 +26,6 @@ public class Spectrobe {
 
     @Required
     public SpectrobeStats stats;
-
-    @Required
-    private String iconRl;
 
     public Spectrobe copy() {
         return new SpectrobeBuilder().buildFrom(this);
@@ -51,14 +47,15 @@ public class Spectrobe {
         this.stats = stats;
     }
 
-    public void setIcon(String rl) {
-        this.iconRl = rl;
-    }
-
     public boolean canEvolve(EvolutionRequirements requirements) {
         return requirements.canEvolve(this);
     }
 
+    public void evolve(Spectrobe evolution) {
+        this.name = evolution.name;
+        this.properties = evolution.properties;
+        this.stats.addStats(evolution.stats);
+    }
 
     public void applyMineral(MineralProperties properties) {
         this.stats.applyMineral(properties);
