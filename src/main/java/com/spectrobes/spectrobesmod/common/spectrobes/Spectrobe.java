@@ -2,14 +2,15 @@ package com.spectrobes.spectrobesmod.common.spectrobes;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralProperties;
+import com.spectrobes.spectrobesmod.common.registry.IconRegistry;
 import com.spectrobes.spectrobesmod.util.SpectrobeBuilder;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.IDataSerializer;
+import net.minecraft.util.ResourceLocation;
 import org.apache.logging.log4j.core.config.plugins.validation.constraints.Required;
 import org.apache.logging.log4j.core.util.UuidUtil;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -26,6 +27,9 @@ public class Spectrobe {
 
     @Required
     public SpectrobeStats stats;
+
+    @Required
+    private String iconRl;
 
     public Spectrobe copy() {
         return new SpectrobeBuilder().buildFrom(this);
@@ -45,6 +49,10 @@ public class Spectrobe {
 
     public void setStats(SpectrobeStats stats) {
         this.stats = stats;
+    }
+
+    public void setIcon(String rl) {
+        this.iconRl = rl;
     }
 
     public boolean canEvolve(EvolutionRequirements requirements) {
@@ -78,6 +86,10 @@ public class Spectrobe {
         s.stats = SpectrobeStats.read((CompoundNBT) nbtData.get("SpectrobeStats"));
 
         return s;
+    }
+
+    public SpectrobeIconInfo getIcon() {
+        return IconRegistry.getInstance().getByName(name);
     }
 
     public static class SpectrobeSerializer implements IDataSerializer<Spectrobe> {

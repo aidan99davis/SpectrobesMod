@@ -11,9 +11,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.world.World;
-import software.bernie.geckolib.animation.AnimationBuilder;
-import software.bernie.geckolib.animation.AnimationTestEvent;
-import software.bernie.geckolib.animation.model.AnimationControllerCollection;
+import software.bernie.geckolib.animation.builder.AnimationBuilder;
+import software.bernie.geckolib.event.AnimationTestEvent;
+import software.bernie.geckolib.manager.EntityAnimationManager;
 
 public class EntityKomainu extends EntityMammalSpectrobe {
 
@@ -31,6 +31,11 @@ public class EntityKomainu extends EntityMammalSpectrobe {
     }
 
     @Override
+    public String getRegistryName() {
+        return "entity_komainu";
+    }
+
+    @Override
     protected EntitySpectrobe getChildForLineage() {
         return this;
     }
@@ -45,19 +50,21 @@ public class EntityKomainu extends EntityMammalSpectrobe {
 
 
     @Override
-    public AnimationControllerCollection getAnimationControllers() {
+    public EntityAnimationManager getAnimationManager() {
         return animationControllers;
     }
 
     @Override
     public <ENTITY extends Entity> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent) {
-        moveController.transitionLength = 2;
+        moveController.transitionLengthTicks = 2;
         if(!(limbSwingAmount > -0.15F && limbSwingAmount < 0.15F))
         {
+            animationControllers.setAnimationSpeed(2);
             moveController.setAnimation(new AnimationBuilder().addAnimation("animation.komainu.jump", true));
             return true;
         }
         else if(this.isSitting()) {
+            animationControllers.setAnimationSpeed(1);
             moveController.setAnimation(new AnimationBuilder().addAnimation("animation.komainu.sit", false));
             return true;
         }

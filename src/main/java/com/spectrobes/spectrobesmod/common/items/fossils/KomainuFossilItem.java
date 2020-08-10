@@ -1,6 +1,7 @@
 package com.spectrobes.spectrobesmod.common.items.fossils;
 
 import com.spectrobes.spectrobesmod.client.entity.SpectrobesEntities;
+import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.entities.EntitySpectrobe;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
@@ -29,10 +30,10 @@ public class KomainuFossilItem extends Item {
                     SpawnReason.MOB_SUMMONED,
                     true,true
             );
-
             komainu.setOwnerId(playerIn.getUniqueID());
-
-//            komainu.setSpectrobeInstance(SpectrobeRegistry.Komainu.copy());
+            playerIn.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(playerCap -> {
+                playerCap.addSpectrobe(komainu.getRegistryName(), komainu.getSpectrobeData());
+            });
         }
 
         return new ActionResult<>(ActionResultType.SUCCESS, itemStack);

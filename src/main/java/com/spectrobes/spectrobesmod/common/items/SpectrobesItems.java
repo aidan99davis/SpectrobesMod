@@ -6,6 +6,7 @@ import com.spectrobes.spectrobesmod.common.items.fossils.KomainuFossilItem;
 import com.spectrobes.spectrobesmod.common.items.fossils.SpikoFossilItem;
 import com.spectrobes.spectrobesmod.common.items.minerals.Mineral;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
+import com.spectrobes.spectrobesmod.common.items.tools.PrizmodItem;
 import com.spectrobes.spectrobesmod.common.registry.MineralRegistry;
 import net.minecraft.item.*;
 import net.minecraftforge.event.RegistryEvent;
@@ -59,6 +60,7 @@ public class SpectrobesItems {
     //Fossils
     public static final Item komainu_fossil_item = null;
     public static final Item spiko_fossil_item = null;
+    public static final Item prizmod_item = null;
 
 
     @SubscribeEvent
@@ -77,6 +79,10 @@ public class SpectrobesItems {
                 new SpikoFossilItem(
                         new Item.Properties()
                                 .group(SpectrobesFossilsItemGroup.Instance)));
+        event.getRegistry().register(
+                new PrizmodItem(
+                        new Item.Properties()
+                                .group(SpectrobesToolsItemGroup.Instance)));
     }
 
     static void registerMineral(final RegistryEvent.Register<Item> event, Mineral mineral) {
@@ -129,6 +135,19 @@ public class SpectrobesItems {
         @Override
         public ItemStack createIcon() {
             return SpectrobesItems.mineral_item_power_c.getDefaultInstance();
+        }
+    }
+    public static class SpectrobesToolsItemGroup extends ItemGroup {
+
+        public static final SpectrobesToolsItemGroup Instance = new SpectrobesToolsItemGroup(ItemGroup.GROUPS.length, "spectrobestab.tools");
+
+        public SpectrobesToolsItemGroup(int index, String label) {
+            super(index, label);
+        }
+
+        @Override
+        public ItemStack createIcon() {
+            return SpectrobesItems.prizmod_item.getDefaultInstance();
         }
     }
 
