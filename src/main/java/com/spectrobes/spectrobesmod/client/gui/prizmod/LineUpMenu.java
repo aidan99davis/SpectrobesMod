@@ -46,6 +46,9 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
             b.render(mouseX,mouseY,pTicks);
         }
 
+        //populatePanelButtons();
+        //allSpectrobesList.draw();
+
         parent.getMinecraft().getTextureManager().bindTexture(PrizmodMenu.SPECTROBE_SLOT_TEXTURE);
 
 //        fill(x, y, x + width, y + height, 0x88000000);
@@ -113,9 +116,10 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
                 if(index < maxCount) {
                     SpectrobePiece piece = allSpectrobesList.addSpectrobe(spectrobe);
                     GuiButtonSpectrobePiece spectrobeButton = new GuiButtonSpectrobePiece(parent, piece, piece.x * 32 + 32, piece.y * 32 + 32, button -> {
-                        //((GuiButtonSpectrobePiece) button).renderActions();
+                        ((GuiButtonSpectrobePiece) button).renderActions();
                         //parent.onSpellChanged(false);
                         //closePanel();
+
                         SpectrobesInfo.LOGGER.info("SPECTROBE SLOT CLICKED");
                     });
                     //spellPieceButton.visible = false;
@@ -212,12 +216,24 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        if(allSpectrobesList.gridData[(int) mouseX / 32][(int) mouseY / 32] != null && mouseButton == 0) {
+        int flooredX = (int)mouseX / 32 - 1;
+        int flooredY = (int)mouseY / 32 - 1;
+        SpectrobesInfo.LOGGER.info("GOT HERE 1");
+        SpectrobesInfo.LOGGER.info("floored X:" + flooredX);
+        SpectrobesInfo.LOGGER.info("floored Y:" + flooredY);
+        if(AllSpectrobesList.exists(flooredX, flooredY)) {
+            if(allSpectrobesList.gridData[flooredX][flooredY].spell != null && mouseButton == 0) {
             visibleButtons.forEach(button -> {
-                if(button.piece != null)
+                SpectrobesInfo.LOGGER.info("GOT HERE 2");
+                if(button.piece != null && button.x == flooredX && button.y == flooredY) {
                     button.onPress();
+                    SpectrobesInfo.LOGGER.info("GOT HERE 3");
+                }
             });
         }
+
+        }
+        allSpectrobesList.mouseClicked(mouseX,mouseY,mouseButton);
         if (parent.cursorX != -1 && parent.cursorY != -1 && mouseButton == 1 && !panelEnabled) {
             openPanel();
             return true;
@@ -255,6 +271,7 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
             }
         });
         parent.changeFocus(false);
-        updatePanelButtons();
+        populatePanelButtons();
+//        updatePanelButtons();
     }
 }

@@ -62,15 +62,6 @@ public class AllSpectrobesList extends Widget {
         }
     }
 
-    public int getSize() {
-        recalculateBoundaries();
-
-        if (empty) {
-            return 0;
-        }
-
-        return Math.max(rightmost - leftmost + 1, bottommost - topmost + 1);
-    }
 
     public static boolean exists(int x, int y) {
         return x >= 0 && y >= 0 && x < GRID_SIZE && y < GRID_SIZE;
@@ -78,27 +69,17 @@ public class AllSpectrobesList extends Widget {
 
 
     public AllSpectrobesList() {
-        super(16, 16, "");
+        super(16, 16, "test");
         gridData = new SpectrobePiece[GRID_SIZE][GRID_SIZE];
         for (int i = 0; i < GRID_SIZE; i++) {
             for (int j = 0; j < GRID_SIZE; j++) {
                 gridData[i][j] = new SpectrobePiece(null);
+                gridData[i][j].x = i;
+                gridData[i][j].y = j;
             }
         }
     }
 
-    public boolean isEmpty() {
-        for (int i = 0; i < GRID_SIZE; i++) {
-            for (int j = 0; j < GRID_SIZE / 2; j++) {
-                SpectrobePiece piece = gridData[i][j];
-                if (piece != null) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
 
     public SpectrobePiece addSpectrobe(Spectrobe piece) {
         int i = 0;

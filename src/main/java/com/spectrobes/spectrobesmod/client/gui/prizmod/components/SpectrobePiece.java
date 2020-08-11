@@ -8,6 +8,7 @@ import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeIconInfo;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties.Stage;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -20,12 +21,15 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
 
+import java.security.interfaces.RSAKey;
 import java.util.List;
 
-public class SpectrobePiece {
+public class SpectrobePiece extends AbstractGui {
 
     public Spectrobe spell;
     public int x, y;
+    public int posX = x * 32 + 32;
+    public int posY = y * 32 + 32;
 
     public SpectrobePiece(Spectrobe spell) {
         this.spell = spell;
@@ -55,7 +59,7 @@ public class SpectrobePiece {
     public void draw() {
         RenderSystem.pushMatrix();
         drawBackground();
-        RenderSystem.translatef(x, y, 0.1F);
+//        RenderSystem.translatef(x, y, 0.1F);
         drawAdditional();
 //        if (isInGrid) {
 //            RenderSystem.translatef(0F, 0F, 0.1F);
@@ -76,7 +80,7 @@ public class SpectrobePiece {
         Minecraft.getInstance().textureManager.bindTexture(bg);
         RenderSystem.enableTexture();
 
-        GuiUtils.blit(x * 32 + 32, y * 32 + 32,32,0,0,32, 32, 32, 32);
+        GuiUtils.blit(posX, posY,32,0,0,32, 32, 32, 32);
 
         RenderSystem.popMatrix();
     }
@@ -95,7 +99,7 @@ public class SpectrobePiece {
 
             Minecraft.getInstance().textureManager.bindTexture(icon);
 
-            //RenderSystem.enableTexture();
+            RenderSystem.enableTexture();
             //RenderSystem.scalef(0.125f, 0.125f, 0.125f);
             float scalex = 32 / iconInfo.getWidth();
             float scaley = 32 / iconInfo.getHeight();
@@ -109,7 +113,7 @@ public class SpectrobePiece {
 
             RenderSystem.scalef(scalex, scaley, 0);
 
-            GuiUtils.blit(x * 32 + 32 + marginleft, y * 32 + 32 + margintop,32,0,0,iconInfo.getWidth(), iconInfo.getHeight(), iconInfo.getHeight(), iconInfo.getWidth());
+            GuiUtils.blit(posX + marginleft, posY + margintop,32,0,0,iconInfo.getWidth(), iconInfo.getHeight(), iconInfo.getHeight(), iconInfo.getWidth());
             RenderSystem.popMatrix();
 
 //            RenderSystem.disableTexture();
@@ -142,5 +146,16 @@ public class SpectrobePiece {
     @OnlyIn(Dist.CLIENT)
     public void getShownPieces(List<SpectrobePiece> pieces) {
         pieces.add(this);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public void displayButtonMenu() {
+        RenderSystem.pushMatrix();
+
+        RenderSystem.translatef(posX + 32, posY + 32, 128);
+        RenderSystem.color3f(255,255,255);
+        fill(100, 100, 128, 64, 100);
+
+        RenderSystem.popMatrix();
     }
 }

@@ -37,9 +37,6 @@ public class PrizmodMenu extends Screen {
     public int cursorX, cursorY;
     public static int selectedX, selectedY;
 
-    //public GuiButtonHelp helpButton;
-    //public TextFieldWidget spellNameField;
-    //public TextFieldWidget commentField;
     public LineUpMenu panelWidget;
     public ITooltipFlag tooltipFlag;
 
@@ -93,11 +90,6 @@ public class PrizmodMenu extends Screen {
                 ySize - top,
                 400, 600);
         panelWidget.allSpectrobesList.draw();
-        //Currently selected piece
-        SpectrobePiece piece = null;
-        if (panelWidget.allSpectrobesList.exists(selectedX, selectedY)) {
-            piece = panelWidget.allSpectrobesList.gridData[selectedX][selectedY];
-        }
 
         cursorX = (mouseX - gridLeft) / 18;
         cursorY = (mouseY - gridTop) / 18;
@@ -120,23 +112,17 @@ public class PrizmodMenu extends Screen {
 //            blit(gridLeft + selectedX * 18, gridTop + selectedY * 18, 32, ySize, 16, 16);
 //        }
 
-        if (hasAltDown()) {
-            tooltip.clear();
-            cursorX = selectedX;
-            cursorY = selectedY;
-            mouseX = gridLeft + cursorX * 18 + 10;
-            mouseY = gridTop + cursorY * 18 + 8;
-        }
-
         int topY = top - 22;
         SpectrobePiece pieceAtCursor = null;
         if (cursorX > -1 && cursorY > -1) {
             String name;
             if (panelWidget.allSpectrobesList.exists(cursorX, cursorY)) {
                 pieceAtCursor = panelWidget.allSpectrobesList.gridData[cursorX][cursorY];
-                if(pieceAtCursor.spell != null) {
+                if (pieceAtCursor.spell != null) {
+                    RenderSystem.pushMatrix();
                     name = pieceAtCursor.spell.name;
                     textRenderer.drawString(name, left + 4, topY + ySize + 24, 0x44FFFFFF);
+                    RenderSystem.popMatrix();
                 }
             }
 //            pieceAtCursor = panelWidget.allSpectrobesList.gridData[cursorX][cursorY];
@@ -151,15 +137,7 @@ public class PrizmodMenu extends Screen {
 //            }
         }
 
-
-        int topYText = topY;
-
-        if (piece.spell != null) {
-            String pieceName = I18n.format(piece.getUnlocalizedName());
-            textRenderer.drawStringWithShadow(pieceName, left + xSize / 2f - textRenderer.getStringWidth(pieceName) / 2f, topYText, 0xFFFFFF);
-        }
-
-        textRenderer.drawStringWithShadow("Prizmod", left + padLeft, topY + 1, 1);
+        textRenderer.drawStringWithShadow("Prizmod", left + padLeft, topY + 10, 1);
 
         List<ITextComponent> legitTooltip = null;
         if (hasAltDown()) {
@@ -169,7 +147,6 @@ public class PrizmodMenu extends Screen {
         if (hasAltDown()) {
             tooltip = legitTooltip;
         }
-
 
         if (pieceAtCursor != null) {
             if (tooltip != null && !tooltip.isEmpty()) {
@@ -248,9 +225,7 @@ public class PrizmodMenu extends Screen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-//        if (player != null) {
-//            return panelWidget.mouseClicked(mouseX,mouseY,mouseButton);
-//        }
+        panelWidget.mouseClicked(mouseX,mouseY,mouseButton);
         return super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
