@@ -48,7 +48,9 @@ public class GuiButtonSpectrobePiece extends Button {
 
     //render actions i.e. assign to slot 1, 2, 3, 4, 5, 6 or child slot
     public void renderActions() {
+        RenderSystem.pushMatrix();
         piece.displayButtonMenu();
+        RenderSystem.popMatrix();
     }
 
     public SpectrobePiece getPiece() {

@@ -100,6 +100,7 @@ public class SpectrobePiece extends AbstractGui {
             Minecraft.getInstance().textureManager.bindTexture(icon);
 
             RenderSystem.enableTexture();
+            RenderSystem.enableAlphaTest();
             //RenderSystem.scalef(0.125f, 0.125f, 0.125f);
             float scalex = 32 / iconInfo.getWidth();
             float scaley = 32 / iconInfo.getHeight();
@@ -152,9 +153,9 @@ public class SpectrobePiece extends AbstractGui {
     public void displayButtonMenu() {
         RenderSystem.pushMatrix();
 
-        RenderSystem.translatef(posX + 32, posY + 32, 128);
+        RenderSystem.translatef(posX + 32, posY, 128);
         RenderSystem.color3f(255,255,255);
-        fill(100, 100, 128, 64, 100);
+        fill(100, 100, 128, 64, 0x88000000);
 
         RenderSystem.popMatrix();
     }

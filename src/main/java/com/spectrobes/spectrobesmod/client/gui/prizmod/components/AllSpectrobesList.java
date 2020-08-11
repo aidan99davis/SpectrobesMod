@@ -25,6 +25,7 @@ public class AllSpectrobesList extends Widget {
 
                 RenderSystem.pushMatrix();
                 Minecraft.getInstance().textureManager.bindTexture(PrizmodMenu.SPECTROBE_SLOT_TEXTURE);
+                RenderSystem.enableAlphaTest();
                 RenderSystem.translatef(i * 32, j * 32, 2);
                 p.draw();
                 RenderSystem.popMatrix();
@@ -69,7 +70,7 @@ public class AllSpectrobesList extends Widget {
 
 
     public AllSpectrobesList() {
-        super(16, 16, "test");
+        super(32, 32, "test");
         gridData = new SpectrobePiece[GRID_SIZE][GRID_SIZE];
         for (int i = 0; i < GRID_SIZE; i++) {
             for (int j = 0; j < GRID_SIZE; j++) {
@@ -101,5 +102,16 @@ public class AllSpectrobesList extends Widget {
             }
         }
         return gridData[ir][jr];
+    }
+
+    public void clear() {
+        gridData = new SpectrobePiece[GRID_SIZE][GRID_SIZE];
+        for (int i = 0; i < GRID_SIZE; i++) {
+            for (int j = 0; j < GRID_SIZE; j++) {
+                gridData[i][j] = new SpectrobePiece(null);
+                gridData[i][j].x = i;
+                gridData[i][j].y = j;
+            }
+        }
     }
 }

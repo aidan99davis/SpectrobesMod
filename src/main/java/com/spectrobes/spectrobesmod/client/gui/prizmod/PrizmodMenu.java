@@ -66,7 +66,12 @@ public class PrizmodMenu extends Screen {
 
         panelWidget.populatePanelButtons();
 
-        onSelectedChanged();
+//        onSelectedChanged();
+    }
+
+    @Override
+    public void tick() {
+        panelWidget.populatePanelButtons();
     }
 
     @Override
@@ -118,12 +123,12 @@ public class PrizmodMenu extends Screen {
             String name;
             if (panelWidget.allSpectrobesList.exists(cursorX, cursorY)) {
                 pieceAtCursor = panelWidget.allSpectrobesList.gridData[cursorX][cursorY];
-                if (pieceAtCursor.spell != null) {
-                    RenderSystem.pushMatrix();
-                    name = pieceAtCursor.spell.name;
-                    textRenderer.drawString(name, left + 4, topY + ySize + 24, 0x44FFFFFF);
-                    RenderSystem.popMatrix();
-                }
+//                if (pieceAtCursor.spell != null) {
+//                    RenderSystem.pushMatrix();
+//                    name = pieceAtCursor.spell.name;
+//                    textRenderer.drawString(name, left + 4, topY + ySize + 24, 0x44FFFFFF);
+//                    RenderSystem.popMatrix();
+//                }
             }
 //            pieceAtCursor = panelWidget.allSpectrobesList.gridData[cursorX][cursorY];
 //            if (pieceAtCursor != null) {

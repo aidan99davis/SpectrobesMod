@@ -1,8 +1,10 @@
 package com.spectrobes.spectrobesmod.client.gui.prizmod;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.components.*;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
+import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.IRenderable;
@@ -23,6 +25,7 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
     public int panelCursor;
     public AllSpectrobesList allSpectrobesList;
     public SpectrobesTeamList spectrobesTeamList;
+    PlayerSpectrobeMaster playerData;
     private SpectrobePiece childForm;
     public int page = 0;
     public final List<GuiButtonSpectrobePiece> visibleButtons = new ArrayList<>();
@@ -36,7 +39,12 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
     public LineUpMenu(int xIn, int yIn, int widthIn, int heightIn, String msg, PrizmodMenu parent) {
         super(xIn, yIn, widthIn, heightIn, msg);
         this.parent = parent;
+        if(parent.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).isPresent()) {
+            playerData = parent.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).orElse(null);
+        }
+
         allSpectrobesList = new AllSpectrobesList();
+        spectrobesTeamList = new SpectrobesTeamList();
 
     }
 
@@ -45,9 +53,9 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
         for(Button b : visibleButtons) {
             b.render(mouseX,mouseY,pTicks);
         }
-
-        //populatePanelButtons();
-        //allSpectrobesList.draw();
+        RenderSystem.pushMatrix();
+        populatePanelButtons();
+//        allSpectrobesList.draw();
 
         parent.getMinecraft().getTextureManager().bindTexture(PrizmodMenu.SPECTROBE_SLOT_TEXTURE);
 
@@ -63,6 +71,7 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
 //        String s = Math.min(Math.max(getPageCount(), 1), page + 1) + "/" + Math.max(getPageCount(), 1);
 //        parent.getMinecraft().fontRenderer.drawStringWithShadow(s, x + width / 2f - parent.getMinecraft().fontRenderer.getStringWidth(s) / 2f, y + height - 12, 0xFFFFFF);
 
+        RenderSystem.popMatrix();
     }
 
 
@@ -85,52 +94,40 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
                 case GLFW.GLFW_KEY_ESCAPE:
                     closePanel();
                     return true;
-                case GLFW.GLFW_KEY_TAB:
-                    if (visibleButtons.size() >= 1) {
-                        int newCursor = panelCursor + (Screen.hasAltDown() ? -1 : 1);
-                        if (newCursor >= (Math.min(visibleButtons.size(), 25))) {
-                            panelCursor = 0;
-
-                            return true;
-                        }
-
-                        panelCursor = Math.max(0, Math.min(newCursor, (Math.min(visibleButtons.size(), 25)) - 1));
-                        return true;
-                    }
             }
         }
         return false;
     }
 
     public void populatePanelButtons() {
-        parent.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent((sm) -> {
-            //populate the 6 team spectrobes pieces
-            //populate the child spectrobe piece
+        //populate the 6 team spectrobes pieces
+        //populate the child spectrobe piece
 
-            //populate the all spectrobes grid
-            allSpectrobesList = new AllSpectrobesList();
-            int maxCount = (int) Math.pow(AllSpectrobesList.GRID_SIZE, 2);
-            int index = 0;
-            for (Spectrobe spectrobe : sm.getOwnedSpectrobes()) {
-                SpectrobesInfo.LOGGER.info("POPULATING SPECTROBE SLOT #" + index);
-                if(index < maxCount) {
-                    SpectrobePiece piece = allSpectrobesList.addSpectrobe(spectrobe);
-                    GuiButtonSpectrobePiece spectrobeButton = new GuiButtonSpectrobePiece(parent, piece, piece.x * 32 + 32, piece.y * 32 + 32, button -> {
-                        ((GuiButtonSpectrobePiece) button).renderActions();
-                        //parent.onSpellChanged(false);
-                        //closePanel();
+        //populate the all spectrobes grid
+        allSpectrobesList.clear();
+        int maxCount = (int) Math.pow(AllSpectrobesList.GRID_SIZE, 2);
+        int index = 0;
+        for (Spectrobe spectrobe : playerData.getOwnedSpectrobes()) {
+            SpectrobesInfo.LOGGER.info("POPULATING SPECTROBE SLOT #" + index);
+            if(index < maxCount) {
+                SpectrobePiece piece = allSpectrobesList.addSpectrobe(spectrobe);
+                GuiButtonSpectrobePiece spectrobeButton = new GuiButtonSpectrobePiece(parent, piece, piece.x * 32 + 32, piece.y * 32 + 32, button -> {
+                    //((GuiButtonSpectrobePiece) button).renderActions();
+                    //parent.onSpellChanged(false);
+                    //closePanel();
 
-                        SpectrobesInfo.LOGGER.info("SPECTROBE SLOT CLICKED");
-                    });
-                    //spellPieceButton.visible = false;
-                    spectrobeButton.active = true;
-                    panelButtons.add(spectrobeButton);
-                    visibleButtons.add(spectrobeButton);
-                    index++;
-                }else {
-                    break;
-                }
+                    SpectrobesInfo.LOGGER.info("SPECTROBE SLOT CLICKED");
+                });
+                //spellPieceButton.visible = false;
+                spectrobeButton.active = true;
+                spectrobeButton.visible = true;
+                panelButtons.add(spectrobeButton);
+                visibleButtons.add(spectrobeButton);
+                index++;
+            }else {
+                break;
             }
+        }
 //
 //            GuiButtonPage right = new GuiButtonPage(0, 0, true, parent, button -> {
 //                int max = getPageCount();
@@ -157,8 +154,7 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
 //            right.active = false;
 //            panelButtons.add(left);
 //            panelButtons.add(right);
-            parent.addButtons(panelButtons);
-        });
+        parent.addButtons(panelButtons);
 
     }
 
@@ -214,37 +210,37 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
 //        }
     }
 
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        int flooredX = (int)mouseX / 32 - 1;
-        int flooredY = (int)mouseY / 32 - 1;
-        SpectrobesInfo.LOGGER.info("GOT HERE 1");
-        SpectrobesInfo.LOGGER.info("floored X:" + flooredX);
-        SpectrobesInfo.LOGGER.info("floored Y:" + flooredY);
-        if(AllSpectrobesList.exists(flooredX, flooredY)) {
-            if(allSpectrobesList.gridData[flooredX][flooredY].spell != null && mouseButton == 0) {
-            visibleButtons.forEach(button -> {
-                SpectrobesInfo.LOGGER.info("GOT HERE 2");
-                if(button.piece != null && button.x == flooredX && button.y == flooredY) {
-                    button.onPress();
-                    SpectrobesInfo.LOGGER.info("GOT HERE 3");
-                }
-            });
-        }
-
-        }
-        allSpectrobesList.mouseClicked(mouseX,mouseY,mouseButton);
-        if (parent.cursorX != -1 && parent.cursorY != -1 && mouseButton == 1 && !panelEnabled) {
-            openPanel();
-            return true;
-        }
-
-        if (panelEnabled && (mouseX < x || mouseY < y || mouseX > x + width || mouseY > y + height)) {
-            closePanel();
-            return true;
-        }
-        return false;
-    }
+//    @Override
+//    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+//        int flooredX = (int)mouseX / 32 - 1;
+//        int flooredY = (int)mouseY / 32 - 1;
+//        SpectrobesInfo.LOGGER.info("GOT HERE 1");
+//        SpectrobesInfo.LOGGER.info("floored X:" + flooredX);
+//        SpectrobesInfo.LOGGER.info("floored Y:" + flooredY);
+//        if(AllSpectrobesList.exists(flooredX, flooredY)) {
+//            if(allSpectrobesList.gridData[flooredX][flooredY].spell != null && mouseButton == 0) {
+//            visibleButtons.forEach(button -> {
+//                SpectrobesInfo.LOGGER.info("GOT HERE 2");
+//                if(button.piece != null && button.x == flooredX && button.y == flooredY) {
+//                    button.onPress();
+//                    SpectrobesInfo.LOGGER.info("GOT HERE 3");
+//                }
+//            });
+//        }
+//
+//        }
+//        allSpectrobesList.mouseClicked(mouseX,mouseY,mouseButton);
+//        if (parent.cursorX != -1 && parent.cursorY != -1 && mouseButton == 1 && !panelEnabled) {
+//            openPanel();
+//            return true;
+//        }
+//
+//        if (panelEnabled && (mouseX < x || mouseY < y || mouseX > x + width || mouseY > y + height)) {
+//            closePanel();
+//            return true;
+//        }
+//        return false;
+//    }
 
 
     public void closePanel() {
@@ -259,10 +255,10 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
     }
 
     public void openPanel() {
-        closePanel();
+//        closePanel();
         panelEnabled = true;
         //page = Math.min(page, Math.max(0, getPageCount() - 1));
-        x = parent.gridLeft + (PrizmodMenu.selectedX + 1) * 18;
+        x = parent.gridLeft + (PrizmodMenu.selectedX + 1) * 32;
         y = parent.gridTop;
         parent.getButtons().forEach(button -> {
             if (button instanceof GuiButtonSpectrobePiece || button instanceof GuiButtonPage) {
@@ -270,7 +266,7 @@ public class LineUpMenu extends Widget implements IRenderable, IGuiEventListener
                 button.active = true;
             }
         });
-        parent.changeFocus(false);
+        parent.changeFocus(true);
         populatePanelButtons();
 //        updatePanelButtons();
     }
