@@ -2,17 +2,14 @@ package com.spectrobes.spectrobesmod.client.gui.prizmod.components;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodMenu;
 import com.spectrobes.spectrobesmod.client.gui.utils.GuiUtils;
+import com.spectrobes.spectrobesmod.client.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeIconInfo;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties.Stage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -27,12 +24,16 @@ import java.util.List;
 public class SpectrobePiece extends AbstractGui {
 
     public Spectrobe spell;
-    public int x, y;
-    public int posX = x * 32 + 32;
-    public int posY = y * 32 + 32;
+    private int x, y;
+    public int posX;
+    public int posY;
 
-    public SpectrobePiece(Spectrobe spell) {
+    public SpectrobePiece(Spectrobe spell, int x ,int y) {
         this.spell = spell;
+        this.x = x;
+        this.y = y;
+        this.posX = (x+1) * 32;
+        this.posY = (y+1) * 32;
     }
 
     /**
@@ -74,15 +75,15 @@ public class SpectrobePiece extends AbstractGui {
      */
     @OnlyIn(Dist.CLIENT)
     public void drawBackground() {
-        ResourceLocation bg = PrizmodMenu.SPECTROBE_SLOT_TEXTURE;
+        ResourceLocation bg = PrizmodScreen.SPECTROBE_SLOT_TEXTURE;
 
-        RenderSystem.pushMatrix();
+//        RenderSystem.pushMatrix();
         Minecraft.getInstance().textureManager.bindTexture(bg);
         RenderSystem.enableTexture();
 
         GuiUtils.blit(posX, posY,32,0,0,32, 32, 32, 32);
 
-        RenderSystem.popMatrix();
+//        RenderSystem.popMatrix();
     }
 
     /**
@@ -149,14 +150,14 @@ public class SpectrobePiece extends AbstractGui {
         pieces.add(this);
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public void displayButtonMenu() {
-        RenderSystem.pushMatrix();
-
-        RenderSystem.translatef(posX + 32, posY, 128);
-        RenderSystem.color3f(255,255,255);
-        fill(100, 100, 128, 64, 0x88000000);
-
-        RenderSystem.popMatrix();
-    }
+//    @OnlyIn(Dist.CLIENT)
+//    public void displayButtonMenu() {
+//        RenderSystem.pushMatrix();
+//
+//        RenderSystem.translatef(posX + 32, posY, 128);
+//        RenderSystem.color3f(255,255,255);
+//        fill(100, 100, 128, 64, 0x88000000);
+//
+//        RenderSystem.popMatrix();
+//    }
 }

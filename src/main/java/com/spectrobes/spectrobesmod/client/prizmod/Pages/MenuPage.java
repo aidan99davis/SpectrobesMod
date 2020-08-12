@@ -20,7 +20,7 @@ public class MenuPage extends PrizmodPage {
 
     @Override
     public void init() {
-        this.addButton(new MenuButton(20, 20, 60, 20, "Line Up", button -> {
+        this.addButton(new MenuButton(parent.width / 2 - 60, 40, 60, 20, "Line Up", button -> {
             parent.setMenuPage(new LineUpPage(parent));
         }));
         //call super.init last cos it needs buttons to be populated.

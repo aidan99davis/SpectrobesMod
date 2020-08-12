@@ -11,14 +11,15 @@ import net.minecraft.client.gui.widget.button.Button;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class PrizmodPage extends FocusableGui {
+public abstract class PrizmodPage extends Widget {
 
-    protected PrizmodScreen parent;
+    public PrizmodScreen parent;
     protected PlayerSpectrobeMaster playerData;
     private List<Widget> buttons = new ArrayList<>();
 
 
     public PrizmodPage(PrizmodScreen parent) {
+        super(parent.pageX, parent.pageY, "");
         this.parent = parent;
     }
 
@@ -28,10 +29,10 @@ public abstract class PrizmodPage extends FocusableGui {
         }
     }
 
-    @Override
-    public List<? extends IGuiEventListener> children() {
-        return buttons;
-    }
+//    @Override
+//    public List<? extends IGuiEventListener> children() {
+//        return buttons;
+//    }
 
     public List<Widget> getButtons() {
         return buttons;

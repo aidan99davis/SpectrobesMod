@@ -1,6 +1,5 @@
 package com.spectrobes.spectrobesmod.common.items.tools;
 
-import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodMenu;
 import com.spectrobes.spectrobesmod.client.prizmod.PrizmodScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
@@ -21,9 +20,8 @@ public class PrizmodItem extends Item {
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack itemStack = new ItemStack(playerIn.getHeldItem(handIn).getItem(), 1);
         if(playerIn.isSneaking()) {
-            Minecraft.getInstance().displayGuiScreen(new PrizmodScreen(playerIn));
         } else {
-            Minecraft.getInstance().displayGuiScreen(new PrizmodMenu(playerIn));
+            Minecraft.getInstance().displayGuiScreen(new PrizmodScreen(playerIn));
         }
 
 
