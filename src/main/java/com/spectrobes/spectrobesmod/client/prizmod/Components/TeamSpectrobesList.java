@@ -1,10 +1,12 @@
 package com.spectrobes.spectrobesmod.client.prizmod.Components;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.components.SpectrobePiece;
 import com.spectrobes.spectrobesmod.client.prizmod.Pages.PrizmodPage;
 import com.spectrobes.spectrobesmod.client.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
+import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraftforge.api.distmarker.Dist;
@@ -53,14 +55,22 @@ public class TeamSpectrobesList extends Widget {
         return x >= 0 && x < GRID_SIZE;
     }
 
-    public void addSpectrobe(int index, Spectrobe piece) {
-        int i = 0;
+    public boolean addSpectrobe(int index, Spectrobe piece) {
 
-        for (i = 0; i < GRID_SIZE; i++) {
-            SpectrobePiece p = gridData[i];
-            if (p.spell == null) {
-                gridData[i].spell = piece;
-            }
+        if(index  >= 0
+                && index < 6
+                && piece.properties.getStage()
+                    != SpectrobeProperties.Stage.CHILD) {
+            gridData[index].spell = piece;
+            parent.parent.playerData.setTeamMember(index, piece);
+            return true;
+        } else if(index == 6 && piece.properties.getStage() == SpectrobeProperties.Stage.CHILD) {
+            gridData[index].spell = piece;
+            parent.parent.playerData.setTeamMember(index, piece);
+            return true;
+        } else {
+            SpectrobesInfo.LOGGER.info("unknown index, wtf?" + index);
+            return false;
         }
     }
 

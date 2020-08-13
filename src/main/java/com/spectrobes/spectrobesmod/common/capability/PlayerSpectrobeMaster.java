@@ -5,6 +5,8 @@ import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,13 +20,13 @@ public class PlayerSpectrobeMaster {
     //index 0 & 1 : current fighting spectrobes
     //index 2-6 : 4 back up fighting spectrobes
     //index 7 : child form
-    private List<UUID> currentTeam = new ArrayList<>(7);
+    private UUID[] currentTeam = new UUID[7];
 
     private List<Spectrobe>
         ownedSpectrobes;
 
     public boolean canFight() {
-        return currentTeam.size() > 2;
+        return currentTeam[0] != null && currentTeam[1] != null;
     }
 
     public PlayerSpectrobeMaster() {
@@ -44,11 +46,11 @@ public class PlayerSpectrobeMaster {
     }
 
     public void setTeamMember(int index, Spectrobe member) {
-        currentTeam.add(index, member.SpectrobeUUID);
+        currentTeam[index] = member.SpectrobeUUID;
     }
 
     public void removeTeamMember(int index) {
-        currentTeam.remove(index);
+        currentTeam[index] = null;
     }
 
     public List<Spectrobe> getOwnedSpectrobes() {
@@ -87,7 +89,7 @@ public class PlayerSpectrobeMaster {
         ownedSpectrobes.addAll(spectrobes);
         if(currentTeamNbt != null) {
             for(int i = 0; (i < currentTeamNbt.keySet().size() && i <= 6); i++) {
-                currentTeam.add(currentTeamNbt.getUniqueId(String.valueOf(i)));
+                currentTeam[i] = (currentTeamNbt.getUniqueId(String.valueOf(i)));
             }
         }
 
@@ -101,12 +103,12 @@ public class PlayerSpectrobeMaster {
         return ownedSpectrobes.size();
     }
 
-    public List<UUID> getCurrentTeamUuids() {
+    public UUID[] getCurrentTeamUuids() {
         return currentTeam;
     }
 
     public void updateSpectrobe(String entityTypeAsString, Spectrobe spectrobeInstance) {
-        for (Spectrobe s : ownedSpectrobes) {
+        for (Spectrobe s : getOwnedSpectrobes()) {
             if(s.SpectrobeUUID == spectrobeInstance.SpectrobeUUID) {
                 SpectrobesInfo.LOGGER.info("UPDATING YER TROBE");
                 ownedSpectrobes.remove(s);

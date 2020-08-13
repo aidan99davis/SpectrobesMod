@@ -16,9 +16,6 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.lwjgl.opengl.GL11;
-
-import java.security.interfaces.RSAKey;
 import java.util.List;
 
 public class SpectrobePiece extends AbstractGui {
@@ -27,6 +24,7 @@ public class SpectrobePiece extends AbstractGui {
     private int x, y;
     public int posX;
     public int posY;
+    public boolean selected;
 
     public SpectrobePiece(Spectrobe spell, int x ,int y) {
         this.spell = spell;
@@ -34,6 +32,7 @@ public class SpectrobePiece extends AbstractGui {
         this.y = y;
         this.posX = (x+3) * 32;
         this.posY = (y+2) * 32;
+        selected = false;
     }
 
     /**
@@ -60,8 +59,11 @@ public class SpectrobePiece extends AbstractGui {
     public void draw() {
         RenderSystem.pushMatrix();
         drawBackground();
-//        RenderSystem.translatef(x, y, 0.1F);
         drawAdditional();
+        if(selected){
+            RenderSystem.translatef(0, 0, -100F);
+            displayBorder();
+        }
 //        if (isInGrid) {
 //            RenderSystem.translatef(0F, 0F, 0.1F);
 //            drawComment(ms, buffers, light);
@@ -150,14 +152,19 @@ public class SpectrobePiece extends AbstractGui {
         pieces.add(this);
     }
 
-//    @OnlyIn(Dist.CLIENT)
-//    public void displayButtonMenu() {
-//        RenderSystem.pushMatrix();
-//
-//        RenderSystem.translatef(posX + 32, posY, 128);
-//        RenderSystem.color3f(255,255,255);
-//        fill(100, 100, 128, 64, 0x88000000);
-//
-//        RenderSystem.popMatrix();
-//    }
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public void displayBorder() {
+        RenderSystem.pushMatrix();
+        RenderSystem.translatef(0,0,129);
+        RenderSystem.enableAlphaTest();
+        RenderSystem.clearColor(255, 255, 255, 125);
+        fill(posX - 1, posY - 1, posX + 34, posY + 34, 16777215);
+        RenderSystem.popMatrix();
+
+        //draw border around slot
+    }
 }

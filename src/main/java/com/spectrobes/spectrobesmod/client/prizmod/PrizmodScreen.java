@@ -29,9 +29,6 @@ public class PrizmodScreen extends Screen implements INestedGuiEventHandler {
     public int pageX = width / 3;
     public int pageY = (int) (height * 0.65);
 
-    private int leftPadding = 0;
-    private int topPadding = 0;
-
     private PrizmodPage prizmodPage;
 
 
@@ -111,7 +108,6 @@ public class PrizmodScreen extends Screen implements INestedGuiEventHandler {
 
         this.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
             this.playerData = sm;
-            SpectrobesInfo.LOGGER.info("Renewing player data.");
         });
     }
 
