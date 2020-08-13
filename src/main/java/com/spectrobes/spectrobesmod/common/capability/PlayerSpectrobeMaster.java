@@ -108,6 +108,7 @@ public class PlayerSpectrobeMaster {
     public void updateSpectrobe(String entityTypeAsString, Spectrobe spectrobeInstance) {
         for (Spectrobe s : ownedSpectrobes) {
             if(s.SpectrobeUUID == spectrobeInstance.SpectrobeUUID) {
+                SpectrobesInfo.LOGGER.info("UPDATING YER TROBE");
                 ownedSpectrobes.remove(s);
                 ownedSpectrobes.add(spectrobeInstance);
             }
@@ -115,7 +116,7 @@ public class PlayerSpectrobeMaster {
     }
 
     public void setSpectrobeInactive(Spectrobe spectrobeData) {
-        this.getOwnedSpectrobes().forEach(s -> {
+        this.ownedSpectrobes.forEach(s -> {
             if(s.SpectrobeUUID == spectrobeData.SpectrobeUUID) {
                 ownedSpectrobes.remove(s);
                 s.active = false;

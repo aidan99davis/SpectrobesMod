@@ -26,4 +26,9 @@ public class MenuPage extends PrizmodPage {
         //call super.init last cos it needs buttons to be populated.
         super.init();
     }
+
+    @Override
+    public void tick() {
+
+    }
 }

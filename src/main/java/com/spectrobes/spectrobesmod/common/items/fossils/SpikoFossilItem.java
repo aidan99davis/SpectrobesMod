@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 
 public class SpikoFossilItem extends Item {
@@ -32,6 +33,8 @@ public class SpikoFossilItem extends Item {
             );
 
             spiko.setOwnerId(playerIn.getUniqueID());
+            spiko.setCustomName(new StringTextComponent(spiko.getSpectrobeData().name));
+            spiko.getSpectrobeData().setActive();
             playerIn.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(playerCap -> {
                 playerCap.addSpectrobe(spiko.getRegistryName(), spiko.getSpectrobeData());
             });

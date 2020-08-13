@@ -91,6 +91,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
                 applyMineral(mineralItem);
             } else if(itemstack.getItem() instanceof PrizmodItem && player.isSneaking()) {
                 if(player == getOwner()) {
+
                     despawn(player);
                 }
             }
@@ -102,12 +103,12 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     }
 
     public void despawn(PlayerEntity player) {
-        if(!world.isRemote) {
-            player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
-                sm.setSpectrobeInactive(getSpectrobeData());
-            });
-            this.remove(false);
-        }
+        this.getSpectrobeData().setInactive();
+        player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
+            sm.updateSpectrobe("", getSpectrobeData());
+        });
+        Minecraft.getInstance().world.addParticle(ParticleTypes.FIREWORK, getPosX() + 0.5D, getPosY() + 1.0D, getPosZ() + 0.5D, 0.0D, 1.0D, 0.0D);
+        this.remove(false);
     }
 
     @Override

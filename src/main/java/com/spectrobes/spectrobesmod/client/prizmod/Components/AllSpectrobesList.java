@@ -24,6 +24,12 @@ public class AllSpectrobesList extends Widget {
     public AllSpectrobesList(PrizmodPage parent) {
         super(parent.x, parent.y, "");
         this.parent = parent;
+        gridData = new SpectrobePiece[GRID_SIZE][GRID_SIZE];
+        for (int i = 0; i < GRID_SIZE; i++) {
+            for (int j = 0; j < GRID_SIZE; j++) {
+                gridData[i][j] = new SpectrobePiece(null, i, j);
+            }
+        }
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -50,12 +56,7 @@ public class AllSpectrobesList extends Widget {
 
     public AllSpectrobesList() {
         super(32, 32, "");
-        gridData = new SpectrobePiece[GRID_SIZE][GRID_SIZE];
-        for (int i = 0; i < GRID_SIZE; i++) {
-            for (int j = 0; j < GRID_SIZE; j++) {
-                gridData[i][j] = new SpectrobePiece(null, i, j);
-            }
-        }
+
     }
 
 
@@ -77,11 +78,9 @@ public class AllSpectrobesList extends Widget {
     }
 
     public void clear() {
-        gridData = null;
-        gridData = new SpectrobePiece[GRID_SIZE][GRID_SIZE];
         for (int i = 0; i < GRID_SIZE; i++) {
             for (int j = 0; j < GRID_SIZE; j++) {
-                gridData[i][j] = new SpectrobePiece(null, i, j);
+                gridData[i][j].spell = null;
             }
         }
     }

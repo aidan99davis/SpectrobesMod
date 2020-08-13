@@ -1,6 +1,7 @@
 package com.spectrobes.spectrobesmod.client.prizmod;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.gui.utils.GuiUtils;
 import com.spectrobes.spectrobesmod.client.prizmod.Pages.MenuPage;
 import com.spectrobes.spectrobesmod.client.prizmod.Pages.PrizmodPage;
@@ -63,7 +64,6 @@ public class PrizmodScreen extends Screen implements INestedGuiEventHandler {
 
     @Override
     public void renderBackground() {
-        this.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> this.playerData = sm);
         super.renderBackground();
         RenderSystem.pushMatrix();
         RenderSystem.color3f(1F, 1F, 1F);
@@ -95,11 +95,24 @@ public class PrizmodScreen extends Screen implements INestedGuiEventHandler {
     }
 
     public void setMenuPage(PrizmodPage prizmodPage) {
+        this.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
+            this.playerData = sm;
+        });
+
         this.buttons.clear();
         this.prizmodPage = prizmodPage;
         this.prizmodPage.init();
         this.setFocused(prizmodPage);
         this.addButton(this.prizmodPage);
+    }
+
+    @Override public void tick() {
+        this.prizmodPage.tick();
+
+        this.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
+            this.playerData = sm;
+            SpectrobesInfo.LOGGER.info("Renewing player data.");
+        });
     }
 
     public void addButtons(List<Widget> buttonList) {

@@ -33,6 +33,7 @@ public class KomainuFossilItem extends Item {
                     true,true
             );
             komainu.setCustomName(new StringTextComponent(komainu.getSpectrobeData().name));
+            komainu.getSpectrobeData().setActive();
             komainu.setOwnerId(playerIn.getUniqueID());
             playerIn.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(playerCap -> {
                 playerCap.addSpectrobe(komainu.getRegistryName(), komainu.getSpectrobeData());

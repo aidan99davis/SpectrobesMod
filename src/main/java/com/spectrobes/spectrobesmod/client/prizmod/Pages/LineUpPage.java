@@ -11,6 +11,8 @@ import com.spectrobes.spectrobesmod.client.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.entities.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.widget.Widget;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.util.text.StringTextComponent;
 
@@ -26,9 +28,14 @@ public class LineUpPage extends PrizmodPage {
     }
 
     @Override
+    public void tick() {
+        //this.populateGrid();
+    }
+
+    @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
         super.render(mouseX, mouseY, partialTicks);
-        populateGrid();
+        //populateGrid();
         RenderSystem.pushMatrix();
         RenderSystem.translatef(parent.width / 3, 0, 1);
         AllSpectrobesGrid.draw();
@@ -49,7 +56,9 @@ public class LineUpPage extends PrizmodPage {
     private void populateGrid() {
         this.AllSpectrobesGrid.clear();
         for(Spectrobe s : parent.playerData.getOwnedSpectrobes()) {
+
             SpectrobesInfo.LOGGER.info("spectrobe name: " + s.name);
+            SpectrobesInfo.LOGGER.info("spectrobe active?: " + s.active);
             AllSpectrobesGrid.addSpectrobe(s);
         }
 
@@ -70,9 +79,9 @@ public class LineUpPage extends PrizmodPage {
                                             parent.player.getPosition(),
                                             SpawnReason.MOB_SUMMONED,
                                             true,true);
-                                    sp.spell.active = true;
                                     spectrobe1.setSpectrobeData(spectrobe);
                                     spectrobe1.setOwnerId(parent.player.getUniqueID());
+                                    parent.playerData.spawnSpectrobe(spectrobe);
                                     Minecraft.getInstance().displayGuiScreen(null);
                                 }
                             } catch (ClassNotFoundException e) {
@@ -82,6 +91,10 @@ public class LineUpPage extends PrizmodPage {
                     });
             addButton(button);
         }
+    }
+
+    private void removeButton(Widget b) {
+        this.buttons.remove(b);
     }
 
     @Override

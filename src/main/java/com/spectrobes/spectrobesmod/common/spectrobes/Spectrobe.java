@@ -27,7 +27,7 @@ public class Spectrobe {
     @Required
     public SpectrobeStats stats;
 
-    public boolean active = false;
+    public boolean active;
 
     public Spectrobe copy() {
         return new SpectrobeBuilder().buildFrom(this);
@@ -91,6 +91,14 @@ public class Spectrobe {
 
     public SpectrobeIconInfo getIcon() {
         return IconRegistry.getInstance().getByName(name);
+    }
+
+    public void setInactive() {
+        active = false;
+    }
+
+    public void setActive() {
+        active = true;
     }
 
     public static class SpectrobeSerializer implements IDataSerializer<Spectrobe> {

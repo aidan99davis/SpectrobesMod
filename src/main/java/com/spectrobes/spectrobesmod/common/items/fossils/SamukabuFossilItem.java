@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 
 public class SamukabuFossilItem extends Item {
@@ -31,6 +32,8 @@ public class SamukabuFossilItem extends Item {
                     true,true
             );
             samukabu.setOwnerId(playerIn.getUniqueID());
+            samukabu.setCustomName(new StringTextComponent(samukabu.getSpectrobeData().name));
+            samukabu.getSpectrobeData().setActive();
             playerIn.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(playerCap -> {
                 playerCap.addSpectrobe(samukabu.getRegistryName(), samukabu.getSpectrobeData());
             });

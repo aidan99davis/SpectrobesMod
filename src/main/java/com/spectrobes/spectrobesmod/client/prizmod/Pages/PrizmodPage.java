@@ -15,7 +15,7 @@ public abstract class PrizmodPage extends Widget {
 
     public PrizmodScreen parent;
     protected PlayerSpectrobeMaster playerData;
-    private List<Widget> buttons = new ArrayList<>();
+    protected List<Widget> buttons = new ArrayList<>();
 
 
     public PrizmodPage(PrizmodScreen parent) {
@@ -50,4 +50,6 @@ public abstract class PrizmodPage extends Widget {
     public void init() {
         parent.addButtons(getButtons());
     }
+
+    public abstract void tick();
 }
