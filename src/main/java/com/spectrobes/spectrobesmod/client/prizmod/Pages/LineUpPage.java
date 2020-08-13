@@ -7,24 +7,29 @@ import com.spectrobes.spectrobesmod.client.prizmod.Components.AllSpectrobesList;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.components.SpectrobePiece;
 import com.spectrobes.spectrobesmod.client.prizmod.Components.MenuButton;
 import com.spectrobes.spectrobesmod.client.prizmod.Components.SpectrobeButton;
+import com.spectrobes.spectrobesmod.client.prizmod.Components.TeamSpectrobesList;
 import com.spectrobes.spectrobesmod.client.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.entities.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.util.text.StringTextComponent;
+
+import java.util.List;
+import java.util.UUID;
 
 public class LineUpPage extends PrizmodPage {
 
     private AllSpectrobesList AllSpectrobesGrid;
+    private TeamSpectrobesList TeamSpectrobesGrid;
     int gridPaddingLeft = parent.width / 3;
     int gridPaddingTop = parent.height / 2;
 
     public LineUpPage(PrizmodScreen parent) {
         super(parent);
         AllSpectrobesGrid = new AllSpectrobesList(this);
+        TeamSpectrobesGrid = new TeamSpectrobesList(this);
     }
 
     @Override
@@ -54,43 +59,57 @@ public class LineUpPage extends PrizmodPage {
     }
 
     private void populateGrid() {
+        this.TeamSpectrobesGrid.clear();
         this.AllSpectrobesGrid.clear();
+        List<UUID> teamUuids =  parent.playerData.getCurrentTeamUuids();
         for(Spectrobe s : parent.playerData.getOwnedSpectrobes()) {
 
             SpectrobesInfo.LOGGER.info("spectrobe name: " + s.name);
             SpectrobesInfo.LOGGER.info("spectrobe active?: " + s.active);
-            AllSpectrobesGrid.addSpectrobe(s);
+            if(teamUuids.contains(s.SpectrobeUUID)) {
+                TeamSpectrobesGrid.addSpectrobe(teamUuids.indexOf(s.SpectrobeUUID), s);
+            } else {
+                AllSpectrobesGrid.addSpectrobe(s);
+            }
+        }
+
+        for (SpectrobePiece sp : TeamSpectrobesGrid.getAll()) {
+            addButton(addSpectrobeButton(sp));
         }
 
         for(SpectrobePiece sp : AllSpectrobesGrid.getAll()) {
-            SpectrobeButton button = new SpectrobeButton(this.parent, sp,
-                    onClick -> {
-                        SpectrobesInfo.LOGGER.info("SPECTROBE SLOT CLICKED M8");
-                        if(sp.spell != null && sp.spell.active == false) {
-                            SpectrobesInfo.LOGGER.info("THIS ONE HAS ONE IN IT THAT ISNT IN THE WORLD");
-                            try {
-                                if(!parent.player.world.isRemote) {
-                                    Spectrobe spectrobe = sp.spell;
-                                    EntitySpectrobe spectrobe1 = SpectrobesEntities.getByName(spectrobe.name).spawn(
-                                            parent.player.world,
-                                            spectrobe.write(),
-                                            new StringTextComponent(spectrobe.name),
-                                            parent.player,
-                                            parent.player.getPosition(),
-                                            SpawnReason.MOB_SUMMONED,
-                                            true,true);
-                                    spectrobe1.setSpectrobeData(spectrobe);
-                                    spectrobe1.setOwnerId(parent.player.getUniqueID());
-                                    parent.playerData.spawnSpectrobe(spectrobe);
-                                    Minecraft.getInstance().displayGuiScreen(null);
-                                }
-                            } catch (ClassNotFoundException e) {
-                                SpectrobesInfo.LOGGER.info("Couldnt find spectrobes registry.\n" + e.getMessage());
-                            }
-                        }
-                    });
-            addButton(button);
+            addButton(addSpectrobeButton(sp));
         }
+    }
+
+    private SpectrobeButton addSpectrobeButton(SpectrobePiece sp) {
+        SpectrobeButton button = new SpectrobeButton(this.parent, sp,
+                onClick -> {
+                    SpectrobesInfo.LOGGER.info("SPECTROBE SLOT CLICKED M8");
+                    if(sp.spell != null && sp.spell.active == false) {
+                        SpectrobesInfo.LOGGER.info("THIS ONE HAS ONE IN IT THAT ISNT IN THE WORLD");
+                        try {
+                            if(!parent.player.world.isRemote) {
+                                Spectrobe spectrobe = sp.spell;
+                                EntitySpectrobe spectrobe1 = SpectrobesEntities.getByName(spectrobe.name).spawn(
+                                        parent.player.world,
+                                        spectrobe.write(),
+                                        new StringTextComponent(spectrobe.name),
+                                        parent.player,
+                                        parent.player.getPosition(),
+                                        SpawnReason.MOB_SUMMONED,
+                                        true,true);
+                                spectrobe1.setSpectrobeData(spectrobe);
+                                spectrobe1.setOwnerId(parent.player.getUniqueID());
+                                parent.playerData.spawnSpectrobe(spectrobe);
+                                Minecraft.getInstance().displayGuiScreen(null);
+                            }
+                        } catch (ClassNotFoundException e) {
+                            SpectrobesInfo.LOGGER.info("Couldnt find spectrobes registry.\n" + e.getMessage());
+                        }
+                    }
+                });
+        return button;
     }
 
     private void removeButton(Widget b) {

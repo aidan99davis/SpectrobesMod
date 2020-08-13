@@ -1,0 +1,80 @@
+package com.spectrobes.spectrobesmod.client.prizmod.Components;
+
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.spectrobes.spectrobesmod.client.gui.prizmod.components.SpectrobePiece;
+import com.spectrobes.spectrobesmod.client.prizmod.Pages.PrizmodPage;
+import com.spectrobes.spectrobesmod.client.prizmod.PrizmodScreen;
+import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.widget.Widget;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class TeamSpectrobesList extends Widget {
+
+    public static final int GRID_SIZE = 7;
+
+    public SpectrobePiece[] gridData;
+
+    private PrizmodPage parent;
+
+    public TeamSpectrobesList(PrizmodPage parent) {
+        super(parent.x, parent.y, "");
+        this.parent = parent;
+        gridData = new SpectrobePiece[GRID_SIZE];
+        gridData[0] = new SpectrobePiece(null, 6, 0);
+        gridData[1] = new SpectrobePiece(null, 7, 0);
+        gridData[2] = new SpectrobePiece(null, 6, 1);
+        gridData[3] = new SpectrobePiece(null, 7, 1);
+        gridData[4] = new SpectrobePiece(null, 6, 2);
+        gridData[5] = new SpectrobePiece(null, 7, 2);
+        gridData[6] = new SpectrobePiece(null, 6, 3);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public void draw() {
+        for (int i = 0; i < GRID_SIZE; i++) {
+            SpectrobePiece p = gridData[i];
+
+            RenderSystem.pushMatrix();
+            Minecraft.getInstance().textureManager.bindTexture(PrizmodScreen.SPECTROBE_SLOT_TEXTURE);
+            RenderSystem.enableAlphaTest();
+            RenderSystem.translatef(i * 32, p.posY, 2);
+            //p.draw();
+            RenderSystem.popMatrix();
+
+        }
+    }
+
+    public static boolean exists(int x) {
+        return x >= 0 && x < GRID_SIZE;
+    }
+
+    public void addSpectrobe(int index, Spectrobe piece) {
+        int i = 0;
+
+        for (i = 0; i < GRID_SIZE; i++) {
+            SpectrobePiece p = gridData[i];
+            if (p.spell == null) {
+                gridData[i].spell = piece;
+            }
+        }
+    }
+
+    public void clear() {
+        for (int i = 0; i < GRID_SIZE; i++) {
+            gridData[i].spell = null;
+        }
+    }
+
+    public List<SpectrobePiece> getAll() {
+        List<SpectrobePiece> toReturn = new ArrayList<>();
+        for (int i = 0; i < GRID_SIZE; i++) {
+                toReturn.add(gridData[i]);
+        }
+        return toReturn;
+    }
+}
