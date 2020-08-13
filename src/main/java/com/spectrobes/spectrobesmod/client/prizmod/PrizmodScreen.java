@@ -63,6 +63,7 @@ public class PrizmodScreen extends Screen implements INestedGuiEventHandler {
 
     @Override
     public void renderBackground() {
+        this.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> this.playerData = sm);
         super.renderBackground();
         RenderSystem.pushMatrix();
         RenderSystem.color3f(1F, 1F, 1F);
@@ -87,8 +88,9 @@ public class PrizmodScreen extends Screen implements INestedGuiEventHandler {
         RenderSystem.translatef(0,0,-16);
         renderBackground();
 
-        this.prizmodPage.render(mouseX,mouseY,partialTicks);
         RenderSystem.popMatrix();
+        RenderSystem.translatef(0,0,32);
+        this.prizmodPage.render(mouseX,mouseY,partialTicks);
 
     }
 

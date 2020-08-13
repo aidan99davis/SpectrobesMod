@@ -1,7 +1,9 @@
 package com.spectrobes.spectrobesmod.common.entities;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
+import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
+import com.spectrobes.spectrobesmod.common.items.tools.PrizmodItem;
 import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.client.Minecraft;
@@ -50,7 +52,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     public EntitySpectrobe(EntityType<? extends EntitySpectrobe> entityTypeIn,
                            World worldIn) {
         super(entityTypeIn, worldIn);
-
+        SpectrobesInfo.LOGGER.info("SPAWNED SPECTROBE TO THE WORLD");
         setInvulnerable(true);
         registerAnimationControllers();
     }
@@ -87,12 +89,25 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
             } else if (itemstack.getItem() instanceof MineralItem){
                 MineralItem mineralItem = (MineralItem)itemstack.getItem();
                 applyMineral(mineralItem);
+            } else if(itemstack.getItem() instanceof PrizmodItem && player.isSneaking()) {
+                if(player == getOwner()) {
+                    despawn(player);
+                }
             }
         }
 
         recentInteract = true;
         ticksTillInteract = 15;
         return super.processInteract(player, hand);
+    }
+
+    public void despawn(PlayerEntity player) {
+        if(!world.isRemote) {
+            player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
+                sm.setSpectrobeInactive(getSpectrobeData());
+            });
+            this.remove(false);
+        }
     }
 
     @Override
@@ -239,6 +254,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     }
 
     private void evolve() {
+        Spectrobe spectrobeInstance = getSpectrobeData();
         Minecraft MINECRAFT = Minecraft.getInstance();
         if(!world.isRemote) {
             MINECRAFT.world.addParticle(ParticleTypes.FLASH, getPosX() + 0.5D, getPosY() + 1.0D, getPosZ() + 0.5D, 0.0D, 0.0D, 0.0D);
@@ -246,9 +262,12 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
             spectrobe.setLocationAndAngles(getPosX(), getPosY(), getPosZ(), 0.0F, 0.0F);
             this.world.addEntity(spectrobe);
             spectrobe.setPosition(getPosX(), getPosY(), getPosZ());
-            this.getSpectrobeData().evolve(spectrobe.getSpectrobeData());
-            spectrobe.setSpectrobeData(this.getSpectrobeData());
+            spectrobeInstance.evolve(spectrobe.getSpectrobeData());
+            spectrobe.setSpectrobeData(spectrobeInstance);
             if(getOwner() != null) {
+                getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
+                    sm.updateSpectrobe(getRegistryName(), spectrobeInstance);
+                });
                 spectrobe.setOwnerId(getOwnerId());
             }
         }
@@ -360,6 +379,11 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
 
             this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(
                     spectrobeInstance.stats.getAtkLevel());
+            if(getOwner() != null) {
+                getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
+                    sm.updateSpectrobe(getRegistryName(), spectrobeInstance);
+                });
+            }
         } else {
             Minecraft.getInstance().player.sendChatMessage("his mineral is the wrong nature.");
         }

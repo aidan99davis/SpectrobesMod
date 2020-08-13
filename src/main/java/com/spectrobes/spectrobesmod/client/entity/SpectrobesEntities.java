@@ -2,6 +2,7 @@ package com.spectrobes.spectrobesmod.client.entity;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.entity.renderer.*;
+import com.spectrobes.spectrobesmod.common.entities.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.entities.komainu.EntityKomainu;
 import com.spectrobes.spectrobesmod.common.entities.komainu.EntityKomanoto;
 import com.spectrobes.spectrobesmod.common.entities.samubaku.EntitySamukabu;
@@ -17,7 +18,13 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class SpectrobesEntities {
+
+    private static final Map<String, EntityType<? extends EntitySpectrobe>> SPECTROBES = new HashMap<>();
+
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES
             = new DeferredRegister<>(ForgeRegistries.ENTITIES, SpectrobesInfo.MOD_ID);
 
@@ -71,11 +78,32 @@ public class SpectrobesEntities {
     }
 
     public static void init() {
+        populateMap();
+
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_KOMAINU.get(), manager -> new KomainuRenderer(manager));
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SPIKO.get(), manager -> new SpikoRenderer(manager));
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_KOMANOTO.get(), manager -> new KomanotoRenderer(manager));
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SPIKAN.get(), manager -> new SpikanRenderer(manager));
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SAMUKABU.get(), manager -> new SamukabuRenderer(manager));
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SAMURITE.get(), manager -> new SamuriteRenderer(manager));
+    }
+
+    private static void populateMap() {
+        SPECTROBES.put("komainu", ENTITY_KOMAINU.get());
+        SPECTROBES.put("komanoto", ENTITY_KOMANOTO.get());
+        SPECTROBES.put("samukabu", ENTITY_SAMUKABU.get());
+        SPECTROBES.put("samurite", ENTITY_SAMURITE.get());
+        SPECTROBES.put("spiko", ENTITY_SPIKO.get());
+        SPECTROBES.put("spikan", ENTITY_SPIKAN.get());
+    }
+
+    public static EntityType<? extends EntitySpectrobe> getByName(String name) throws ClassNotFoundException {
+        EntityType<? extends EntitySpectrobe> spectrobe = SPECTROBES.get(name.toLowerCase());
+        if(spectrobe != null) {
+            return spectrobe;
+        }
+        throw new ClassNotFoundException("could not find the spectrobe's " +
+                "entity registry. " +
+                "is its name spelled correctly?");
     }
 }

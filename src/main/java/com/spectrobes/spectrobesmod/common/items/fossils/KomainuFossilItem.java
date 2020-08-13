@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 
 public class KomainuFossilItem extends Item {
@@ -24,12 +25,14 @@ public class KomainuFossilItem extends Item {
         ItemStack itemStack = new ItemStack(playerIn.getHeldItem(handIn).getItem(), 1);
         if(!worldIn.isRemote) {
             EntitySpectrobe komainu = (EntitySpectrobe) SpectrobesEntities.ENTITY_KOMAINU.get().spawn(worldIn,
-                    itemStack,
+                    null,
+                    new StringTextComponent("Komainu"),
                     playerIn,
                     playerIn.getPosition(),
                     SpawnReason.MOB_SUMMONED,
                     true,true
             );
+            komainu.setCustomName(new StringTextComponent(komainu.getSpectrobeData().name));
             komainu.setOwnerId(playerIn.getUniqueID());
             playerIn.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(playerCap -> {
                 playerCap.addSpectrobe(komainu.getRegistryName(), komainu.getSpectrobeData());

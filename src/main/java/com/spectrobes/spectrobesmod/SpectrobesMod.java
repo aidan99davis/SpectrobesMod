@@ -5,6 +5,7 @@ import com.spectrobes.spectrobesmod.common.capability.PlayerEvents;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.registry.IconRegistry;
 import com.spectrobes.spectrobesmod.common.registry.MineralRegistry;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.api.distmarker.Dist;
@@ -59,12 +60,12 @@ public class SpectrobesMod
             @Nullable
             @Override
             public INBT writeNBT(Capability<PlayerSpectrobeMaster> capability, PlayerSpectrobeMaster instance, Direction side) {
-                throw new UnsupportedOperationException();
+                return instance.serializeNBT();
             }
 
             @Override
             public void readNBT(Capability<PlayerSpectrobeMaster> capability, PlayerSpectrobeMaster instance, Direction side, INBT nbt) {
-                throw new UnsupportedOperationException();
+                instance.deserializeNBT((CompoundNBT) nbt);
             }
         }, () -> null);
     }

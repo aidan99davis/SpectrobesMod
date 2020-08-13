@@ -1,7 +1,6 @@
 package com.spectrobes.spectrobesmod.client.prizmod.Components;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.components.SpectrobePiece;
 import com.spectrobes.spectrobesmod.client.prizmod.PrizmodScreen;
 import net.minecraft.client.gui.widget.button.Button;
@@ -9,7 +8,6 @@ import net.minecraft.client.gui.widget.button.Button;
 public class SpectrobeButton extends Button {
     public SpectrobePiece piece;
     final PrizmodScreen gui;
-
 
     public SpectrobeButton(PrizmodScreen gui, SpectrobePiece piece, IPressable pressable) {
         super(piece.posX, piece.posY, 32, 32, "", pressable);

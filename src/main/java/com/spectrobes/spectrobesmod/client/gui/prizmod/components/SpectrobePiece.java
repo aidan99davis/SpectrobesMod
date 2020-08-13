@@ -32,8 +32,8 @@ public class SpectrobePiece extends AbstractGui {
         this.spell = spell;
         this.x = x;
         this.y = y;
-        this.posX = (x+1) * 32;
-        this.posY = (y+1) * 32;
+        this.posX = (x+3) * 32;
+        this.posY = (y+2) * 32;
     }
 
     /**

@@ -2,12 +2,17 @@ package com.spectrobes.spectrobesmod.client.prizmod.Pages;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
+import com.spectrobes.spectrobesmod.client.entity.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.client.prizmod.Components.AllSpectrobesList;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.components.SpectrobePiece;
 import com.spectrobes.spectrobesmod.client.prizmod.Components.MenuButton;
 import com.spectrobes.spectrobesmod.client.prizmod.Components.SpectrobeButton;
 import com.spectrobes.spectrobesmod.client.prizmod.PrizmodScreen;
+import com.spectrobes.spectrobesmod.common.entities.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.SpawnReason;
+import net.minecraft.util.text.StringTextComponent;
 
 public class LineUpPage extends PrizmodPage {
 
@@ -44,6 +49,7 @@ public class LineUpPage extends PrizmodPage {
     private void populateGrid() {
         this.AllSpectrobesGrid.clear();
         for(Spectrobe s : parent.playerData.getOwnedSpectrobes()) {
+            SpectrobesInfo.LOGGER.info("spectrobe name: " + s.name);
             AllSpectrobesGrid.addSpectrobe(s);
         }
 
@@ -51,8 +57,27 @@ public class LineUpPage extends PrizmodPage {
             SpectrobeButton button = new SpectrobeButton(this.parent, sp,
                     onClick -> {
                         SpectrobesInfo.LOGGER.info("SPECTROBE SLOT CLICKED M8");
-                        if(sp.spell != null) {
-                            SpectrobesInfo.LOGGER.info("THIS ONE HAS ONE IN IT");
+                        if(sp.spell != null && sp.spell.active == false) {
+                            SpectrobesInfo.LOGGER.info("THIS ONE HAS ONE IN IT THAT ISNT IN THE WORLD");
+                            try {
+                                if(!parent.player.world.isRemote) {
+                                    Spectrobe spectrobe = sp.spell;
+                                    EntitySpectrobe spectrobe1 = SpectrobesEntities.getByName(spectrobe.name).spawn(
+                                            parent.player.world,
+                                            spectrobe.write(),
+                                            new StringTextComponent(spectrobe.name),
+                                            parent.player,
+                                            parent.player.getPosition(),
+                                            SpawnReason.MOB_SUMMONED,
+                                            true,true);
+                                    sp.spell.active = true;
+                                    spectrobe1.setSpectrobeData(spectrobe);
+                                    spectrobe1.setOwnerId(parent.player.getUniqueID());
+                                    Minecraft.getInstance().displayGuiScreen(null);
+                                }
+                            } catch (ClassNotFoundException e) {
+                                SpectrobesInfo.LOGGER.info("Couldnt find spectrobes registry.\n" + e.getMessage());
+                            }
                         }
                     });
             addButton(button);

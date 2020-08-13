@@ -20,7 +20,7 @@ public class PlayerSpectrobeMaster {
     //index 7 : child form
     private List<UUID> currentTeam = new ArrayList<>(7);
 
-    private HashMap<String, List<Spectrobe>>
+    private List<Spectrobe>
         ownedSpectrobes;
 
     public boolean canFight() {
@@ -28,7 +28,7 @@ public class PlayerSpectrobeMaster {
     }
 
     public PlayerSpectrobeMaster() {
-        this.ownedSpectrobes = new HashMap<>();
+        this.ownedSpectrobes = new ArrayList<>();
 
     }
 
@@ -36,14 +36,8 @@ public class PlayerSpectrobeMaster {
                                 Spectrobe spectrobeInstance) {
         SpectrobesInfo.LOGGER.info("ADDING SPECTROBE TO THE PLAYER");
         List<Spectrobe> newList;
-        if(ownedSpectrobes.values().size() + 1 <= MAX_OWNED_SPECTROBES) {
-            if(this.ownedSpectrobes.get(entityTypeAsString) == null) {
-                newList = new ArrayList<>();
-                newList.add(spectrobeInstance);
-                this.ownedSpectrobes.put(entityTypeAsString, newList);
-            } else {
-                this.ownedSpectrobes.get(entityTypeAsString).add(spectrobeInstance);
-            }
+        if(ownedSpectrobes.size() + 1 <= MAX_OWNED_SPECTROBES) {
+            ownedSpectrobes.add(spectrobeInstance);
             return true;
         }
         return false;
@@ -58,27 +52,20 @@ public class PlayerSpectrobeMaster {
     }
 
     public List<Spectrobe> getOwnedSpectrobes() {
-        List<Spectrobe> allOwned =  new ArrayList<>();
 
-        if(ownedSpectrobes.keySet().size() > 0) {
-            for(List<Spectrobe> spectrobeList : ownedSpectrobes.values()) {
-                allOwned.addAll(spectrobeList);
-            }
+        if(ownedSpectrobes.size() > 0) {
+            return ownedSpectrobes;
         }
 
-        return allOwned;
+        return new ArrayList<>();
     }
 
     public CompoundNBT serializeNBT() {
         CompoundNBT myData = new CompoundNBT();
-        CompoundNBT ownedSpectrobesNbt = new CompoundNBT();
         CompoundNBT currentTeamNbt = new CompoundNBT();
-        for (String key : ownedSpectrobes.keySet()) {
-            ListNBT spectrobes = new ListNBT();
-            for(Spectrobe s : ownedSpectrobes.get(key)) {
-                spectrobes.add(s.write());
-            }
-            ownedSpectrobesNbt.put(key, spectrobes);
+        ListNBT spectrobes = new ListNBT();
+        for(Spectrobe s : ownedSpectrobes) {
+            spectrobes.add(s.write());
         }
         int index = 0;
         for(UUID s : currentTeam) {
@@ -86,20 +73,18 @@ public class PlayerSpectrobeMaster {
             index++;
         }
         myData.put("currentTeam", currentTeamNbt);
-        myData.put("spectrobesOwned", ownedSpectrobesNbt);
+        myData.put("spectrobesOwned", spectrobes);
         return myData;
     }
 
     public void deserializeNBT(CompoundNBT nbt) {
-        CompoundNBT ownedSpectrobesNbt = (CompoundNBT) nbt.get("spectrobesOwned");
+        ListNBT ownedSpectrobesNbt = (ListNBT) nbt.get("spectrobesOwned");
         CompoundNBT currentTeamNbt = (CompoundNBT) nbt.get("currentTeam");
-        for(String key : ownedSpectrobesNbt.keySet()) {
-            List<Spectrobe> spectrobes = new ArrayList<>();
-            for(INBT spectrobeNbt : (ListNBT)ownedSpectrobesNbt.get(key)) {
-                spectrobes.add(Spectrobe.read((CompoundNBT)spectrobeNbt));
-            }
-            ownedSpectrobes.put(key, spectrobes);
+        List<Spectrobe> spectrobes = new ArrayList<>();
+        for(INBT spectrobeNbt : (ListNBT)ownedSpectrobesNbt) {
+            spectrobes.add(Spectrobe.read((CompoundNBT)spectrobeNbt));
         }
+        ownedSpectrobes.addAll(spectrobes);
         if(currentTeamNbt != null) {
             for(int i = 0; (i < currentTeamNbt.keySet().size() && i <= 6); i++) {
                 currentTeam.add(currentTeamNbt.getUniqueId(String.valueOf(i)));
@@ -113,10 +98,37 @@ public class PlayerSpectrobeMaster {
     }
 
     public int getOwnedSpectrobesCount() {
-        return ownedSpectrobes.values().size();
+        return ownedSpectrobes.size();
     }
 
     public List<UUID> getCurrentTeamUuids() {
         return currentTeam;
+    }
+
+    public void updateSpectrobe(String entityTypeAsString, Spectrobe spectrobeInstance) {
+        for (Spectrobe s : ownedSpectrobes) {
+            if(s.SpectrobeUUID == spectrobeInstance.SpectrobeUUID) {
+                ownedSpectrobes.remove(s);
+                ownedSpectrobes.add(spectrobeInstance);
+            }
+        }
+    }
+
+    public void setSpectrobeInactive(Spectrobe spectrobeData) {
+        this.getOwnedSpectrobes().forEach(s -> {
+            if(s.SpectrobeUUID == spectrobeData.SpectrobeUUID) {
+                ownedSpectrobes.remove(s);
+                s.active = false;
+                ownedSpectrobes.add(spectrobeData);
+            }
+        });
+    }
+
+    public void spawnSpectrobe(Spectrobe spectrobeData) {
+        this.ownedSpectrobes.forEach(s -> {
+            if(s.SpectrobeUUID == spectrobeData.SpectrobeUUID) {
+                s.active = true;
+            }
+        });
     }
 }
