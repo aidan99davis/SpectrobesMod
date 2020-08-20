@@ -34,7 +34,7 @@ public class SpectrobeButton extends Button {
 
     public void setSelected(boolean selected) {
         this.selected = selected;
-        piece.setSelected(true);
+        piece.setSelected(selected);
     }
 
     //render actions i.e. assign to slot 1, 2, 3, 4, 5, 6 or child slot

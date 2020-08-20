@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.gui.utils.GuiUtils;
 import com.spectrobes.spectrobesmod.client.prizmod.PrizmodScreen;
+import com.spectrobes.spectrobesmod.common.items.tools.PrizmodItem;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeIconInfo;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties.Stage;
@@ -60,10 +61,6 @@ public class SpectrobePiece extends AbstractGui {
         RenderSystem.pushMatrix();
         drawBackground();
         drawAdditional();
-        if(selected){
-            RenderSystem.translatef(0, 0, -100F);
-            displayBorder();
-        }
 //        if (isInGrid) {
 //            RenderSystem.translatef(0F, 0F, 0.1F);
 //            drawComment(ms, buffers, light);
@@ -77,7 +74,7 @@ public class SpectrobePiece extends AbstractGui {
      */
     @OnlyIn(Dist.CLIENT)
     public void drawBackground() {
-        ResourceLocation bg = PrizmodScreen.SPECTROBE_SLOT_TEXTURE;
+        ResourceLocation bg = selected? PrizmodScreen.SPECTROBE_SLOT_SELECTED_TEXTURE : PrizmodScreen.SPECTROBE_SLOT_TEXTURE;
 
 //        RenderSystem.pushMatrix();
         Minecraft.getInstance().textureManager.bindTexture(bg);

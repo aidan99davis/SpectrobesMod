@@ -11,7 +11,7 @@ import com.spectrobes.spectrobesmod.client.prizmod.Components.TeamSpectrobesList
 import com.spectrobes.spectrobesmod.client.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.entities.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.util.text.StringTextComponent;
@@ -94,29 +94,32 @@ public class LineUpPage extends PrizmodPage {
     private SpectrobeButton addSpectrobeButton(SpectrobePiece sp) {
         SpectrobeButton button = new SpectrobeButton(this.parent, sp,
                 onClick -> {
-                    setSelectedSpectrobe(((SpectrobeButton)onClick));
-                    SpectrobesInfo.LOGGER.info("SPECTROBE SLOT CLICKED M8");
-                    if(sp.spell != null && sp.spell.active == false) {
-                        try {
-                            if(!parent.player.world.isRemote) {
-                                Spectrobe spectrobe = sp.spell;
-                                EntitySpectrobe spectrobe1 = SpectrobesEntities.getByName(spectrobe.name).spawn(
-                                        parent.player.world,
-                                        spectrobe.write(),
-                                        new StringTextComponent(spectrobe.name),
-                                        parent.player,
-                                        parent.player.getPosition(),
-                                        SpawnReason.MOB_SUMMONED,
-                                        true,true);
-                                spectrobe1.setSpectrobeData(spectrobe);
-                                spectrobe1.setOwnerId(parent.player.getUniqueID());
-                                parent.playerData.spawnSpectrobe(spectrobe);
-                                //Minecraft.getInstance().displayGuiScreen(null);
+                    if(Screen.hasShiftDown()) {
+                        if(sp.spell != null && sp.spell.active == false) {
+                            try {
+                                if(!parent.player.world.isRemote) {
+                                    Spectrobe spectrobe = sp.spell;
+                                    EntitySpectrobe spectrobe1 = SpectrobesEntities.getByName(spectrobe.name).spawn(
+                                            parent.player.world,
+                                            spectrobe.write(),
+                                            new StringTextComponent(spectrobe.name),
+                                            parent.player,
+                                            parent.player.getPosition(),
+                                            SpawnReason.MOB_SUMMONED,
+                                            true,true);
+                                    spectrobe1.setSpectrobeData(spectrobe);
+                                    spectrobe1.setOwnerId(parent.player.getUniqueID());
+                                    parent.playerData.spawnSpectrobe(spectrobe);
+                                    //Minecraft.getInstance().displayGuiScreen(null);
+                                }
+                            } catch (ClassNotFoundException e) {
+                                SpectrobesInfo.LOGGER.info("Couldnt find spectrobe's registry.\n" + e.getMessage());
                             }
-                        } catch (ClassNotFoundException e) {
-                            SpectrobesInfo.LOGGER.info("Couldnt find spectrobes registry.\n" + e.getMessage());
                         }
+                    } else {
+                        setSelectedSpectrobe(((SpectrobeButton)onClick));
                     }
+
                 });
         return button;
     }
@@ -135,10 +138,25 @@ public class LineUpPage extends PrizmodPage {
 
                 selectedButton = null;
                 return;
+            } else if(TeamSpectrobesGrid.getAll().contains(selectedButton.piece)
+                    && TeamSpectrobesGrid.getAll().contains(button.piece)) {
+                if(TeamSpectrobesGrid.swapSpectrobes(
+                        TeamSpectrobesGrid.getAll().indexOf(button.piece),
+                        TeamSpectrobesGrid.getAll().indexOf(selectedButton.piece))) {
+                    populateGrid();
+                }
+
+                selectedButton = null;
+                return;
             }
         }
-        selectedButton = button;
-        selectedButton.setSelected(true);
+        if(button.piece.spell != null) {
+            selectedButton = button;
+            selectedButton.setSelected(true);
+            return;
+        }
+
+        selectedButton = null;
 
     }
 

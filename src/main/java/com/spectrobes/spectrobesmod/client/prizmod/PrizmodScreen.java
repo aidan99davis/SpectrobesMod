@@ -23,6 +23,7 @@ import java.util.List;
 public class PrizmodScreen extends Screen implements INestedGuiEventHandler {
     public static final ResourceLocation texture = new ResourceLocation("spectrobesmod:textures/gui/prizmod_background.png");
     public static final ResourceLocation SPECTROBE_SLOT_TEXTURE = new ResourceLocation("spectrobesmod:textures/gui/spectrobe_slot.png");
+    public static final ResourceLocation SPECTROBE_SLOT_SELECTED_TEXTURE = new ResourceLocation("spectrobesmod:textures/gui/spectrobe_slot_selected.png");
 
     public final PlayerEntity player;
     public PlayerSpectrobeMaster playerData;

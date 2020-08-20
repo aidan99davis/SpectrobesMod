@@ -36,8 +36,6 @@ public class PlayerSpectrobeMaster {
 
     public boolean addSpectrobe(String entityTypeAsString,
                                 Spectrobe spectrobeInstance) {
-        SpectrobesInfo.LOGGER.info("ADDING SPECTROBE TO THE PLAYER");
-        List<Spectrobe> newList;
         if(ownedSpectrobes.size() + 1 <= MAX_OWNED_SPECTROBES) {
             ownedSpectrobes.add(spectrobeInstance);
             return true;
@@ -46,7 +44,11 @@ public class PlayerSpectrobeMaster {
     }
 
     public void setTeamMember(int index, Spectrobe member) {
-        currentTeam[index] = member.SpectrobeUUID;
+        if(member != null) {
+            currentTeam[index] = member.SpectrobeUUID;
+        } else {
+            removeTeamMember(index);
+        }
     }
 
     public void removeTeamMember(int index) {
@@ -71,8 +73,10 @@ public class PlayerSpectrobeMaster {
         }
         int index = 0;
         for(UUID s : currentTeam) {
-            currentTeamNbt.putUniqueId(String.valueOf(index), s);
-            index++;
+            if(s != null) {
+                currentTeamNbt.putUniqueId(String.valueOf(index), s);
+                index++;
+            }
         }
         myData.put("currentTeam", currentTeamNbt);
         myData.put("spectrobesOwned", spectrobes);
