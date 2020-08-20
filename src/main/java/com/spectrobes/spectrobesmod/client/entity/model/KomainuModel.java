@@ -1,12 +1,10 @@
 package com.spectrobes.spectrobesmod.client.entity.model;
 
-import com.google.common.collect.ImmutableList;
-import com.spectrobes.spectrobesmod.SpectrobesMod;
+import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.entities.komainu.EntityKomainu;
-import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.util.ResourceLocation;
 import software.bernie.geckolib.animation.model.AnimatedEntityModel;
-import software.bernie.geckolib.animation.model.AnimatedModelRenderer;
+import software.bernie.geckolib.animation.render.AnimatedModelRenderer;
 
 // Made with Blockbench 3.5.4
 // Exported for Minecraft version 1.12.2 or 1.15.2 (same format for both) for entity model animated with GeckoLib
@@ -92,6 +90,6 @@ public class KomainuModel extends AnimatedEntityModel<EntityKomainu> {
 	@Override
     public ResourceLocation getAnimationFileLocation()
     {
-        return new ResourceLocation(SpectrobesMod.MOD_ID, "animations/spectrobe/komainu.json");
+        return new ResourceLocation(SpectrobesInfo.MOD_ID, "animations/spectrobe/komainu.json");
     }
 }

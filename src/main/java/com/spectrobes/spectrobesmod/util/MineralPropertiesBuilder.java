@@ -46,4 +46,16 @@ public class MineralPropertiesBuilder {
 
         return properties;
     }
+
+    public MineralProperties buildFrom(MineralProperties mineralProperties) {
+        MineralProperties properties = new MineralProperties();
+
+        properties.setHpOffset(mineralProperties.getHpOffset());
+        properties.setAtkOffset(mineralProperties.getAtkOffset());
+        properties.setDefOffset(mineralProperties.getDefOffset());
+        properties.setNature(mineralProperties.getNature());
+        properties.setXpWorth(mineralProperties.getXpWorth());
+
+        return properties;
+    }
 }

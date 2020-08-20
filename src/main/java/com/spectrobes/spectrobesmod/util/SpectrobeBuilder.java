@@ -3,6 +3,7 @@ package com.spectrobes.spectrobesmod.util;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeStats;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.UUID;
 
@@ -11,7 +12,6 @@ public class SpectrobeBuilder {
     private String name;
     private SpectrobeProperties properties;
     private SpectrobeStats stats;
-    private Spectrobe evolution;
 
     public SpectrobeBuilder withMasterUUID(UUID masterUUID) {
         this.masterUUID = masterUUID;
@@ -32,10 +32,12 @@ public class SpectrobeBuilder {
         this.properties = props;
         return this;
     }
+
     public SpectrobeBuilder withStats(int hpStat, int atkStat, int defStat) {
         this.stats = new SpectrobeStats(hpStat,atkStat,defStat);
         return this;
     }
+
 
     public Spectrobe buildFrom(Spectrobe spectrobe) {
         Spectrobe newSpectrobe = new Spectrobe();

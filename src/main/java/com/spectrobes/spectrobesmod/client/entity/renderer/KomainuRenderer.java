@@ -1,5 +1,6 @@
 package com.spectrobes.spectrobesmod.client.entity.renderer;
 
+import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.SpectrobesMod;
 import com.spectrobes.spectrobesmod.client.entity.model.KomainuModel;
 import com.spectrobes.spectrobesmod.common.entities.komainu.EntityKomainu;
@@ -22,6 +23,6 @@ public class KomainuRenderer extends MobRenderer<EntityKomainu, KomainuModel> {
     @Override
     public ResourceLocation getEntityTexture(EntityKomainu entity)
     {
-        return new ResourceLocation(SpectrobesMod.MOD_ID + ":textures/models/spectrobe/komainu.png");
+        return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/komainu.png");
     }
 }

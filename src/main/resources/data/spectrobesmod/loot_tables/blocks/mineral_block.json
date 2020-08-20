@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "spectrobesmod:mineral_item"
+          "name": "spectrobesmod:mineral_item_power_c"
         }
       ]
     }

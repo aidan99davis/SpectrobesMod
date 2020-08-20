@@ -1,11 +1,18 @@
 package com.spectrobes.spectrobesmod;
 
 import com.spectrobes.spectrobesmod.client.entity.SpectrobesEntities;
+import com.spectrobes.spectrobesmod.common.capability.PlayerEvents;
+import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
+import com.spectrobes.spectrobesmod.common.registry.IconRegistry;
 import com.spectrobes.spectrobesmod.common.registry.MineralRegistry;
-import com.spectrobes.spectrobesmod.util.SpectrobesWorldData;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.util.Direction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
@@ -16,18 +23,14 @@ import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nullable;
 import java.util.stream.Collectors;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod("spectrobesmod")
 public class SpectrobesMod
 {
-    public static final String MOD_ID = "spectrobesmod";
-    // Directly reference a log4j logger.
-    public static final Logger LOGGER = LogManager.getLogger();
     public static SpectrobesMod Instance;
 
     public SpectrobesMod() {
@@ -39,17 +42,32 @@ public class SpectrobesMod
         modEventBus.addListener(this::enqueueIMC);
         modEventBus.addListener(this::processIMC);
         modEventBus.addListener(this::doClientStuff);
-        MinecraftForge.EVENT_BUS.addListener(SpectrobesWorldData::onWorldLoaded);
-        MinecraftForge.EVENT_BUS.addListener(SpectrobesWorldData::onWorldSaved);
 
         SpectrobesEntities.ENTITY_TYPES.register(modEventBus);
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
     }
 
+//    private <T extends Event> void initialiseCapabilities(final AttachCapabilitiesEvent event) {
+//        event.addCapability(SpectrobesInfo.MOD_ID, PlayerSpectrobeMaster.Provider);
+//    }
+
     private void setup(final FMLCommonSetupEvent event)
     {
+        MinecraftForge.EVENT_BUS.register(PlayerEvents.instance);
+        IconRegistry.init();
+        CapabilityManager.INSTANCE.register(PlayerSpectrobeMaster.class, new Capability.IStorage<PlayerSpectrobeMaster>() {
+            @Nullable
+            @Override
+            public INBT writeNBT(Capability<PlayerSpectrobeMaster> capability, PlayerSpectrobeMaster instance, Direction side) {
+                return instance.serializeNBT();
+            }
 
+            @Override
+            public void readNBT(Capability<PlayerSpectrobeMaster> capability, PlayerSpectrobeMaster instance, Direction side, INBT nbt) {
+                instance.deserializeNBT((CompoundNBT) nbt);
+            }
+        }, () -> null);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -62,12 +80,12 @@ public class SpectrobesMod
 
     private void enqueueIMC(final InterModEnqueueEvent event)
     {
-        InterModComms.sendTo("examplemod", "helloworld", () -> { LOGGER.info("Hello world from the MDK"); return "Hello world";});
+        InterModComms.sendTo("examplemod", "helloworld", () -> { SpectrobesInfo.LOGGER.info("Hello world from the MDK"); return "Hello world";});
     }
 
     private void processIMC(final InterModProcessEvent event)
     {
-        LOGGER.info("Got IMC {}", event.getIMCStream().
+        SpectrobesInfo.LOGGER.info("Got IMC {}", event.getIMCStream().
                 map(m->m.getMessageSupplier().get()).
                 collect(Collectors.toList()));
     }
@@ -76,7 +94,7 @@ public class SpectrobesMod
     @SubscribeEvent
     public void onServerStarting(FMLServerStartingEvent event) {
         // do something when the server starts
-        LOGGER.info("HELLO from server starting");
+        SpectrobesInfo.LOGGER.info("HELLO from server starting");
     }
 
 }
