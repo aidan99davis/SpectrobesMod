@@ -27,6 +27,8 @@ public class Spectrobe {
     @Required
     public SpectrobeStats stats;
 
+    public boolean active;
+
     public Spectrobe copy() {
         return new SpectrobeBuilder().buildFrom(this);
     }
@@ -67,6 +69,7 @@ public class Spectrobe {
         if(MasterUUID != null)
             compoundnbt.putUniqueId("MasterUUID", MasterUUID);
         compoundnbt.putUniqueId("UUID", SpectrobeUUID);
+        compoundnbt.putBoolean("active", active);
 
         compoundnbt.put("SpectrobeStats", stats.write());
         compoundnbt.put("SpectrobeProperties", properties.write());
@@ -78,6 +81,7 @@ public class Spectrobe {
         s.MasterUUID = nbtData.getUniqueId("MasterUUID");
         s.name = nbtData.get("name").getString();
         s.SpectrobeUUID = nbtData.getUniqueId("UUID");
+        s.active = nbtData.getBoolean("active");
         s.properties = SpectrobeProperties.read(((CompoundNBT) nbtData.get("SpectrobeProperties")));
 
         s.stats = SpectrobeStats.read((CompoundNBT) nbtData.get("SpectrobeStats"));
@@ -87,6 +91,14 @@ public class Spectrobe {
 
     public SpectrobeIconInfo getIcon() {
         return IconRegistry.getInstance().getByName(name);
+    }
+
+    public void setInactive() {
+        active = false;
+    }
+
+    public void setActive() {
+        active = true;
     }
 
     public static class SpectrobeSerializer implements IDataSerializer<Spectrobe> {

@@ -55,12 +55,43 @@
 			}
 		},
 		"animation.samukabu.sitting": {
-			"loop": true,
 			"animation_length": 0.36,
 			"bones": {
 				"body": {
 					"position": {
 						"vector": [0, -2.5, 0]
+					}
+				}
+			}
+		},
+		"animation.samukabu.jump": {
+			"animation_length": 0.52,
+			"bones": {
+				"body": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.08": {
+							"vector": [-22.5, 0, 0]
+						},
+						"0.32": {
+							"vector": [12.5, 0, 0]
+						},
+						"0.44": {
+							"vector": [0, 0, 0]
+						}
+					},
+					"position": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.2": {
+							"vector": [0, 6, 0]
+						},
+						"0.44": {
+							"vector": [0, 0, 0]
+						}
 					}
 				}
 			}

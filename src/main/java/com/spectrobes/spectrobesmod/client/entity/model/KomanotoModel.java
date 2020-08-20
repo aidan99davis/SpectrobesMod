@@ -1,3 +1,7 @@
+// Made with Blockbench 3.6.5
+// Exported for Minecraft version 1.12.2 or 1.15.2 (same format for both) for entity models animated with GeckoLib
+// Paste this class into your mod and follow the documentation for GeckoLib to use animations. You can find the documentation here: https://github.com/bernie-g/geckolib
+// Blockbench plugin created by Gecko
 package com.spectrobes.spectrobesmod.client.entity.model;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
@@ -6,10 +10,6 @@ import net.minecraft.util.ResourceLocation;
 import software.bernie.geckolib.animation.model.AnimatedEntityModel;
 import software.bernie.geckolib.animation.render.AnimatedModelRenderer;
 
-// Made with Blockbench 3.5.4
-// Exported for Minecraft version 1.12.2 or 1.15.2 (same format for both) for entity models animated with GeckoLib
-// Paste this class into your mod and follow the documentation for GeckoLib to use animations. You can find the documentation here: https://github.com/bernie-g/geckolib
-// Blockbench plugin created by Gecko
 public class KomanotoModel extends AnimatedEntityModel<EntityKomanoto> {
 
     private final AnimatedModelRenderer body;
@@ -45,8 +45,8 @@ public class KomanotoModel extends AnimatedEntityModel<EntityKomanoto> {
     public KomanotoModel()
     {
         textureWidth = 128;
-		textureHeight = 128;
-		body = new AnimatedModelRenderer(this);
+    	textureHeight = 128;
+    	body = new AnimatedModelRenderer(this);
 		body.setRotationPoint(0.0F, 18.0F, 0.0F);
 		body.setTextureOffset(32, 0).addBox(-8.0F, -26.0F, -8.0F, 16.0F, 16.0F, 32.0F, 0.0F, true);
 		body.setModelRendererName("body");
@@ -225,7 +225,8 @@ public class KomanotoModel extends AnimatedEntityModel<EntityKomanoto> {
 		this.registerModelRenderer(body_adornment_4);
 
 		head = new AnimatedModelRenderer(this);
-		head.setRotationPoint(0.0F, -5.2857F, -4.9286F);
+		head.setRotationPoint(0.0F, -23.2857F, -4.9286F);
+		body.addChild(head);
 		head.setTextureOffset(0, 0).addBox(-8.0F, -11.7143F, -16.0714F, 16.0F, 16.0F, 16.0F, 0.0F, false);
 		head.setTextureOffset(0, 0).addBox(-2.0F, -3.7143F, -17.0714F, 4.0F, 2.0F, 1.0F, 0.0F, false);
 		head.setModelRendererName("head");
@@ -291,9 +292,8 @@ public class KomanotoModel extends AnimatedEntityModel<EntityKomanoto> {
 		eyes.setModelRendererName("eyes");
 		this.registerModelRenderer(eyes);
 
-		this.rootBones.add(body);
-		this.rootBones.add(head);
-	}
+    this.rootBones.add(body);
+  }
 
 
     @Override
