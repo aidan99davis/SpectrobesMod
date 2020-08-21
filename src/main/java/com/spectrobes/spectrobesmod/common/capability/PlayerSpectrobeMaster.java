@@ -1,15 +1,13 @@
 package com.spectrobes.spectrobesmod.common.capability;
 
-import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public class PlayerSpectrobeMaster {
@@ -91,8 +89,10 @@ public class PlayerSpectrobeMaster {
         }
         ownedSpectrobes.addAll(spectrobes);
         if(currentTeamNbt != null) {
-            for(int i = 0; (i < currentTeamNbt.keySet().size() && i <= 6); i++) {
-                currentTeam[i] = (currentTeamNbt.getUniqueId(String.valueOf(i)));
+            Set<String> keys = currentTeamNbt.keySet();
+            for(String s : keys) {
+                int index = Integer.valueOf(s.substring(0,1));
+                currentTeam[index] = currentTeamNbt.getUniqueId(s);
             }
         }
 
@@ -113,7 +113,6 @@ public class PlayerSpectrobeMaster {
     public void updateSpectrobe(Spectrobe spectrobeInstance) {
         for (Spectrobe s : getOwnedSpectrobes()) {
             if(s.SpectrobeUUID == spectrobeInstance.SpectrobeUUID) {
-                SpectrobesInfo.LOGGER.info("UPDATING YER TROBE");
                 ownedSpectrobes.remove(s);
                 ownedSpectrobes.add(spectrobeInstance);
             }
