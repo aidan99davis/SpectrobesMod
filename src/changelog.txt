@@ -1,0 +1,5 @@
+V1.3
+=====
+
+Refactored fossil definitions.
+fossils and minerals are now used up upon right clicking.

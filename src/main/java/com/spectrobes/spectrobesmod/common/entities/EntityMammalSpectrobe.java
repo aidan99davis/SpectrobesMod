@@ -10,7 +10,7 @@ public abstract class EntityMammalSpectrobe extends EntitySpectrobe {
 
     @Override
     public void mate() {
-
+        //todo: live births, gestation time, litter count.
     }
 
 }
