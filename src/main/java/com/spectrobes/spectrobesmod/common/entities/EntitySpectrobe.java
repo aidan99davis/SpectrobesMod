@@ -2,6 +2,7 @@ package com.spectrobes.spectrobesmod.common.entities;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
+import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
 import com.spectrobes.spectrobesmod.common.items.tools.PrizmodItem;
 import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
@@ -66,6 +67,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         this.goalSelector.addGoal(5, new BreedGoal(this,10));
         this.goalSelector.addGoal(2, new RandomWalkingGoal(this, 0.2d));
         this.goalSelector.addGoal(5, new LookAtGoal(this, PlayerEntity.class, 6.0F));
+        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, EntityKrawl.class, true));
 //        this.goalSelector.addGoal(5, new LookRandomlyGoal(this));
         this.goalSelector.addGoal(3, new FollowOwnerGoal(this,0.3f , 4, 12, true));
     }
@@ -115,7 +117,8 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
 
     @Override
     public boolean attackEntityFrom(DamageSource source, float amount) {
-        if(source.getImmediateSource() instanceof EntitySpectrobe){
+        if(source.getImmediateSource() instanceof EntitySpectrobe
+                || source.getImmediateSource() instanceof EntityKrawl){
             return super.attackEntityFrom(source,amount);
         }
         return false;
@@ -151,6 +154,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         dataManager.set(TICKS_TILL_MATE, ticksTillMate);
     }
 
+    //Networking
     @Override
     public IPacket<?> createSpawnPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
