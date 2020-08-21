@@ -35,7 +35,7 @@ public class SamukabuFossilItem extends Item {
             samukabu.setCustomName(new StringTextComponent(samukabu.getSpectrobeData().name));
             samukabu.getSpectrobeData().setActive();
             playerIn.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(playerCap -> {
-                playerCap.addSpectrobe(samukabu.getRegistryName(), samukabu.getSpectrobeData());
+                playerCap.addSpectrobe(samukabu.getSpectrobeData());
             });
         }
 

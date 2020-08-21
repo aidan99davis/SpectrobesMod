@@ -21,6 +21,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties.Nature;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties.Stage;
@@ -89,6 +90,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
             } else if (itemstack.getItem() instanceof MineralItem){
                 MineralItem mineralItem = (MineralItem)itemstack.getItem();
                 applyMineral(mineralItem);
+                itemstack.shrink(1);
             } else if(itemstack.getItem() instanceof PrizmodItem && player.isSneaking()) {
                 if(player == getOwner()) {
 
@@ -105,7 +107,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     public void despawn(PlayerEntity player) {
         this.getSpectrobeData().setInactive();
         player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
-            sm.updateSpectrobe("", getSpectrobeData());
+            sm.updateSpectrobe(getSpectrobeData());
         });
         Minecraft.getInstance().world.addParticle(ParticleTypes.FIREWORK, getPosX() + 0.5D, getPosY() + 1.0D, getPosZ() + 0.5D, 0.0D, 1.0D, 0.0D);
         this.remove(false);
@@ -265,9 +267,10 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
             spectrobe.setPosition(getPosX(), getPosY(), getPosZ());
             spectrobeInstance.evolve(spectrobe.getSpectrobeData());
             spectrobe.setSpectrobeData(spectrobeInstance);
+            spectrobe.setCustomName(new StringTextComponent(spectrobeInstance.name));
             if(getOwner() != null) {
                 getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
-                    sm.updateSpectrobe(getRegistryName(), spectrobeInstance);
+                    sm.updateSpectrobe(spectrobeInstance);
                 });
                 spectrobe.setOwnerId(getOwnerId());
             }
@@ -382,7 +385,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
                     spectrobeInstance.stats.getAtkLevel());
             if(getOwner() != null) {
                 getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
-                    sm.updateSpectrobe(getRegistryName(), spectrobeInstance);
+                    sm.updateSpectrobe(spectrobeInstance);
                 });
             }
         } else {

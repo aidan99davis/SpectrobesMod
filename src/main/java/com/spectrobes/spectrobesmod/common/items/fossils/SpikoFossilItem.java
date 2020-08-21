@@ -36,7 +36,7 @@ public class SpikoFossilItem extends Item {
             spiko.setCustomName(new StringTextComponent(spiko.getSpectrobeData().name));
             spiko.getSpectrobeData().setActive();
             playerIn.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(playerCap -> {
-                playerCap.addSpectrobe(spiko.getRegistryName(), spiko.getSpectrobeData());
+                playerCap.addSpectrobe(spiko.getSpectrobeData());
             });
         }
 

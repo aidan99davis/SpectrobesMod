@@ -34,8 +34,7 @@ public class PlayerSpectrobeMaster {
 
     }
 
-    public boolean addSpectrobe(String entityTypeAsString,
-                                Spectrobe spectrobeInstance) {
+    public boolean addSpectrobe(Spectrobe spectrobeInstance) {
         if(ownedSpectrobes.size() + 1 <= MAX_OWNED_SPECTROBES) {
             ownedSpectrobes.add(spectrobeInstance);
             return true;
@@ -111,7 +110,7 @@ public class PlayerSpectrobeMaster {
         return currentTeam;
     }
 
-    public void updateSpectrobe(String entityTypeAsString, Spectrobe spectrobeInstance) {
+    public void updateSpectrobe(Spectrobe spectrobeInstance) {
         for (Spectrobe s : getOwnedSpectrobes()) {
             if(s.SpectrobeUUID == spectrobeInstance.SpectrobeUUID) {
                 SpectrobesInfo.LOGGER.info("UPDATING YER TROBE");
