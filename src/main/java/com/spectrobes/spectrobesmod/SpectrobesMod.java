@@ -6,6 +6,7 @@ import com.spectrobes.spectrobesmod.common.capability.PlayerEvents;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.registry.IconRegistry;
 import com.spectrobes.spectrobesmod.common.registry.MineralRegistry;
+import com.spectrobes.spectrobesmod.common.worldgen.SpectrobesOreGen;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
@@ -17,17 +18,17 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
-import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
+import net.minecraftforge.fml.event.lifecycle.*;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 import javax.annotation.Nullable;
 
+import static net.minecraftforge.fml.common.Mod.EventBusSubscriber.*;
+
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(SpectrobesInfo.MOD_ID)
+@Mod.EventBusSubscriber(modid = SpectrobesInfo.MOD_ID, bus = Bus.MOD)
 public class SpectrobesMod
 {
     public static SpectrobesMod Instance;
@@ -85,6 +86,12 @@ public class SpectrobesMod
 //        SpectrobesInfo.LOGGER.info("Got IMC {}", event.getIMCStream().
 //                map(m->m.getMessageSupplier().get()).
 //                collect(Collectors.toList()));
+    }
+
+
+    @SubscribeEvent
+    public static void loadCompleteEvent(FMLLoadCompleteEvent event) {
+        SpectrobesOreGen.generateOre();
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call

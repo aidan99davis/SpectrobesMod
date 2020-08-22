@@ -16,6 +16,10 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.registries.ObjectHolder;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 @Mod.EventBusSubscriber(modid = SpectrobesInfo.MOD_ID, bus = Bus.MOD)
 @ObjectHolder(SpectrobesInfo.MOD_ID)
 public class SpectrobesItems {
@@ -64,6 +68,8 @@ public class SpectrobesItems {
     public static final Item samukabu_fossil_item = null;
     public static final Item prizmod_item = null;
 
+    private static List<Item> all_minerals = new ArrayList<>();
+    private static List<Item> all_fossils = new ArrayList<>();
 
     @SubscribeEvent
     public static void registerItems(final RegistryEvent.Register<Item> event) {
@@ -73,18 +79,29 @@ public class SpectrobesItems {
             registerMineral(event, m);
         }
 
-        event.getRegistry().register(
-                new KomainuFossilItem(
+        Item fossil;
+
+        fossil = new KomainuFossilItem(
                         new Item.Properties()
-                                .group(SpectrobesFossilsItemGroup.Instance)));
-        event.getRegistry().register(
-                new SpikoFossilItem(
+                                .group(SpectrobesFossilsItemGroup.Instance));
+
+        event.getRegistry().register(fossil);
+        all_fossils.add(fossil);
+
+        fossil = new SpikoFossilItem(
+                    new Item.Properties()
+                        .group(SpectrobesFossilsItemGroup.Instance));
+
+        event.getRegistry().register(fossil);
+        all_fossils.add(fossil);
+
+        fossil = new SamukabuFossilItem(
                         new Item.Properties()
-                                .group(SpectrobesFossilsItemGroup.Instance)));
-        event.getRegistry().register(
-                new SamukabuFossilItem(
-                        new Item.Properties()
-                                .group(SpectrobesFossilsItemGroup.Instance)));
+                                .group(SpectrobesFossilsItemGroup.Instance));
+
+        event.getRegistry().register(fossil);
+        all_fossils.add(fossil);
+
         event.getRegistry().register(
                 new PrizmodItem(
                         new Item.Properties()
@@ -92,12 +109,25 @@ public class SpectrobesItems {
     }
 
     static void registerMineral(final RegistryEvent.Register<Item> event, Mineral mineral) {
-        event.getRegistry().register(
-                new MineralItem(
-                        new Item.Properties()
-                                .group(SpectrobesMineralItemGroup.Instance),
-                        mineral.name,
-                        mineral.properties.copy()));
+        Item newItem = new MineralItem(
+                new Item.Properties()
+                        .group(SpectrobesMineralItemGroup.Instance),
+                mineral.name,
+                mineral.properties.copy());
+        event.getRegistry().register(newItem);
+        all_minerals.add(newItem);
+    }
+
+    public static ItemStack getRandomMineral() {
+        Random random = new Random();
+        int index = random.nextInt(all_minerals.size());
+        return new ItemStack(all_minerals.get(index));
+    }
+
+    public static ItemStack getRandomFossil() {
+        Random random = new Random();
+        int index = random.nextInt(all_fossils.size());
+        return new ItemStack(all_fossils.get(index));
     }
 
     //Creative Tabs

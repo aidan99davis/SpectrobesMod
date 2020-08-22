@@ -21,7 +21,7 @@ public class EntitySwar extends EntityKrawl {
     public <ENTITY extends EntityKrawl> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent) {
         moveController.transitionLengthTicks = 2;
         if(!IsAttacking()) {
-            animationControllers.setAnimationSpeed(1);
+            animationControllers.setAnimationSpeed(0.125);
             moveController.setAnimation(new AnimationBuilder().addAnimation("animation.swar.idle", true));
             return true;
 

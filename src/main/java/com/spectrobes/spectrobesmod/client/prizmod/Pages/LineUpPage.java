@@ -83,18 +83,18 @@ public class LineUpPage extends PrizmodPage {
         }
 
         for (SpectrobePiece sp : TeamSpectrobesGrid.getAll()) {
-            addButton(addSpectrobeButton(sp));
+            addButton(addSpectrobeButton(sp, true));
         }
 
         for(SpectrobePiece sp : AllSpectrobesGrid.getAll()) {
-            addButton(addSpectrobeButton(sp));
+            addButton(addSpectrobeButton(sp, false));
         }
     }
 
-    private SpectrobeButton addSpectrobeButton(SpectrobePiece sp) {
+    private SpectrobeButton addSpectrobeButton(SpectrobePiece sp, boolean teamSpectrobe) {
         SpectrobeButton button = new SpectrobeButton(this.parent, sp,
                 onClick -> {
-                    if(Screen.hasShiftDown()) {
+                    if(Screen.hasShiftDown() && teamSpectrobe) {
                         if(sp.spell != null && sp.spell.active == false) {
                             try {
                                 if(!parent.player.world.isRemote) {
