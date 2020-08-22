@@ -1,10 +1,12 @@
 package com.spectrobes.spectrobesmod.common.entities.krawl;
 
-import com.spectrobes.spectrobesmod.common.entities.EntitySpectrobe;
+import com.spectrobes.spectrobesmod.SpectrobesInfo;
+import com.spectrobes.spectrobesmod.common.entities.goals.AttackSpectrobeGoal;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.IPacket;
@@ -25,12 +27,15 @@ public abstract class EntityKrawl extends CreatureEntity implements IAnimatedEnt
 
     protected EntityKrawl(EntityType<? extends CreatureEntity> type, World worldIn) {
         super(type, worldIn);
+        registerAnimationControllers();
     }
 
 
     @Override
     public boolean attackEntityFrom(DamageSource source, float amount) {
+        SpectrobesInfo.LOGGER.info("GOT HERE 4");
         if(source.getImmediateSource() instanceof EntitySpectrobe){
+            SpectrobesInfo.LOGGER.info("GOT HERE 5");
             return super.attackEntityFrom(source,amount);
         }
         return false;
@@ -41,13 +46,19 @@ public abstract class EntityKrawl extends CreatureEntity implements IAnimatedEnt
     {
 //        this.goalSelector.addGoal(5, new BreedGoal(this,10)); todo: Make krawl eat mass and duplicate?
         this.goalSelector.addGoal(2, new RandomWalkingGoal(this, 0.2d));
+        this.goalSelector.addGoal(2, new AttackSpectrobeGoal(this, true, true));
         this.goalSelector.addGoal(5, new LookAtGoal(this, PlayerEntity.class, 10.0F));
         this.goalSelector.addGoal(5, new LookRandomlyGoal(this));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 0.8D));
         this.goalSelector.addGoal(3, new MeleeAttackGoal(this,0.3f , true));
-        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
-        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, EntitySpectrobe.class, true));
-        this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
+    }
+
+    @Override
+    protected void registerAttributes() {
+        super.registerAttributes();
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20);
+        this.getAttributes().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
+        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(5);
     }
 
     //Networking

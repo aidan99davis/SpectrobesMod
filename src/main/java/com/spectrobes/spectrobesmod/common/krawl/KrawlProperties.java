@@ -19,19 +19,21 @@ public class KrawlProperties {
         this.nature = nature;
     }
 
-    public static KrawlProperties read(CompoundNBT spectrobeProperties) {
-
-        return new KrawlProperties(
-                SpectrobeProperties.Nature.valueOf(spectrobeProperties.get("nature").getString()));
-
-    }
-
     public SpectrobeProperties.Nature getNature() {
         return nature;
     }
 
     public void setNature(SpectrobeProperties.Nature nature) {
         this.nature = nature;
+    }
+
+    //serialisation
+
+    public static KrawlProperties read(CompoundNBT spectrobeProperties) {
+
+        return new KrawlProperties(
+                SpectrobeProperties.Nature.valueOf(spectrobeProperties.get("nature").getString()));
+
     }
 
     public CompoundNBT write() {

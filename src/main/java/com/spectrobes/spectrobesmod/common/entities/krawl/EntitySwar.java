@@ -8,7 +8,7 @@ import software.bernie.geckolib.event.AnimationTestEvent;
 import software.bernie.geckolib.manager.EntityAnimationManager;
 
 public class EntitySwar extends EntityKrawl {
-    protected EntitySwar(EntityType<? extends CreatureEntity> type, World worldIn) {
+    public EntitySwar(EntityType<? extends CreatureEntity> type, World worldIn) {
         super(type, worldIn);
     }
 
