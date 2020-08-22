@@ -7,6 +7,14 @@
         {
           "type": "minecraft:item",
           "name": "spectrobesmod:komainu_fossil_item"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "spectrobesmod:samukabu_fossil_item"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "spectrobesmod:spiko_fossil_item"
         }
       ]
     }
