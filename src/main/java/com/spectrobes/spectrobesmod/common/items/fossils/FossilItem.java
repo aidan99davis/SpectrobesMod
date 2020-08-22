@@ -1,7 +1,7 @@
 package com.spectrobes.spectrobesmod.common.items.fossils;
 
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
-import com.spectrobes.spectrobesmod.common.entities.EntitySpectrobe;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;

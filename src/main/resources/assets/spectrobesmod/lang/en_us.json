@@ -45,5 +45,12 @@
     "itemGroup.spectrobestab.fossils": "Spectrobes Fossils",
     "itemGroup.spectrobestab.blocks": "Spectrobes Blocks",
     "itemGroup.spectrobestab.minerals": "Spectrobes Minerals",
-    "itemGroup.spectrobestab.tools": "Spectrobes Tools"
+    "itemGroup.spectrobestab.tools": "Spectrobes Tools",
+    "entity.spectrobesmod.entity_swar": "Swar",
+    "entity.spectrobesmod.entity_komainu": "Komainu",
+    "entity.spectrobesmod.entity_komanoto": "Komanoto",
+    "entity.spectrobesmod.entity_samukabu": "Samukabu",
+    "entity.spectrobesmod.entity_samurite": "Samurite",
+    "entity.spectrobesmod.entity_spiko": "Spiko",
+    "entity.spectrobesmod.entity_spikan": "Spikan"
 }
