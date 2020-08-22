@@ -20,9 +20,15 @@ public class EntitySwar extends EntityKrawl {
     @Override
     public <ENTITY extends EntityKrawl> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent) {
         moveController.transitionLengthTicks = 2;
+        if(!IsAttacking()) {
+            animationControllers.setAnimationSpeed(1);
+            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.swar.idle", true));
+            return true;
 
-        animationControllers.setAnimationSpeed(2);
-        moveController.setAnimation(new AnimationBuilder().addAnimation("animation.swar.idle", true));
-        return true;
+        } else {
+            animationControllers.setAnimationSpeed(1);
+            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.swar.attack", true));
+            return true;
+        }
     }
 }

@@ -1,15 +1,18 @@
 package com.spectrobes.spectrobesmod.common.entities.krawl;
 
-import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.entities.goals.AttackSpectrobeGoal;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.IPacket;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -24,21 +27,41 @@ public abstract class EntityKrawl extends CreatureEntity implements IAnimatedEnt
     public EntityAnimationManager animationControllers = new EntityAnimationManager();
     protected EntityAnimationController moveController = new EntityAnimationController(this, "moveController", 10F, this::moveController);
 
+    private static final DataParameter<Boolean> IS_ATTACKING =
+            EntityDataManager.createKey(EntityKrawl.class,
+                    DataSerializers.BOOLEAN);
 
     protected EntityKrawl(EntityType<? extends CreatureEntity> type, World worldIn) {
         super(type, worldIn);
         registerAnimationControllers();
     }
 
+    public boolean IsAttacking() {
+        return dataManager.get(IS_ATTACKING);
+    }
+    public void setIsAttacking(boolean attacking) {
+        dataManager.set(IS_ATTACKING, attacking);
+    }
 
     @Override
-    public boolean attackEntityFrom(DamageSource source, float amount) {
-        SpectrobesInfo.LOGGER.info("GOT HERE 4");
-        if(source.getImmediateSource() instanceof EntitySpectrobe){
-            SpectrobesInfo.LOGGER.info("GOT HERE 5");
-            return super.attackEntityFrom(source,amount);
+    public boolean attackEntityAsMob(Entity toAttack) {
+        setIsAttacking(true);
+        return super.attackEntityAsMob(toAttack);
+    }
+
+    @Override
+    public void setAggroed(boolean hasAggro) {
+        if(!hasAggro){
+            setIsAttacking(false);
         }
-        return false;
+        super.setAggroed(hasAggro);
+    }
+
+    @Override
+    public void damageEntity(DamageSource source, float amount) {
+        if(source.getImmediateSource() instanceof EntitySpectrobe){
+            super.damageEntity(source,amount);
+        }
     }
 
     @Override
@@ -59,6 +82,12 @@ public abstract class EntityKrawl extends CreatureEntity implements IAnimatedEnt
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20);
         this.getAttributes().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(5);
+    }
+
+    @Override
+    protected void registerData() {
+        super.registerData();
+        dataManager.register(IS_ATTACKING, false);
     }
 
     //Networking

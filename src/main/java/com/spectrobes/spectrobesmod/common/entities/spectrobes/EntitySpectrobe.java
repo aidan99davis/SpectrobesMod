@@ -44,6 +44,10 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
             EntityDataManager.createKey(EntitySpectrobe.class,
             DataSerializers.VARINT);
 
+    private static final DataParameter<Boolean> IS_ATTACKING =
+            EntityDataManager.createKey(EntitySpectrobe.class,
+                    DataSerializers.BOOLEAN);
+
     private static final DataParameter<Spectrobe> SPECTROBE_DATA =
             EntityDataManager.createKey(EntitySpectrobe.class,
                     Spectrobe.SpectrobeSerializer);
@@ -117,12 +121,11 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource source, float amount) {
+    public void damageEntity(DamageSource source, float amount) {
         if(source.getImmediateSource() instanceof EntitySpectrobe
                 || source.getImmediateSource() instanceof EntityKrawl){
-            return super.attackEntityFrom(source,amount);
+            super.damageEntity(source,amount);
         }
-        return false;
     }
 
     @Override
@@ -148,6 +151,13 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         dataManager.set(SPECTROBE_DATA, spectrobe);
     }
 
+    public boolean IsAttacking() {
+        return dataManager.get(IS_ATTACKING);
+    }
+    public void setIsAttacking(boolean attacking) {
+        dataManager.set(IS_ATTACKING, attacking);
+    }
+
     public int getTicksTillMate() {
         return dataManager.get(TICKS_TILL_MATE);
     }
@@ -171,6 +181,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         super.registerData();
         dataManager.register(SPECTROBE_DATA, GetNewSpectrobeInstance());
         dataManager.register(TICKS_TILL_MATE, 15000);
+        dataManager.register(IS_ATTACKING, false);
     }
 
     /**
@@ -291,6 +302,29 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         // cocoon entity which holds this, the cocoon will "hatch"
         // after a predefined time. it will then spawn the next form of spectrobe with
         //the correct variation of skin, part and data for atk, hp and def etc.
+    }
+
+    @Override
+    public void onDeath(DamageSource cause) {
+        if(getOwner() != null) {
+            despawn((PlayerEntity) getOwner());
+        } else {
+            super.onDeath(cause);
+        }
+    }
+
+    @Override
+    public boolean attackEntityAsMob(Entity toAttack) {
+        setIsAttacking(true);
+        return super.attackEntityAsMob(toAttack);
+    }
+
+    @Override
+    public void setAggroed(boolean hasAggro) {
+        if(!hasAggro){
+            setIsAttacking(false);
+        }
+        super.setAggroed(hasAggro);
     }
 
     private void addStats(Spectrobe spectrobeData) {
