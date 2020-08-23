@@ -1,5 +1,8 @@
 package com.spectrobes.spectrobesmod.common.entities.krawl;
 
+import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
+import com.spectrobes.spectrobesmod.common.registry.KrawlRegistry;
+import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.world.World;
@@ -31,4 +34,10 @@ public class EntitySwar extends EntityKrawl {
             return true;
         }
     }
+
+    @Override
+    protected KrawlProperties GetKrawlProperties() {
+        return KrawlRegistry.Swar_Properties.copy();
+    }
+
 }

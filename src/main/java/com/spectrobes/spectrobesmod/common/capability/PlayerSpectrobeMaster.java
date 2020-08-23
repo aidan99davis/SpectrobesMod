@@ -29,15 +29,10 @@ public class PlayerSpectrobeMaster {
 
     public PlayerSpectrobeMaster() {
         this.ownedSpectrobes = new ArrayList<>();
-
     }
 
-    public boolean addSpectrobe(Spectrobe spectrobeInstance) {
-        if(ownedSpectrobes.size() + 1 <= MAX_OWNED_SPECTROBES) {
-            ownedSpectrobes.add(spectrobeInstance);
-            return true;
-        }
-        return false;
+    public void addSpectrobe(Spectrobe spectrobeInstance) {
+        ownedSpectrobes.add(spectrobeInstance);
     }
 
     public void setTeamMember(int index, Spectrobe member) {

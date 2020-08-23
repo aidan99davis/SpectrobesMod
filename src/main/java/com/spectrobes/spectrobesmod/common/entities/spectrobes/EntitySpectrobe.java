@@ -2,10 +2,13 @@ package com.spectrobes.spectrobesmod.common.entities.spectrobes;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
+import com.spectrobes.spectrobesmod.common.entities.IHasNature;
 import com.spectrobes.spectrobesmod.common.entities.goals.AttackKrawlGoal;
+import com.spectrobes.spectrobesmod.common.entities.goals.ReturnToPrizmodGoal;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
 import com.spectrobes.spectrobesmod.common.items.tools.PrizmodItem;
+import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.client.Minecraft;
@@ -36,7 +39,7 @@ import software.bernie.geckolib.manager.EntityAnimationManager;
 
 import javax.annotation.Nullable;
 
-public abstract class EntitySpectrobe extends TameableEntity implements IEntityAdditionalSpawnData, IAnimatedEntity{
+public abstract class EntitySpectrobe extends TameableEntity implements IEntityAdditionalSpawnData, IAnimatedEntity, IHasNature {
     private boolean recentInteract = false;
     private int ticksTillInteract = 0;
 
@@ -68,6 +71,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     {
         super.registerGoals();
         this.goalSelector.addGoal(6, new SwimGoal(this));
+        this.goalSelector.addGoal(1, new ReturnToPrizmodGoal(this));
         this.goalSelector.addGoal(1, new AttackKrawlGoal(this, true, false));
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 0.5, false));
         this.goalSelector.addGoal(4, new BreatheAirGoal(this));
@@ -100,8 +104,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
                 itemstack.shrink(1);
             } else if(itemstack.getItem() instanceof PrizmodItem && player.isSneaking()) {
                 if(player == getOwner()) {
-
-                    despawn(player);
+                    despawn();
                 }
             }
         }
@@ -111,21 +114,49 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         return super.processInteract(player, hand);
     }
 
-    public void despawn(PlayerEntity player) {
-        this.getSpectrobeData().setInactive();
-        player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
-            sm.updateSpectrobe(getSpectrobeData());
-        });
+    //prevent spectrobes from despawning naturally. they should only stop existing via prizmod recall feature, or death.
+    @Override
+    public boolean preventDespawn() {
+        return true;
+    }
+
+    public void despawn() {
+        if(!world.isRemote) {
+            this.getSpectrobeData().setInactive();
+//            player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
+//                sm.updateSpectrobe(getSpectrobeData());
+//            });
+        }
         Minecraft.getInstance().world.addParticle(ParticleTypes.FIREWORK, getPosX() + 0.5D, getPosY() + 1.0D, getPosZ() + 0.5D, 0.0D, 1.0D, 0.0D);
         this.remove(false);
     }
 
     @Override
-    public void damageEntity(DamageSource source, float amount) {
+    public void onKillEntity(LivingEntity entityLivingIn) {
+        if(entityLivingIn instanceof EntityKrawl) {
+            awardKillStats(((EntityKrawl)entityLivingIn).krawlProperties);
+        }
+        super.onKillEntity(entityLivingIn);
+    }
+
+    //
+//    @Override
+//    public void damageEntity(DamageSource source, float amount) {
+//        if(source.getImmediateSource() instanceof EntitySpectrobe
+//                || source.getImmediateSource() instanceof EntityKrawl){
+//            isInvulnerableTo()
+//            super.damageEntity(source,amount);
+//        }
+//    }
+
+    @Override
+    public boolean isInvulnerableTo(DamageSource source) {
         if(source.getImmediateSource() instanceof EntitySpectrobe
                 || source.getImmediateSource() instanceof EntityKrawl){
-            super.damageEntity(source,amount);
+            return false;
         }
+
+        return true;
     }
 
     @Override
@@ -307,7 +338,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     @Override
     public void onDeath(DamageSource cause) {
         if(getOwner() != null) {
-            despawn((PlayerEntity) getOwner());
+            despawn();
         } else {
             super.onDeath(cause);
         }
@@ -332,8 +363,13 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         spectrobeInstance.stats.addStats(spectrobeData.stats);
     }
 
+    private void awardKillStats(KrawlProperties krawlProperties) {
+        Spectrobe spectrobeInstance = getSpectrobeData();
+        spectrobeInstance.stats.addStats(krawlProperties);
+    }
+
     //Checks if the attacker should have the attack multiplier bonus applied.
-    private int hasTypeAdvantage(EntitySpectrobe attacker, EntitySpectrobe defender) {
+    private int hasTypeAdvantage(IHasNature attacker, IHasNature defender) {
         int toReturn = 0;
 
         if(attacker == defender)

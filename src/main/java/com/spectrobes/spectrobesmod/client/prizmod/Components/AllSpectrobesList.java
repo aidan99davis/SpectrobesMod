@@ -39,6 +39,8 @@ public class AllSpectrobesList extends Widget {
             if(remainder > 0) {
                 this.pages += 1;
             }
+            if(pages == 0)
+                pages++;
         }
         for(int a = 0; a < this.pages; a ++) {
             SpectrobePiece[][] newGridData = new SpectrobePiece[GRID_SIZE][GRID_SIZE];
@@ -77,10 +79,6 @@ public class AllSpectrobesList extends Widget {
 
     public AllSpectrobesList() {
         super(32, 32, "");
-
-    }
-
-    public void addSpectrobes(List<Spectrobe> spectrobes) {
 
     }
 

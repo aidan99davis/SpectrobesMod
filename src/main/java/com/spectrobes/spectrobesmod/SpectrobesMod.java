@@ -7,6 +7,7 @@ import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.registry.IconRegistry;
 import com.spectrobes.spectrobesmod.common.registry.MineralRegistry;
 import com.spectrobes.spectrobesmod.common.worldgen.SpectrobesOreGen;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
@@ -86,12 +87,6 @@ public class SpectrobesMod
 //        SpectrobesInfo.LOGGER.info("Got IMC {}", event.getIMCStream().
 //                map(m->m.getMessageSupplier().get()).
 //                collect(Collectors.toList()));
-    }
-
-
-    @SubscribeEvent
-    public static void loadCompleteEvent(FMLLoadCompleteEvent event) {
-        SpectrobesOreGen.generateOre();
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call

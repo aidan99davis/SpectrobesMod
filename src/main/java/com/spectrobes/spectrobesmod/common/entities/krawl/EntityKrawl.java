@@ -1,8 +1,10 @@
 package com.spectrobes.spectrobesmod.common.entities.krawl;
 
+import com.spectrobes.spectrobesmod.common.entities.IHasNature;
 import com.spectrobes.spectrobesmod.common.entities.goals.AttackSpectrobeGoal;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
+import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -21,9 +23,9 @@ import software.bernie.geckolib.entity.IAnimatedEntity;
 import software.bernie.geckolib.event.AnimationTestEvent;
 import software.bernie.geckolib.manager.EntityAnimationManager;
 
-public abstract class EntityKrawl extends CreatureEntity implements IAnimatedEntity {
+public abstract class EntityKrawl extends CreatureEntity implements IAnimatedEntity, IHasNature {
 
-    private KrawlProperties krawlProperties;
+    public KrawlProperties krawlProperties;
     public EntityAnimationManager animationControllers = new EntityAnimationManager();
     protected EntityAnimationController moveController = new EntityAnimationController(this, "moveController", 10F, this::moveController);
 
@@ -34,7 +36,10 @@ public abstract class EntityKrawl extends CreatureEntity implements IAnimatedEnt
     protected EntityKrawl(EntityType<? extends CreatureEntity> type, World worldIn) {
         super(type, worldIn);
         registerAnimationControllers();
+        krawlProperties = GetKrawlProperties();
     }
+
+    protected abstract KrawlProperties GetKrawlProperties();
 
     public boolean IsAttacking() {
         return dataManager.get(IS_ATTACKING);
@@ -112,4 +117,8 @@ public abstract class EntityKrawl extends CreatureEntity implements IAnimatedEnt
         }
     }
 
+    @Override
+    public SpectrobeProperties.Nature getNature() {
+        return krawlProperties.getNature();
+    }
 }
