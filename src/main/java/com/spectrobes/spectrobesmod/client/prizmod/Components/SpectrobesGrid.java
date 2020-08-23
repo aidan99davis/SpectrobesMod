@@ -84,8 +84,8 @@
 //        for (i = 0; i < GRID_SIZE && !added; i++) {
 //            for (j = 0; j < GRID_SIZE && !added; j++) {
 //                SpectrobePiece p = gridData[i][j];
-//                if (p.spell == null) {
-//                    gridData[i][j].spell = piece;
+//                if (p.spectrobe == null) {
+//                    gridData[i][j].spectrobe = piece;
 //                    gridData[i][j].x = i;
 //                    gridData[i][j].y = j;
 //                    added = true;

@@ -69,8 +69,8 @@ public class AllSpectrobesList extends Widget {
         for (i = 0; i < GRID_SIZE && !added; i++) {
             for (j = 0; j < GRID_SIZE && !added; j++) {
                 SpectrobePiece p = gridData[i][j];
-                if (p.spell == null) {
-                    gridData[i][j].spell = piece;
+                if (p.spectrobe == null) {
+                    gridData[i][j].spectrobe = piece;
                     added = true;
                 }
             }
@@ -80,7 +80,7 @@ public class AllSpectrobesList extends Widget {
     public void clear() {
         for (int i = 0; i < GRID_SIZE; i++) {
             for (int j = 0; j < GRID_SIZE; j++) {
-                gridData[i][j].spell = null;
+                gridData[i][j].spectrobe = null;
             }
         }
     }

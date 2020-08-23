@@ -123,9 +123,9 @@
 //            String name;
 //            if (panelWidget.allSpectrobesList.exists(cursorX, cursorY)) {
 //                pieceAtCursor = panelWidget.allSpectrobesList.gridData[cursorX][cursorY];
-////                if (pieceAtCursor.spell != null) {
+////                if (pieceAtCursor.spectrobe != null) {
 ////                    RenderSystem.pushMatrix();
-////                    name = pieceAtCursor.spell.name;
+////                    name = pieceAtCursor.spectrobe.name;
 ////                    textRenderer.drawString(name, left + 4, topY + ySize + 24, 0x44FFFFFF);
 ////                    RenderSystem.popMatrix();
 ////                }
@@ -179,7 +179,7 @@
 //    public void onSpellChanged(boolean nameOnly) {
 ////        if (player != null) {
 ////            if (!spectator) {
-////                MessageSpellModified message = new MessageSpellModified(programmer.getPos(), spell);
+////                MessageSpellModified message = new MessageSpellModified(programmer.getPos(), spectrobe);
 ////                MessageRegister.HANDLER.sendToServer(message);
 ////            }
 ////
@@ -196,7 +196,7 @@
 ////        configWidget.configButtons.clear();
 ////
 ////        if (selectedX != -1 && selectedY != -1) {
-////            SpectrobePiece piece = spell.grid.gridData[selectedX][selectedY];
+////            SpectrobePiece piece = spectrobe.grid.gridData[selectedX][selectedY];
 ////            if (piece != null) {
 ////
 ////                if (piece.hasConfig()) {
@@ -238,7 +238,7 @@
 ////    private void closeComment(boolean save) {
 ////        Spectrobe piece = null;
 ////        if (selectedX != -1 && selectedY != -1) {
-////            piece = spell.grid.gridData[selectedX][selectedY];
+////            piece = spectrobe.grid.gridData[selectedX][selectedY];
 ////        }
 ////
 ////        if (save && piece != null) {

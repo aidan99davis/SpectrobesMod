@@ -61,11 +61,11 @@ public class TeamSpectrobesList extends Widget {
                 && index < 6
                 && piece.properties.getStage()
                     != SpectrobeProperties.Stage.CHILD) {
-            gridData[index].spell = piece;
+            gridData[index].spectrobe = piece;
             parent.parent.playerData.setTeamMember(index, piece);
             return true;
         } else if(index == 6 && piece.properties.getStage() == SpectrobeProperties.Stage.CHILD) {
-            gridData[index].spell = piece;
+            gridData[index].spectrobe = piece;
             parent.parent.playerData.setTeamMember(index, piece);
             return true;
         } else {
@@ -76,7 +76,7 @@ public class TeamSpectrobesList extends Widget {
 
     public void clear() {
         for (int i = 0; i < GRID_SIZE; i++) {
-            gridData[i].spell = null;
+            gridData[i].spectrobe = null;
         }
     }
 
@@ -98,11 +98,11 @@ public class TeamSpectrobesList extends Widget {
                 && j < 6
                 && i != j) {
             Spectrobe temp;
-            temp = s1.spell;
-            gridData[i].spell = s2.spell;
-            gridData[j].spell = temp;
-            parent.parent.playerData.setTeamMember(i, gridData[i].spell);
-            parent.parent.playerData.setTeamMember(j, gridData[j].spell);
+            temp = s1.spectrobe;
+            gridData[i].spectrobe = s2.spectrobe;
+            gridData[j].spectrobe = temp;
+            parent.parent.playerData.setTeamMember(i, gridData[i].spectrobe);
+            parent.parent.playerData.setTeamMember(j, gridData[j].spectrobe);
             return true;
         }
 

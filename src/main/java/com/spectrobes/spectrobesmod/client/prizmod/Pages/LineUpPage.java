@@ -88,10 +88,10 @@ public class LineUpPage extends PrizmodPage {
         SpectrobeButton button = new SpectrobeButton(this.parent, sp,
                 onClick -> {
                     if(Screen.hasShiftDown() && teamSpectrobe) {
-                        if(sp.spell != null && sp.spell.active == false) {
+                        if(sp.spectrobe != null && sp.spectrobe.active == false) {
                             try {
                                 if(!parent.player.world.isRemote) {
-                                    Spectrobe spectrobe = sp.spell;
+                                    Spectrobe spectrobe = sp.spectrobe;
                                     EntitySpectrobe spectrobe1 = SpectrobesEntities.getByName(spectrobe.name).spawn(
                                             parent.player.world,
                                             spectrobe.write(),
@@ -125,7 +125,7 @@ public class LineUpPage extends PrizmodPage {
 
                 if(TeamSpectrobesGrid.addSpectrobe(
                         TeamSpectrobesGrid.getAll().indexOf(button.piece),
-                        selectedButton.piece.spell)) {
+                        selectedButton.piece.spectrobe)) {
                     populateGrid();
                 }
 
@@ -143,7 +143,7 @@ public class LineUpPage extends PrizmodPage {
                 return;
             }
         }
-        if(button.piece.spell != null) {
+        if(button.piece.spectrobe != null) {
             selectedButton = button;
             selectedButton.setSelected(true);
             return;

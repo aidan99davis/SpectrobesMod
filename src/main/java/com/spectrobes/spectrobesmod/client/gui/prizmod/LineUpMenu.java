@@ -218,7 +218,7 @@
 ////        SpectrobesInfo.LOGGER.info("floored X:" + flooredX);
 ////        SpectrobesInfo.LOGGER.info("floored Y:" + flooredY);
 ////        if(AllSpectrobesList.exists(flooredX, flooredY)) {
-////            if(allSpectrobesList.gridData[flooredX][flooredY].spell != null && mouseButton == 0) {
+////            if(allSpectrobesList.gridData[flooredX][flooredY].spectrobe != null && mouseButton == 0) {
 ////            visibleButtons.forEach(button -> {
 ////                SpectrobesInfo.LOGGER.info("GOT HERE 2");
 ////                if(button.piece != null && button.x == flooredX && button.y == flooredY) {

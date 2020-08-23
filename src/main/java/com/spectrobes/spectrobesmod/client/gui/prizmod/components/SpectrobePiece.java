@@ -4,11 +4,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.gui.utils.GuiUtils;
 import com.spectrobes.spectrobesmod.client.prizmod.PrizmodScreen;
-import com.spectrobes.spectrobesmod.common.items.tools.PrizmodItem;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeIconInfo;
-import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties.Stage;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.ResourceLocation;
@@ -21,14 +18,14 @@ import java.util.List;
 
 public class SpectrobePiece extends AbstractGui {
 
-    public Spectrobe spell;
+    public Spectrobe spectrobe;
     private int x, y;
     public int posX;
     public int posY;
     public boolean selected;
 
     public SpectrobePiece(Spectrobe spell, int x ,int y) {
-        this.spell = spell;
+        this.spectrobe = spell;
         this.x = x;
         this.y = y;
         this.posX = (x+3) * 32;
@@ -37,7 +34,7 @@ public class SpectrobePiece extends AbstractGui {
     }
 
     public String getUnlocalizedName() {
-        return SpectrobesInfo.MOD_ID + ".spectrobe." + spell.name;
+        return SpectrobesInfo.MOD_ID + ".spectrobe." + spectrobe.name;
     }
 
     public String getSortingName() {
@@ -58,7 +55,6 @@ public class SpectrobePiece extends AbstractGui {
         ResourceLocation bg = selected? PrizmodScreen.SPECTROBE_SLOT_SELECTED_TEXTURE : PrizmodScreen.SPECTROBE_SLOT_TEXTURE;
 
         GuiUtils.drawTexture(bg, posX, posY, 32, 32,75);
-        GuiUtils.blit(posX, posY,32,0,0,32, 32, 32, 32);
     }
 
     /**
@@ -66,8 +62,8 @@ public class SpectrobePiece extends AbstractGui {
      */
     @OnlyIn(Dist.CLIENT)
     public void drawAdditional() {
-        if(spell != null) {
-            SpectrobeIconInfo iconInfo = spell.getIcon();
+        if(spectrobe != null) {
+            SpectrobeIconInfo iconInfo = spectrobe.getIcon();
 
             float scalex = 32 / iconInfo.getWidth();
             float scaley = 32 / iconInfo.getHeight();
@@ -94,21 +90,10 @@ public class SpectrobePiece extends AbstractGui {
 
     @OnlyIn(Dist.CLIENT)
     public void getTooltip(List<ITextComponent> tooltip) {
-        if(spell != null)
+        if(spectrobe != null)
             tooltip.add(new TranslationTextComponent(getUnlocalizedName()));
         //tooltip.add(new TranslationTextComponent(getUnlocalizedDesc()).setStyle(Style.EMPTY.withColor(TextFormatting.GRAY)));
         //TooltipHelper.tooltipIfShift(tooltip, () -> addToTooltipAfterShift(tooltip));
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public void addToTooltipAfterShift(List<ITextComponent> tooltip) {
-        tooltip.add(new StringTextComponent(""));
-
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public void getShownPieces(List<SpectrobePiece> pieces) {
-        pieces.add(this);
     }
 
     public void setSelected(boolean selected) {
