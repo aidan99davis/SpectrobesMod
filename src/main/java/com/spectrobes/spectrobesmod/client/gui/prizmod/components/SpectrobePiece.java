@@ -93,7 +93,7 @@ public class SpectrobePiece extends AbstractGui {
         if(spectrobe != null)
             tooltip.add(new TranslationTextComponent(getUnlocalizedName()));
         //tooltip.add(new TranslationTextComponent(getUnlocalizedDesc()).setStyle(Style.EMPTY.withColor(TextFormatting.GRAY)));
-        //TooltipHelper.tooltipIfShift(tooltip, () -> addToTooltipAfterShift(tooltip));
+//        TooltipHelper.tooltipIfShift(tooltip, () -> addToTooltipAfterShift(tooltip));
     }
 
     public void setSelected(boolean selected) {

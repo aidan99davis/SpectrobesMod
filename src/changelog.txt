@@ -3,6 +3,7 @@ V1.3
 
 Refactored fossil definitions.
 fossils and minerals are now used up upon right clicking.
+fossils and minerals are now spawning in the world.
 started defining krawl ingame, AI, Properties, Stats.
 added swar.
 Killed owned spectrobes now return to the prizmod instead of dying.

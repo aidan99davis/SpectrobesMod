@@ -12,6 +12,7 @@ import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.Widget;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.util.text.StringTextComponent;
 
@@ -53,12 +54,23 @@ public class LineUpPage extends PrizmodPage {
             parent.setMenuPage(new MenuPage(parent));
         }));
 
+        this.addButton(new Button(parent.width / 2 - 60, parent.height / 5, 60, 20, "Prev", button -> {
+            this.AllSpectrobesGrid.previousPage();
+            this.populateGrid();
+        }));
+
+        this.addButton(new Button(parent.width / 2, parent.height / 5, 60, 20, "Next", button -> {
+            this.AllSpectrobesGrid.nextPage();
+            this.populateGrid();
+        }));
+
         populateGrid();
 
         super.init();
     }
 
     private void populateGrid() {
+//        buttons.clear();
         this.TeamSpectrobesGrid.clear();
         this.AllSpectrobesGrid.clear();
         UUID[] teamUuids =  parent.playerData.getCurrentTeamUuids();

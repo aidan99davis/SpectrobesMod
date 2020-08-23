@@ -32,7 +32,7 @@ public class SpectrobesEntities {
             () -> EntityType.Builder.create(EntityKomanoto::new,
                     EntityClassification.CREATURE)
                     .size(1.5f, 1.5f)
-                    .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "komanoto").toString()));
+                    .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "entity_komanoto").toString()));
 
     public static final RegistryObject<EntityType<EntityKomainu>> ENTITY_KOMAINU
             = ENTITY_TYPES.register("entity_komainu",

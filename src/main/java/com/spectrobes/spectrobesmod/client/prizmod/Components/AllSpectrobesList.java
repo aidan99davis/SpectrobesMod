@@ -11,7 +11,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AllSpectrobesList extends Widget {
 
@@ -19,17 +21,36 @@ public class AllSpectrobesList extends Widget {
 
     public SpectrobePiece[][] gridData;
 
+    public Map<Integer,SpectrobePiece[][]> gridData_paged;
+    private int pages;
+
+    public int currentPage = 0;
+
     private PrizmodPage parent;
 
     public AllSpectrobesList(PrizmodPage parent) {
         super(parent.x, parent.y, "");
         this.parent = parent;
-        gridData = new SpectrobePiece[GRID_SIZE][GRID_SIZE];
-        for (int i = 0; i < GRID_SIZE; i++) {
-            for (int j = 0; j < GRID_SIZE; j++) {
-                gridData[i][j] = new SpectrobePiece(null, i, j);
+        gridData_paged = new HashMap<>();
+        if(this.parent.parent.playerData != null) {
+            int specCount = this.parent.parent.playerData.getOwnedSpectrobesCount();
+            int remainder = specCount % 25;
+            this.pages = specCount / 25;
+            if(remainder > 0) {
+                this.pages += 1;
             }
         }
+        for(int a = 0; a < this.pages; a ++) {
+            SpectrobePiece[][] newGridData = new SpectrobePiece[GRID_SIZE][GRID_SIZE];
+            for (int i = 0; i < GRID_SIZE; i++) {
+                for (int j = 0; j < GRID_SIZE; j++) {
+                    newGridData[i][j] = new SpectrobePiece(null, i, j);
+                }
+            }
+            gridData_paged.put(a, newGridData);
+        }
+
+        gridData = gridData_paged.get(currentPage);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -59,28 +80,34 @@ public class AllSpectrobesList extends Widget {
 
     }
 
+    public void addSpectrobes(List<Spectrobe> spectrobes) {
+
+    }
 
     public void addSpectrobe(Spectrobe piece) {
         int i = 0;
         int j = 0;
         boolean added = false;
 
-
-        for (i = 0; i < GRID_SIZE && !added; i++) {
-            for (j = 0; j < GRID_SIZE && !added; j++) {
-                SpectrobePiece p = gridData[i][j];
-                if (p.spectrobe == null) {
-                    gridData[i][j].spectrobe = piece;
-                    added = true;
+        for(int a = 0; a < this.pages && !added; a++) {
+            for (i = 0; i < GRID_SIZE && !added; i++) {
+                for (j = 0; j < GRID_SIZE && !added; j++) {
+                    SpectrobePiece p = gridData_paged.get(a)[i][j];
+                    if (p.spectrobe == null) {
+                        gridData_paged.get(a)[i][j].spectrobe = piece;
+                        added = true;
+                    }
                 }
             }
         }
     }
 
     public void clear() {
-        for (int i = 0; i < GRID_SIZE; i++) {
-            for (int j = 0; j < GRID_SIZE; j++) {
-                gridData[i][j].spectrobe = null;
+        for(int a = 0; a < this.pages; a++) {
+            for (int i = 0; i < GRID_SIZE; i++) {
+                for (int j = 0; j < GRID_SIZE; j++) {
+                    gridData_paged.get(a)[i][j].spectrobe = null;
+                }
             }
         }
     }
@@ -89,9 +116,23 @@ public class AllSpectrobesList extends Widget {
         List<SpectrobePiece> toReturn = new ArrayList<>();
         for (int i = 0; i < GRID_SIZE; i++) {
             for (int j = 0; j < GRID_SIZE; j++) {
-                toReturn.add(gridData[i][j]);
+                toReturn.add(gridData_paged.get(currentPage)[i][j]);
             }
         }
         return toReturn;
+    }
+
+    public void previousPage() {
+        if(currentPage > 0) {
+            currentPage --;
+        }
+    }
+
+    public void nextPage() {
+        if(currentPage + 1 < pages) {
+            currentPage ++;
+        } else {
+            currentPage = 0;
+        }
     }
 }
