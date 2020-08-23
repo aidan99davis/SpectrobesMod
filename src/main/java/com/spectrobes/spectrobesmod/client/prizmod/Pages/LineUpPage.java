@@ -1,6 +1,5 @@
 package com.spectrobes.spectrobesmod.client.prizmod.Pages;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.client.prizmod.Components.AllSpectrobesList;
@@ -26,8 +25,6 @@ public class LineUpPage extends PrizmodPage {
     private TeamSpectrobesList TeamSpectrobesGrid;
     private List<Widget> actionButtons = new ArrayList<>();
     private SpectrobeButton selectedButton;
-    int gridPaddingLeft = parent.width / 3;
-    int gridPaddingTop = parent.height / 2;
 
     public LineUpPage(PrizmodScreen parent) {
         super(parent);
@@ -43,15 +40,11 @@ public class LineUpPage extends PrizmodPage {
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
         super.render(mouseX, mouseY, partialTicks);
-        //populateGrid();
-        RenderSystem.pushMatrix();
-        RenderSystem.translatef(parent.width / 3, 0, 1);
         AllSpectrobesGrid.draw();
         TeamSpectrobesGrid.draw();
         if(selectedButton != null) {
-            selectedButton.renderActions();
+            selectedButton.renderInfo();
         }
-        RenderSystem.popMatrix();
     }
 
     @Override

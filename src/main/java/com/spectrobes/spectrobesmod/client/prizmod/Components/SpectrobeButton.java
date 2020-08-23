@@ -23,13 +23,10 @@ public class SpectrobeButton extends Button {
 
     @Override
     public void renderButton(int mouseX, int mouseY, float partialTicks) {
-        //super.renderButton(mouseX, mouseY, partialTicks);
-//        RenderSystem.popMatrix();
         piece.draw();
         if(selected) {
-            renderActions();
+            renderInfo();
         }
-//        RenderSystem.pushMatrix();
     }
 
     public void setSelected(boolean selected) {
@@ -38,8 +35,8 @@ public class SpectrobeButton extends Button {
     }
 
     //render actions i.e. assign to slot 1, 2, 3, 4, 5, 6 or child slot
-    public void renderActions() {
-        piece.displayBorder();
+    public void renderInfo() {
+//        piece.drawInfo();
     }
 
     public SpectrobePiece getPiece() {
