@@ -1,6 +1,5 @@
 package com.spectrobes.spectrobesmod.common.worldgen;
 
-import com.spectrobes.spectrobesmod.common.blocks.SpectrobesBlock;
 import com.spectrobes.spectrobesmod.common.blocks.SpectrobesBlocks;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStage;
