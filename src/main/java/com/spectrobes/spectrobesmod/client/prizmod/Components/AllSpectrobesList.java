@@ -32,16 +32,14 @@ public class AllSpectrobesList extends Widget {
         super(parent.x, parent.y, "");
         this.parent = parent;
         gridData_paged = new HashMap<>();
-        if(this.parent.parent.playerData != null) {
-            int specCount = this.parent.parent.playerData.getOwnedSpectrobesCount();
-            int remainder = specCount % 25;
-            this.pages = specCount / 25;
-            if(remainder > 0) {
-                this.pages += 1;
-            }
-            if(pages == 0)
-                pages++;
+        int specCount = this.parent.parent.getContainer().getOwnedSpectrobesCount();
+        int remainder = specCount % 25;
+        this.pages = specCount / 25;
+        if(remainder > 0) {
+            this.pages += 1;
         }
+        if(pages == 0)
+            pages++;
         for(int a = 0; a < this.pages; a ++) {
             SpectrobePiece[][] newGridData = new SpectrobePiece[GRID_SIZE][GRID_SIZE];
             for (int i = 0; i < GRID_SIZE; i++) {

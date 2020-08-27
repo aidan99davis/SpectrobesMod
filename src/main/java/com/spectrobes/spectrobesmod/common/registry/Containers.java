@@ -1,0 +1,21 @@
+package com.spectrobes.spectrobesmod.common.registry;
+
+import com.spectrobes.spectrobesmod.SpectrobesInfo;
+import com.spectrobes.spectrobesmod.client.container.PrizmodContainer;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.container.ContainerType;
+import net.minecraftforge.common.extensions.IForgeContainerType;
+import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+
+public class Containers {
+    public static final DeferredRegister<ContainerType<?>> CONTAINERS
+            = DeferredRegister.create(ForgeRegistries.CONTAINERS, SpectrobesInfo.MOD_ID);
+
+    public static final RegistryObject<ContainerType<PrizmodContainer>> PRIZMOD = CONTAINERS.register("prizmod",
+            () -> IForgeContainerType.create((windowId, inv, data) -> {
+                return new PrizmodContainer(windowId, inv.player);
+            }));
+
+}

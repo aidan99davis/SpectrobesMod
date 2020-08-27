@@ -78,7 +78,11 @@ public class Spectrobe {
     }
     public static Spectrobe read(CompoundNBT nbtData) {
         Spectrobe s = new Spectrobe();
-        s.MasterUUID = nbtData.getUniqueId("MasterUUID");
+        try {
+            s.MasterUUID = nbtData.getUniqueId("MasterUUID");
+        } catch(NullPointerException ex) {
+            s.MasterUUID = null;
+        }
         s.name = nbtData.get("name").getString();
         s.SpectrobeUUID = nbtData.getUniqueId("UUID");
         s.active = nbtData.getBoolean("active");

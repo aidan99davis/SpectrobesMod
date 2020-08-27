@@ -1,13 +1,20 @@
 package com.spectrobes.spectrobesmod;
 
+import com.spectrobes.spectrobesmod.client.container.PrizmodContainer;
 import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
+import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlRendererManager;
+import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobeRendererManager;
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
+import com.spectrobes.spectrobesmod.client.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.capability.PlayerEvents;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
+import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
+import com.spectrobes.spectrobesmod.common.registry.Containers;
 import com.spectrobes.spectrobesmod.common.registry.IconRegistry;
 import com.spectrobes.spectrobesmod.common.registry.MineralRegistry;
 import com.spectrobes.spectrobesmod.common.worldgen.SpectrobesOreGen;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
@@ -33,25 +40,29 @@ import static net.minecraftforge.fml.common.Mod.EventBusSubscriber.*;
 public class SpectrobesMod
 {
     public static SpectrobesMod Instance;
+    final IEventBus modEventBus;
 
     public SpectrobesMod() {
         Instance = this;
-        final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         //register listeners to the event bus
         modEventBus.addListener(this::setup);
         modEventBus.addListener(this::enqueueIMC);
         modEventBus.addListener(this::processIMC);
         modEventBus.addListener(this::doClientStuff);
+        // Register ourselves for server and other game events we are interested in
 
         SpectrobesEntities.ENTITY_TYPES.register(modEventBus);
+        Containers.CONTAINERS.register(modEventBus);
         KrawlEntities.ENTITY_TYPES.register(modEventBus);
-        // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+        SpectrobesNetwork.init();
     }
 
     private void setup(final FMLCommonSetupEvent event)
     {
+        SpectrobesInfo.LOGGER.info("Common setup shiz");
         MinecraftForge.EVENT_BUS.register(PlayerEvents.instance);
         IconRegistry.init();
         CapabilityManager.INSTANCE.register(PlayerSpectrobeMaster.class, new Capability.IStorage<PlayerSpectrobeMaster>() {
@@ -68,12 +79,15 @@ public class SpectrobesMod
         }, () -> null);
     }
 
-    @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public void doClientStuff(final FMLClientSetupEvent event)
     {
+        SpectrobesInfo.LOGGER.info("Client setup shiz");
+        ScreenManager.registerFactory(Containers.PRIZMOD.get(), PrizmodScreen::new);
         SpectrobesEntities.init();
+        SpectrobeRendererManager.init();
         KrawlEntities.init();
+        KrawlRendererManager.init();
         MineralRegistry.init();
     }
 

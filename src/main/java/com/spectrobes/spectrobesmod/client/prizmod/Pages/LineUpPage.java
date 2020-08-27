@@ -9,6 +9,8 @@ import com.spectrobes.spectrobesmod.client.prizmod.Components.SpectrobeButton;
 import com.spectrobes.spectrobesmod.client.prizmod.Components.TeamSpectrobesList;
 import com.spectrobes.spectrobesmod.client.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
+import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSpawnSpectrobePacket;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.Widget;
@@ -18,6 +20,7 @@ import net.minecraft.util.text.StringTextComponent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class LineUpPage extends PrizmodPage {
@@ -73,11 +76,14 @@ public class LineUpPage extends PrizmodPage {
 //        buttons.clear();
         this.TeamSpectrobesGrid.clear();
         this.AllSpectrobesGrid.clear();
-        UUID[] teamUuids =  parent.playerData.getCurrentTeamUuids();
-        for(Spectrobe s : parent.playerData.getOwnedSpectrobes()) {
+        Map<Integer, UUID> teamUuids =  parent.getContainer().getCurrentTeamUUIDs();
+        for(Spectrobe s : parent.getContainer().getOwnedSpectrobes()) {
+            SpectrobesInfo.LOGGER.info("ADDING SPECTROBE TO PRIZMOD: " + s.SpectrobeUUID);
             boolean dontAdd = false;
             for (int i = 0; i < 7; i++) {
-                if(teamUuids[i] == s.SpectrobeUUID) {
+                SpectrobesInfo.LOGGER.info("teamUuids.get(i): " + teamUuids.get(i));
+                if(teamUuids.get(i) != null && teamUuids.get(i).equals(s.SpectrobeUUID)) {
+                    SpectrobesInfo.LOGGER.info("ADDING SPECTROBE TO LINE UP");
                     TeamSpectrobesGrid.addSpectrobe(i, s);
                     dontAdd = true;
                 }
@@ -101,24 +107,13 @@ public class LineUpPage extends PrizmodPage {
                 onClick -> {
                     if(Screen.hasShiftDown() && teamSpectrobe) {
                         if(sp.spectrobe != null && sp.spectrobe.active == false) {
-                            try {
-                                if(!parent.player.world.isRemote) {
-                                    Spectrobe spectrobe = sp.spectrobe;
-                                    EntitySpectrobe spectrobe1 = SpectrobesEntities.getByName(spectrobe.name).spawn(
-                                            parent.player.world,
-                                            spectrobe.write(),
-                                            new StringTextComponent(spectrobe.name),
-                                            parent.player,
-                                            parent.player.getPosition(),
-                                            SpawnReason.MOB_SUMMONED,
-                                            true,true);
-                                    spectrobe1.setSpectrobeData(spectrobe);
-                                    spectrobe1.setOwnerId(parent.player.getUniqueID());
-                                    parent.playerData.spawnSpectrobe(spectrobe);
-                                    //Minecraft.getInstance().displayGuiScreen(null);
-                                }
-                            } catch (ClassNotFoundException e) {
-                                SpectrobesInfo.LOGGER.info("Couldnt find spectrobe's registry.\n" + e.getMessage());
+                            SpectrobesInfo.LOGGER.info("Slot clicked while holding shift");
+                            if(parent.player.world.isRemote()) {
+                                SpectrobesInfo.LOGGER.info("world isnt remote");
+                                Spectrobe spectrobe = sp.spectrobe;
+                                SpectrobesNetwork.sendToServer(new SSpawnSpectrobePacket(spectrobe));
+                                parent.getContainer().spawnSpectrobe(spectrobe);
+                                SpectrobesInfo.LOGGER.info("spectrobe spawned");
                             }
                         }
                     } else {
@@ -148,6 +143,10 @@ public class LineUpPage extends PrizmodPage {
                 if(TeamSpectrobesGrid.swapSpectrobes(
                         TeamSpectrobesGrid.getAll().indexOf(button.piece),
                         TeamSpectrobesGrid.getAll().indexOf(selectedButton.piece))) {
+                    parent.getContainer().setTeamMember(TeamSpectrobesGrid.getAll().indexOf(button.piece),
+                            button.piece.spectrobe);
+                    parent.getContainer().setTeamMember(TeamSpectrobesGrid.getAll().indexOf(selectedButton.piece),
+                            selectedButton.piece.spectrobe);
                     populateGrid();
                 }
 

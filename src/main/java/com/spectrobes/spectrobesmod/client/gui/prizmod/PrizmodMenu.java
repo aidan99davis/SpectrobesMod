@@ -4,7 +4,7 @@
 //import com.spectrobes.spectrobesmod.SpectrobesInfo;
 //import com.spectrobes.spectrobesmod.client.gui.prizmod.components.SpectrobePiece;
 //import com.spectrobes.spectrobesmod.client.gui.utils.GuiUtils;
-//import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
+//import com.spectrobes.spectrobesmod.container.capability.PlayerProperties;
 //import net.minecraft.client.gui.FontRenderer;
 //import net.minecraft.client.gui.screen.Screen;
 //import net.minecraft.client.gui.widget.Widget;

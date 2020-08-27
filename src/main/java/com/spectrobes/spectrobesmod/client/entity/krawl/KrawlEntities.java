@@ -31,8 +31,6 @@ public class KrawlEntities {
 
     public static void init() {
         populateMap();
-
-        RenderingRegistry.registerEntityRenderingHandler(KrawlEntities.ENTITY_SWAR.get(), manager -> new SwarRenderer(manager));
     }
 
     private static void populateMap() {

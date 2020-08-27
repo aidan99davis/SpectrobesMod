@@ -4,8 +4,8 @@
 //import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodMenu;
 //import com.spectrobes.spectrobesmod.client.gui.prizmod.components.SpectrobePiece;
 //import com.spectrobes.spectrobesmod.client.prizmod.Pages.PrizmodPage;
-//import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
-//import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
+//import com.spectrobes.spectrobesmod.container.capability.PlayerSpectrobeMaster;
+//import com.spectrobes.spectrobesmod.container.spectrobes.Spectrobe;
 //import net.minecraft.client.Minecraft;
 //import net.minecraft.client.gui.widget.Widget;
 //import net.minecraftforge.api.distmarker.Dist;
