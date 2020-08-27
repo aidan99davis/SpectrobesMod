@@ -98,6 +98,6 @@ public class SpectrobesEntities {
         }
         throw new ClassNotFoundException("could not find the spectrobe's " +
                 "entity registry. " +
-                "is its name spelled correctly?");
+                "is its name spelled correctly?: " + name);
     }
 }

@@ -40,9 +40,10 @@ public abstract class FossilItem extends Item {
             Spectrobe spectrobe = getSpectrobeInstance();
             playerIn.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(playerCap -> {
                 playerCap.addSpectrobe(spectrobe);
-                Minecraft.getInstance().player.sendChatMessage(spectrobe.name + " has been sent to your prizmod.");
                 itemStack.shrink(1);
             });
+        } else {
+            Minecraft.getInstance().player.sendChatMessage("A new spectrobe has been sent to your prizmod.");
         }
         return new ActionResult<>(ActionResultType.SUCCESS, itemStack);
     }

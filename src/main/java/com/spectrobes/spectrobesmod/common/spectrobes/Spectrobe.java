@@ -18,6 +18,7 @@ public class Spectrobe {
     public static final IDataSerializer<Spectrobe> SpectrobeSerializer = new SpectrobeSerializer().init();
     @Nullable
     public UUID MasterUUID;
+
     public UUID SpectrobeUUID = UuidUtil.getTimeBasedUuid();
     @Required
     public String name;
@@ -66,8 +67,10 @@ public class Spectrobe {
     public CompoundNBT write() {
         CompoundNBT compoundnbt = new CompoundNBT();
         compoundnbt.putString("name", name);
-        if(MasterUUID != null)
+        compoundnbt.putUniqueId("SpectrobeUUID", SpectrobeUUID);
+        if(MasterUUID != null) {
             compoundnbt.putUniqueId("MasterUUID", MasterUUID);
+        }
         compoundnbt.putUniqueId("UUID", SpectrobeUUID);
         compoundnbt.putBoolean("active", active);
 
@@ -78,13 +81,14 @@ public class Spectrobe {
     }
     public static Spectrobe read(CompoundNBT nbtData) {
         Spectrobe s = new Spectrobe();
+        s.SpectrobeUUID = nbtData.getUniqueId("SpectrobeUUID");
         try {
             s.MasterUUID = nbtData.getUniqueId("MasterUUID");
         } catch(NullPointerException ex) {
             s.MasterUUID = null;
         }
         s.name = nbtData.get("name").getString();
-        s.SpectrobeUUID = nbtData.getUniqueId("UUID");
+//        s.SpectrobeUUID = nbtData.getUniqueId("UUID");
         s.active = nbtData.getBoolean("active");
         s.properties = SpectrobeProperties.read(((CompoundNBT) nbtData.get("SpectrobeProperties")));
 

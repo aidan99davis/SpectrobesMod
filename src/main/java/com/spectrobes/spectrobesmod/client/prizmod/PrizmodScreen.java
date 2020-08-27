@@ -33,10 +33,6 @@ public class PrizmodScreen extends ContainerScreen<PrizmodContainer> {
     public PrizmodScreen(PrizmodContainer container, PlayerInventory playerInv, ITextComponent text) {
         super(container, playerInv, text);
         this.player = playerInv.player;
-//        this.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> this.playerData = sm);
-//        if(this.playerData == null) {
-//            Minecraft.getInstance().displayGuiScreen(null);
-//        }
     }
 
     @Override public List<Widget> children() {return buttons;}

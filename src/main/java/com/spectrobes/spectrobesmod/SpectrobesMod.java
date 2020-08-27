@@ -65,6 +65,7 @@ public class SpectrobesMod
         SpectrobesInfo.LOGGER.info("Common setup shiz");
         MinecraftForge.EVENT_BUS.register(PlayerEvents.instance);
         IconRegistry.init();
+        SpectrobesEntities.init();
         CapabilityManager.INSTANCE.register(PlayerSpectrobeMaster.class, new Capability.IStorage<PlayerSpectrobeMaster>() {
             @Nullable
             @Override
@@ -84,7 +85,6 @@ public class SpectrobesMod
     {
         SpectrobesInfo.LOGGER.info("Client setup shiz");
         ScreenManager.registerFactory(Containers.PRIZMOD.get(), PrizmodScreen::new);
-        SpectrobesEntities.init();
         SpectrobeRendererManager.init();
         KrawlEntities.init();
         KrawlRendererManager.init();

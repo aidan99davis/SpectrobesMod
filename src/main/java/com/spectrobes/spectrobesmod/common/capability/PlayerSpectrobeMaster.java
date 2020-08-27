@@ -104,8 +104,11 @@ public class PlayerSpectrobeMaster {
     }
 
     public void updateSpectrobe(Spectrobe spectrobeInstance) {
+        SpectrobesInfo.LOGGER.info("UPDATING SPECTROBE:" + spectrobeInstance.SpectrobeUUID);
         for (Spectrobe s : getOwnedSpectrobes()) {
-            if(s.SpectrobeUUID == spectrobeInstance.SpectrobeUUID) {
+            SpectrobesInfo.LOGGER.info("UPDATING SPECTROBE PT 2:" + s.SpectrobeUUID);
+            if(s.SpectrobeUUID.equals(spectrobeInstance.SpectrobeUUID)) {
+                SpectrobesInfo.LOGGER.info("UPDATING SPECTROBE PT 3");
                 ownedSpectrobes.remove(s);
                 ownedSpectrobes.add(spectrobeInstance);
             }

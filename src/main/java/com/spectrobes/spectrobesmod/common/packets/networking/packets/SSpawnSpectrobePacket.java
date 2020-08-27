@@ -56,12 +56,12 @@ public class SSpawnSpectrobePacket {
                         player.getPosition(),
                         SpawnReason.MOB_SUMMONED,
                         true,true);
+                spectrobe1.setSpectrobeData(spectrobe);
+                spectrobe1.setOwnerId(player.getUniqueID());
+                serverCap.spawnSpectrobe(spectrobe);
             } catch (ClassNotFoundException e) {
                 SpectrobesInfo.LOGGER.info("Couldnt find spectrobe's registry.\n" + e.getMessage());
             }
-            spectrobe1.setSpectrobeData(spectrobe);
-            spectrobe1.setOwnerId(player.getUniqueID());
-            serverCap.spawnSpectrobe(spectrobe);
 
 
         });
