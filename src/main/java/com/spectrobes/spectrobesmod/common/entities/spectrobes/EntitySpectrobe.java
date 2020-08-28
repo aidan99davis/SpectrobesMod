@@ -238,17 +238,17 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
 
     @Override
     public void writeSpawnData(PacketBuffer buffer) {
-        if(!world.isRemote) {
+//        if(!world.isRemote) {
             if(getSpectrobeData() != null)
                 buffer.writeCompoundTag(getSpectrobeData().write());
-        }
+//        }
     }
 
     @Override
     public void readSpawnData(PacketBuffer additionalData) {
-        if(!world.isRemote) {
+//        if(!world.isRemote) {
             setSpectrobeData(Spectrobe.read(additionalData.readCompoundTag()));
-        }
+//        }
     }
 
     //Animation

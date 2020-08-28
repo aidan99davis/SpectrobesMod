@@ -1,6 +1,7 @@
 package com.spectrobes.spectrobesmod.common.packets.networking.packets;
 
 
+import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
@@ -13,36 +14,31 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import javax.annotation.Nullable;
+import java.util.UUID;
 import java.util.function.Supplier;
 
 public class SUpdateSpectrobeSlotPacket {
 
     private int slot;
-    @Nullable
-    private Spectrobe spectrobe;
 
-    public SUpdateSpectrobeSlotPacket(int slot, Spectrobe spectrobe) {
+    private UUID spectrobeUUID;
+
+    public SUpdateSpectrobeSlotPacket(int slot, UUID spectrobeUUID) {
         this.slot = slot;
-        this.spectrobe = spectrobe;
+        this.spectrobeUUID = spectrobeUUID;
     }
 
     public void toBytes(PacketBuffer buf) {
-        if(spectrobe != null) {
-            buf.writeCompoundTag(spectrobe.write());
-        }
+        buf.writeUniqueId(spectrobeUUID);
+        SpectrobesInfo.LOGGER.info("instantiated packet with SpectrobeUUID: " + spectrobeUUID.toString());
         buf.writeInt(slot);
     }
 
     public static SUpdateSpectrobeSlotPacket fromBytes(PacketBuffer buf) {
         int slot = buf.readInt();
-        Spectrobe spectrobe;
-        try {
-            spectrobe = Spectrobe.read(buf.readCompoundTag());
-        } catch(NullPointerException ex) {
-            spectrobe = null;
-        }
+        UUID spectrobeUUID = buf.readUniqueId();
 
-        return new SUpdateSpectrobeSlotPacket(slot, spectrobe);
+        return new SUpdateSpectrobeSlotPacket(slot, spectrobeUUID);
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> ctx) {
@@ -52,7 +48,7 @@ public class SUpdateSpectrobeSlotPacket {
             PlayerSpectrobeMaster serverCap = player
                     .getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
                     .orElseThrow(IllegalStateException::new);
-            serverCap.setTeamMember(slot, spectrobe);
+            serverCap.setTeamMember(slot, spectrobeUUID);
 
         });
         return true;

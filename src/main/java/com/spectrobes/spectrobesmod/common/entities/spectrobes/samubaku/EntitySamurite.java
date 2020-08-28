@@ -21,7 +21,7 @@ public class EntitySamurite extends EntityMammalSpectrobe {
     }
 
     public Spectrobe GetNewSpectrobeInstance() {
-        return SpectrobeRegistry.Samurite.copy();
+        return SpectrobeRegistry.Samurite.copy(false);
     }
 
     @Override

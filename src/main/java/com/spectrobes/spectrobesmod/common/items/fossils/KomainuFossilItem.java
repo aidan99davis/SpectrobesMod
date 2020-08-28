@@ -11,6 +11,6 @@ public class KomainuFossilItem extends FossilItem {
 
     @Override
     public Spectrobe getSpectrobeInstance() {
-        return SpectrobeRegistry.Komainu.copy();
+        return SpectrobeRegistry.Komainu.copy(false);
     }
 }

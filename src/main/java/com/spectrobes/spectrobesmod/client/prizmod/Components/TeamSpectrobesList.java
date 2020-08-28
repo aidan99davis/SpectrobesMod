@@ -62,11 +62,11 @@ public class TeamSpectrobesList extends Widget {
                 && piece.properties.getStage()
                     != SpectrobeProperties.Stage.CHILD) {
             gridData[index].spectrobe = piece;
-            parent.parent.getContainer().setTeamMember(index, piece);
+            parent.parent.getContainer().setTeamMember(index, piece.SpectrobeUUID);
             return true;
         } else if(index == 6 && piece.properties.getStage() == SpectrobeProperties.Stage.CHILD) {
             gridData[index].spectrobe = piece;
-            parent.parent.getContainer().setTeamMember(index, piece);
+            parent.parent.getContainer().setTeamMember(index, piece.SpectrobeUUID);
             return true;
         } else {
             SpectrobesInfo.LOGGER.info("unknown index, wtf?" + index);

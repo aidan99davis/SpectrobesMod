@@ -20,7 +20,7 @@ public class EntitySamukabu extends EntityMammalSpectrobe {
     }
 
     public Spectrobe GetNewSpectrobeInstance() {
-        return SpectrobeRegistry.Samukabu.copy();
+        return SpectrobeRegistry.Samukabu.copy(false);
     }
 
     @Override

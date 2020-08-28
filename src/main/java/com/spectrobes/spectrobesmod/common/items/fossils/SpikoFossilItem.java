@@ -11,6 +11,6 @@ public class SpikoFossilItem extends FossilItem {
 
     @Override
     public Spectrobe getSpectrobeInstance() {
-        return SpectrobeRegistry.Spiko.copy();
+        return SpectrobeRegistry.Spiko.copy(false);
     }
 }

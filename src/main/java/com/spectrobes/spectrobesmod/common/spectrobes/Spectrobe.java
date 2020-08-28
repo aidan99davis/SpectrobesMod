@@ -30,8 +30,8 @@ public class Spectrobe {
 
     public boolean active;
 
-    public Spectrobe copy() {
-        return new SpectrobeBuilder().buildFrom(this);
+    public Spectrobe copy(boolean copyUUID) {
+        return new SpectrobeBuilder().buildFrom(this, copyUUID);
     }
 
     public void setName(String name) {
@@ -71,7 +71,7 @@ public class Spectrobe {
         if(MasterUUID != null) {
             compoundnbt.putUniqueId("MasterUUID", MasterUUID);
         }
-        compoundnbt.putUniqueId("UUID", SpectrobeUUID);
+//        compoundnbt.putUniqueId("UUID", SpectrobeUUID);
         compoundnbt.putBoolean("active", active);
 
         compoundnbt.put("SpectrobeStats", stats.write());
@@ -109,6 +109,10 @@ public class Spectrobe {
         active = true;
     }
 
+    public void setSpectrobeUUID(UUID spectrobeUUID) {
+        this.SpectrobeUUID = spectrobeUUID;
+    }
+
     public static class SpectrobeSerializer implements IDataSerializer<Spectrobe> {
 
         @Override
@@ -123,7 +127,7 @@ public class Spectrobe {
 
         @Override
         public Spectrobe copyValue(Spectrobe value) {
-            return value.copy();
+            return value.copy(true);
         }
 
         public IDataSerializer<Spectrobe> init() {

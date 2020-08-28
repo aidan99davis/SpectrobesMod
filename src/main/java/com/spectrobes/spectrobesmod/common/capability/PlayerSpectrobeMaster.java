@@ -34,9 +34,9 @@ public class PlayerSpectrobeMaster {
         ownedSpectrobes.add(spectrobeInstance);
     }
 
-    public void setTeamMember(int index, Spectrobe member) {
-        if(member != null) {
-            currentTeam.put(index, member.SpectrobeUUID);
+    public void setTeamMember(int index, UUID spectrobeUUID) {
+        if(spectrobeUUID != null) {
+            currentTeam.put(index, spectrobeUUID);
         } else {
             removeTeamMember(index);
         }
@@ -64,7 +64,8 @@ public class PlayerSpectrobeMaster {
         }
 
         for(int i : currentTeam.keySet()) {
-            currentTeamNbt.putUniqueId(String.valueOf(i), currentTeam.get(i));
+            SpectrobesInfo.LOGGER.info("Serialissing: " + String.valueOf(i));
+            currentTeamNbt.putUniqueId(String.valueOf(i).substring(0,1), currentTeam.get(i));
         }
 
         myData.put("currentTeam", currentTeamNbt);
@@ -84,8 +85,14 @@ public class PlayerSpectrobeMaster {
         if(currentTeamNbt != null) {
             Set<String> keys = currentTeamNbt.keySet();
             for(String s : keys) {
+                SpectrobesInfo.LOGGER.info("deserialising: " + s);
                 int index = Integer.valueOf(s.substring(0,1));
-                currentTeam.put(index, currentTeamNbt.getUniqueId(s));
+                if(index < 0 || index > 6) {
+                    throw new IndexOutOfBoundsException("index was negative or above 6. this shouldnt be happening: " + index);
+                }
+                if(currentTeam.get(index) != null) {
+                    currentTeam.put(index, currentTeamNbt.getUniqueId(s));
+                }
             }
         }
 
@@ -109,8 +116,9 @@ public class PlayerSpectrobeMaster {
             SpectrobesInfo.LOGGER.info("UPDATING SPECTROBE PT 2:" + s.SpectrobeUUID);
             if(s.SpectrobeUUID.equals(spectrobeInstance.SpectrobeUUID)) {
                 SpectrobesInfo.LOGGER.info("UPDATING SPECTROBE PT 3");
-                ownedSpectrobes.remove(s);
-                ownedSpectrobes.add(spectrobeInstance);
+                s = spectrobeInstance;
+//                ownedSpectrobes.remove(s);
+//                ownedSpectrobes.add(spectrobeInstance);
             }
         }
     }
@@ -118,9 +126,7 @@ public class PlayerSpectrobeMaster {
     public void setSpectrobeInactive(Spectrobe spectrobeData) {
         this.ownedSpectrobes.forEach(s -> {
             if(s.SpectrobeUUID == spectrobeData.SpectrobeUUID) {
-                ownedSpectrobes.remove(s);
                 s.active = false;
-                ownedSpectrobes.add(spectrobeData);
             }
         });
     }

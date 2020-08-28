@@ -144,9 +144,9 @@ public class LineUpPage extends PrizmodPage {
                         TeamSpectrobesGrid.getAll().indexOf(button.piece),
                         TeamSpectrobesGrid.getAll().indexOf(selectedButton.piece))) {
                     parent.getContainer().setTeamMember(TeamSpectrobesGrid.getAll().indexOf(button.piece),
-                            button.piece.spectrobe);
+                            button.piece.spectrobe.SpectrobeUUID);
                     parent.getContainer().setTeamMember(TeamSpectrobesGrid.getAll().indexOf(selectedButton.piece),
-                            selectedButton.piece.spectrobe);
+                            selectedButton.piece.spectrobe.SpectrobeUUID);
                     populateGrid();
                 }
 

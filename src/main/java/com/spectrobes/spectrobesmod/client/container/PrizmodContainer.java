@@ -91,13 +91,14 @@ public class PrizmodContainer extends Container {
         markDirty();
     }
 
-    public void setTeamMember(int index, Spectrobe piece) {
-        SpectrobesInfo.LOGGER.info("setTeamMember");
-        capability.setTeamMember(index, piece);
-        if(player.world.isRemote()) {
-            SpectrobesNetwork.sendToServer(new SUpdateSpectrobeSlotPacket(index, piece));
+    public void setTeamMember(int index, UUID spectrobeUUID) {
+        SpectrobesInfo.LOGGER.info("setTeamMember UUID: " + spectrobeUUID.toString());
+        if(!player.world.isRemote()) {
+            SpectrobesNetwork.sendToServer(new SUpdateSpectrobeSlotPacket(index, spectrobeUUID));
+        } else {
+            capability.setTeamMember(index, spectrobeUUID);
         }
-        markDirty();
+//        markDirty();
 
     }
 
