@@ -5,13 +5,14 @@ import com.spectrobes.spectrobesmod.common.registry.KrawlRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.world.World;
 import software.bernie.geckolib.animation.builder.AnimationBuilder;
 import software.bernie.geckolib.event.AnimationTestEvent;
 import software.bernie.geckolib.manager.EntityAnimationManager;
 
 public class EntitySwar extends EntityKrawl {
-    public EntitySwar(EntityType<? extends CreatureEntity> type, World worldIn) {
+    public EntitySwar(EntityType<? extends MonsterEntity> type, World worldIn) {
         super(type, worldIn);
     }
 

@@ -113,6 +113,13 @@ public class Spectrobe {
         this.SpectrobeUUID = spectrobeUUID;
     }
 
+    public void update(Spectrobe spectrobeInstance) {
+        setName(spectrobeInstance.name);
+        setProperties(spectrobeInstance.properties);
+        setStats(spectrobeInstance.stats);
+        setMasterUUID(spectrobeInstance.MasterUUID);
+    }
+
     public static class SpectrobeSerializer implements IDataSerializer<Spectrobe> {
 
         @Override

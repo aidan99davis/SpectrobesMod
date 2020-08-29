@@ -55,6 +55,10 @@ public class TeamSpectrobesList extends Widget {
         return x >= 0 && x < GRID_SIZE;
     }
 
+    public void populateSlot(int index, Spectrobe piece) {
+        gridData[index].spectrobe = piece;
+    }
+
     public boolean addSpectrobe(int index, Spectrobe piece) {
 
         if(index  >= 0

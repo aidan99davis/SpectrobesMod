@@ -32,19 +32,23 @@ public class PrizmodContainer extends Container {
 
     @Override
     public void detectAndSendChanges() {
-        if(!player.world.isRemote()) {
-            SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(capability),
-                    (ServerPlayerEntity) player);
-        } else {
-            SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket(capability));
+        if(needsSync) {
+            if(!player.world.isRemote()) {
+                SpectrobesInfo.LOGGER.info("SYNCING TO CLIENT");
+                SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(capability),
+                        (ServerPlayerEntity) player);
+            } else {
+                SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket(capability));
+            }
+            needsSync = false;
         }
-        needsSync = false;
 //        super.detectAndSendChanges();
     }
 
     public void tick() {
         if(needsSync) {
-            detectAndSendChanges();
+//            SpectrobesInfo.LOGGER.info("DETECTED AND SENDING CHANGES");
+//            detectAndSendChanges();
         }
 //        capability = this.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
 //                .orElseThrow(IllegalStateException::new);
@@ -94,6 +98,7 @@ public class PrizmodContainer extends Container {
     public void setTeamMember(int index, UUID spectrobeUUID) {
         SpectrobesInfo.LOGGER.info("setTeamMember UUID: " + spectrobeUUID.toString());
         if(!player.world.isRemote()) {
+            SpectrobesInfo.LOGGER.info("SENDING PACKET");
             SpectrobesNetwork.sendToServer(new SUpdateSpectrobeSlotPacket(index, spectrobeUUID));
         } else {
             capability.setTeamMember(index, spectrobeUUID);

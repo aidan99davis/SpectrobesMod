@@ -324,11 +324,15 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
                 SpectrobesInfo.LOGGER.info("owner aint null");
                 getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
                     sm.updateSpectrobe(spectrobeInstance);
-                    SpectrobesNetwork.sendToClient(new CSyncSpectrobeMasterPacket(sm), (ServerPlayerEntity)getOwner());
+//                    SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket(sm));
                 });
                 spectrobe.setOwnerId(getOwnerId());
             }
         } else {
+            getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
+                sm.updateSpectrobe(spectrobeInstance);
+                SpectrobesNetwork.sendToServer(new SSyncSpectrobeMasterPacket(sm));
+            });
             world.addParticle(ParticleTypes.FLASH, getPosX() + 0.5D, getPosY() + 1.0D, getPosZ() + 0.5D, 0.0D, 0.0D, 0.0D);
         }
 
@@ -368,8 +372,16 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     }
 
     private void awardKillStats(KrawlProperties krawlProperties) {
-        Spectrobe spectrobeInstance = getSpectrobeData();
-        spectrobeInstance.stats.addStats(krawlProperties);
+        if(!world.isRemote()) {
+            Spectrobe spectrobeInstance = getSpectrobeData();
+            spectrobeInstance.stats.addStats(krawlProperties);
+            if(getOwner() != null) {
+                getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
+                    sm.updateSpectrobe(spectrobeInstance);
+                    SpectrobesNetwork.sendToServer(new SSyncSpectrobeMasterPacket(sm));
+                });
+            }
+        }
     }
 
     //Checks if the attacker should have the attack multiplier bonus applied.
@@ -469,6 +481,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
                     spectrobeInstance.stats.getAtkLevel());
             if(getOwner() != null) {
                 getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
+                    SpectrobesInfo.LOGGER.info("UPDATING SPECTROBE AFTER APPLYING MINERAL");
                     sm.updateSpectrobe(spectrobeInstance);
                 });
             }

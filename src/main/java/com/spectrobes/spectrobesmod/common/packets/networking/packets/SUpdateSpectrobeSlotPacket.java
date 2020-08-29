@@ -26,11 +26,11 @@ public class SUpdateSpectrobeSlotPacket {
     public SUpdateSpectrobeSlotPacket(int slot, UUID spectrobeUUID) {
         this.slot = slot;
         this.spectrobeUUID = spectrobeUUID;
+        SpectrobesInfo.LOGGER.info("instantiated packet with SpectrobeUUID: " + spectrobeUUID.toString());
     }
 
     public void toBytes(PacketBuffer buf) {
         buf.writeUniqueId(spectrobeUUID);
-        SpectrobesInfo.LOGGER.info("instantiated packet with SpectrobeUUID: " + spectrobeUUID.toString());
         buf.writeInt(slot);
     }
 

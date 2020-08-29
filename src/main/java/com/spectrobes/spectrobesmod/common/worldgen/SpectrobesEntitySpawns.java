@@ -19,7 +19,7 @@ public class SpectrobesEntitySpawns {
         for(Biome biome : ForgeRegistries.BIOMES) {
             if(biome.getCategory() != Biome.Category.OCEAN) {
                 biome.getSpawns(EntityClassification.MONSTER)
-                        .add(new Biome.SpawnListEntry(KrawlEntities.ENTITY_SWAR.get(), 20, 2, 6));
+                        .add(new Biome.SpawnListEntry(KrawlEntities.ENTITY_SWAR.get(), 10, 1, 4));
             }
         }
     }

@@ -10,6 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
@@ -23,7 +24,7 @@ import software.bernie.geckolib.entity.IAnimatedEntity;
 import software.bernie.geckolib.event.AnimationTestEvent;
 import software.bernie.geckolib.manager.EntityAnimationManager;
 
-public abstract class EntityKrawl extends CreatureEntity implements IAnimatedEntity, IHasNature {
+public abstract class EntityKrawl extends MonsterEntity implements IAnimatedEntity, IHasNature {
 
     public KrawlProperties krawlProperties;
     public EntityAnimationManager animationControllers = new EntityAnimationManager();
@@ -33,7 +34,7 @@ public abstract class EntityKrawl extends CreatureEntity implements IAnimatedEnt
             EntityDataManager.createKey(EntityKrawl.class,
                     DataSerializers.BOOLEAN);
 
-    protected EntityKrawl(EntityType<? extends CreatureEntity> type, World worldIn) {
+    protected EntityKrawl(EntityType<? extends MonsterEntity> type, World worldIn) {
         super(type, worldIn);
         registerAnimationControllers();
         krawlProperties = GetKrawlProperties();
@@ -70,9 +71,20 @@ public abstract class EntityKrawl extends CreatureEntity implements IAnimatedEnt
     }
 
     @Override
+    public void livingTick() {
+        super.livingTick();
+
+        if(this.isInDaylight()) {
+            this.setFire(8);
+        }
+    }
+
+    @Override
     protected void registerGoals()
     {
 //        this.goalSelector.addGoal(5, new BreedGoal(this,10)); todo: Make krawl eat mass and duplicate?
+        this.goalSelector.addGoal(2, new RestrictSunGoal(this));
+        this.goalSelector.addGoal(3, new FleeSunGoal(this, 1.0D));
         this.goalSelector.addGoal(2, new RandomWalkingGoal(this, 0.2d));
         this.goalSelector.addGoal(2, new AttackSpectrobeGoal(this, true, true));
         this.goalSelector.addGoal(5, new LookAtGoal(this, PlayerEntity.class, 10.0F));
@@ -85,7 +97,6 @@ public abstract class EntityKrawl extends CreatureEntity implements IAnimatedEnt
     protected void registerAttributes() {
         super.registerAttributes();
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20);
-        this.getAttributes().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(5);
     }
 
