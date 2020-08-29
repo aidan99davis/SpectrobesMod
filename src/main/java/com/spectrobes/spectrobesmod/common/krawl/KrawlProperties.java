@@ -1,6 +1,7 @@
 package com.spectrobes.spectrobesmod.common.krawl;
 
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
+import com.spectrobes.spectrobesmod.util.KrawlPropertiesBuilder;
 import net.minecraft.nbt.CompoundNBT;
 
 public class KrawlProperties {
@@ -15,6 +16,10 @@ public class KrawlProperties {
     private int hpOffset;
     private int xp_worth;
 
+    public KrawlProperties() {
+        this.nature = SpectrobeProperties.Nature.OTHER;
+    }
+
     public KrawlProperties(SpectrobeProperties.Nature nature) {
         this.nature = nature;
     }
@@ -27,24 +32,62 @@ public class KrawlProperties {
         this.nature = nature;
     }
 
-    //serialisation
-
-    public static KrawlProperties read(CompoundNBT spectrobeProperties) {
-
-        return new KrawlProperties(
-                SpectrobeProperties.Nature.valueOf(spectrobeProperties.get("nature").getString()));
-
-    }
-
-    public CompoundNBT write() {
-        CompoundNBT compoundnbt = new CompoundNBT();
-        compoundnbt.putString("nature", nature.toString());
-
-        return compoundnbt;
-    }
-
     public KrawlProperties copy() {
-        return new KrawlProperties(nature);
+        KrawlProperties properties = new KrawlProperties();
+
+        properties.setNature(this.nature);
+        properties.setAtkLevel(this.atkLevel);
+        properties.setAtkOffset(this.atkOffset);
+        properties.setDefLevel(this.defLevel);
+        properties.setDefOffset(this.defOffset);
+        properties.setHpLevel(this.hpLevel);
+        properties.setHpOffset(this.hpOffset);
+        properties.setXpWorth(this.xp_worth);
+
+        return properties;
     }
 
+    public void setAtkLevel(int atkLevel) {
+        this.atkLevel = atkLevel;
+    }
+
+    public void setAtkOffset(int atkOffset) {
+        this.atkOffset = atkOffset;
+    }
+
+    public void setDefLevel(int defLevel) {
+        this.defLevel = defLevel;
+    }
+
+    public void setDefOffset(int defOffset) {
+        this.defOffset = defOffset;
+    }
+
+    public void setHpLevel(int hpLevel) {
+        this.hpLevel = hpLevel;
+    }
+
+    public void setHpOffset(int hpOffset) {
+        this.hpOffset = hpOffset;
+    }
+
+    public void setXpWorth(int xp_worth) {
+        this.xp_worth = xp_worth;
+    }
+
+    public int getHpOffset() {
+        return hpOffset;
+    }
+
+    public int getDefOffset() {
+        return defOffset;
+    }
+
+    public int getAtkOffset() {
+        return atkOffset;
+    }
+
+    public int getXpWorth() {
+        return xp_worth;
+    }
 }

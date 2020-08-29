@@ -55,18 +55,22 @@ public class TeamSpectrobesList extends Widget {
         return x >= 0 && x < GRID_SIZE;
     }
 
+    public void populateSlot(int index, Spectrobe piece) {
+        gridData[index].spectrobe = piece;
+    }
+
     public boolean addSpectrobe(int index, Spectrobe piece) {
 
         if(index  >= 0
                 && index < 6
                 && piece.properties.getStage()
                     != SpectrobeProperties.Stage.CHILD) {
-            gridData[index].spell = piece;
-            parent.parent.playerData.setTeamMember(index, piece);
+            gridData[index].spectrobe = piece;
+            parent.parent.getContainer().setTeamMember(index, piece.SpectrobeUUID);
             return true;
         } else if(index == 6 && piece.properties.getStage() == SpectrobeProperties.Stage.CHILD) {
-            gridData[index].spell = piece;
-            parent.parent.playerData.setTeamMember(index, piece);
+            gridData[index].spectrobe = piece;
+            parent.parent.getContainer().setTeamMember(index, piece.SpectrobeUUID);
             return true;
         } else {
             SpectrobesInfo.LOGGER.info("unknown index, wtf?" + index);
@@ -76,7 +80,7 @@ public class TeamSpectrobesList extends Widget {
 
     public void clear() {
         for (int i = 0; i < GRID_SIZE; i++) {
-            gridData[i].spell = null;
+            gridData[i].spectrobe = null;
         }
     }
 
@@ -97,12 +101,6 @@ public class TeamSpectrobesList extends Widget {
                 && j  >= 0
                 && j < 6
                 && i != j) {
-            Spectrobe temp;
-            temp = s1.spell;
-            gridData[i].spell = s2.spell;
-            gridData[j].spell = temp;
-            parent.parent.playerData.setTeamMember(i, gridData[i].spell);
-            parent.parent.playerData.setTeamMember(j, gridData[j].spell);
             return true;
         }
 

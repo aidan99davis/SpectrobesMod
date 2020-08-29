@@ -21,7 +21,7 @@ public class EntitySpikan extends EntityMammalSpectrobe {
     }
 
     public Spectrobe GetNewSpectrobeInstance() {
-        return SpectrobeRegistry.Spikan.copy();
+        return SpectrobeRegistry.Spikan.copy(false);
     }
 
     @Override

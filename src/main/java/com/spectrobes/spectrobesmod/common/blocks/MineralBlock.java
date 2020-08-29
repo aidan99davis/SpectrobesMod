@@ -30,6 +30,7 @@ public class MineralBlock extends SpectrobesBlock {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
 
         Random random = new Random();

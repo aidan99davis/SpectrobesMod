@@ -1,6 +1,7 @@
 package com.spectrobes.spectrobesmod.common.spectrobes;
 
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralProperties;
+import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
@@ -116,5 +117,12 @@ public class SpectrobeStats {
         this.hpLevel += stats.getHpLevel();
         this.atkLevel += stats.getAtkLevel();
         this.defLevel += stats.getDefLevel();
+    }
+
+    public void addStats(KrawlProperties stats) {
+        this.hpLevel += stats.getHpOffset();
+        this.atkLevel += stats.getAtkOffset();
+        this.defLevel += stats.getDefOffset();
+        this.addXp(stats.getXpWorth());
     }
 }

@@ -28,7 +28,8 @@ public class SpectrobesEntities {
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES
             = new DeferredRegister<>(ForgeRegistries.ENTITIES, SpectrobesInfo.MOD_ID);
 
-    public static final RegistryObject<EntityType<EntityKomanoto>> ENTITY_KOMANOTO = ENTITY_TYPES.register("entity_komanoto",
+    public static final RegistryObject<EntityType<EntityKomanoto>> ENTITY_KOMANOTO
+            = ENTITY_TYPES.register("entity_komanoto",
             () -> EntityType.Builder.create(EntityKomanoto::new,
                     EntityClassification.CREATURE)
                     .size(1.5f, 1.5f)
@@ -79,13 +80,6 @@ public class SpectrobesEntities {
 
     public static void init() {
         populateMap();
-
-        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_KOMAINU.get(), manager -> new KomainuRenderer(manager));
-        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SPIKO.get(), manager -> new SpikoRenderer(manager));
-        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_KOMANOTO.get(), manager -> new KomanotoRenderer(manager));
-        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SPIKAN.get(), manager -> new SpikanRenderer(manager));
-        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SAMUKABU.get(), manager -> new SamukabuRenderer(manager));
-        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SAMURITE.get(), manager -> new SamuriteRenderer(manager));
     }
 
     private static void populateMap() {
@@ -104,6 +98,6 @@ public class SpectrobesEntities {
         }
         throw new ClassNotFoundException("could not find the spectrobe's " +
                 "entity registry. " +
-                "is its name spelled correctly?");
+                "is its name spelled correctly?: " + name);
     }
 }

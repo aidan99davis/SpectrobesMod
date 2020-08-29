@@ -19,7 +19,7 @@ public class EntitySpiko extends EntityMammalSpectrobe {
     }
 
     public Spectrobe GetNewSpectrobeInstance() {
-        return SpectrobeRegistry.Spiko.copy();
+        return SpectrobeRegistry.Spiko.copy(false);
     }
 
     @Override

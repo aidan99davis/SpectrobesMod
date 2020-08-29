@@ -39,9 +39,12 @@ public class SpectrobeBuilder {
     }
 
 
-    public Spectrobe buildFrom(Spectrobe spectrobe) {
+    public Spectrobe buildFrom(Spectrobe spectrobe, boolean copyUUID) {
         Spectrobe newSpectrobe = new Spectrobe();
         newSpectrobe.setMasterUUID(spectrobe.MasterUUID);
+        if(copyUUID) {
+            newSpectrobe.setSpectrobeUUID(spectrobe.SpectrobeUUID);
+        }
         newSpectrobe.setName(spectrobe.name);
         newSpectrobe.setProperties(spectrobe.properties.copy());
         newSpectrobe.setStats(spectrobe.stats.copy());

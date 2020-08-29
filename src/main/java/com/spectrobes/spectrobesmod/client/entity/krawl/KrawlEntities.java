@@ -25,14 +25,12 @@ public class KrawlEntities {
     public static final RegistryObject<EntityType<EntitySwar>> ENTITY_SWAR
             = ENTITY_TYPES.register("entity_swar",
             () -> EntityType.Builder.create(EntitySwar::new,
-                    EntityClassification.CREATURE)
+                    EntityClassification.MONSTER)
                     .size(0.5f, 0.75f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "swar").toString()));
 
     public static void init() {
         populateMap();
-
-        RenderingRegistry.registerEntityRenderingHandler(KrawlEntities.ENTITY_SWAR.get(), manager -> new SwarRenderer(manager));
     }
 
     private static void populateMap() {

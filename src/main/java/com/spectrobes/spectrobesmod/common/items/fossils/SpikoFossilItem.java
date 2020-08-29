@@ -1,8 +1,7 @@
 package com.spectrobes.spectrobesmod.common.items.fossils;
 
-import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
-import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
-import net.minecraft.entity.EntityType;
+import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
+import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 
 public class SpikoFossilItem extends FossilItem {
 
@@ -11,7 +10,7 @@ public class SpikoFossilItem extends FossilItem {
     }
 
     @Override
-    public EntityType<? extends EntitySpectrobe> getSpectrobeInstance() {
-        return SpectrobesEntities.ENTITY_SPIKO.get();
+    public Spectrobe getSpectrobeInstance() {
+        return SpectrobeRegistry.Spiko.copy(false);
     }
 }

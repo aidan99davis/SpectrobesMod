@@ -21,7 +21,7 @@ public class EntityKomanoto extends EntityMammalSpectrobe {
     }
 
     public Spectrobe GetNewSpectrobeInstance() {
-        return SpectrobeRegistry.Komanoto.copy();
+        return SpectrobeRegistry.Komanoto.copy(false);
     }
 
     @Override

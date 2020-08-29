@@ -30,17 +30,14 @@ public class AttackKrawlGoal extends TargetGoal {
 
         List<EntityKrawl> nearbyMobs = goalOwner.world.getEntitiesWithinAABB(EntityKrawl.class, goalOwner.getBoundingBox().grow(20, 20, 20));
         if (!nearbyMobs.isEmpty()) {
-            SpectrobesInfo.LOGGER.info("GOT HERE 1");
             this.target = nearbyMobs.get(0);
             return true;
         }
-        SpectrobesInfo.LOGGER.info("GOT HERE 2");
         return false;
     }
 
     @Override
     public void startExecuting() {
-        SpectrobesInfo.LOGGER.info("GOT HERE 3");
 
         this.goalOwner.setAttackTarget(this.target);
         this.goalOwner.getNavigator().setPath(this.goalOwner.getNavigator().getPathToEntity(this.target, 1), 3);

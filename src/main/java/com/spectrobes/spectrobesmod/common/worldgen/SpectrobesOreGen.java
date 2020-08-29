@@ -1,5 +1,6 @@
 package com.spectrobes.spectrobesmod.common.worldgen;
 
+import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.blocks.SpectrobesBlocks;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStage;
@@ -8,10 +9,16 @@ import net.minecraft.world.gen.feature.OreFeatureConfig;
 import net.minecraft.world.gen.placement.ConfiguredPlacement;
 import net.minecraft.world.gen.placement.CountRangeConfig;
 import net.minecraft.world.gen.placement.Placement;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
+@Mod.EventBusSubscriber(modid = SpectrobesInfo.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class SpectrobesOreGen {
-    public static void generateOre() {
+
+    @SubscribeEvent
+    public static void generateOre(FMLLoadCompleteEvent event) {
         for(Biome biome : ForgeRegistries.BIOMES) {
             ConfiguredPlacement mineralOreConfig = Placement.COUNT_RANGE.configure(new CountRangeConfig(20, 23, 2, 128));
             ConfiguredPlacement fossilOreConfig = Placement.COUNT_RANGE.configure(new CountRangeConfig(20, 20,  4, 128));

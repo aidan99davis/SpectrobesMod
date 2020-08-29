@@ -20,7 +20,7 @@ public class EntityKomainu extends EntityMammalSpectrobe {
     }
 
     public Spectrobe GetNewSpectrobeInstance() {
-        return SpectrobeRegistry.Komainu.copy();
+        return SpectrobeRegistry.Komainu.copy(false);
     }
 
     @Override

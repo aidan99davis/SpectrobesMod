@@ -2,10 +2,16 @@ package com.spectrobes.spectrobesmod.common.entities.spectrobes;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
+import com.spectrobes.spectrobesmod.common.entities.IHasNature;
 import com.spectrobes.spectrobesmod.common.entities.goals.AttackKrawlGoal;
+import com.spectrobes.spectrobesmod.common.entities.goals.ReturnToPrizmodGoal;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
 import com.spectrobes.spectrobesmod.common.items.tools.PrizmodItem;
+import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
+import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.CSyncSpectrobeMasterPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSyncSpectrobeMasterPacket;
 import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.client.Minecraft;
@@ -13,6 +19,7 @@ import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
@@ -36,7 +43,7 @@ import software.bernie.geckolib.manager.EntityAnimationManager;
 
 import javax.annotation.Nullable;
 
-public abstract class EntitySpectrobe extends TameableEntity implements IEntityAdditionalSpawnData, IAnimatedEntity{
+public abstract class EntitySpectrobe extends TameableEntity implements IEntityAdditionalSpawnData, IAnimatedEntity, IHasNature {
     private boolean recentInteract = false;
     private int ticksTillInteract = 0;
 
@@ -59,7 +66,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     public EntitySpectrobe(EntityType<? extends EntitySpectrobe> entityTypeIn,
                            World worldIn) {
         super(entityTypeIn, worldIn);
-        //setInvulnerable(true);
+
         registerAnimationControllers();
     }
 
@@ -68,6 +75,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     {
         super.registerGoals();
         this.goalSelector.addGoal(6, new SwimGoal(this));
+//        this.goalSelector.addGoal(1, new ReturnToPrizmodGoal(this));
         this.goalSelector.addGoal(1, new AttackKrawlGoal(this, true, false));
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 0.5, false));
         this.goalSelector.addGoal(4, new BreatheAirGoal(this));
@@ -100,8 +108,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
                 itemstack.shrink(1);
             } else if(itemstack.getItem() instanceof PrizmodItem && player.isSneaking()) {
                 if(player == getOwner()) {
-
-                    despawn(player);
+                    despawn();
                 }
             }
         }
@@ -111,21 +118,47 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         return super.processInteract(player, hand);
     }
 
-    public void despawn(PlayerEntity player) {
-        this.getSpectrobeData().setInactive();
-        player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
-            sm.updateSpectrobe(getSpectrobeData());
-        });
-        Minecraft.getInstance().world.addParticle(ParticleTypes.FIREWORK, getPosX() + 0.5D, getPosY() + 1.0D, getPosZ() + 0.5D, 0.0D, 1.0D, 0.0D);
+    //prevent spectrobes from despawning naturally. they should only stop existing via prizmod recall feature, or death.
+    @Override
+    public boolean preventDespawn() {
+        return true;
+    }
+
+    public void despawn() {
+        if(!world.isRemote) {
+            this.getSpectrobeData().setInactive();
+        } else {
+            Minecraft.getInstance().world.addParticle(ParticleTypes.FIREWORK, getPosX() + 0.5D, getPosY() + 1.0D, getPosZ() + 0.5D, 0.0D, 1.0D, 0.0D);
+        }
         this.remove(false);
     }
 
     @Override
-    public void damageEntity(DamageSource source, float amount) {
+    public void onKillEntity(LivingEntity entityLivingIn) {
+        if(entityLivingIn instanceof EntityKrawl) {
+            awardKillStats(((EntityKrawl)entityLivingIn).krawlProperties);
+        }
+        super.onKillEntity(entityLivingIn);
+    }
+
+    //
+//    @Override
+//    public void damageEntity(DamageSource source, float amount) {
+//        if(source.getImmediateSource() instanceof EntitySpectrobe
+//                || source.getImmediateSource() instanceof EntityKrawl){
+//            isInvulnerableTo()
+//            super.damageEntity(source,amount);
+//        }
+//    }
+
+    @Override
+    public boolean isInvulnerableTo(DamageSource source) {
         if(source.getImmediateSource() instanceof EntitySpectrobe
                 || source.getImmediateSource() instanceof EntityKrawl){
-            super.damageEntity(source,amount);
+            return false;
         }
+
+        return true;
     }
 
     @Override
@@ -205,17 +238,17 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
 
     @Override
     public void writeSpawnData(PacketBuffer buffer) {
-        if(!world.isRemote) {
+//        if(!world.isRemote) {
             if(getSpectrobeData() != null)
                 buffer.writeCompoundTag(getSpectrobeData().write());
-        }
+//        }
     }
 
     @Override
     public void readSpawnData(PacketBuffer additionalData) {
-        if(!world.isRemote) {
+//        if(!world.isRemote) {
             setSpectrobeData(Spectrobe.read(additionalData.readCompoundTag()));
-        }
+//        }
     }
 
     //Animation
@@ -239,7 +272,6 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
 
     public void tryEvolve() {
         if(hasEvolution() && canEvolve()) {
-            SpectrobesInfo.LOGGER.info("HAS AN EVOLUTION AND CAN EVOLVE");
             evolve();
         }
     }
@@ -274,15 +306,14 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         if(requirements == null)
             return false;
 
-        return getSpectrobeData().canEvolve(getEvolutionRequirements());
+        return getSpectrobeData().canEvolve(requirements);
     }
 
     private void evolve() {
         Spectrobe spectrobeInstance = getSpectrobeData();
-        Minecraft MINECRAFT = Minecraft.getInstance();
-        if(!world.isRemote) {
-            MINECRAFT.world.addParticle(ParticleTypes.FLASH, getPosX() + 0.5D, getPosY() + 1.0D, getPosZ() + 0.5D, 0.0D, 0.0D, 0.0D);
+        if(!world.isRemote()) {
             EntitySpectrobe spectrobe = getEvolutionRegistry().create(world);
+            SpectrobesInfo.LOGGER.info("got here so we probably can send a packet");
             spectrobe.setLocationAndAngles(getPosX(), getPosY(), getPosZ(), 0.0F, 0.0F);
             this.world.addEntity(spectrobe);
             spectrobe.setPosition(getPosX(), getPosY(), getPosZ());
@@ -290,11 +321,19 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
             spectrobe.setSpectrobeData(spectrobeInstance);
             spectrobe.setCustomName(new StringTextComponent(spectrobeInstance.name));
             if(getOwner() != null) {
+                SpectrobesInfo.LOGGER.info("owner aint null");
                 getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
                     sm.updateSpectrobe(spectrobeInstance);
+//                    SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket(sm));
                 });
                 spectrobe.setOwnerId(getOwnerId());
             }
+        } else {
+            getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
+                sm.updateSpectrobe(spectrobeInstance);
+                SpectrobesNetwork.sendToServer(new SSyncSpectrobeMasterPacket(sm));
+            });
+            world.addParticle(ParticleTypes.FLASH, getPosX() + 0.5D, getPosY() + 1.0D, getPosZ() + 0.5D, 0.0D, 0.0D, 0.0D);
         }
 
         this.remove();
@@ -307,7 +346,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     @Override
     public void onDeath(DamageSource cause) {
         if(getOwner() != null) {
-            despawn((PlayerEntity) getOwner());
+            despawn();
         } else {
             super.onDeath(cause);
         }
@@ -332,8 +371,21 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         spectrobeInstance.stats.addStats(spectrobeData.stats);
     }
 
+    private void awardKillStats(KrawlProperties krawlProperties) {
+        if(!world.isRemote()) {
+            Spectrobe spectrobeInstance = getSpectrobeData();
+            spectrobeInstance.stats.addStats(krawlProperties);
+            if(getOwner() != null) {
+                getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
+                    sm.updateSpectrobe(spectrobeInstance);
+                    SpectrobesNetwork.sendToServer(new SSyncSpectrobeMasterPacket(sm));
+                });
+            }
+        }
+    }
+
     //Checks if the attacker should have the attack multiplier bonus applied.
-    private int hasTypeAdvantage(EntitySpectrobe attacker, EntitySpectrobe defender) {
+    private int hasTypeAdvantage(IHasNature attacker, IHasNature defender) {
         int toReturn = 0;
 
         if(attacker == defender)
@@ -429,6 +481,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
                     spectrobeInstance.stats.getAtkLevel());
             if(getOwner() != null) {
                 getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
+                    SpectrobesInfo.LOGGER.info("UPDATING SPECTROBE AFTER APPLYING MINERAL");
                     sm.updateSpectrobe(spectrobeInstance);
                 });
             }

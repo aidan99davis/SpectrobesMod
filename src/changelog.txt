@@ -3,6 +3,14 @@ V1.3
 
 Refactored fossil definitions.
 fossils and minerals are now used up upon right clicking.
+fossils and minerals are now spawning in the world.
 started defining krawl ingame, AI, Properties, Stats.
 added swar.
 Killed owned spectrobes now return to the prizmod instead of dying.
+Prizmod now has a paging feature for viewing all your owned spectrobes.
+krawl spawn at night in groups of 2-6.
+fossils no longer spawn spectrobes, it will send it directly to your prizmod.
+Spectrobes gain stats from defeating krawl.
+
+Team lineup now persists for the duration of the session(until you leave the game).
+you just need to re-assign them when you rejoin

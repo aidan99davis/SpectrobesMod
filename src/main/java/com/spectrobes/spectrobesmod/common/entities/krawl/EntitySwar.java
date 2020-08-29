@@ -1,14 +1,18 @@
 package com.spectrobes.spectrobesmod.common.entities.krawl;
 
+import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
+import com.spectrobes.spectrobesmod.common.registry.KrawlRegistry;
+import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.world.World;
 import software.bernie.geckolib.animation.builder.AnimationBuilder;
 import software.bernie.geckolib.event.AnimationTestEvent;
 import software.bernie.geckolib.manager.EntityAnimationManager;
 
 public class EntitySwar extends EntityKrawl {
-    public EntitySwar(EntityType<? extends CreatureEntity> type, World worldIn) {
+    public EntitySwar(EntityType<? extends MonsterEntity> type, World worldIn) {
         super(type, worldIn);
     }
 
@@ -31,4 +35,10 @@ public class EntitySwar extends EntityKrawl {
             return true;
         }
     }
+
+    @Override
+    protected KrawlProperties GetKrawlProperties() {
+        return KrawlRegistry.Swar_Properties.copy();
+    }
+
 }

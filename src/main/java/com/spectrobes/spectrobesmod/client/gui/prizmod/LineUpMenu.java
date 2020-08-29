@@ -4,9 +4,9 @@
 //import com.spectrobes.spectrobesmod.SpectrobesInfo;
 //import com.spectrobes.spectrobesmod.client.gui.prizmod.components.*;
 //import com.spectrobes.spectrobesmod.client.prizmod.Components.AllSpectrobesList;
-//import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
-//import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
-//import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
+//import com.spectrobes.spectrobesmod.container.capability.PlayerProperties;
+//import com.spectrobes.spectrobesmod.container.capability.PlayerSpectrobeMaster;
+//import com.spectrobes.spectrobesmod.container.spectrobes.Spectrobe;
 //import net.minecraft.client.gui.IGuiEventListener;
 //import net.minecraft.client.gui.IRenderable;
 //import net.minecraft.client.gui.widget.Widget;
@@ -218,7 +218,7 @@
 ////        SpectrobesInfo.LOGGER.info("floored X:" + flooredX);
 ////        SpectrobesInfo.LOGGER.info("floored Y:" + flooredY);
 ////        if(AllSpectrobesList.exists(flooredX, flooredY)) {
-////            if(allSpectrobesList.gridData[flooredX][flooredY].spell != null && mouseButton == 0) {
+////            if(allSpectrobesList.gridData[flooredX][flooredY].spectrobe != null && mouseButton == 0) {
 ////            visibleButtons.forEach(button -> {
 ////                SpectrobesInfo.LOGGER.info("GOT HERE 2");
 ////                if(button.piece != null && button.x == flooredX && button.y == flooredY) {
