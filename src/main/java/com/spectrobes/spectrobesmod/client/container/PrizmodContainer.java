@@ -103,7 +103,7 @@ public class PrizmodContainer extends Container {
         } else {
             capability.setTeamMember(index, spectrobeUUID);
         }
-//        markDirty();
+        markDirty();
 
     }
 

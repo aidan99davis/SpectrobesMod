@@ -68,10 +68,10 @@ public class PlayerSpectrobeMaster {
             spectrobes.add(s.write());
         }
 
-        for(int i : currentTeam.keySet()) {
+        for(int i = 0; i < 7; i++) {
             if(currentTeam.get(i) != null) {
-                SpectrobesInfo.LOGGER.info("Serialissing: " + String.valueOf(i).substring(0,1));
-                currentTeamNbt.putUniqueId(String.valueOf(i).substring(0,1), currentTeam.get(i));
+                SpectrobesInfo.LOGGER.info("Serialissing: " + String.valueOf(i));
+                currentTeamNbt.putString(String.valueOf(i), currentTeam.get(i).toString());
             }
         }
 
@@ -93,7 +93,7 @@ public class PlayerSpectrobeMaster {
         if(currentTeamNbt != null) {
             String[] keys = currentTeamNbt.keySet().toArray(new String[7]);
             for(String s : keys) {
-//                SpectrobesInfo.LOGGER.info("deserialising: " + s);
+                SpectrobesInfo.LOGGER.info("deserialising: " + s);
                 if(s != null) {
                     int index = Integer.valueOf(s.substring(0,1));
                     if(index < 0 || index > 6) {
