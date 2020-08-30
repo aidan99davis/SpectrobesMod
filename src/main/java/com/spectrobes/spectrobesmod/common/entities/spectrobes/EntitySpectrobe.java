@@ -12,6 +12,7 @@ import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.CSyncSpectrobeMasterPacket;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSyncSpectrobeMasterPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.SUpdateSpectrobeSlotPacket;
 import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.client.Minecraft;
@@ -125,9 +126,13 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     }
 
     public void despawn() {
-        if(!world.isRemote) {
-            this.getSpectrobeData().setInactive();
-        } else {
+        this.getSpectrobeData().setInactive();
+        if(this.getOwner() != null) {
+            this.getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
+                sm.setSpectrobeInactive(this.getSpectrobeData());
+            });
+        }
+        if(world.isRemote) {
             Minecraft.getInstance().world.addParticle(ParticleTypes.FIREWORK, getPosX() + 0.5D, getPosY() + 1.0D, getPosZ() + 0.5D, 0.0D, 1.0D, 0.0D);
         }
         this.remove(false);
