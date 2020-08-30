@@ -15,4 +15,6 @@ Spectrobes gain stats from defeating krawl.
 Team lineup now persists for the duration of the session(until you leave the game).
 you just need to re-assign them when you rejoin
 
-Added kubaku.
+Added kubaku and kuganon.
+
+Added prizmod crafting recipe: crafted like a compass but with a diamond in the middle.

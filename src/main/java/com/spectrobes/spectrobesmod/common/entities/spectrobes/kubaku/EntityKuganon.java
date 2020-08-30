@@ -13,29 +13,30 @@ import software.bernie.geckolib.animation.builder.AnimationBuilder;
 import software.bernie.geckolib.event.AnimationTestEvent;
 import software.bernie.geckolib.manager.EntityAnimationManager;
 
-public class EntityKubaku extends EntityMammalSpectrobe {
+public class EntityKuganon extends EntityMammalSpectrobe {
 
-    public EntityKubaku(EntityType<EntityKubaku> entityTypeIn, World worldIn) {
+
+    public EntityKuganon(EntityType<EntityKuganon> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
     }
 
     public Spectrobe GetNewSpectrobeInstance() {
-        return SpectrobeRegistry.Kubaku.copy(false);
+        return SpectrobeRegistry.Kuganon.copy(false);
     }
 
     @Override
     public EntityType<? extends EntitySpectrobe> getEvolutionRegistry() {
-        return SpectrobesEntities.ENTITY_KUGANON.get();
+        return null;
     }
 
     @Override
     public String getRegistryName() {
-        return "entity_kubaku";
+        return "entity_kuganon";
     }
 
     @Override
     protected EntitySpectrobe getChildForLineage() {
-        return this;
+        return SpectrobesEntities.ENTITY_KUBAKU.get().create(world);
     }
 
     @Override
@@ -53,22 +54,25 @@ public class EntityKubaku extends EntityMammalSpectrobe {
     }
 
     @Override
-    public <ENTITY extends EntitySpectrobe> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent) {
+    public <ENTITY extends EntitySpectrobe> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent)
+    {
+        moveController.transitionLengthTicks = 2;
         if(entityAnimationTestEvent.isWalking())
         {
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.kubaku.walk", true));
+            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.kuganon.walk", true));
             return true;
-        }
-        else if(entityAnimationTestEvent.getEntity().isSitting()) {
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.kubaku.idle", true));
-            return true;
+        } else {
+            if(this.IsAttacking()) {
+                moveController.setAnimation(new AnimationBuilder().addAnimation("animation.kuganon.attack", true));
+                return true;
+            }
         }
         return false;
-
     }
 
     @Override
     protected EvolutionRequirements getEvolutionRequirements() {
-        return new EvolutionRequirements(5, 7, 0);
+        //returning null makes canEvolve always evaluate to false.
+        return null;
     }
 }

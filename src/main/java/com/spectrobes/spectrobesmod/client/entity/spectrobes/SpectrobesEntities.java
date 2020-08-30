@@ -6,6 +6,7 @@ import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.komainu.EntityKomainu;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.komainu.EntityKomanoto;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.kubaku.EntityKubaku;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.kubaku.EntityKuganon;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.samubaku.EntitySamukabu;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.samubaku.EntitySamurite;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.spiko.EntitySpikan;
@@ -71,14 +72,19 @@ public class SpectrobesEntities {
                     .size(1f, 2f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "samurite").toString()));
 
-
-
     public static final RegistryObject<EntityType<EntityKubaku>> ENTITY_KUBAKU
             = ENTITY_TYPES.register("entity_kubaku",
             () -> EntityType.Builder.create(EntityKubaku::new,
                     EntityClassification.CREATURE)
                     .size(0.5f, 0.75f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "kubaku").toString()));
+
+    public static final RegistryObject<EntityType<EntityKuganon>> ENTITY_KUGANON
+            = ENTITY_TYPES.register("entity_kuganon",
+            () -> EntityType.Builder.create(EntityKuganon::new,
+                    EntityClassification.CREATURE)
+                    .size(0.5f, 0.75f)
+                    .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "kuganon").toString()));
 
     public static <T extends Entity> RegistryObject<EntityType<T>> BuildEntity(EntityType.IFactory<T> entity, Class<T> entityClass, float width, float height)
     {
@@ -100,6 +106,7 @@ public class SpectrobesEntities {
         SPECTROBES.put("spiko", ENTITY_SPIKO.get());
         SPECTROBES.put("spikan", ENTITY_SPIKAN.get());
         SPECTROBES.put("kubaku", ENTITY_KUBAKU.get());
+        SPECTROBES.put("kuganon", ENTITY_KUGANON.get());
     }
 
     public static EntityType<? extends EntitySpectrobe> getByName(String name) throws ClassNotFoundException {

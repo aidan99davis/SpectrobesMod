@@ -55,4 +55,12 @@ public class SpectrobeRegistry {
             .withProperties(SpectrobePropertyRegistry.KUBAKU)
             .withStats(25,5,5)
             .build();
+
+
+    public static final Spectrobe Kuganon
+            = new SpectrobeBuilder()
+            .withName("Kuganon")
+            .withProperties(SpectrobePropertyRegistry.KUGANON)
+            .withStats(225,175,255)
+            .build();
 }
