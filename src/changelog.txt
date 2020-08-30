@@ -14,3 +14,5 @@ Spectrobes gain stats from defeating krawl.
 
 Team lineup now persists for the duration of the session(until you leave the game).
 you just need to re-assign them when you rejoin
+
+Added kubaku.

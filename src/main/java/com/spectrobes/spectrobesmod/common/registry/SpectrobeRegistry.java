@@ -47,4 +47,12 @@ public class SpectrobeRegistry {
             .withProperties(SpectrobePropertyRegistry.SAMURITE)
             .withStats(100,45,30)
             .build();
+
+
+    public static final Spectrobe Kubaku
+            = new SpectrobeBuilder()
+            .withName("Kubaku")
+            .withProperties(SpectrobePropertyRegistry.KUBAKU)
+            .withStats(25,5,5)
+            .build();
 }

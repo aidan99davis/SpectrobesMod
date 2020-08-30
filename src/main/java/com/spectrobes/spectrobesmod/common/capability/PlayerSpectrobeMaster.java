@@ -82,7 +82,10 @@ public class PlayerSpectrobeMaster {
 
     public void deserializeNBT(CompoundNBT nbt) {
         this.ownedSpectrobes = new ArrayList<>();
-//        this.currentTeam = new HashMap<>(7);
+        this.currentTeam = new HashMap<>(7);
+        for(int i = 0; i < 7; i++) {
+            this.currentTeam.put(i, null);
+        }
         ListNBT ownedSpectrobesNbt = (ListNBT) nbt.get("spectrobesOwned");
         CompoundNBT currentTeamNbt = (CompoundNBT) nbt.get("currentTeam");
         List<Spectrobe> spectrobes = new ArrayList<>();
@@ -91,7 +94,7 @@ public class PlayerSpectrobeMaster {
         }
         ownedSpectrobes.addAll(spectrobes);
         if(currentTeamNbt != null) {
-            String[] keys = currentTeamNbt.keySet().toArray(new String[7]);
+            Set<String> keys = currentTeamNbt.keySet();
             for(String s : keys) {
                 SpectrobesInfo.LOGGER.info("deserialising: " + s);
                 if(s != null) {
@@ -101,7 +104,7 @@ public class PlayerSpectrobeMaster {
                     }
 //                if(currentTeam.get(index) == null) {
                     SpectrobesInfo.LOGGER.info("setting spectrobe in slot: " + index + " uuid: " + currentTeamNbt.getUniqueId(s));
-                    currentTeam.replace(index, currentTeamNbt.getUniqueId(s));
+                    currentTeam.replace(index, UUID.fromString(currentTeamNbt.getString(s)));
 //                }
                 }
             }
