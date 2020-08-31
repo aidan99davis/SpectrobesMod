@@ -26,17 +26,23 @@ public class SUpdateSpectrobeSlotPacket {
     public SUpdateSpectrobeSlotPacket(int slot, UUID spectrobeUUID) {
         this.slot = slot;
         this.spectrobeUUID = spectrobeUUID;
-        SpectrobesInfo.LOGGER.info("instantiated packet with SpectrobeUUID: " + spectrobeUUID.toString());
+//        SpectrobesInfo.LOGGER.info("instantiated packet with SpectrobeUUID: " + spectrobeUUID.toString());
     }
 
     public void toBytes(PacketBuffer buf) {
-        buf.writeUniqueId(spectrobeUUID);
+        if(spectrobeUUID != null)
+            buf.writeUniqueId(spectrobeUUID);
         buf.writeInt(slot);
     }
 
     public static SUpdateSpectrobeSlotPacket fromBytes(PacketBuffer buf) {
         int slot = buf.readInt();
-        UUID spectrobeUUID = buf.readUniqueId();
+        UUID spectrobeUUID;
+        try {
+            spectrobeUUID = buf.readUniqueId();
+        } catch(Exception ex) {
+            spectrobeUUID = null;
+        }
 
         return new SUpdateSpectrobeSlotPacket(slot, spectrobeUUID);
     }

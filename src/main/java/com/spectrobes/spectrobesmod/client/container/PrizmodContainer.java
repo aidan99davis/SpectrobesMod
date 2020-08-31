@@ -97,7 +97,7 @@ public class PrizmodContainer extends Container {
     }
 
     public void setTeamMember(int index, UUID spectrobeUUID) {
-        SpectrobesInfo.LOGGER.info("setTeamMember UUID: " + spectrobeUUID.toString());
+//        SpectrobesInfo.LOGGER.info("setTeamMember UUID: " + spectrobeUUID.toString());
         capability.setTeamMember(index, spectrobeUUID);
         if(player.world.isRemote()) {
             SpectrobesInfo.LOGGER.info("SENDING PACKET with index: " + index);
