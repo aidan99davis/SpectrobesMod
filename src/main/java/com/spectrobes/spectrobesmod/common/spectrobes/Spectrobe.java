@@ -71,7 +71,6 @@ public class Spectrobe {
         if(MasterUUID != null) {
             compoundnbt.putUniqueId("MasterUUID", MasterUUID);
         }
-//        compoundnbt.putUniqueId("UUID", SpectrobeUUID);
         compoundnbt.putBoolean("active", active);
 
         compoundnbt.put("SpectrobeStats", stats.write());

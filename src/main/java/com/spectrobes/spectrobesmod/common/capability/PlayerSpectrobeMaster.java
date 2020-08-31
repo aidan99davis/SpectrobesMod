@@ -33,17 +33,13 @@ public class PlayerSpectrobeMaster {
     }
 
     public void addSpectrobe(Spectrobe spectrobeInstance) {
-//        SpectrobesInfo.LOGGER.info("adding spectrobe");
         ownedSpectrobes.add(spectrobeInstance);
     }
 
     public void setTeamMember(int index, UUID spectrobeUUID) {
         if(spectrobeUUID != null) {
-            SpectrobesInfo.LOGGER.info("Set team member in slot: "
-                    + index + " with spectrobe uuid: " + spectrobeUUID);
             currentTeam.replace(index, spectrobeUUID);
         } else {
-            SpectrobesInfo.LOGGER.info("Removing team member");
             removeTeamMember(index);
         }
     }
@@ -70,8 +66,6 @@ public class PlayerSpectrobeMaster {
         }
 
         for(int i = 0; i < 7; i++) {
-            SpectrobesInfo.LOGGER.info("Serialissing: " + String.valueOf(i));
-            SpectrobesInfo.LOGGER.info("currentTeam.get(i): " + currentTeam.get(i));
             if(currentTeam.get(i) != null)
                 currentTeamNbt.putString(String.valueOf(i), currentTeam.get(i).toString());
         }
@@ -93,15 +87,9 @@ public class PlayerSpectrobeMaster {
             spectrobes.add(Spectrobe.read((CompoundNBT)spectrobeNbt));
         }
         ownedSpectrobes.addAll(spectrobes);
-//        if(currentTeamNbt != null) {
-        for(String key : currentTeamNbt.keySet()) {
-            SpectrobesInfo.LOGGER.info("KEY: " + key);
-        }
+
         for(int i = 0; i < 7; i++) {
-                SpectrobesInfo.LOGGER.info("deserialising: " + i);
                     try {
-                        SpectrobesInfo.LOGGER.info("setting spectrobe in slot: " + i + " uuid: "
-                                + currentTeamNbt.getString(String.valueOf(i)));
                         currentTeam.replace(i, UUID.fromString(
                                 currentTeamNbt.getString(String.valueOf(i))));
 
