@@ -5,6 +5,7 @@ import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -33,15 +34,15 @@ public class CSyncSpectrobeMasterPacket {
 
     public boolean handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            PlayerEntity player = ctx.get().getSender();
+            ServerPlayerEntity player = ctx.get().getSender();
 
             PlayerSpectrobeMaster serverCap = player
                     .getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
                     .orElseThrow(IllegalStateException::new);
             serverCap.deserializeNBT(capability.serializeNBT());
 
-
         });
+        ctx.get().setPacketHandled(true);
         return true;
     }
 }

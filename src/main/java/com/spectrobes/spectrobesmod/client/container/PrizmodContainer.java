@@ -6,6 +6,7 @@ import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.items.tools.PrizmodItem;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.CSyncSpectrobeMasterPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.CUpdateSpectrobeSlotPacket;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSyncSpectrobeMasterPacket;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SUpdateSpectrobeSlotPacket;
 import com.spectrobes.spectrobesmod.common.registry.Containers;
@@ -48,7 +49,7 @@ public class PrizmodContainer extends Container {
     public void tick() {
         if(needsSync) {
 //            SpectrobesInfo.LOGGER.info("DETECTED AND SENDING CHANGES");
-//            detectAndSendChanges();
+            detectAndSendChanges();
         }
 //        capability = this.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
 //                .orElseThrow(IllegalStateException::new);
@@ -96,14 +97,13 @@ public class PrizmodContainer extends Container {
     }
 
     public void setTeamMember(int index, UUID spectrobeUUID) {
-        SpectrobesInfo.LOGGER.info("setTeamMember UUID: " + spectrobeUUID.toString());
-        if(!player.world.isRemote()) {
-            SpectrobesInfo.LOGGER.info("SENDING PACKET");
+//        SpectrobesInfo.LOGGER.info("setTeamMember UUID: " + spectrobeUUID.toString());
+        capability.setTeamMember(index, spectrobeUUID);
+        if(player.world.isRemote()) {
+            SpectrobesInfo.LOGGER.info("SENDING PACKET with index: " + index);
             SpectrobesNetwork.sendToServer(new SUpdateSpectrobeSlotPacket(index, spectrobeUUID));
-        } else {
-            capability.setTeamMember(index, spectrobeUUID);
+            markDirty();
         }
-        markDirty();
 
     }
 

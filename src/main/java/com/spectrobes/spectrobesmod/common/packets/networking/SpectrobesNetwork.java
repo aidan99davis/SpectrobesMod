@@ -1,10 +1,7 @@
 package com.spectrobes.spectrobesmod.common.packets.networking;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.CSyncSpectrobeMasterPacket;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSpawnSpectrobePacket;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSyncSpectrobeMasterPacket;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.SUpdateSpectrobeSlotPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.*;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkDirection;
@@ -44,6 +41,12 @@ public class SpectrobesNetwork {
                 .encoder(SUpdateSpectrobeSlotPacket::toBytes)
                 .decoder(SUpdateSpectrobeSlotPacket::fromBytes)
                 .consumer(SUpdateSpectrobeSlotPacket::handle)
+                .add();
+
+        INSTANCE.messageBuilder(CUpdateSpectrobeSlotPacket.class, nextID())
+                .encoder(CUpdateSpectrobeSlotPacket::toBytes)
+                .decoder(CUpdateSpectrobeSlotPacket::fromBytes)
+                .consumer(CUpdateSpectrobeSlotPacket::handle)
                 .add();
 
         INSTANCE.messageBuilder(SSpawnSpectrobePacket.class, nextID())

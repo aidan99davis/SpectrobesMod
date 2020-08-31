@@ -33,14 +33,11 @@ public class PlayerSpectrobeMaster {
     }
 
     public void addSpectrobe(Spectrobe spectrobeInstance) {
-//        SpectrobesInfo.LOGGER.info("adding spectrobe");
         ownedSpectrobes.add(spectrobeInstance);
     }
 
     public void setTeamMember(int index, UUID spectrobeUUID) {
         if(spectrobeUUID != null) {
-            SpectrobesInfo.LOGGER.info("Set team member in slot: "
-                    + index + " with spectrobe uuid: " + spectrobeUUID);
             currentTeam.replace(index, spectrobeUUID);
         } else {
             removeTeamMember(index);
@@ -69,20 +66,20 @@ public class PlayerSpectrobeMaster {
         }
 
         for(int i = 0; i < 7; i++) {
-            if(currentTeam.get(i) != null) {
-                SpectrobesInfo.LOGGER.info("Serialissing: " + String.valueOf(i));
+            if(currentTeam.get(i) != null)
                 currentTeamNbt.putString(String.valueOf(i), currentTeam.get(i).toString());
-            }
         }
-
-        myData.put("currentTeam", currentTeamNbt);
         myData.put("spectrobesOwned", spectrobes);
+        myData.put("currentTeam", currentTeamNbt);
         return myData;
     }
 
     public void deserializeNBT(CompoundNBT nbt) {
         this.ownedSpectrobes = new ArrayList<>();
-//        this.currentTeam = new HashMap<>(7);
+        this.currentTeam = new HashMap<>(7);
+        for(int i = 0; i < 7; i++) {
+            this.currentTeam.put(i, null);
+        }
         ListNBT ownedSpectrobesNbt = (ListNBT) nbt.get("spectrobesOwned");
         CompoundNBT currentTeamNbt = (CompoundNBT) nbt.get("currentTeam");
         List<Spectrobe> spectrobes = new ArrayList<>();
@@ -90,22 +87,16 @@ public class PlayerSpectrobeMaster {
             spectrobes.add(Spectrobe.read((CompoundNBT)spectrobeNbt));
         }
         ownedSpectrobes.addAll(spectrobes);
-        if(currentTeamNbt != null) {
-            String[] keys = currentTeamNbt.keySet().toArray(new String[7]);
-            for(String s : keys) {
-                SpectrobesInfo.LOGGER.info("deserialising: " + s);
-                if(s != null) {
-                    int index = Integer.valueOf(s.substring(0,1));
-                    if(index < 0 || index > 6) {
-                        throw new IndexOutOfBoundsException("index was negative or above 6. this shouldnt be happening: " + index);
+
+        for(int i = 0; i < 7; i++) {
+                    try {
+                        currentTeam.replace(i, UUID.fromString(
+                                currentTeamNbt.getString(String.valueOf(i))));
+
+                    } catch(Exception ex){
                     }
-//                if(currentTeam.get(index) == null) {
-                    SpectrobesInfo.LOGGER.info("setting spectrobe in slot: " + index + " uuid: " + currentTeamNbt.getUniqueId(s));
-                    currentTeam.replace(index, currentTeamNbt.getUniqueId(s));
-//                }
-                }
             }
-        }
+//        }
 
     }
 
