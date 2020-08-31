@@ -101,6 +101,13 @@ public class TeamSpectrobesList extends Widget {
                 && j  >= 0
                 && j < 6
                 && i != j) {
+
+            Spectrobe temp;
+            temp = s1.spectrobe;
+            gridData[i].spectrobe = s2.spectrobe;
+            gridData[j].spectrobe = temp;
+            parent.parent.getContainer().setTeamMember(i, gridData[i].spectrobe.SpectrobeUUID);
+            parent.parent.getContainer().setTeamMember(j, gridData[j].spectrobe.SpectrobeUUID);
             return true;
         }
 

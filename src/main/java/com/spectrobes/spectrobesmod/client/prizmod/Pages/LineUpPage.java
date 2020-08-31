@@ -143,10 +143,11 @@ public class LineUpPage extends PrizmodPage {
                 if(TeamSpectrobesGrid.swapSpectrobes(
                         TeamSpectrobesGrid.getAll().indexOf(button.piece),
                         TeamSpectrobesGrid.getAll().indexOf(selectedButton.piece))) {
-                    parent.getContainer().setTeamMember(TeamSpectrobesGrid.getAll().indexOf(button.piece),
-                            button.piece.spectrobe.SpectrobeUUID);
-                    parent.getContainer().setTeamMember(TeamSpectrobesGrid.getAll().indexOf(selectedButton.piece),
-                            selectedButton.piece.spectrobe.SpectrobeUUID);
+//                    Spectrobe temp = button.piece.spectrobe;
+//                    parent.getContainer().setTeamMember(TeamSpectrobesGrid.getAll().indexOf(button.piece),
+//                            selectedButton.piece.spectrobe.SpectrobeUUID);
+//                    parent.getContainer().setTeamMember(TeamSpectrobesGrid.getAll().indexOf(selectedButton.piece),
+//                            selectedButton.piece.spectrobe.SpectrobeUUID);
                     populateGrid();
                 }
 
