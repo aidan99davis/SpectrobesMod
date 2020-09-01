@@ -4,6 +4,7 @@ import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralProperties;
 import com.spectrobes.spectrobesmod.common.registry.IconRegistry;
 import com.spectrobes.spectrobesmod.util.SpectrobeBuilder;
+import net.minecraft.crash.ReportedException;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializers;
@@ -80,7 +81,11 @@ public class Spectrobe {
     }
     public static Spectrobe read(CompoundNBT nbtData) {
         Spectrobe s = new Spectrobe();
-        s.SpectrobeUUID = nbtData.getUniqueId("SpectrobeUUID");
+        try {
+            s.SpectrobeUUID = nbtData.getUniqueId("SpectrobeUUID");
+        } catch(NullPointerException ex) {
+            s.SpectrobeUUID = UuidUtil.getTimeBasedUuid();
+        }
         try {
             s.MasterUUID = nbtData.getUniqueId("MasterUUID");
         } catch(NullPointerException ex) {

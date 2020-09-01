@@ -23,7 +23,8 @@ public class IconRegistry {
         icons.put("samukabu", new SpectrobeIconInfo("samukabu", 24, 27));
         icons.put("samurite", new SpectrobeIconInfo("samurite", 31, 26));
         icons.put("kubaku", new SpectrobeIconInfo("kubaku", 21, 22));
-        icons.put("kuganon", new SpectrobeIconInfo("kuganon", 31, 24));
+        icons.put("kuganon", new SpectrobeIconInfo("kuganon", 21, 22));
+        icons.put("shakin", new SpectrobeIconInfo("shakin", 22, 18));
     }
 
     public static IconRegistry getInstance() {
@@ -38,7 +39,7 @@ public class IconRegistry {
             return icons.get(name.toLowerCase());
         } else {
 
-            SpectrobesInfo.LOGGER.warn("COULD NOT FIND SPECIFIED ICON " + name.toLowerCase());
+            SpectrobesInfo.LOGGER.error("COULD NOT FIND SPECIFIED ICON " + name.toLowerCase());
             return null;
         }
     }

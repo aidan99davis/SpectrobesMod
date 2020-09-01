@@ -13,9 +13,10 @@ public class Containers {
     public static final DeferredRegister<ContainerType<?>> CONTAINERS
             = DeferredRegister.create(ForgeRegistries.CONTAINERS, SpectrobesInfo.MOD_ID);
 
-    public static final RegistryObject<ContainerType<PrizmodContainer>> PRIZMOD = CONTAINERS.register("prizmod",
-            () -> IForgeContainerType.create((windowId, inv, data) -> {
-                return new PrizmodContainer(windowId, inv.player);
-            }));
-
+    public static void init() {
+        PrizmodContainer.PRIZMOD = CONTAINERS.register("prizmod",
+                () -> IForgeContainerType.create((windowId, inv, data) -> {
+                    return new PrizmodContainer(windowId, inv.player);
+                }));
+    }
 }

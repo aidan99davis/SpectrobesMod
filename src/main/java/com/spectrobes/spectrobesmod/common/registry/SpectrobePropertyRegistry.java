@@ -23,4 +23,6 @@ public class SpectrobePropertyRegistry {
     //SAMUKABU LINE
     public static SpectrobeProperties SAMUKABU = new SpectrobeProperties(SpectrobeProperties.Nature.FLASH, SpectrobeProperties.Stage.CHILD);
     public static SpectrobeProperties SAMURITE = new SpectrobeProperties(SpectrobeProperties.Nature.FLASH, SpectrobeProperties.Stage.ADULT);
+
+    public static SpectrobeProperties SHAKIN = new SpectrobeProperties(SpectrobeProperties.Nature.FLASH, SpectrobeProperties.Stage.CHILD);
 }
