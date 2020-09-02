@@ -14,29 +14,30 @@ import software.bernie.geckolib.animation.builder.AnimationBuilder;
 import software.bernie.geckolib.event.AnimationTestEvent;
 import software.bernie.geckolib.manager.EntityAnimationManager;
 
-public class EntityShakin extends EntityAquaticSpectrobe {
+public class EntityShakor extends EntityAquaticSpectrobe {
 
-    public EntityShakin(EntityType<EntityShakin> entityTypeIn, World worldIn) {
+
+    public EntityShakor(EntityType<EntityShakor> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
     }
 
     public Spectrobe GetNewSpectrobeInstance() {
-        return SpectrobeRegistry.Shakin.copy(false);
+        return SpectrobeRegistry.Shakor.copy(false);
     }
 
     @Override
     public EntityType<? extends EntitySpectrobe> getEvolutionRegistry() {
-        return SpectrobesEntities.ENTITY_SHAKOR.get();
+        return null;
     }
 
     @Override
     public String getRegistryName() {
-        return "entity_shakin";
+        return "entity_shakor";
     }
 
     @Override
     protected EntitySpectrobe getChildForLineage() {
-        return this;
+        return SpectrobesEntities.ENTITY_SHAKIN.get().create(world);
     }
 
     @Override
@@ -54,25 +55,32 @@ public class EntityShakin extends EntityAquaticSpectrobe {
     }
 
     @Override
-    public <ENTITY extends EntitySpectrobe> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent) {
+    public <ENTITY extends EntitySpectrobe> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent)
+    {
         moveController.transitionLengthTicks = 2;
         if(entityAnimationTestEvent.isWalking())
         {
-            animationControllers.setAnimationSpeed(1);
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.shakin.walk", true));
+            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.shakor.walk", true));
             return true;
         }
         else if(entityAnimationTestEvent.getEntity().isSitting()) {
-            animationControllers.setAnimationSpeed(1);
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.komainu.sit", false));
+            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.shakor.idle", true));
             return true;
+        } else if(entityAnimationTestEvent.getEntity().isSwimming()) {
+            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.shakor.walk", true));
+            return true;
+        } else {
+            if(this.IsAttacking()) {
+                moveController.setAnimation(new AnimationBuilder().addAnimation("animation.shakor.attack", true));
+                return true;
+            }
         }
         return false;
-
     }
 
     @Override
     protected EvolutionRequirements getEvolutionRequirements() {
-        return new EvolutionRequirements(5, 7, 0);
+        //returning null makes canEvolve always evaluate to false.
+        return null;
     }
 }
