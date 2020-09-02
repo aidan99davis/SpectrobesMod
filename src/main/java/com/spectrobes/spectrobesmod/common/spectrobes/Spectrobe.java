@@ -31,6 +31,8 @@ public class Spectrobe {
 
     public boolean active;
 
+    public int Variant;
+
     public Spectrobe copy(boolean copyUUID) {
         return new SpectrobeBuilder().buildFrom(this, copyUUID);
     }
@@ -49,6 +51,13 @@ public class Spectrobe {
 
     public void setStats(SpectrobeStats stats) {
         this.stats = stats;
+    }
+
+    public void setVariant(int variant) {
+        if(variant < 0 || variant > 2) {
+            throw new IllegalArgumentException("Value must be between 0 and 2.");
+        }
+        this.Variant = variant;
     }
 
     public boolean canEvolve(EvolutionRequirements requirements) {
@@ -73,6 +82,7 @@ public class Spectrobe {
             compoundnbt.putUniqueId("MasterUUID", MasterUUID);
         }
         compoundnbt.putBoolean("active", active);
+        compoundnbt.putInt("variant", Variant);
 
         compoundnbt.put("SpectrobeStats", stats.write());
         compoundnbt.put("SpectrobeProperties", properties.write());
@@ -91,8 +101,12 @@ public class Spectrobe {
         } catch(NullPointerException ex) {
             s.MasterUUID = null;
         }
+        try {
+            s.Variant = nbtData.getInt("variant");
+        } catch(NullPointerException ex) {
+            s.Variant = 0;
+        }
         s.name = nbtData.get("name").getString();
-//        s.SpectrobeUUID = nbtData.getUniqueId("UUID");
         s.active = nbtData.getBoolean("active");
         s.properties = SpectrobeProperties.read(((CompoundNBT) nbtData.get("SpectrobeProperties")));
 

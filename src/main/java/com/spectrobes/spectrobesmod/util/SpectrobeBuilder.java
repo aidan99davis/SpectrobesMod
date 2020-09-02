@@ -12,6 +12,7 @@ public class SpectrobeBuilder {
     private String name;
     private SpectrobeProperties properties;
     private SpectrobeStats stats;
+    private int variant = 0;
 
     public SpectrobeBuilder withMasterUUID(UUID masterUUID) {
         this.masterUUID = masterUUID;
@@ -20,6 +21,11 @@ public class SpectrobeBuilder {
 
     public SpectrobeBuilder withName(String name) {
         this.name = name;
+        return this;
+    }
+
+    public SpectrobeBuilder withVariant(int variant) {
+        this.variant = variant;
         return this;
     }
 
@@ -45,6 +51,7 @@ public class SpectrobeBuilder {
         if(copyUUID) {
             newSpectrobe.setSpectrobeUUID(spectrobe.SpectrobeUUID);
         }
+        newSpectrobe.setVariant(spectrobe.Variant);
         newSpectrobe.setName(spectrobe.name);
         newSpectrobe.setProperties(spectrobe.properties.copy());
         newSpectrobe.setStats(spectrobe.stats.copy());
@@ -55,6 +62,7 @@ public class SpectrobeBuilder {
         Spectrobe newSpectrobe = new Spectrobe();
         newSpectrobe.setMasterUUID(masterUUID);
         newSpectrobe.setName(name);
+        newSpectrobe.setVariant(variant);
         newSpectrobe.setProperties(properties);
         newSpectrobe.setStats(stats);
         return newSpectrobe;
