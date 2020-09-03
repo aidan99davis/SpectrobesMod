@@ -56,14 +56,14 @@ public class EntityKuganon extends EntityMammalSpectrobe {
     @Override
     public <ENTITY extends EntitySpectrobe> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent)
     {
-        moveController.transitionLengthTicks = 2;
+        moveAnimationController.transitionLengthTicks = 2;
         if(entityAnimationTestEvent.isWalking())
         {
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.kuganon.walk", true));
+            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.kuganon.walk", true));
             return true;
         } else {
             if(this.IsAttacking()) {
-                moveController.setAnimation(new AnimationBuilder().addAnimation("animation.kuganon.attack", true));
+                moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.kuganon.attack", true));
                 return true;
             }
         }

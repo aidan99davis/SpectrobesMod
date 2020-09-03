@@ -56,11 +56,11 @@ public class EntityKubaku extends EntityMammalSpectrobe {
     public <ENTITY extends EntitySpectrobe> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent) {
         if(entityAnimationTestEvent.isWalking())
         {
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.kubaku.walk", true));
+            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.kubaku.walk", true));
             return true;
         }
         else if(entityAnimationTestEvent.getEntity().isSitting()) {
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.kubaku.idle", true));
+            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.kubaku.idle", true));
             return true;
         }
         return false;

@@ -4,15 +4,13 @@ import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.entities.IHasNature;
 import com.spectrobes.spectrobesmod.common.entities.goals.AttackKrawlGoal;
-import com.spectrobes.spectrobesmod.common.entities.goals.ReturnToPrizmodGoal;
+import com.spectrobes.spectrobesmod.common.entities.goals.FollowMasterGoal;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
 import com.spectrobes.spectrobesmod.common.items.tools.PrizmodItem;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.CSyncSpectrobeMasterPacket;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSyncSpectrobeMasterPacket;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.SUpdateSpectrobeSlotPacket;
 import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.client.Minecraft;
@@ -20,7 +18,6 @@ import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
@@ -61,7 +58,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
                     Spectrobe.SpectrobeSerializer);
 
     public EntityAnimationManager animationControllers = new EntityAnimationManager();
-    protected EntityAnimationController moveController = new EntityAnimationController(this, "moveController", 10F, this::moveController);
+    protected EntityAnimationController moveAnimationController = new EntityAnimationController(this, "moveAnimationController", 10F, this::moveController);
 
 
     public EntitySpectrobe(EntityType<? extends EntitySpectrobe> entityTypeIn,
@@ -75,15 +72,11 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     protected void registerGoals()
     {
         super.registerGoals();
-        this.goalSelector.addGoal(6, new SwimGoal(this));
-//        this.goalSelector.addGoal(1, new ReturnToPrizmodGoal(this));
-        this.goalSelector.addGoal(1, new AttackKrawlGoal(this, true, false));
-        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 0.5, false));
-        this.goalSelector.addGoal(4, new BreatheAirGoal(this));
+        this.goalSelector.addGoal(0, new AttackKrawlGoal(this, true, false));
+        this.goalSelector.addGoal(0, new MeleeAttackGoal(this, 0.5, false));
+        this.goalSelector.addGoal(1, new FollowMasterGoal(this,0.3f , 4, 12, true));
         this.goalSelector.addGoal(5, new BreedGoal(this,10));
-        this.goalSelector.addGoal(2, new RandomWalkingGoal(this, 0.2d));
         this.goalSelector.addGoal(5, new LookAtGoal(this, PlayerEntity.class, 6.0F));
-        this.goalSelector.addGoal(3, new FollowOwnerGoal(this,0.3f , 4, 12, true));
     }
 
     @Override
@@ -142,6 +135,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     public void onKillEntity(LivingEntity entityLivingIn) {
         if(entityLivingIn instanceof EntityKrawl) {
             awardKillStats(((EntityKrawl)entityLivingIn).krawlProperties);
+            updateEntityAttributes();
         }
         super.onKillEntity(entityLivingIn);
     }
@@ -172,6 +166,8 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         setSpectrobeData(Spectrobe.read((CompoundNBT) compound.get("SpectrobeData")));
         if(getSpectrobeData() == null)
             setSpectrobeData(GetNewSpectrobeInstance());
+
+        updateEntityAttributes();
     }
 
     @Override
@@ -253,6 +249,8 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     public void readSpawnData(PacketBuffer additionalData) {
 //        if(!world.isRemote) {
             setSpectrobeData(Spectrobe.read(additionalData.readCompoundTag()));
+            updateEntityAttributes();
+
 //        }
     }
 
@@ -267,7 +265,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     {
         if(world.isRemote)
         {
-            this.animationControllers.addAnimationController(moveController);
+            this.animationControllers.addAnimationController(moveAnimationController);
         }
     }
 
@@ -380,6 +378,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         if(!world.isRemote()) {
             Spectrobe spectrobeInstance = getSpectrobeData();
             spectrobeInstance.stats.addStats(krawlProperties);
+            updateEntityAttributes();
             if(getOwner() != null) {
                 getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
                     sm.updateSpectrobe(spectrobeInstance);
@@ -479,11 +478,8 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
                 || mineralItem.mineralProperties.getNature().equals(Nature.OTHER)) {
             spectrobeInstance.applyMineral(mineralItem.mineralProperties);
 
-            this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(
-                    spectrobeInstance.stats.getHpLevel());
+            updateEntityAttributes();
 
-            this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(
-                    spectrobeInstance.stats.getAtkLevel());
             if(getOwner() != null) {
                 getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
                     SpectrobesInfo.LOGGER.info("UPDATING SPECTROBE AFTER APPLYING MINERAL");
@@ -493,6 +489,18 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         } else {
             Minecraft.getInstance().player.sendChatMessage("his mineral is the wrong nature.");
         }
+    }
+
+    private void updateEntityAttributes() {
+        Spectrobe spectrobeInstance = getSpectrobeData();
+
+        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(
+                spectrobeInstance.stats.getHpLevel());
+
+        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(
+                spectrobeInstance.stats.getAtkLevel());
+
+        this.getAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(spectrobeInstance.stats.getDefLevel());
     }
 
     protected abstract AgeableEntity getChildForLineage();

@@ -54,16 +54,16 @@ public class EntitySamukabu extends EntityMammalSpectrobe {
 
     @Override
     public <ENTITY extends EntitySpectrobe> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent) {
-        moveController.transitionLengthTicks = 2;
+        moveAnimationController.transitionLengthTicks = 2;
         if(entityAnimationTestEvent.isWalking())
         {
             animationControllers.setAnimationSpeed(2);
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.samukabu.walk", true));
+            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.samukabu.walk", true));
             return true;
         }
         else if(entityAnimationTestEvent.getEntity().isSitting()) {
             animationControllers.setAnimationSpeed(1);
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.samukabu.sitting", true));
+            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.samukabu.sitting", true));
             return true;
         }
         return false;

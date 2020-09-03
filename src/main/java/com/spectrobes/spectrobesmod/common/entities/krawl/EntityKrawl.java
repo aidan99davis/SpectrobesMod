@@ -28,7 +28,7 @@ public abstract class EntityKrawl extends MonsterEntity implements IAnimatedEnti
 
     public KrawlProperties krawlProperties;
     public EntityAnimationManager animationControllers = new EntityAnimationManager();
-    protected EntityAnimationController moveController = new EntityAnimationController(this, "moveController", 10F, this::moveController);
+    protected EntityAnimationController moveController = new EntityAnimationController(this, "moveAnimationController", 10F, this::moveController);
 
     private static final DataParameter<Boolean> IS_ATTACKING =
             EntityDataManager.createKey(EntityKrawl.class,
@@ -38,6 +38,11 @@ public abstract class EntityKrawl extends MonsterEntity implements IAnimatedEnti
         super(type, worldIn);
         registerAnimationControllers();
         krawlProperties = GetKrawlProperties();
+    }
+
+    @Override
+    public boolean canBreatheUnderwater() {
+        return true;
     }
 
     protected abstract KrawlProperties GetKrawlProperties();

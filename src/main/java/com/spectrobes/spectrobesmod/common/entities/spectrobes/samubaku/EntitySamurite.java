@@ -56,18 +56,18 @@ public class EntitySamurite extends EntityMammalSpectrobe {
     @Override
     public <ENTITY extends EntitySpectrobe> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent)
     {
-        moveController.transitionLengthTicks = 2;
+        moveAnimationController.transitionLengthTicks = 2;
         if(entityAnimationTestEvent.isWalking())
         {
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.samurite.walk", true));
+            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.samurite.walk", true));
             return true;
         }
 //        else if(this.isSitting()) {
-//            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.samurite.sit", false));
+//            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.samurite.sit", false));
 //            return true;
 //        } else {
 //            if(this.getAttackingEntity() != null) {
-//                moveController.setAnimation(new AnimationBuilder().addAnimation("animation.samurite.attack", true));
+//                moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.samurite.attack", true));
 //                return true;
 //            }
 //        }

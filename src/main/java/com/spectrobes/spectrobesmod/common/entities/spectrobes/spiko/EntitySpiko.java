@@ -53,22 +53,22 @@ public class EntitySpiko extends EntityMammalSpectrobe {
 
     @Override
     public <ENTITY extends EntitySpectrobe> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent) {
-        moveController.transitionLengthTicks = 2;
+        moveAnimationController.transitionLengthTicks = 2;
         if(!(limbSwingAmount > -0.15F && limbSwingAmount < 0.15F))
         {
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.spiko.walk", true));
+            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.spiko.walk", true));
             return true;
         }
         if(this.isSitting()) {
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.spiko.sit", false));
+            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.spiko.sit", false));
             return true;
         }
         else if(isJumping) {
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.spiko.jump", true));
+            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.spiko.jump", true));
             return true;
         }
         else {
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.spiko.idle", true));
+            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.spiko.idle", true));
             return true;
         }
     }

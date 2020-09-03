@@ -55,18 +55,18 @@ public class EntitySpikan extends EntityMammalSpectrobe {
     @Override
     public <ENTITY extends EntitySpectrobe> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent)
     {
-        moveController.transitionLengthTicks = 2;
+        moveAnimationController.transitionLengthTicks = 2;
         if(entityAnimationTestEvent.isWalking())
         {
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.spikan.walk", true));
+            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.spikan.walk", true));
             return true;
         }
         else if(this.isSitting()) {
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.spikan.sit", false));
+            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.spikan.sit", false));
             return true;
         } else {
             if(this.getAttackingEntity() != null) {
-                moveController.setAnimation(new AnimationBuilder().addAnimation("animation.spikan.walk", true));
+                moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.spikan.walk", true));
                 return true;
             }
         }

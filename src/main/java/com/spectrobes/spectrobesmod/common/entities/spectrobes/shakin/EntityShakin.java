@@ -2,7 +2,6 @@ package com.spectrobes.spectrobesmod.common.entities.spectrobes.shakin;
 
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityAquaticSpectrobe;
-import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityMammalSpectrobe;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
@@ -55,16 +54,16 @@ public class EntityShakin extends EntityAquaticSpectrobe {
 
     @Override
     public <ENTITY extends EntitySpectrobe> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent) {
-        moveController.transitionLengthTicks = 2;
+//        moveAnimationController.transitionLengthTicks = 2;
         if(entityAnimationTestEvent.isWalking())
         {
             animationControllers.setAnimationSpeed(1);
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.shakin.walk", true));
+            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.shakin.walk", true));
             return true;
         }
         else if(entityAnimationTestEvent.getEntity().isSitting()) {
             animationControllers.setAnimationSpeed(1);
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.komainu.sit", false));
+            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.komainu.sit", false));
             return true;
         }
         return false;
