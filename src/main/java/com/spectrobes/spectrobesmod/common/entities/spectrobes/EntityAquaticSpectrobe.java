@@ -19,12 +19,15 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.Tag;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.EnumSet;
+import java.util.List;
+import java.util.Random;
 
 
 public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
@@ -86,8 +89,27 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
 
     @Override
     public void mate() {
-        //todo: aquatic breeding. eggs? livebirth?
+        List<? extends EntityAquaticSpectrobe> mates
+                    = world.getEntitiesWithinAABB(getClass(),
+                        this.getBoundingBox()
+                        .grow(10, 10, 10));
+        if(mates.isEmpty())
+            return;
+
+        mates.get(0).setTicksTillMate(16000);
+        Random random = new Random();
+        int litterSize = random.nextInt(getMaxLitterSize());
+
+        for(int i = 0; i < litterSize; i++) {
+            EntitySpectrobe spectrobe = getChildForLineage()
+                    .create(world);
+            this.world.addEntity(spectrobe);
+            spectrobe.setPositionAndUpdate(getPosX(), getPosY(), getPosZ());
+        }
+        //todo: aquatic breeding. eggs? livebirth? - livebirth for now, with a litter size.
     }
+
+    protected abstract int getMaxLitterSize();
 
     static class SwimWithPlayerGoal extends Goal {
         private final EntityAquaticSpectrobe spectrobe;

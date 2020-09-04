@@ -3,6 +3,7 @@ package com.spectrobes.spectrobesmod.common.entities.spectrobes.samubaku;
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityMammalSpectrobe;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.komainu.EntityKomainu;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
@@ -34,8 +35,8 @@ public class EntitySamukabu extends EntityMammalSpectrobe {
     }
 
     @Override
-    protected EntitySpectrobe getChildForLineage() {
-        return this;
+    protected EntityType<? extends EntitySpectrobe> getChildForLineage() {
+        return SpectrobesEntities.ENTITY_SAMUKABU.get();
     }
 
     @Override

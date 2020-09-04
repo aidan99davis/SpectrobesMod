@@ -3,6 +3,7 @@ package com.spectrobes.spectrobesmod.common.entities.spectrobes.shakin;
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityAquaticSpectrobe;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.komainu.EntityKomainu;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
@@ -35,8 +36,8 @@ public class EntityShakor extends EntityAquaticSpectrobe {
     }
 
     @Override
-    protected EntitySpectrobe getChildForLineage() {
-        return SpectrobesEntities.ENTITY_SHAKIN.get().create(world);
+    protected EntityType<? extends EntitySpectrobe> getChildForLineage() {
+        return SpectrobesEntities.ENTITY_SHAKIN.get();
     }
 
     @Override
@@ -45,6 +46,11 @@ public class EntityShakor extends EntityAquaticSpectrobe {
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20);
         this.getAttributes().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(5);
+    }
+
+    @Override
+    protected int getMaxLitterSize() {
+        return 3;
     }
 
 
