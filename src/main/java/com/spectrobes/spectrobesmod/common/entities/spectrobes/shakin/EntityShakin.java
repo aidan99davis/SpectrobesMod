@@ -78,6 +78,6 @@ public class EntityShakin extends EntityAquaticSpectrobe {
 
     @Override
     protected EvolutionRequirements getEvolutionRequirements() {
-        return new EvolutionRequirements(5, 7, 0);
+        return new EvolutionRequirements(1, 5, 0);
     }
 }

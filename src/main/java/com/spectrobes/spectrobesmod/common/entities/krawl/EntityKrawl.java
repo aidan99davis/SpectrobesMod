@@ -3,6 +3,7 @@ package com.spectrobes.spectrobesmod.common.entities.krawl;
 import com.spectrobes.spectrobesmod.common.entities.IHasNature;
 import com.spectrobes.spectrobesmod.common.entities.goals.AttackSpectrobeGoal;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
+import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.entity.CreatureEntity;
@@ -10,8 +11,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -23,6 +26,8 @@ import software.bernie.geckolib.animation.controller.EntityAnimationController;
 import software.bernie.geckolib.entity.IAnimatedEntity;
 import software.bernie.geckolib.event.AnimationTestEvent;
 import software.bernie.geckolib.manager.EntityAnimationManager;
+
+import java.util.Random;
 
 public abstract class EntityKrawl extends MonsterEntity implements IAnimatedEntity, IHasNature {
 
@@ -131,6 +136,24 @@ public abstract class EntityKrawl extends MonsterEntity implements IAnimatedEnti
         {
             this.animationControllers.addAnimationController(moveController);
         }
+    }
+
+    @Override
+    public void onDeath(DamageSource source) {
+        Random random = new Random();
+
+        int mineralCount = random.nextInt(3);
+
+        ItemStack mineralStack =SpectrobesItems.getRandomMineral();
+        mineralStack.grow(mineralCount);
+
+        ItemEntity lvt_10_1_ = new ItemEntity(world,
+                this.getPosX() + 0.5D,
+                (this.getPosY() + 1),
+                this.getPosZ() + 0.5D, mineralStack);
+        lvt_10_1_.setDefaultPickupDelay();
+        world.addEntity(lvt_10_1_);
+        super.onDeath(source);
     }
 
     @Override

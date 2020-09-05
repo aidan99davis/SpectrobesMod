@@ -76,6 +76,6 @@ public class EntitySpiko extends EntityMammalSpectrobe {
 
     @Override
     protected EvolutionRequirements getEvolutionRequirements() {
-        return new EvolutionRequirements(10, 5, 0);
+        return new EvolutionRequirements(1, 3, 0);
     }
 }

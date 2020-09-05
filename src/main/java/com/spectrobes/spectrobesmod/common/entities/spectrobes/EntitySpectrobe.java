@@ -49,7 +49,7 @@ import java.util.function.Predicate;
 public abstract class EntitySpectrobe extends TameableEntity implements IEntityAdditionalSpawnData, IAnimatedEntity, IHasNature {
     public static final Predicate<ItemEntity> MINERAL_SELECTOR = (itemEntity) -> {
         return !itemEntity.cannotPickup() && itemEntity.isAlive() && itemEntity.getItem().getItem() instanceof MineralItem;
-    };;
+    };
     private boolean recentInteract = false;
     private int ticksTillInteract = 0;
 
@@ -74,7 +74,6 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         super(entityTypeIn, worldIn);
 
         registerAnimationControllers();
-        this.setCanPickUpLoot(true);
     }
 
     @Override
@@ -90,30 +89,21 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     }
 
     @Override
+    public boolean canPickUpLoot() {
+        return getStage() == Stage.CHILD;
+    }
+
+    @Override
     public boolean canPickUpItem(ItemStack p_213365_1_) {
+        if(!canPickUpLoot())
+            return false;
+
         EquipmentSlotType lvt_2_1_ = MobEntity.getSlotForItemStack(p_213365_1_);
         if (!this.getItemStackFromSlot(lvt_2_1_).isEmpty()) {
             return false;
         } else {
             return lvt_2_1_ == EquipmentSlotType.MAINHAND && super.canPickUpItem(p_213365_1_);
         }
-    }
-
-    @Override
-    protected void updateEquipmentIfNeeded(ItemEntity p_175445_1_) {
-        SpectrobesInfo.LOGGER.info("updating equipment");
-        if (this.getItemStackFromSlot(EquipmentSlotType.MAINHAND).isEmpty()) {
-            SpectrobesInfo.LOGGER.info("updating equipment - 1");
-            ItemStack lvt_2_1_ = p_175445_1_.getItem();
-            if (this.canEquipItem(lvt_2_1_)) {
-                SpectrobesInfo.LOGGER.info("updating equipment - 2");
-                this.setItemStackToSlot(EquipmentSlotType.MAINHAND, lvt_2_1_);
-                this.inventoryHandsDropChances[EquipmentSlotType.MAINHAND.getIndex()] = 2.0F;
-                this.onItemPickup(p_175445_1_, lvt_2_1_.getCount());
-                p_175445_1_.remove();
-            }
-        }
-
     }
 
     @Override
@@ -353,7 +343,6 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         Spectrobe spectrobeInstance = getSpectrobeData();
         if(!world.isRemote()) {
             EntitySpectrobe spectrobe = getEvolutionRegistry().create(world);
-            SpectrobesInfo.LOGGER.info("got here so we probably can send a packet");
             spectrobe.setLocationAndAngles(getPosX(), getPosY(), getPosZ(), 0.0F, 0.0F);
             this.world.addEntity(spectrobe);
             spectrobe.setPosition(getPosX(), getPosY(), getPosZ());
@@ -361,7 +350,6 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
             spectrobe.setSpectrobeData(spectrobeInstance);
             spectrobe.setCustomName(new StringTextComponent(spectrobeInstance.name));
             if(getOwner() != null) {
-                SpectrobesInfo.LOGGER.info("owner aint null");
                 getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
                     sm.updateSpectrobe(spectrobeInstance);
 //                    SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket(sm));
@@ -511,7 +499,6 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     }
 
     public void applyMineral(MineralItem mineralItem) {
-        SpectrobesInfo.LOGGER.info("APPLY MINERal");
         Spectrobe spectrobeInstance = getSpectrobeData();
         if(spectrobeInstance.properties.getNature()
                 .equals(mineralItem.mineralProperties.getNature())
@@ -522,7 +509,6 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
 
             if(getOwner() != null) {
                 getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
-                    SpectrobesInfo.LOGGER.info("UPDATING SPECTROBE AFTER APPLYING MINERAL");
                     sm.updateSpectrobe(spectrobeInstance);
                 });
             }

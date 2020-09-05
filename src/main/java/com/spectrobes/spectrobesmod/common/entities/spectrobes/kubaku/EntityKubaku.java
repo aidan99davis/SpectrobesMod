@@ -70,6 +70,6 @@ public class EntityKubaku extends EntityMammalSpectrobe {
 
     @Override
     protected EvolutionRequirements getEvolutionRequirements() {
-        return new EvolutionRequirements(5, 7, 0);
+        return new EvolutionRequirements(1, 4, 0);
     }
 }
