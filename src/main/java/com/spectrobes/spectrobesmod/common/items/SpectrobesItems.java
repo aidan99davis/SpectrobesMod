@@ -66,6 +66,9 @@ public class SpectrobesItems {
     public static final Item samukabu_fossil_item = null;
     public static final Item kubaku_fossil_item = null;
     public static final Item shakin_fossil_item = null;
+    public static final Item segu_fossil_item = null;
+
+    //Tools
     public static final Item prizmod_item = null;
 
     private static List<Item> all_minerals = new ArrayList<>();
@@ -110,6 +113,13 @@ public class SpectrobesItems {
         all_fossils.add(fossil);
 
         fossil = new ShakinFossilItem(
+                new Item.Properties()
+                        .group(SpectrobesFossilsItemGroup.Instance));
+
+        event.getRegistry().register(fossil);
+        all_fossils.add(fossil);
+
+        fossil = new SeguFossilItem(
                 new Item.Properties()
                         .group(SpectrobesFossilsItemGroup.Instance));
 
