@@ -1,28 +1,17 @@
 package com.spectrobes.spectrobesmod.common.entities.spectrobes;
 
-import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.RandomPositionGenerator;
-import net.minecraft.entity.ai.controller.DolphinLookController;
 import net.minecraft.entity.ai.controller.LookController;
 import net.minecraft.entity.ai.controller.MovementController;
 import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.passive.DolphinEntity;
-import net.minecraft.entity.passive.IFlyingAnimal;
-import net.minecraft.entity.passive.TurtleEntity;
-import net.minecraft.entity.passive.fish.AbstractFishEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluid;
 import net.minecraft.pathfinding.*;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.tags.Tag;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.EnumSet;
@@ -75,8 +64,8 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
     protected void registerGoals() {
         super.registerGoals();
 //        this.goalSelector.addGoal(0, new BreatheAirGoal(this));
-        this.goalSelector.addGoal(0, new SwimWithPlayerGoal(this, 4.0D));
-        this.goalSelector.addGoal(2, new RandomSwimmingGoal(this, 2.0D, 10));
+        this.goalSelector.addGoal(0, new SwimWithPlayerGoal(this, 2.0D));
+        this.goalSelector.addGoal(2, new RandomSwimmingGoal(this, 2.0D, 1));
         this.goalSelector.addGoal(2, new FindWaterGoal(this));
         this.goalSelector.addGoal(4, new LookRandomlyGoal(this));
         this.goalSelector.addGoal(8, new FollowBoatGoal(this));
@@ -155,10 +144,10 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
 
         }
     }
-    static class MoveHelperController extends MovementController {
+    static class MoveHelperController_ONE extends MovementController {
         private final EntityAquaticSpectrobe fish;
 
-        MoveHelperController(EntityAquaticSpectrobe p_i48857_1_) {
+        MoveHelperController_ONE(EntityAquaticSpectrobe p_i48857_1_) {
             super(p_i48857_1_);
             this.fish = p_i48857_1_;
         }
@@ -211,10 +200,10 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
         }
     }
 
-    static class MoveHelperController_ONE extends MovementController {
+    static class MoveHelperController extends MovementController {
         private final EntityAquaticSpectrobe dolphin;
 
-        public MoveHelperController_ONE(EntityAquaticSpectrobe dolphinIn) {
+        public MoveHelperController(EntityAquaticSpectrobe dolphinIn) {
             super(dolphinIn);
             this.dolphin = dolphinIn;
         }
