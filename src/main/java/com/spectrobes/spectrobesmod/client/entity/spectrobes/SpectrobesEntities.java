@@ -9,6 +9,7 @@ import com.spectrobes.spectrobesmod.common.entities.spectrobes.kubaku.EntityKuba
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.kubaku.EntityKuganon;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.samubaku.EntitySamukabu;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.samubaku.EntitySamurite;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.segu.EntitySegu;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.shakin.EntityShakin;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.shakin.EntityShakor;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.spiko.EntitySpikan;
@@ -102,6 +103,13 @@ public class SpectrobesEntities {
                     .size(0.5f, 0.75f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "shakor").toString()));
 
+    public static final RegistryObject<EntityType<EntitySegu>> ENTITY_SEGU
+            = ENTITY_TYPES.register("entity_segu",
+            () -> EntityType.Builder.create(EntitySegu::new,
+                    EntityClassification.CREATURE)
+                    .size(0.5f, 0.75f)
+                    .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "segu").toString()));
+
     public static <T extends Entity> RegistryObject<EntityType<T>> BuildEntity(EntityType.IFactory<T> entity, Class<T> entityClass, float width, float height)
     {
         String name = entityClass.getSimpleName().toLowerCase();
@@ -125,6 +133,7 @@ public class SpectrobesEntities {
         SPECTROBES.put("kuganon", ENTITY_KUGANON.get());
         SPECTROBES.put("shakin", ENTITY_SHAKIN.get());
         SPECTROBES.put("shakor", ENTITY_SHAKOR.get());
+        SPECTROBES.put("segu", ENTITY_SEGU.get());
     }
 
     public static EntityType<? extends EntitySpectrobe> getByName(String name) throws ClassNotFoundException {

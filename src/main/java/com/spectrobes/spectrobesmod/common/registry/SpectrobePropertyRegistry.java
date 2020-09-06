@@ -19,6 +19,9 @@ public class SpectrobePropertyRegistry {
     public static SpectrobeProperties KUBAKU = new SpectrobeProperties(SpectrobeProperties.Nature.AURORA, SpectrobeProperties.Stage.CHILD);
     public static SpectrobeProperties KUGANON = new SpectrobeProperties(SpectrobeProperties.Nature.AURORA, SpectrobeProperties.Stage.ADULT);
 
+    //SEGU LINE
+    public static SpectrobeProperties SEGU = new SpectrobeProperties(SpectrobeProperties.Nature.AURORA, SpectrobeProperties.Stage.CHILD);
+
     //FLASH
 
     //SAMUKABU LINE

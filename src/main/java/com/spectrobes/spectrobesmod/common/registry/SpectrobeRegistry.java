@@ -79,4 +79,12 @@ public class SpectrobeRegistry {
             .withProperties(SpectrobePropertyRegistry.SHAKOR)
             .withStats(225,175,255)
             .build();
+
+
+    public static final Spectrobe Segu
+            = new SpectrobeBuilder()
+            .withName("Segu")
+            .withProperties(SpectrobePropertyRegistry.SEGU)
+            .withStats(25,15,45)
+            .build();
 }
