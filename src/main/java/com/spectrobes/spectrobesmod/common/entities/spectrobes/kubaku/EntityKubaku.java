@@ -3,6 +3,7 @@ package com.spectrobes.spectrobesmod.common.entities.spectrobes.kubaku;
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityMammalSpectrobe;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.komainu.EntityKomainu;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
@@ -34,8 +35,8 @@ public class EntityKubaku extends EntityMammalSpectrobe {
     }
 
     @Override
-    protected EntitySpectrobe getChildForLineage() {
-        return this;
+    protected EntityType<? extends EntitySpectrobe> getChildForLineage() {
+        return SpectrobesEntities.ENTITY_KUBAKU.get();
     }
 
     @Override
@@ -56,11 +57,11 @@ public class EntityKubaku extends EntityMammalSpectrobe {
     public <ENTITY extends EntitySpectrobe> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent) {
         if(entityAnimationTestEvent.isWalking())
         {
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.kubaku.walk", true));
+            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.kubaku.walk", true));
             return true;
         }
         else if(entityAnimationTestEvent.getEntity().isSitting()) {
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.kubaku.idle", true));
+            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.kubaku.idle", true));
             return true;
         }
         return false;
@@ -69,6 +70,6 @@ public class EntityKubaku extends EntityMammalSpectrobe {
 
     @Override
     protected EvolutionRequirements getEvolutionRequirements() {
-        return new EvolutionRequirements(5, 7, 0);
+        return new EvolutionRequirements(1, 4, 0);
     }
 }

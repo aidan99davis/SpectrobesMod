@@ -15,6 +15,7 @@ public class SpectrobePropertyRegistry {
     public static SpectrobeProperties SPIKO = new SpectrobeProperties(SpectrobeProperties.Nature.AURORA, SpectrobeProperties.Stage.CHILD);
     public static SpectrobeProperties SPIKAN = new SpectrobeProperties(SpectrobeProperties.Nature.AURORA, SpectrobeProperties.Stage.ADULT);
 
+    //KUBAKU LINE
     public static SpectrobeProperties KUBAKU = new SpectrobeProperties(SpectrobeProperties.Nature.AURORA, SpectrobeProperties.Stage.CHILD);
     public static SpectrobeProperties KUGANON = new SpectrobeProperties(SpectrobeProperties.Nature.AURORA, SpectrobeProperties.Stage.ADULT);
 
@@ -23,4 +24,8 @@ public class SpectrobePropertyRegistry {
     //SAMUKABU LINE
     public static SpectrobeProperties SAMUKABU = new SpectrobeProperties(SpectrobeProperties.Nature.FLASH, SpectrobeProperties.Stage.CHILD);
     public static SpectrobeProperties SAMURITE = new SpectrobeProperties(SpectrobeProperties.Nature.FLASH, SpectrobeProperties.Stage.ADULT);
+
+    //SHAKIN LINE
+    public static SpectrobeProperties SHAKIN = new SpectrobeProperties(SpectrobeProperties.Nature.FLASH, SpectrobeProperties.Stage.CHILD);
+    public static SpectrobeProperties SHAKOR = new SpectrobeProperties(SpectrobeProperties.Nature.FLASH, SpectrobeProperties.Stage.ADULT);
 }

@@ -22,6 +22,12 @@ public class EvolutionRequirements {
         if(spectrobe.stats.getLevel() < level_required) {
             return false;
         }
+        if(spectrobe.stats.getMineralsEaten() < minerals_eaten) {
+            return false;
+        }
+        if(spectrobe.stats.getBattlesWon() < battles_fought) {
+            return false;
+        }
 
         return true;
     }

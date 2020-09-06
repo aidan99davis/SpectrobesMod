@@ -1,19 +1,12 @@
 package com.spectrobes.spectrobesmod.common.packets.networking.packets;
 
 
-import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
-import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkEvent;
 
-import javax.annotation.Nullable;
 import java.util.UUID;
 import java.util.function.Supplier;
 

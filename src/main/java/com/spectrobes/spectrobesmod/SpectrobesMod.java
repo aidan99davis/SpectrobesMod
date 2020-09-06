@@ -55,6 +55,7 @@ public class SpectrobesMod
 
         SpectrobesEntities.ENTITY_TYPES.register(modEventBus);
         Containers.CONTAINERS.register(modEventBus);
+        Containers.init();
         KrawlEntities.ENTITY_TYPES.register(modEventBus);
         MinecraftForge.EVENT_BUS.register(this);
         SpectrobesNetwork.init();
@@ -84,7 +85,7 @@ public class SpectrobesMod
     public void doClientStuff(final FMLClientSetupEvent event)
     {
         SpectrobesInfo.LOGGER.info("Client setup shiz");
-        ScreenManager.registerFactory(Containers.PRIZMOD.get(), PrizmodScreen::new);
+        ScreenManager.registerFactory(PrizmodContainer.PRIZMOD.get(), PrizmodScreen::new);
         SpectrobeRendererManager.init();
         KrawlEntities.init();
         KrawlRendererManager.init();

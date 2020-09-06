@@ -3,6 +3,7 @@ package com.spectrobes.spectrobesmod.common.entities.spectrobes.spiko;
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityMammalSpectrobe;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.komainu.EntityKomainu;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
@@ -35,8 +36,8 @@ public class EntitySpikan extends EntityMammalSpectrobe {
     }
 
     @Override
-    protected EntitySpectrobe getChildForLineage() {
-        return SpectrobesEntities.ENTITY_SPIKO.get().create(world);
+    protected EntityType<? extends EntitySpectrobe> getChildForLineage() {
+        return SpectrobesEntities.ENTITY_SPIKO.get();
     }
 
     @Override
@@ -55,18 +56,18 @@ public class EntitySpikan extends EntityMammalSpectrobe {
     @Override
     public <ENTITY extends EntitySpectrobe> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent)
     {
-        moveController.transitionLengthTicks = 2;
+        moveAnimationController.transitionLengthTicks = 2;
         if(entityAnimationTestEvent.isWalking())
         {
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.spikan.walk", true));
+            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.spikan.walk", true));
             return true;
         }
         else if(this.isSitting()) {
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.spikan.sit", false));
+            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.spikan.sit", false));
             return true;
         } else {
             if(this.getAttackingEntity() != null) {
-                moveController.setAnimation(new AnimationBuilder().addAnimation("animation.spikan.walk", true));
+                moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.spikan.walk", true));
                 return true;
             }
         }

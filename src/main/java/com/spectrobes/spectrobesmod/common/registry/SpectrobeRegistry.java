@@ -63,4 +63,20 @@ public class SpectrobeRegistry {
             .withProperties(SpectrobePropertyRegistry.KUGANON)
             .withStats(225,175,255)
             .build();
+
+
+    public static final Spectrobe Shakin
+            = new SpectrobeBuilder()
+            .withName("Shakin")
+            .withProperties(SpectrobePropertyRegistry.SHAKIN)
+            .withStats(25,25,25)
+            .build();
+
+
+    public static final Spectrobe Shakor
+            = new SpectrobeBuilder()
+            .withName("Shakor")
+            .withProperties(SpectrobePropertyRegistry.SHAKOR)
+            .withStats(225,175,255)
+            .build();
 }

@@ -3,6 +3,7 @@ package com.spectrobes.spectrobesmod.common.entities.spectrobes.spiko;
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityMammalSpectrobe;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.komainu.EntityKomainu;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
@@ -33,8 +34,8 @@ public class EntitySpiko extends EntityMammalSpectrobe {
     }
 
     @Override
-    protected EntitySpectrobe getChildForLineage() {
-        return this;
+    protected EntityType<? extends EntitySpectrobe> getChildForLineage() {
+        return SpectrobesEntities.ENTITY_SPIKO.get();
     }
 
     @Override
@@ -53,28 +54,28 @@ public class EntitySpiko extends EntityMammalSpectrobe {
 
     @Override
     public <ENTITY extends EntitySpectrobe> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent) {
-        moveController.transitionLengthTicks = 2;
+        moveAnimationController.transitionLengthTicks = 2;
         if(!(limbSwingAmount > -0.15F && limbSwingAmount < 0.15F))
         {
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.spiko.walk", true));
+            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.spiko.walk", true));
             return true;
         }
         if(this.isSitting()) {
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.spiko.sit", false));
+            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.spiko.sit", false));
             return true;
         }
         else if(isJumping) {
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.spiko.jump", true));
+            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.spiko.jump", true));
             return true;
         }
         else {
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.spiko.idle", true));
+            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.spiko.idle", true));
             return true;
         }
     }
 
     @Override
     protected EvolutionRequirements getEvolutionRequirements() {
-        return new EvolutionRequirements(10, 5, 0);
+        return new EvolutionRequirements(1, 3, 0);
     }
 }

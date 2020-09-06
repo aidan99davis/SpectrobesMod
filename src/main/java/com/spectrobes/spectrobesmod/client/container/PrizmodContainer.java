@@ -14,6 +14,9 @@ import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.ContainerType;
+import net.minecraftforge.common.extensions.IForgeContainerType;
+import net.minecraftforge.fml.RegistryObject;
 
 import java.util.*;
 
@@ -24,8 +27,10 @@ public class PrizmodContainer extends Container {
     private PlayerSpectrobeMaster capability;
     private boolean needsSync = true;
 
+    public static RegistryObject<ContainerType<PrizmodContainer>> PRIZMOD = null;
+
     public PrizmodContainer(int id, PlayerEntity player) {
-        super(Containers.PRIZMOD.get(), id);
+        super(PRIZMOD.get(), id);
         this.player = player;
         capability = this.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
                 .orElseThrow(IllegalStateException::new);

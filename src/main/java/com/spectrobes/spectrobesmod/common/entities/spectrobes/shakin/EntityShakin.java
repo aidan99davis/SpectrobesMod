@@ -1,7 +1,7 @@
-package com.spectrobes.spectrobesmod.common.entities.spectrobes.samubaku;
+package com.spectrobes.spectrobesmod.common.entities.spectrobes.shakin;
 
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
-import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityMammalSpectrobe;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityAquaticSpectrobe;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.komainu.EntityKomainu;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
@@ -14,29 +14,29 @@ import software.bernie.geckolib.animation.builder.AnimationBuilder;
 import software.bernie.geckolib.event.AnimationTestEvent;
 import software.bernie.geckolib.manager.EntityAnimationManager;
 
-public class EntitySamukabu extends EntityMammalSpectrobe {
+public class EntityShakin extends EntityAquaticSpectrobe {
 
-    public EntitySamukabu(EntityType<EntitySamukabu> entityTypeIn, World worldIn) {
+    public EntityShakin(EntityType<EntityShakin> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
     }
 
     public Spectrobe GetNewSpectrobeInstance() {
-        return SpectrobeRegistry.Samukabu.copy(false);
+        return SpectrobeRegistry.Shakin.copy(false);
     }
 
     @Override
     public EntityType<? extends EntitySpectrobe> getEvolutionRegistry() {
-        return SpectrobesEntities.ENTITY_SAMURITE.get();
+        return SpectrobesEntities.ENTITY_SHAKOR.get();
     }
 
     @Override
     public String getRegistryName() {
-        return "entity_samukabu";
+        return "entity_shakin";
     }
 
     @Override
     protected EntityType<? extends EntitySpectrobe> getChildForLineage() {
-        return SpectrobesEntities.ENTITY_SAMUKABU.get();
+        return SpectrobesEntities.ENTITY_SHAKIN.get();
     }
 
     @Override
@@ -47,6 +47,11 @@ public class EntitySamukabu extends EntityMammalSpectrobe {
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(5);
     }
 
+    @Override
+    protected int getMaxLitterSize() {
+        return 0;
+    }
+
 
     @Override
     public EntityAnimationManager getAnimationManager() {
@@ -55,16 +60,16 @@ public class EntitySamukabu extends EntityMammalSpectrobe {
 
     @Override
     public <ENTITY extends EntitySpectrobe> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent) {
-        moveAnimationController.transitionLengthTicks = 2;
+//        moveAnimationController.transitionLengthTicks = 2;
         if(entityAnimationTestEvent.isWalking())
         {
-            animationControllers.setAnimationSpeed(2);
-            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.samukabu.walk", true));
+            animationControllers.setAnimationSpeed(1);
+            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.shakin.walk", true));
             return true;
         }
         else if(entityAnimationTestEvent.getEntity().isSitting()) {
             animationControllers.setAnimationSpeed(1);
-            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.samukabu.sitting", true));
+            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.komainu.sit", false));
             return true;
         }
         return false;

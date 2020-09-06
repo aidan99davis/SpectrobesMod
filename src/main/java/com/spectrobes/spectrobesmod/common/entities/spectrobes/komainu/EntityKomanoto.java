@@ -35,8 +35,8 @@ public class EntityKomanoto extends EntityMammalSpectrobe {
     }
 
     @Override
-    protected EntitySpectrobe getChildForLineage() {
-        return SpectrobesEntities.ENTITY_KOMAINU.get().create(world);
+    protected EntityType<EntityKomainu> getChildForLineage() {
+        return SpectrobesEntities.ENTITY_KOMAINU.get();
     }
 
     @Override
@@ -56,18 +56,18 @@ public class EntityKomanoto extends EntityMammalSpectrobe {
     @Override
     public <ENTITY extends EntitySpectrobe> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent)
     {
-        moveController.transitionLengthTicks = 2;
+        moveAnimationController.transitionLengthTicks = 2;
         if(entityAnimationTestEvent.isWalking())
         {
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.komanoto.walking", true));
+            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.komanoto.walking", true));
             return true;
         }
         else if(entityAnimationTestEvent.getEntity().isSitting()) {
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.komanoto.sit", false));
+            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.komanoto.sit", false));
             return true;
         } else {
             if(this.IsAttacking()) {
-                moveController.setAnimation(new AnimationBuilder().addAnimation("animation.komanoto.attack", true));
+                moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.komanoto.attack", true));
                 return true;
             }
         }

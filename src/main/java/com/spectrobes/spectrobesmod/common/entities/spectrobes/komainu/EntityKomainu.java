@@ -34,8 +34,8 @@ public class EntityKomainu extends EntityMammalSpectrobe {
     }
 
     @Override
-    protected EntitySpectrobe getChildForLineage() {
-        return this;
+    protected EntityType<EntityKomainu> getChildForLineage() {
+        return SpectrobesEntities.ENTITY_KOMAINU.get();
     }
 
     @Override
@@ -54,16 +54,16 @@ public class EntityKomainu extends EntityMammalSpectrobe {
 
     @Override
     public <ENTITY extends EntitySpectrobe> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent) {
-        moveController.transitionLengthTicks = 2;
+        moveAnimationController.transitionLengthTicks = 2;
         if(entityAnimationTestEvent.isWalking())
         {
             animationControllers.setAnimationSpeed(2);
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.komainu.jump", true));
+            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.komainu.jump", true));
             return true;
         }
         else if(entityAnimationTestEvent.getEntity().isSitting()) {
             animationControllers.setAnimationSpeed(1);
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.komainu.sit", false));
+            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.komainu.sit", false));
             return true;
         }
         return false;
@@ -72,6 +72,6 @@ public class EntityKomainu extends EntityMammalSpectrobe {
 
     @Override
     protected EvolutionRequirements getEvolutionRequirements() {
-        return new EvolutionRequirements(5, 7, 0);
+        return new EvolutionRequirements(1, 5, 0);
     }
 }

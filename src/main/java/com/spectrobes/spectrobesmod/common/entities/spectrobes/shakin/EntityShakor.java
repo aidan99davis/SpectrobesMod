@@ -1,7 +1,7 @@
-package com.spectrobes.spectrobesmod.common.entities.spectrobes.samubaku;
+package com.spectrobes.spectrobesmod.common.entities.spectrobes.shakin;
 
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
-import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityMammalSpectrobe;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityAquaticSpectrobe;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.komainu.EntityKomainu;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
@@ -14,29 +14,30 @@ import software.bernie.geckolib.animation.builder.AnimationBuilder;
 import software.bernie.geckolib.event.AnimationTestEvent;
 import software.bernie.geckolib.manager.EntityAnimationManager;
 
-public class EntitySamukabu extends EntityMammalSpectrobe {
+public class EntityShakor extends EntityAquaticSpectrobe {
 
-    public EntitySamukabu(EntityType<EntitySamukabu> entityTypeIn, World worldIn) {
+
+    public EntityShakor(EntityType<EntityShakor> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
     }
 
     public Spectrobe GetNewSpectrobeInstance() {
-        return SpectrobeRegistry.Samukabu.copy(false);
+        return SpectrobeRegistry.Shakor.copy(false);
     }
 
     @Override
     public EntityType<? extends EntitySpectrobe> getEvolutionRegistry() {
-        return SpectrobesEntities.ENTITY_SAMURITE.get();
+        return null;
     }
 
     @Override
     public String getRegistryName() {
-        return "entity_samukabu";
+        return "entity_shakor";
     }
 
     @Override
     protected EntityType<? extends EntitySpectrobe> getChildForLineage() {
-        return SpectrobesEntities.ENTITY_SAMUKABU.get();
+        return SpectrobesEntities.ENTITY_SHAKIN.get();
     }
 
     @Override
@@ -47,6 +48,11 @@ public class EntitySamukabu extends EntityMammalSpectrobe {
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(5);
     }
 
+    @Override
+    protected int getMaxLitterSize() {
+        return 3;
+    }
+
 
     @Override
     public EntityAnimationManager getAnimationManager() {
@@ -54,25 +60,31 @@ public class EntitySamukabu extends EntityMammalSpectrobe {
     }
 
     @Override
-    public <ENTITY extends EntitySpectrobe> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent) {
-        moveAnimationController.transitionLengthTicks = 2;
+    public <ENTITY extends EntitySpectrobe> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent)
+    {
         if(entityAnimationTestEvent.isWalking())
         {
-            animationControllers.setAnimationSpeed(2);
-            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.samukabu.walk", true));
+            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.shakor.walk", true));
             return true;
         }
         else if(entityAnimationTestEvent.getEntity().isSitting()) {
-            animationControllers.setAnimationSpeed(1);
-            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.samukabu.sitting", true));
+            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.shakor.idle", true));
             return true;
+        } else if(entityAnimationTestEvent.getEntity().isSwimming()) {
+            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.shakor.walk", true));
+            return true;
+        } else {
+            if(this.IsAttacking()) {
+                moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.shakor.attack", true));
+                return true;
+            }
         }
         return false;
-
     }
 
     @Override
     protected EvolutionRequirements getEvolutionRequirements() {
-        return new EvolutionRequirements(1, 5, 0);
+        //returning null makes canEvolve always evaluate to false.
+        return null;
     }
 }

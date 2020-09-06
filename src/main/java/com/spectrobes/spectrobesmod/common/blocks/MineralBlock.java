@@ -34,9 +34,9 @@ public class MineralBlock extends SpectrobesBlock {
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
 
         Random random = new Random();
-        int minerals_dropped = random.nextInt(4);
+        int minerals_dropped = random.nextInt(3);
         ItemStack mineralItem = SpectrobesItems.getRandomMineral();
-        mineralItem.grow(minerals_dropped - 1);
+        mineralItem.grow(minerals_dropped + 1);
 
         ArrayList minerals = new ArrayList();
         minerals.add(mineralItem);
