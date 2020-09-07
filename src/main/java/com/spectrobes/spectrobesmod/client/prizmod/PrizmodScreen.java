@@ -6,6 +6,7 @@ import com.spectrobes.spectrobesmod.client.gui.utils.GuiUtils;
 import com.spectrobes.spectrobesmod.client.prizmod.Pages.MenuPage;
 import com.spectrobes.spectrobesmod.client.prizmod.Pages.PrizmodPage;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.entity.player.PlayerEntity;
@@ -33,6 +34,9 @@ public class PrizmodScreen extends ContainerScreen<PrizmodContainer> {
     public PrizmodScreen(PrizmodContainer container, PlayerInventory playerInv, ITextComponent text) {
         super(container, playerInv, text);
         this.player = playerInv.player;
+        this.xSize = Minecraft.getInstance().getMainWindow().getWidth();
+        this.ySize = Minecraft.getInstance().getMainWindow().getHeight();
+
     }
 
     @Override public List<Widget> children() {return buttons;}

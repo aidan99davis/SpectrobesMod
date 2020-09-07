@@ -32,6 +32,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties.Nature;
@@ -243,6 +244,14 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         dataManager.register(SPECTROBE_DATA, GetNewSpectrobeInstance());
         dataManager.register(TICKS_TILL_MATE, 400);
         dataManager.register(IS_ATTACKING, false);
+    }
+
+    @Override
+    public Vec3d getMotion() {
+        if(!this.isSitting()) {
+            return super.getMotion();
+        }
+        return Vec3d.ZERO;
     }
 
     /**

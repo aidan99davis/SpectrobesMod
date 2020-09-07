@@ -1,3 +1,9 @@
+V1.3.1
+======
+Fixed Segu fossil & vilar fossil using other fossil textures.
+Fixed segu, shakin and vilar item names.
+
+
 V1.3
 =====
 
@@ -6,6 +12,7 @@ fossils and minerals are now used up upon right clicking.
 fossils and minerals are now spawning in the world.
 started defining krawl ingame, AI, Properties, Stats.
 added swar.
+added vilar, vilamasta, segu, shakin, shakor, kubaku, kuganon
 Killed owned spectrobes now return to the prizmod instead of dying.
 Prizmod now has a paging feature for viewing all your owned spectrobes.
 krawl spawn at night in groups of 2-6.
@@ -14,7 +21,5 @@ Spectrobes gain stats from defeating krawl.
 
 Team lineup now persists for the duration of the session(until you leave the game).
 you just need to re-assign them when you rejoin
-
-Added kubaku and kuganon.
 
 Added prizmod crafting recipe: crafted like a compass but with a diamond in the middle.

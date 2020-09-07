@@ -1,4 +1,4 @@
-package com.spectrobes.spectrobesmod.common.entities.spectrobes.komainu;
+package com.spectrobes.spectrobesmod.common.entities.spectrobes.vilar;
 
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityMammalSpectrobe;
@@ -13,29 +13,30 @@ import software.bernie.geckolib.animation.builder.AnimationBuilder;
 import software.bernie.geckolib.event.AnimationTestEvent;
 import software.bernie.geckolib.manager.EntityAnimationManager;
 
-public class EntityKomainu extends EntityMammalSpectrobe {
+public class EntityVilamasta extends EntityMammalSpectrobe {
 
-    public EntityKomainu(EntityType<EntityKomainu> entityTypeIn, World worldIn) {
+
+    public EntityVilamasta(EntityType<EntityVilamasta> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
     }
 
     public Spectrobe GetNewSpectrobeInstance() {
-        return SpectrobeRegistry.Komainu.copy(false);
+        return SpectrobeRegistry.Vilamasta.copy(false);
     }
 
     @Override
     public EntityType<? extends EntitySpectrobe> getEvolutionRegistry() {
-        return SpectrobesEntities.ENTITY_KOMANOTO.get();
+        return null;
     }
 
     @Override
     public String getRegistryName() {
-        return "entity_komainu";
+        return "entity_vilamasta";
     }
 
     @Override
     protected EntityType<? extends EntitySpectrobe> getChildForLineage() {
-        return SpectrobesEntities.ENTITY_KOMAINU.get();
+        return SpectrobesEntities.ENTITY_VILAR.get();
     }
 
     @Override
@@ -53,25 +54,29 @@ public class EntityKomainu extends EntityMammalSpectrobe {
     }
 
     @Override
-    public <ENTITY extends EntitySpectrobe> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent) {
+    public <ENTITY extends EntitySpectrobe> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent)
+    {
         moveAnimationController.transitionLengthTicks = 2;
         if(entityAnimationTestEvent.isWalking())
         {
-            animationControllers.setAnimationSpeed(2);
-            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.komainu.jump", true));
+            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.vilamasta.walk", true));
             return true;
         }
         else if(entityAnimationTestEvent.getEntity().isSitting()) {
-            animationControllers.setAnimationSpeed(1);
-            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.komainu.sit", false));
+            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.vilamasta.idle", true));
             return true;
+        } else {
+            if(this.IsAttacking()) {
+                moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.vilamasta.attack", true));
+                return true;
+            }
         }
         return false;
-
     }
 
     @Override
     protected EvolutionRequirements getEvolutionRequirements() {
-        return new EvolutionRequirements(1, 5, 0);
+        //returning null makes canEvolve always evaluate to false.
+        return null;
     }
 }

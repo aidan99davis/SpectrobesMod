@@ -5,9 +5,13 @@ import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 public class SpectrobePropertyRegistry {
     //CORONA
 
-    //KOMA LINE
+    //KOMAINU LINE
     public static SpectrobeProperties KOMAINU = new SpectrobeProperties(SpectrobeProperties.Nature.CORONA, SpectrobeProperties.Stage.CHILD);
     public static SpectrobeProperties KOMANOTO = new SpectrobeProperties(SpectrobeProperties.Nature.CORONA, SpectrobeProperties.Stage.ADULT);
+
+    //VILAR LINE
+    public static SpectrobeProperties VILAR = new SpectrobeProperties(SpectrobeProperties.Nature.CORONA, SpectrobeProperties.Stage.CHILD);
+    public static SpectrobeProperties VILAMASTA = new SpectrobeProperties(SpectrobeProperties.Nature.CORONA, SpectrobeProperties.Stage.ADULT);
 
     //AURORA
 
