@@ -1,4 +1,4 @@
-package com.spectrobes.spectrobesmod.common.entities.spectrobes.komainu;
+package com.spectrobes.spectrobesmod.common.entities.spectrobes.vilar;
 
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityMammalSpectrobe;
@@ -13,29 +13,29 @@ import software.bernie.geckolib.animation.builder.AnimationBuilder;
 import software.bernie.geckolib.event.AnimationTestEvent;
 import software.bernie.geckolib.manager.EntityAnimationManager;
 
-public class EntityKomainu extends EntityMammalSpectrobe {
+public class EntityVilar extends EntityMammalSpectrobe {
 
-    public EntityKomainu(EntityType<EntityKomainu> entityTypeIn, World worldIn) {
+    public EntityVilar(EntityType<EntityVilar> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
     }
 
     public Spectrobe GetNewSpectrobeInstance() {
-        return SpectrobeRegistry.Komainu.copy(false);
+        return SpectrobeRegistry.Vilar.copy(false);
     }
 
     @Override
     public EntityType<? extends EntitySpectrobe> getEvolutionRegistry() {
-        return SpectrobesEntities.ENTITY_KOMANOTO.get();
+        return SpectrobesEntities.ENTITY_VILAMASTA.get();
     }
 
     @Override
     public String getRegistryName() {
-        return "entity_komainu";
+        return "entity_vilar";
     }
 
     @Override
-    protected EntityType<? extends EntitySpectrobe> getChildForLineage() {
-        return SpectrobesEntities.ENTITY_KOMAINU.get();
+    protected EntityType<EntityVilar> getChildForLineage() {
+        return SpectrobesEntities.ENTITY_VILAR.get();
     }
 
     @Override
@@ -57,13 +57,13 @@ public class EntityKomainu extends EntityMammalSpectrobe {
         moveAnimationController.transitionLengthTicks = 2;
         if(entityAnimationTestEvent.isWalking())
         {
-            animationControllers.setAnimationSpeed(2);
-            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.komainu.jump", true));
+            animationControllers.setAnimationSpeed(1);
+            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.vilar.walk", true));
             return true;
         }
         else if(entityAnimationTestEvent.getEntity().isSitting()) {
-            animationControllers.setAnimationSpeed(1);
-            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.komainu.sit", false));
+            animationControllers.setAnimationSpeed(0.5);
+            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.vilar.idle", true));
             return true;
         }
         return false;

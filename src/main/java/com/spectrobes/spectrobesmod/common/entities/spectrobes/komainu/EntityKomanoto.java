@@ -35,7 +35,7 @@ public class EntityKomanoto extends EntityMammalSpectrobe {
     }
 
     @Override
-    protected EntityType<EntityKomainu> getChildForLineage() {
+    protected EntityType<? extends EntitySpectrobe> getChildForLineage() {
         return SpectrobesEntities.ENTITY_KOMAINU.get();
     }
 

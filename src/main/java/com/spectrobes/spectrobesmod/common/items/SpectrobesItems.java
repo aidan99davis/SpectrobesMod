@@ -67,6 +67,7 @@ public class SpectrobesItems {
     public static final Item kubaku_fossil_item = null;
     public static final Item shakin_fossil_item = null;
     public static final Item segu_fossil_item = null;
+    public static final Item vilar_fossil_item = null;
 
     //Tools
     public static final Item prizmod_item = null;
@@ -120,6 +121,13 @@ public class SpectrobesItems {
         all_fossils.add(fossil);
 
         fossil = new SeguFossilItem(
+                new Item.Properties()
+                        .group(SpectrobesFossilsItemGroup.Instance));
+
+        event.getRegistry().register(fossil);
+        all_fossils.add(fossil);
+
+        fossil = new VilarFossilItem(
                 new Item.Properties()
                         .group(SpectrobesFossilsItemGroup.Instance));
 

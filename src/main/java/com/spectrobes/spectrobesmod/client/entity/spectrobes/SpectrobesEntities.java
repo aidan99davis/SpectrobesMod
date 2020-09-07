@@ -14,6 +14,8 @@ import com.spectrobes.spectrobesmod.common.entities.spectrobes.shakin.EntityShak
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.shakin.EntityShakor;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.spiko.EntitySpikan;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.spiko.EntitySpiko;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.vilar.EntityVilamasta;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.vilar.EntityVilar;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
@@ -103,6 +105,20 @@ public class SpectrobesEntities {
                     .size(0.5f, 0.75f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "shakor").toString()));
 
+    public static final RegistryObject<EntityType<EntityVilar>> ENTITY_VILAR
+            = ENTITY_TYPES.register("entity_vilar",
+            () -> EntityType.Builder.create(EntityVilar::new,
+                    EntityClassification.CREATURE)
+                    .size(0.5f, 0.75f)
+                    .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "vilar").toString()));
+
+    public static final RegistryObject<EntityType<EntityVilamasta>> ENTITY_VILAMASTA
+            = ENTITY_TYPES.register("entity_vilamasta",
+            () -> EntityType.Builder.create(EntityVilamasta::new,
+                    EntityClassification.CREATURE)
+                    .size(0.5f, 0.75f)
+                    .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "vilamasta").toString()));
+
     public static final RegistryObject<EntityType<EntitySegu>> ENTITY_SEGU
             = ENTITY_TYPES.register("entity_segu",
             () -> EntityType.Builder.create(EntitySegu::new,
@@ -133,6 +149,8 @@ public class SpectrobesEntities {
         SPECTROBES.put("kuganon", ENTITY_KUGANON.get());
         SPECTROBES.put("shakin", ENTITY_SHAKIN.get());
         SPECTROBES.put("shakor", ENTITY_SHAKOR.get());
+        SPECTROBES.put("vilar", ENTITY_VILAR.get());
+        SPECTROBES.put("vilamasta", ENTITY_VILAMASTA.get());
         SPECTROBES.put("segu", ENTITY_SEGU.get());
     }
 
