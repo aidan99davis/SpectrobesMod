@@ -62,6 +62,10 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
             EntityDataManager.createKey(EntitySpectrobe.class,
                     DataSerializers.BOOLEAN);
 
+    private static final DataParameter<Boolean> IS_SITTING =
+            EntityDataManager.createKey(EntitySpectrobe.class,
+                    DataSerializers.BOOLEAN);
+
     private static final DataParameter<Spectrobe> SPECTROBE_DATA =
             EntityDataManager.createKey(EntitySpectrobe.class,
                     Spectrobe.SpectrobeSerializer);
@@ -90,21 +94,8 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     }
 
     @Override
-    public boolean canPickUpLoot() {
-        return getStage() == Stage.CHILD;
-    }
-
-    @Override
-    public boolean canPickUpItem(ItemStack p_213365_1_) {
-        if(!canPickUpLoot())
-            return false;
-
-        EquipmentSlotType lvt_2_1_ = MobEntity.getSlotForItemStack(p_213365_1_);
-        if (!this.getItemStackFromSlot(lvt_2_1_).isEmpty()) {
-            return false;
-        } else {
-            return lvt_2_1_ == EquipmentSlotType.MAINHAND && super.canPickUpItem(p_213365_1_);
-        }
+    public boolean isSitting() {
+        return dataManager.get(IS_SITTING);
     }
 
     @Override
@@ -112,16 +103,16 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         ItemStack itemstack = player.getHeldItem(hand);
         if(getSpectrobeData() != null) {
             if(!recentInteract && itemstack.isEmpty()) {
-                if(player.isSneaking()) {
-                    this.setSitting(!this.isSitting());
+                if(player.getUniqueID().equals(getOwnerId()) && player.isSneaking()) {
+                    dataManager.set(IS_SITTING, (!dataManager.get(IS_SITTING)));
                     if(world.isRemote()) {
-                        Minecraft.getInstance().player.sendChatMessage(
-                                isSitting()?
+                        player.sendMessage(new StringTextComponent(
+                                dataManager.get(IS_SITTING)?
                                         "Your spectrobe is now sitting"
-                                        : "Your spectrobe is no longer sitting.");
+                                        : "Your spectrobe is no longer sitting."));
                     }
                 } else {
-                    printSpectrobeToChat();
+                    printSpectrobeToChat(player);
                 }
 
             } else if (itemstack.getItem() instanceof MineralItem){
@@ -167,16 +158,6 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         }
         super.onKillEntity(entityLivingIn);
     }
-
-    //
-//    @Override
-//    public void damageEntity(DamageSource source, float amount) {
-//        if(source.getImmediateSource() instanceof EntitySpectrobe
-//                || source.getImmediateSource() instanceof EntityKrawl){
-//            isInvulnerableTo()
-//            super.damageEntity(source,amount);
-//        }
-//    }
 
     @Override
     public boolean isInvulnerableTo(DamageSource source) {
@@ -244,11 +225,12 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         dataManager.register(SPECTROBE_DATA, GetNewSpectrobeInstance());
         dataManager.register(TICKS_TILL_MATE, 400);
         dataManager.register(IS_ATTACKING, false);
+        dataManager.register(IS_SITTING, false);
     }
 
     @Override
     public Vec3d getMotion() {
-        if(!this.isSitting()) {
+        if(!dataManager.get(IS_SITTING)) {
             return super.getMotion();
         }
         return Vec3d.ZERO;
@@ -487,7 +469,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         return null;
     }
 
-    private void printSpectrobeToChat() {
+    private void printSpectrobeToChat(PlayerEntity player) {
         Spectrobe spectrobeInstance = getSpectrobeData();
         StringBuilder builder1 = new StringBuilder();
         StringBuilder builder2 = new StringBuilder();
@@ -501,9 +483,9 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         builder2.append("Atk: " + spectrobeInstance.stats.getAtkLevel() + ", ");
         builder2.append("Def: " + spectrobeInstance.stats.getDefLevel() + ", ");
         if(world.isRemote()) {
-            Minecraft.getInstance().player.sendChatMessage(builder3.toString());
-            Minecraft.getInstance().player.sendChatMessage(builder1.toString());
-            Minecraft.getInstance().player.sendChatMessage(builder2.toString());
+            player.sendMessage(new StringTextComponent(builder3.toString()));
+            player.sendMessage(new StringTextComponent(builder1.toString()));
+            player.sendMessage(new StringTextComponent(builder2.toString()));
         }
     }
 

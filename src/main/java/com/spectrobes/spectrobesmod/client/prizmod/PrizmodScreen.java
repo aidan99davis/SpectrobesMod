@@ -36,7 +36,13 @@ public class PrizmodScreen extends ContainerScreen<PrizmodContainer> {
         this.player = playerInv.player;
         this.xSize = Minecraft.getInstance().getMainWindow().getWidth();
         this.ySize = Minecraft.getInstance().getMainWindow().getHeight();
+    }
 
+    @Override
+    public void resize(Minecraft mc, int p_resize_2_, int p_resize_3_) {
+        super.resize(mc, p_resize_2_, p_resize_3_);
+        this.xSize = mc.getMainWindow().getWidth();
+        this.ySize = mc.getMainWindow().getHeight();
     }
 
     @Override public List<Widget> children() {return buttons;}

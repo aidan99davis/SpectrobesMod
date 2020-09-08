@@ -8,6 +8,7 @@ package com.spectrobes.spectrobesmod.common.entities.goals;
 import java.util.EnumSet;
 
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityAquaticSpectrobe;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.entity.LivingEntity;

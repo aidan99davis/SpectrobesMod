@@ -1,7 +1,7 @@
 package com.spectrobes.spectrobesmod.common.capability;
 
-import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
+import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
@@ -10,12 +10,9 @@ import java.util.*;
 
 public class PlayerSpectrobeMaster {
 
-    /** The maximum number of owned spectrobes to track. todo: Configurable */
-    public static final int MAX_OWNED_SPECTROBES = 50;
-
     //index 0 & 1 : current fighting spectrobes
-    //index 2-6 : 4 back up fighting spectrobes
-    //index 7 : child form
+    //index 2-5 : 4 back up fighting spectrobes
+    //index 6 : child form
     private Map<Integer,UUID> currentTeam = new HashMap<>(7);
 
     private List<Spectrobe>
@@ -115,12 +112,22 @@ public class PlayerSpectrobeMaster {
     }
 
     public void updateSpectrobe(Spectrobe spectrobeInstance) {
-        SpectrobesInfo.LOGGER.info("UPDATING SPECTROBE:" + spectrobeInstance.SpectrobeUUID);
         for (Spectrobe s : getOwnedSpectrobes()) {
-            SpectrobesInfo.LOGGER.info("UPDATING SPECTROBE PT 2:" + s.SpectrobeUUID);
             if(s.SpectrobeUUID.equals(spectrobeInstance.SpectrobeUUID)) {
-                SpectrobesInfo.LOGGER.info("UPDATING SPECTROBE PT 3");
                 s.update(spectrobeInstance);
+                if(getCurrentTeamUuids().containsValue(s.SpectrobeUUID)) {
+                    validateTeam();
+                }
+            }
+        }
+    }
+
+    private void validateTeam() {
+        for(Spectrobe s : ownedSpectrobes) {
+            if(currentTeam.get(6).equals(s.SpectrobeUUID)) {
+                if(s.properties.getStage() != SpectrobeProperties.Stage.CHILD) {
+                    removeTeamMember(6);
+                }
             }
         }
     }

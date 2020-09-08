@@ -2,6 +2,7 @@ package com.spectrobes.spectrobesmod.common.entities.krawl;
 
 import com.spectrobes.spectrobesmod.common.entities.IHasNature;
 import com.spectrobes.spectrobesmod.common.entities.goals.AttackSpectrobeGoal;
+import com.spectrobes.spectrobesmod.common.entities.goals.AttackSpectrobeMasterGoal;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
@@ -97,6 +98,7 @@ public abstract class EntityKrawl extends MonsterEntity implements IAnimatedEnti
         this.goalSelector.addGoal(3, new FleeSunGoal(this, 1.0D));
         this.goalSelector.addGoal(2, new RandomWalkingGoal(this, 0.2d));
         this.goalSelector.addGoal(2, new AttackSpectrobeGoal(this, true, true));
+        this.goalSelector.addGoal(2, new AttackSpectrobeMasterGoal(this, true, true));
         this.goalSelector.addGoal(5, new LookAtGoal(this, PlayerEntity.class, 10.0F));
         this.goalSelector.addGoal(5, new LookRandomlyGoal(this));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 0.8D));

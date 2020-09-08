@@ -56,11 +56,13 @@ public class EntitySegu extends EntityMammalSpectrobe {
         moveAnimationController.transitionLengthTicks = 2;
         if(!(limbSwingAmount > -0.15F && limbSwingAmount < 0.15F))
         {
+            animationControllers.setAnimationSpeed(1);
             moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.segu.walk", true));
             return true;
         }
         if(this.isSitting()) {
-            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.segu.idle", false));
+            animationControllers.setAnimationSpeed(0.5);
+            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.segu.idle", true));
             return true;
         }
         return false;

@@ -1,3 +1,11 @@
+V1.4
+=====
+Krawl only attack players with an adult form in the top two slots of the prizmod line up
+
+V1.3.2
+======
+Fixed chat messages being sent globally
+
 V1.3.1
 ======
 Fixed Segu fossil & vilar fossil using other fossil textures.
