@@ -124,7 +124,7 @@ public class PlayerSpectrobeMaster {
 
     private void validateTeam() {
         for(Spectrobe s : ownedSpectrobes) {
-            if(currentTeam.get(6).equals(s.SpectrobeUUID)) {
+            if(currentTeam.get(6) != null && currentTeam.get(6).equals(s.SpectrobeUUID)) {
                 if(s.properties.getStage() != SpectrobeProperties.Stage.CHILD) {
                     removeTeamMember(6);
                 }
