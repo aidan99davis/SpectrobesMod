@@ -54,7 +54,6 @@ public class Spectrobe {
     }
 
     public void setVariant(int variant) {
-        SpectrobesInfo.LOGGER.info("Setting Variant: " + variant);
         if(variant < 0 || variant > 2) {
             throw new IllegalArgumentException("Value must be between 0 and 2. was: " + variant);
         }
@@ -135,6 +134,7 @@ public class Spectrobe {
     public void update(Spectrobe spectrobeInstance) {
         setName(spectrobeInstance.name);
         setProperties(spectrobeInstance.properties);
+        setVariant(spectrobeInstance.Variant);
         setStats(spectrobeInstance.stats);
         setMasterUUID(spectrobeInstance.MasterUUID);
     }
