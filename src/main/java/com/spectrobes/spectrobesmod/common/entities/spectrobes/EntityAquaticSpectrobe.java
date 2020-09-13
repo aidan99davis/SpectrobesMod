@@ -82,8 +82,10 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
                     = world.getEntitiesWithinAABB(getClass(),
                         this.getBoundingBox()
                         .grow(10, 10, 10));
-        if(mates.isEmpty())
+        if(mates.isEmpty()) {
+            this.setTicksTillMate(16000);
             return;
+        }
 
         mates.get(0).setTicksTillMate(16000);
         Random random = new Random();

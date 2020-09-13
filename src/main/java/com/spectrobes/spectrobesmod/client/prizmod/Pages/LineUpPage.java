@@ -83,6 +83,9 @@ public class LineUpPage extends PrizmodPage {
             for (int i = 0; i < 7; i++) {
                 SpectrobesInfo.LOGGER.info("teamUuids.get(i): " + teamUuids.get(i));
                 if(teamUuids.get(i) != null && teamUuids.get(i).equals(s.SpectrobeUUID)) {
+                    if(teamUuids.get(i).equals(parent.getContainer().getCurrentSelectedUUID())) {
+                        TeamSpectrobesGrid.setSlotCurrent(i);
+                    }
                     SpectrobesInfo.LOGGER.info("ADDING SPECTROBE TO LINE UP");
                     TeamSpectrobesGrid.populateSlot(i, s);
                     dontAdd = true;

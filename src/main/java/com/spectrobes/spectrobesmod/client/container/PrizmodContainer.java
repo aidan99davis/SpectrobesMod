@@ -116,4 +116,8 @@ public class PrizmodContainer extends Container {
         SpectrobesInfo.LOGGER.info("getOwnedSpectrobesCount: " + capability.getOwnedSpectrobesCount());
         return capability.getOwnedSpectrobesCount();
     }
+
+    public UUID getCurrentSelectedUUID() {
+        return capability.getCurrentTeamMember() != null? capability.getCurrentTeamMember().SpectrobeUUID : null;
+    }
 }

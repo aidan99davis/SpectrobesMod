@@ -1,13 +1,11 @@
 package com.spectrobes.spectrobesmod.common.entities.spectrobes;
 
-import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.entities.IHasNature;
 import com.spectrobes.spectrobesmod.common.entities.goals.AttackKrawlGoal;
 import com.spectrobes.spectrobesmod.common.entities.goals.FindMineralsGoal;
 import com.spectrobes.spectrobesmod.common.entities.goals.FollowMasterGoal;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
-import com.spectrobes.spectrobesmod.common.entities.spectrobes.komainu.EntityKomainu;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
 import com.spectrobes.spectrobesmod.common.items.tools.PrizmodItem;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
@@ -21,7 +19,6 @@ import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
@@ -88,7 +85,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         this.goalSelector.addGoal(0, new AttackKrawlGoal(this, true, false));
         this.goalSelector.addGoal(0, new FindMineralsGoal(this));
         this.goalSelector.addGoal(0, new MeleeAttackGoal(this, 0.5, false));
-        this.goalSelector.addGoal(1, new FollowMasterGoal(this,0.3f , 4, 12, true));
+        this.goalSelector.addGoal(1, new FollowMasterGoal(this,0.3f , 3, 12, true));
         this.goalSelector.addGoal(5, new BreedGoal(this,10));
         this.goalSelector.addGoal(5, new LookAtGoal(this, PlayerEntity.class, 6.0F));
     }
@@ -300,7 +297,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     //spectrobe special time
 
     public void tryMate() {
-        if(getStage() != Stage.CHILD) {
+        if(getStage() != Stage.CHILD && getOwner() == null) {
             if(getTicksTillMate() == 0) {
                 mate();
                 setTicksTillMate(16000);
