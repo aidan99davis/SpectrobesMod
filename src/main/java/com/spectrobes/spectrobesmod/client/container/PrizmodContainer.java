@@ -40,7 +40,6 @@ public class PrizmodContainer extends Container {
     public void detectAndSendChanges() {
         if(needsSync) {
             if(!player.world.isRemote()) {
-                SpectrobesInfo.LOGGER.info("SYNCING TO CLIENT");
                 SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(capability),
                         (ServerPlayerEntity) player);
             } else {
@@ -75,7 +74,6 @@ public class PrizmodContainer extends Container {
     }
 
     public Map<Integer, UUID> getCurrentTeamUUIDs() {
-        SpectrobesInfo.LOGGER.info("getCurrentTeamUUIDs:");
         Collection<UUID> uuidSet = capability.getCurrentTeamUuids().values();
         for (UUID id : uuidSet) {
             SpectrobesInfo.LOGGER.info(id);
@@ -85,15 +83,12 @@ public class PrizmodContainer extends Container {
     }
 
     public List<Spectrobe> getOwnedSpectrobes() {
-        SpectrobesInfo.LOGGER.info("getOwnedSpectrobes");
         for(Spectrobe s : capability.getOwnedSpectrobes()) {
-            SpectrobesInfo.LOGGER.info("Spectrobe UUID: " + s.SpectrobeUUID);
         }
         return capability.getOwnedSpectrobes();
     }
 
     public void spawnSpectrobe(Spectrobe spectrobe) {
-        SpectrobesInfo.LOGGER.info("spawnSpectrobe");
         capability.spawnSpectrobe(spectrobe);
         if(player.world.isRemote()) {
 
@@ -102,10 +97,8 @@ public class PrizmodContainer extends Container {
     }
 
     public void setTeamMember(int index, UUID spectrobeUUID) {
-//        SpectrobesInfo.LOGGER.info("setTeamMember UUID: " + spectrobeUUID.toString());
         capability.setTeamMember(index, spectrobeUUID);
         if(player.world.isRemote()) {
-            SpectrobesInfo.LOGGER.info("SENDING PACKET with index: " + index);
             SpectrobesNetwork.sendToServer(new SUpdateSpectrobeSlotPacket(index, spectrobeUUID));
             markDirty();
         }
@@ -113,7 +106,6 @@ public class PrizmodContainer extends Container {
     }
 
     public int getOwnedSpectrobesCount() {
-        SpectrobesInfo.LOGGER.info("getOwnedSpectrobesCount: " + capability.getOwnedSpectrobesCount());
         return capability.getOwnedSpectrobesCount();
     }
 

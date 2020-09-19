@@ -78,15 +78,12 @@ public class LineUpPage extends PrizmodPage {
         this.AllSpectrobesGrid.clear();
         Map<Integer, UUID> teamUuids =  parent.getContainer().getCurrentTeamUUIDs();
         for(Spectrobe s : parent.getContainer().getOwnedSpectrobes()) {
-            SpectrobesInfo.LOGGER.info("ADDING SPECTROBE TO PRIZMOD: " + s.SpectrobeUUID);
             boolean dontAdd = false;
             for (int i = 0; i < 7; i++) {
-                SpectrobesInfo.LOGGER.info("teamUuids.get(i): " + teamUuids.get(i));
                 if(teamUuids.get(i) != null && teamUuids.get(i).equals(s.SpectrobeUUID)) {
                     if(teamUuids.get(i).equals(parent.getContainer().getCurrentSelectedUUID())) {
                         TeamSpectrobesGrid.setSlotCurrent(i);
                     }
-                    SpectrobesInfo.LOGGER.info("ADDING SPECTROBE TO LINE UP");
                     TeamSpectrobesGrid.populateSlot(i, s);
                     dontAdd = true;
                 }
@@ -110,13 +107,10 @@ public class LineUpPage extends PrizmodPage {
                 onClick -> {
                     if(Screen.hasShiftDown() && teamSpectrobe) {
                         if(sp.spectrobe != null && sp.spectrobe.active == false) {
-                            SpectrobesInfo.LOGGER.info("Slot clicked while holding shift");
                             if(parent.player.world.isRemote()) {
-                                SpectrobesInfo.LOGGER.info("world isnt remote");
                                 Spectrobe spectrobe = sp.spectrobe;
                                 SpectrobesNetwork.sendToServer(new SSpawnSpectrobePacket(spectrobe));
                                 parent.getContainer().spawnSpectrobe(spectrobe);
-                                SpectrobesInfo.LOGGER.info("spectrobe spawned");
                             }
                         }
                     } else {

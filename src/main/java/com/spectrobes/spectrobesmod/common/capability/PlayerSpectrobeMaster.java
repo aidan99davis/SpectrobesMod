@@ -39,6 +39,7 @@ public class PlayerSpectrobeMaster {
     public void changeSelected(int direction) {
         if(direction != -1 && direction != 1) {
             SpectrobesInfo.LOGGER.error("UNKNOWN DIRECTION");
+            return;
         }
         currentSelected += direction;
 

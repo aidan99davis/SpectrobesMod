@@ -64,7 +64,6 @@ public class SpectrobesMod
 
     private void setup(final FMLCommonSetupEvent event)
     {
-        SpectrobesInfo.LOGGER.info("Common setup shiz");
         MinecraftForge.EVENT_BUS.register(PlayerEvents.instance);
         IconRegistry.init();
         SpectrobesEntities.init();
@@ -85,7 +84,6 @@ public class SpectrobesMod
     @SubscribeEvent
     public void doClientStuff(final FMLClientSetupEvent event)
     {
-        SpectrobesInfo.LOGGER.info("Client setup shiz");
         ScreenManager.registerFactory(PrizmodContainer.PRIZMOD.get(), PrizmodScreen::new);
         SpectrobeRendererManager.init();
         KrawlEntities.init();
