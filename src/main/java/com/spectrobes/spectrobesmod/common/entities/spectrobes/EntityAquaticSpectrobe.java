@@ -64,8 +64,8 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
     protected void registerGoals() {
         super.registerGoals();
 //        this.goalSelector.addGoal(0, new BreatheAirGoal(this));
-        this.goalSelector.addGoal(0, new SwimWithPlayerGoal(this, 2.0D));
-        this.goalSelector.addGoal(2, new RandomSwimmingGoal(this, 2.0D, 1));
+        this.goalSelector.addGoal(0, new SwimWithPlayerGoal(this, 1.0D));
+        this.goalSelector.addGoal(2, new RandomSwimmingGoal(this, 1.0D, 1));
         this.goalSelector.addGoal(2, new FindWaterGoal(this));
         this.goalSelector.addGoal(4, new LookRandomlyGoal(this));
         this.goalSelector.addGoal(8, new FollowBoatGoal(this));
@@ -195,7 +195,8 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
         public boolean canEntityStandOnPos(BlockPos p_188555_1_) {
             if (this.entity instanceof EntityAquaticSpectrobe) {
 
-                return this.world.getBlockState(p_188555_1_).getBlock() == Blocks.WATER;
+                return this.world.getBlockState(p_188555_1_).getBlock() == Blocks.WATER
+                        || !this.world.getBlockState(p_188555_1_.down()).isAir();
             }
 
             return !this.world.getBlockState(p_188555_1_.down()).isAir();

@@ -5,6 +5,8 @@ import com.spectrobes.spectrobesmod.common.blocks.SpectrobesBlocks;
 import com.spectrobes.spectrobesmod.common.items.fossils.*;
 import com.spectrobes.spectrobesmod.common.items.minerals.Mineral;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
+import com.spectrobes.spectrobesmod.common.items.minerals.SpecialMineralItem;
+import com.spectrobes.spectrobesmod.common.items.minerals.chroma.ChromaMineralItem;
 import com.spectrobes.spectrobesmod.common.items.tools.PrizmodItem;
 import com.spectrobes.spectrobesmod.common.registry.MineralRegistry;
 import net.minecraft.item.*;
@@ -59,6 +61,9 @@ public class SpectrobesItems {
     public static final Item mineral_item_sylvite = null;
     public static final Item mineral_item_topaz = null;
     public static final Item mineral_item_zircon = null;
+    public static final Item chroma_mineral_item_zero = null;
+    public static final Item chroma_mineral_item_one = null;
+    public static final Item chroma_mineral_item_two = null;
 
     //Fossils
     public static final Item komainu_fossil_item = null;
@@ -68,6 +73,7 @@ public class SpectrobesItems {
     public static final Item shakin_fossil_item = null;
     public static final Item segu_fossil_item = null;
     public static final Item vilar_fossil_item = null;
+    public static final Item harumi_fossil_item = null;
 
     //Tools
     public static final Item prizmod_item = null;
@@ -82,6 +88,32 @@ public class SpectrobesItems {
         for(Mineral m : MineralRegistry.ALL_MINERALS) {
             registerMineral(event, m);
         }
+
+        SpecialMineralItem specialMineralItem;
+
+        specialMineralItem = new ChromaMineralItem(
+                new Item.Properties()
+                        .group(SpectrobesMineralItemGroup.Instance),
+                "chroma_mineral_item_zero",
+                            0);
+
+        event.getRegistry().register(specialMineralItem);
+
+        specialMineralItem = new ChromaMineralItem(
+                new Item.Properties()
+                        .group(SpectrobesMineralItemGroup.Instance),
+                "chroma_mineral_item_one",
+                1);
+
+        event.getRegistry().register(specialMineralItem);
+
+        specialMineralItem = new ChromaMineralItem(
+                new Item.Properties()
+                        .group(SpectrobesMineralItemGroup.Instance),
+                "chroma_mineral_item_two",
+                2);
+
+        event.getRegistry().register(specialMineralItem);
 
         Item fossil;
 
@@ -128,6 +160,13 @@ public class SpectrobesItems {
         all_fossils.add(fossil);
 
         fossil = new VilarFossilItem(
+                new Item.Properties()
+                        .group(SpectrobesFossilsItemGroup.Instance));
+
+        event.getRegistry().register(fossil);
+        all_fossils.add(fossil);
+
+        fossil = new HarumiFossilItem(
                 new Item.Properties()
                         .group(SpectrobesFossilsItemGroup.Instance));
 

@@ -35,4 +35,6 @@ public class SpectrobePropertyRegistry {
     //SHAKIN LINE
     public static SpectrobeProperties SHAKIN = new SpectrobeProperties(SpectrobeProperties.Nature.FLASH, SpectrobeProperties.Stage.CHILD);
     public static SpectrobeProperties SHAKOR = new SpectrobeProperties(SpectrobeProperties.Nature.FLASH, SpectrobeProperties.Stage.ADULT);
+
+    public static SpectrobeProperties HARUMI = new SpectrobeProperties(SpectrobeProperties.Nature.FLASH, SpectrobeProperties.Stage.CHILD);
 }

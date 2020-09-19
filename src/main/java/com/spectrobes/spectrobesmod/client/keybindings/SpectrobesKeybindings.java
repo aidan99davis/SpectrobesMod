@@ -86,15 +86,7 @@ public class SpectrobesKeybindings {
                                 sm.changeSelected(-1);
                                 List<EntitySpectrobe> spectrobes = mc.player.world
                                         .getEntitiesWithinAABB(EntitySpectrobe.class, mc.player.getBoundingBox().grow(30, 30, 30));
-                                if(oldUUID != null) {
-                                    for(EntitySpectrobe spectrobe : spectrobes) {
-                                        if(spectrobe.getOwnerId().equals(mc.player.getUniqueID())) {
-                                            spectrobe.despawn();
-                                        }
-                                    }
-                                    SpectrobesNetwork.sendToServer(new SDespawnSpectrobePacket(currentMember));
-
-                                }
+                                SummonPlayerSpectrobe(mc, currentMember, oldUUID, spectrobes);
                                 if(sm.getCurrentTeamMember() != null) {
                                     sm.spawnCurrent();
                                     SpectrobesNetwork.sendToServer(new SSpawnSpectrobePacket(sm.getCurrentTeamMember()));
@@ -118,16 +110,9 @@ public class SpectrobesKeybindings {
                                 sm.changeSelected(1);
                                 List<EntitySpectrobe> spectrobes = mc.player.world
                                         .getEntitiesWithinAABB(EntitySpectrobe.class, mc.player.getBoundingBox().grow(30, 30, 30));
-                                if(oldUUID != null) {
-                                    for(EntitySpectrobe spectrobe : spectrobes) {
-                                        if(spectrobe.getOwnerId().equals(mc.player.getUniqueID())) {
-                                            spectrobe.despawn();
-                                        }
-                                    }
-                                    SpectrobesNetwork.sendToServer(new SDespawnSpectrobePacket(currentMember));
 
+                                SummonPlayerSpectrobe(mc, currentMember, oldUUID, spectrobes);
 
-                                }
                                 if(sm.getCurrentTeamMember() != null) {
                                     SpectrobesNetwork.sendToServer(new SSpawnSpectrobePacket(sm.getCurrentTeamMember()));
                                 }
@@ -141,6 +126,20 @@ public class SpectrobesKeybindings {
             toolMenuKeyWasDown = true;
         }
 
+    }
+
+    private static void SummonPlayerSpectrobe(Minecraft mc, Spectrobe currentMember, UUID oldUUID, List<EntitySpectrobe> spectrobes) {
+        if(oldUUID != null) {
+            for(EntitySpectrobe spectrobe : spectrobes) {
+                if(spectrobe.getOwner() != null && spectrobe.getOwnerId().equals(mc.player.getUniqueID())) {
+                    spectrobe.despawn();
+                }
+            }
+            if(mc.player.world.isRemote()) {
+                SpectrobesNetwork.sendToServer(new SDespawnSpectrobePacket(currentMember));
+            }
+
+        }
     }
 
     public static boolean isKeyDown(KeyBinding keybind)

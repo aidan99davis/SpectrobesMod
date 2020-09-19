@@ -30,10 +30,16 @@ public class FindMineralsGoal extends Goal {
         return false;
     }
 
+    @Override
+    public boolean shouldContinueExecuting() {
+        List<ItemEntity> lvt_1_1_ = entity.world.getEntitiesWithinAABB(ItemEntity.class, this.entity.getBoundingBox().grow(8.0D, 8.0D, 8.0D), EntitySpectrobe.MINERAL_SELECTOR);
+        return !lvt_1_1_.isEmpty();
+    }
+
     public void startExecuting() {
         List<ItemEntity> lvt_1_1_ = this.entity.world.getEntitiesWithinAABB(ItemEntity.class, this.entity.getBoundingBox().grow(8.0D, 8.0D, 8.0D), EntitySpectrobe.MINERAL_SELECTOR);
         if (!lvt_1_1_.isEmpty()) {
-            this.entity.getNavigator().tryMoveToEntityLiving(lvt_1_1_.get(0), 1.2000000476837158D);
+            this.entity.getNavigator().tryMoveToEntityLiving(lvt_1_1_.get(0), 0.8000000476837158D);
         }
     }
 
@@ -41,15 +47,16 @@ public class FindMineralsGoal extends Goal {
         ItemStack lvt_1_1_ = this.entity.getItemStackFromSlot(EquipmentSlotType.MAINHAND);
         if (!lvt_1_1_.isEmpty()) {
             this.eatMineral(lvt_1_1_.getStack());
-            this.entity.setItemStackToSlot(EquipmentSlotType.MAINHAND, ItemStack.EMPTY);
         }
+        this.entity.setItemStackToSlot(EquipmentSlotType.MAINHAND, ItemStack.EMPTY);
+        this.entity.getNavigator().clearPath();
 
     }
 
     public void tick() {
         List<ItemEntity> lvt_1_1_ = this.entity.world.getEntitiesWithinAABB(ItemEntity.class, this.entity.getBoundingBox().grow(2.0D, 2.0D, 2.0D), EntitySpectrobe.MINERAL_SELECTOR);
         if (!lvt_1_1_.isEmpty()) {
-            this.entity.getNavigator().tryMoveToEntityLiving((Entity)lvt_1_1_.get(0), 1.2000000476837158D);
+            this.entity.getNavigator().tryMoveToEntityLiving((Entity)lvt_1_1_.get(0), 0.8000000476837158D);
             if(this.entity.getDistance(lvt_1_1_.get(0)) < 5) {
                 this.eatMineral(lvt_1_1_.get(0).getItem());
                 lvt_1_1_.get(0).getItem().shrink(1);

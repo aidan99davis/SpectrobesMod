@@ -7,6 +7,7 @@ import com.spectrobes.spectrobesmod.common.entities.goals.FindMineralsGoal;
 import com.spectrobes.spectrobesmod.common.entities.goals.FollowMasterGoal;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
+import com.spectrobes.spectrobesmod.common.items.minerals.SpecialMineralItem;
 import com.spectrobes.spectrobesmod.common.items.tools.PrizmodItem;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
@@ -86,7 +87,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         this.goalSelector.addGoal(0, new FindMineralsGoal(this));
         this.goalSelector.addGoal(0, new MeleeAttackGoal(this, 0.5, false));
         this.goalSelector.addGoal(1, new FollowMasterGoal(this,0.3f , 3, 12, true));
-        this.goalSelector.addGoal(5, new BreedGoal(this,10));
+//        this.goalSelector.addGoal(5, new BreedGoal(this,1));
         this.goalSelector.addGoal(5, new LookAtGoal(this, PlayerEntity.class, 6.0F));
     }
 
@@ -115,6 +116,10 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
             } else if (itemstack.getItem() instanceof MineralItem){
                 MineralItem mineralItem = (MineralItem)itemstack.getItem();
                 applyMineral(mineralItem);
+                itemstack.shrink(1);
+            } else if (itemstack.getItem() instanceof SpecialMineralItem){
+                SpecialMineralItem mineralItem = (SpecialMineralItem)itemstack.getItem();
+                applySpecialMineral(mineralItem);
                 itemstack.shrink(1);
             } else if(itemstack.getItem() instanceof PrizmodItem && player.isSneaking()) {
                 if(player == getOwner()) {
@@ -169,7 +174,9 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     @Override
     public void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
-        setSpectrobeData(Spectrobe.read((CompoundNBT) compound.get("SpectrobeData")));
+        if(compound.get("SpectrobeData") != null) {
+            setSpectrobeData(Spectrobe.read((CompoundNBT) compound.get("SpectrobeData")));
+        }
         if(getSpectrobeData() == null)
             setSpectrobeData(GetNewSpectrobeInstance());
 
@@ -390,7 +397,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     }
 
     private void awardKillStats(KrawlProperties krawlProperties) {
-        if(!world.isRemote()) {
+        if(world.isRemote()) {
             Spectrobe spectrobeInstance = getSpectrobeData();
             spectrobeInstance.stats.addStats(krawlProperties);
             updateEntityAttributes();
@@ -483,6 +490,18 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
             player.sendMessage(new StringTextComponent(builder3.toString()));
             player.sendMessage(new StringTextComponent(builder1.toString()));
             player.sendMessage(new StringTextComponent(builder2.toString()));
+        }
+    }
+
+    public void applySpecialMineral(SpecialMineralItem mineralItem) {
+        Spectrobe updatedData = mineralItem.applyEffect(this.getSpectrobeData());
+
+        this.setSpectrobeData(updatedData);
+
+        if(getOwner() != null) {
+            getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
+                sm.updateSpectrobe(updatedData);
+            });
         }
     }
 

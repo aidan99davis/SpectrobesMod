@@ -29,6 +29,7 @@ public class IconRegistry {
         icons.put("vilar", new SpectrobeIconInfo("vilar", 27, 27));
         icons.put("vilamasta", new SpectrobeIconInfo("vilamasta", 28, 32));
         icons.put("segu", new SpectrobeIconInfo("segu", 26, 25));
+        icons.put("harumi", new SpectrobeIconInfo("harumi", 22, 21));
     }
 
     public static IconRegistry getInstance() {
