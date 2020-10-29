@@ -23,6 +23,7 @@ public class SpectrobePiece extends AbstractGui {
     public int posX;
     public int posY;
     public boolean selected;
+    public boolean current;
 
     public SpectrobePiece(Spectrobe spell, int x ,int y) {
         this.spectrobe = spell;
@@ -31,6 +32,11 @@ public class SpectrobePiece extends AbstractGui {
         this.posX = (x+3) * 32;
         this.posY = (y+2) * 32;
         selected = false;
+        current = false;
+    }
+
+    public void toggleCurrent() {
+        current = !current;
     }
 
     public String getUnlocalizedName() {
@@ -52,7 +58,12 @@ public class SpectrobePiece extends AbstractGui {
      */
     @OnlyIn(Dist.CLIENT)
     public void drawBackground() {
-        ResourceLocation bg = selected? PrizmodScreen.SPECTROBE_SLOT_SELECTED_TEXTURE : PrizmodScreen.SPECTROBE_SLOT_TEXTURE;
+        ResourceLocation bg;
+        if(!current) {
+            bg = selected? PrizmodScreen.SPECTROBE_SLOT_SELECTED_TEXTURE : PrizmodScreen.SPECTROBE_SLOT_TEXTURE;
+        } else {
+            bg = PrizmodScreen.SPECTROBE_SLOT_CURRENT_TEXTURE;
+        }
 
         GuiUtils.drawTexture(bg, posX, posY, 32, 32,75);
     }

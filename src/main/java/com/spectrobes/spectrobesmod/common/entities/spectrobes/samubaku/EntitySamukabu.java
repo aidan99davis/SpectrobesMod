@@ -75,4 +75,9 @@ public class EntitySamukabu extends EntityMammalSpectrobe {
     protected EvolutionRequirements getEvolutionRequirements() {
         return new EvolutionRequirements(1, 5, 0);
     }
+
+    @Override
+    public int getLitterSize() {
+        return 0;
+    }
 }

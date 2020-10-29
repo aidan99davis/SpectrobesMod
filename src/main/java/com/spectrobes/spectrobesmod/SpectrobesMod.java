@@ -5,6 +5,7 @@ import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
 import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlRendererManager;
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobeRendererManager;
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
+import com.spectrobes.spectrobesmod.client.keybindings.SpectrobesKeybindings;
 import com.spectrobes.spectrobesmod.client.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.capability.PlayerEvents;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
@@ -63,7 +64,6 @@ public class SpectrobesMod
 
     private void setup(final FMLCommonSetupEvent event)
     {
-        SpectrobesInfo.LOGGER.info("Common setup shiz");
         MinecraftForge.EVENT_BUS.register(PlayerEvents.instance);
         IconRegistry.init();
         SpectrobesEntities.init();
@@ -84,12 +84,12 @@ public class SpectrobesMod
     @SubscribeEvent
     public void doClientStuff(final FMLClientSetupEvent event)
     {
-        SpectrobesInfo.LOGGER.info("Client setup shiz");
         ScreenManager.registerFactory(PrizmodContainer.PRIZMOD.get(), PrizmodScreen::new);
         SpectrobeRendererManager.init();
         KrawlEntities.init();
         KrawlRendererManager.init();
         MineralRegistry.init();
+        SpectrobesKeybindings.initKeybinds();
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event)

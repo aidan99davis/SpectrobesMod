@@ -69,7 +69,7 @@ public class EntityShakin extends EntityAquaticSpectrobe {
         }
         else if(entityAnimationTestEvent.getEntity().isSitting()) {
             animationControllers.setAnimationSpeed(1);
-            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.komainu.sit", false));
+            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.shakin.sit", false));
             return true;
         }
         return false;

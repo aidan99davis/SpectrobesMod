@@ -1,6 +1,8 @@
 V1.4
 =====
 Krawl only attack players with an adult form in the top two slots of the prizmod line up
+Added chroma minerals
+Added chroma variants for komainu, komanoto, shakin, shakor.
 
 V1.3.2
 ======

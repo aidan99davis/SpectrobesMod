@@ -24,7 +24,17 @@ public class KomanotoRenderer extends MobRenderer<EntityKomanoto, KomanotoModel>
     @Override
     public ResourceLocation getEntityTexture(EntityKomanoto entity)
     {
-        return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/komanoto.png");
+        switch (entity.getSpectrobeData().Variant) {
+            case 0:
+                return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/komanoto_0.png");
+            case 1:
+                return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/komanoto_1.png");
+            case 2:
+                return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/komanoto_2.png");
+            default:
+                return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/komanoto_0.png");
+
+        }
     }
 
     @Override

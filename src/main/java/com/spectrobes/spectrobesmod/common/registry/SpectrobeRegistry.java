@@ -87,7 +87,6 @@ public class SpectrobeRegistry {
             .withStats(25,25,25)
             .build();
 
-
     public static final Spectrobe Vilamasta
             = new SpectrobeBuilder()
             .withName("Vilamasta")
@@ -95,11 +94,17 @@ public class SpectrobeRegistry {
             .withStats(225,175,255)
             .build();
 
-
     public static final Spectrobe Segu
             = new SpectrobeBuilder()
             .withName("Segu")
             .withProperties(SpectrobePropertyRegistry.SEGU)
+            .withStats(25,15,45)
+            .build();
+
+    public static final Spectrobe Harumi
+            = new SpectrobeBuilder()
+            .withName("Harumi")
+            .withProperties(SpectrobePropertyRegistry.HARUMI)
             .withStats(25,15,45)
             .build();
 }

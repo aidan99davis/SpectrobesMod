@@ -72,4 +72,9 @@ public class EntityKubaku extends EntityMammalSpectrobe {
     protected EvolutionRequirements getEvolutionRequirements() {
         return new EvolutionRequirements(1, 4, 0);
     }
+
+    @Override
+    public int getLitterSize() {
+        return 0;
+    }
 }

@@ -1,9 +1,7 @@
 package com.spectrobes.spectrobesmod.client.entity.spectrobes.renderer;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.client.entity.spectrobes.model.KomainuModel;
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.model.ShakinModel;
-import com.spectrobes.spectrobesmod.common.entities.spectrobes.komainu.EntityKomainu;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.shakin.EntityShakin;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
@@ -24,6 +22,16 @@ public class ShakinRenderer extends MobRenderer<EntityShakin, ShakinModel> {
     @Override
     public ResourceLocation getEntityTexture(EntityShakin entity)
     {
-        return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/shakin.png");
+        switch (entity.getSpectrobeData().Variant) {
+            case 0:
+                return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/shakin_0.png");
+            case 1:
+                return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/shakin_1.png");
+            case 2:
+                return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/shakin_2.png");
+            default:
+                return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/shakin_0.png");
+
+        }
     }
 }
