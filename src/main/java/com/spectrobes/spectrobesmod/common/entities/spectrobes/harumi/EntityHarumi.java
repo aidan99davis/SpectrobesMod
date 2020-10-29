@@ -2,6 +2,7 @@ package com.spectrobes.spectrobesmod.common.entities.spectrobes.harumi;
 
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityAquaticSpectrobe;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityCrustaceanSpectrobe;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
@@ -13,7 +14,7 @@ import software.bernie.geckolib.animation.builder.AnimationBuilder;
 import software.bernie.geckolib.event.AnimationTestEvent;
 import software.bernie.geckolib.manager.EntityAnimationManager;
 
-public class EntityHarumi extends EntityAquaticSpectrobe {
+public class EntityHarumi extends EntityCrustaceanSpectrobe {
 
     public EntityHarumi(EntityType<EntityHarumi> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
