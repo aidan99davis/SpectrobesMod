@@ -39,15 +39,17 @@ import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties.Nature
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties.Stage;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
-import software.bernie.geckolib.animation.controller.EntityAnimationController;
-import software.bernie.geckolib.entity.IAnimatedEntity;
-import software.bernie.geckolib.event.AnimationTestEvent;
-import software.bernie.geckolib.manager.EntityAnimationManager;
+import software.bernie.geckolib.core.IAnimatable;
+import software.bernie.geckolib.core.PlayState;
+import software.bernie.geckolib.core.controller.AnimationController;
+import software.bernie.geckolib.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib.core.manager.AnimationData;
+import software.bernie.geckolib.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
 import java.util.function.Predicate;
 
-public abstract class EntitySpectrobe extends TameableEntity implements IEntityAdditionalSpawnData, IAnimatedEntity, IHasNature {
+public abstract class EntitySpectrobe extends TameableEntity implements IEntityAdditionalSpawnData, IAnimatable, IHasNature {
     public static final Predicate<ItemEntity> MINERAL_SELECTOR = (itemEntity) -> {
         return !itemEntity.cannotPickup() && itemEntity.isAlive() && itemEntity.getItem().getItem() instanceof MineralItem;
     };
@@ -70,15 +72,14 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
             EntityDataManager.createKey(EntitySpectrobe.class,
                     Spectrobe.SpectrobeSerializer);
 
-    public EntityAnimationManager animationControllers = new EntityAnimationManager();
-    protected EntityAnimationController moveAnimationController = new EntityAnimationController(this, "moveAnimationController", 10F, this::moveController);
+    public AnimationFactory animationControllers = new AnimationFactory(this);
+    protected AnimationController moveAnimationController = new AnimationController(this, "moveAnimationController", 10F, this::moveController);
 
 
     public EntitySpectrobe(EntityType<? extends EntitySpectrobe> entityTypeIn,
                            World worldIn) {
         super(entityTypeIn, worldIn);
 
-        registerAnimationControllers();
     }
 
     @Override
@@ -275,19 +276,16 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     //Animation
 
     @Override
-    public EntityAnimationManager getAnimationManager() {
+    public AnimationFactory getFactory() {
         return animationControllers;
     }
 
-    public void registerAnimationControllers()
+    public void registerControllers(AnimationData data)
     {
-        if(world.isRemote)
-        {
-            this.animationControllers.addAnimationController(moveAnimationController);
-        }
+        data.addAnimationController(new AnimationController(this, "controller", 0, this::moveController));
     }
 
-    public abstract <ENTITY extends EntitySpectrobe> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent);
+    public abstract <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> entityAnimationTestEvent);
 
     //Spectrobe evolution
 

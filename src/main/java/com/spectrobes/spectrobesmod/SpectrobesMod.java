@@ -29,6 +29,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.*;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import software.bernie.geckolib.GeckoLib;
 
 import javax.annotation.Nullable;
 
@@ -59,6 +60,7 @@ public class SpectrobesMod
         KrawlEntities.ENTITY_TYPES.register(modEventBus);
         MinecraftForge.EVENT_BUS.register(this);
         SpectrobesNetwork.init();
+        GeckoLib.initialize();
     }
 
     private void setup(final FMLCommonSetupEvent event)

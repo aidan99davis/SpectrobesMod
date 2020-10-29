@@ -3,16 +3,16 @@ package com.spectrobes.spectrobesmod.common.entities.spectrobes.kubaku;
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityMammalSpectrobe;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
-import com.spectrobes.spectrobesmod.common.entities.spectrobes.komainu.EntityKomainu;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.world.World;
-import software.bernie.geckolib.animation.builder.AnimationBuilder;
-import software.bernie.geckolib.event.AnimationTestEvent;
-import software.bernie.geckolib.manager.EntityAnimationManager;
+import software.bernie.geckolib.core.PlayState;
+import software.bernie.geckolib.core.builder.AnimationBuilder;
+import software.bernie.geckolib.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib.core.manager.AnimationFactory;
 
 public class EntityKuganon extends EntityMammalSpectrobe {
 
@@ -48,27 +48,26 @@ public class EntityKuganon extends EntityMammalSpectrobe {
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(5);
     }
 
-
     @Override
-    public EntityAnimationManager getAnimationManager() {
+    public AnimationFactory getFactory() {
         return animationControllers;
     }
 
     @Override
-    public <ENTITY extends EntitySpectrobe> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent)
+    public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> entityAnimationTestEvent)
     {
         moveAnimationController.transitionLengthTicks = 2;
-        if(entityAnimationTestEvent.isWalking())
+        if(entityAnimationTestEvent.isMoving())
         {
             moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.kuganon.walk", true));
-            return true;
+            return PlayState.CONTINUE;
         } else {
             if(this.IsAttacking()) {
                 moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.kuganon.attack", true));
-                return true;
+                return PlayState.CONTINUE;
             }
         }
-        return false;
+        return PlayState.STOP;
     }
 
     @Override
