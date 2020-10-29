@@ -3,16 +3,16 @@ package com.spectrobes.spectrobesmod.common.entities.spectrobes.shakin;
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityAquaticSpectrobe;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
-import com.spectrobes.spectrobesmod.common.entities.spectrobes.komainu.EntityKomainu;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.world.World;
-import software.bernie.geckolib.animation.builder.AnimationBuilder;
-import software.bernie.geckolib.event.AnimationTestEvent;
-import software.bernie.geckolib.manager.EntityAnimationManager;
+import software.bernie.geckolib.core.PlayState;
+import software.bernie.geckolib.core.builder.AnimationBuilder;
+import software.bernie.geckolib.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib.core.manager.AnimationFactory;
 
 public class EntityShakor extends EntityAquaticSpectrobe {
 
@@ -53,33 +53,32 @@ public class EntityShakor extends EntityAquaticSpectrobe {
         return 3;
     }
 
-
     @Override
-    public EntityAnimationManager getAnimationManager() {
+    public AnimationFactory getFactory() {
         return animationControllers;
     }
 
     @Override
-    public <ENTITY extends EntitySpectrobe> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent)
+    public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> entityAnimationTestEvent)
     {
-        if(entityAnimationTestEvent.isWalking())
+        if(entityAnimationTestEvent.isMoving())
         {
             moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.shakor.walk", true));
-            return true;
+            return PlayState.CONTINUE;
         }
-        else if(entityAnimationTestEvent.getEntity().isSitting()) {
+        else if(entityAnimationTestEvent.getAnimatable().isSitting()) {
             moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.shakor.idle", true));
-            return true;
-        } else if(entityAnimationTestEvent.getEntity().isSwimming()) {
+            return PlayState.CONTINUE;
+        } else if(entityAnimationTestEvent.getAnimatable().isSwimming()) {
             moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.shakor.walk", true));
-            return true;
+            return PlayState.CONTINUE;
         } else {
             if(this.IsAttacking()) {
                 moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.shakor.attack", true));
-                return true;
+                return PlayState.CONTINUE;
             }
         }
-        return false;
+        return PlayState.STOP;
     }
 
     @Override
