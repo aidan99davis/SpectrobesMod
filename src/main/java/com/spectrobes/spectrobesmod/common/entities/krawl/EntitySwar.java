@@ -2,14 +2,13 @@ package com.spectrobes.spectrobesmod.common.entities.krawl;
 
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import com.spectrobes.spectrobesmod.common.registry.KrawlRegistry;
-import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
-import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.world.World;
-import software.bernie.geckolib.animation.builder.AnimationBuilder;
-import software.bernie.geckolib.event.AnimationTestEvent;
-import software.bernie.geckolib.manager.EntityAnimationManager;
+import software.bernie.geckolib.core.PlayState;
+import software.bernie.geckolib.core.builder.AnimationBuilder;
+import software.bernie.geckolib.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib.core.manager.AnimationFactory;
 
 public class EntitySwar extends EntityKrawl {
     public EntitySwar(EntityType<? extends MonsterEntity> type, World worldIn) {
@@ -17,22 +16,20 @@ public class EntitySwar extends EntityKrawl {
     }
 
     @Override
-    public EntityAnimationManager getAnimationManager() {
+    public AnimationFactory getFactory() {
         return animationControllers;
     }
 
     @Override
-    public <ENTITY extends EntityKrawl> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent) {
+    public <ENTITY extends EntityKrawl> PlayState moveController(AnimationEvent<ENTITY> entityAnimationTestEvent) {
         moveController.transitionLengthTicks = 2;
         if(!IsAttacking()) {
-            animationControllers.setAnimationSpeed(0.125);
             moveController.setAnimation(new AnimationBuilder().addAnimation("animation.swar.idle", true));
-            return true;
+            return PlayState.CONTINUE;
 
         } else {
-            animationControllers.setAnimationSpeed(1);
             moveController.setAnimation(new AnimationBuilder().addAnimation("animation.swar.attack", true));
-            return true;
+            return PlayState.CONTINUE;
         }
     }
 

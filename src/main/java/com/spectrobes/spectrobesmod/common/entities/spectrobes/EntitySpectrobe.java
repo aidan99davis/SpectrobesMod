@@ -79,7 +79,6 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     public EntitySpectrobe(EntityType<? extends EntitySpectrobe> entityTypeIn,
                            World worldIn) {
         super(entityTypeIn, worldIn);
-
     }
 
     @Override
@@ -280,6 +279,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         return animationControllers;
     }
 
+    @Override
     public void registerControllers(AnimationData data)
     {
         data.addAnimationController(new AnimationController(this, "controller", 0, this::moveController));

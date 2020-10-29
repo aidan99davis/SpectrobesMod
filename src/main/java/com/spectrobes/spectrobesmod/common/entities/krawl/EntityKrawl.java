@@ -7,7 +7,6 @@ import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
-import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -23,18 +22,20 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
-import software.bernie.geckolib.animation.controller.EntityAnimationController;
-import software.bernie.geckolib.entity.IAnimatedEntity;
-import software.bernie.geckolib.event.AnimationTestEvent;
-import software.bernie.geckolib.manager.EntityAnimationManager;
+import software.bernie.geckolib.core.IAnimatable;
+import software.bernie.geckolib.core.PlayState;
+import software.bernie.geckolib.core.controller.AnimationController;
+import software.bernie.geckolib.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib.core.manager.AnimationData;
+import software.bernie.geckolib.core.manager.AnimationFactory;
 
 import java.util.Random;
 
-public abstract class EntityKrawl extends MonsterEntity implements IAnimatedEntity, IHasNature {
+public abstract class EntityKrawl extends MonsterEntity implements IAnimatable, IHasNature {
 
     public KrawlProperties krawlProperties;
-    public EntityAnimationManager animationControllers = new EntityAnimationManager();
-    protected EntityAnimationController moveController = new EntityAnimationController(this, "moveAnimationController", 10F, this::moveController);
+    public AnimationFactory animationControllers = new AnimationFactory(this);
+    protected AnimationController moveController = new AnimationController(this, "moveAnimationController", 10F, this::moveController);
 
     private static final DataParameter<Boolean> IS_ATTACKING =
             EntityDataManager.createKey(EntityKrawl.class,
@@ -42,7 +43,6 @@ public abstract class EntityKrawl extends MonsterEntity implements IAnimatedEnti
 
     protected EntityKrawl(EntityType<? extends MonsterEntity> type, World worldIn) {
         super(type, worldIn);
-        registerAnimationControllers();
         krawlProperties = GetKrawlProperties();
     }
 
@@ -125,19 +125,17 @@ public abstract class EntityKrawl extends MonsterEntity implements IAnimatedEnti
     }
 
     //Animation
-    public abstract <ENTITY extends EntityKrawl> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent);
+    public abstract <ENTITY extends EntityKrawl> PlayState moveController(AnimationEvent<ENTITY> entityAnimationTestEvent);
 
     @Override
-    public EntityAnimationManager getAnimationManager() {
+    public AnimationFactory getFactory() {
         return animationControllers;
     }
 
-    public void registerAnimationControllers()
+    @Override
+    public void registerControllers(AnimationData data)
     {
-        if(world.isRemote)
-        {
-            this.animationControllers.addAnimationController(moveController);
-        }
+        data.addAnimationController(new AnimationController(this, "controller", 0, this::moveController));
     }
 
     @Override
