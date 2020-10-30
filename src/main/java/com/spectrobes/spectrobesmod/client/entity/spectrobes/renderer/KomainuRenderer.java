@@ -8,14 +8,15 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import software.bernie.geckolib.renderers.geo.GeoEntityRenderer;
 
 import javax.annotation.Nullable;
 
 @OnlyIn(Dist.CLIENT)
-public class KomainuRenderer extends MobRenderer<EntityKomainu, KomainuModel> {
+public class KomainuRenderer extends GeoEntityRenderer<EntityKomainu> {
 
     public KomainuRenderer(EntityRendererManager renderManagerIn) {
-        super(renderManagerIn, new KomainuModel(), 0.5f);
+        super(renderManagerIn, new KomainuModel());
     }
 
     @Nullable

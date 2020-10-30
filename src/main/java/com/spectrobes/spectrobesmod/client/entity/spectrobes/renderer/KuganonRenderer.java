@@ -13,14 +13,15 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import software.bernie.geckolib.renderers.geo.GeoEntityRenderer;
 
 import javax.annotation.Nullable;
 
 @OnlyIn(Dist.CLIENT)
-public class KuganonRenderer extends MobRenderer<EntityKuganon, KuganonModel> {
+public class KuganonRenderer extends GeoEntityRenderer<EntityKuganon> {
 
     public KuganonRenderer(EntityRendererManager renderManagerIn) {
-        super(renderManagerIn, new KuganonModel(), 0.5f);
+        super(renderManagerIn, new KuganonModel());
     }
 
     @Nullable

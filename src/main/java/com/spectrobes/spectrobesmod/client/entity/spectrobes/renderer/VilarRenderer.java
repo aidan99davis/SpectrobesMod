@@ -12,14 +12,15 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import software.bernie.geckolib.renderers.geo.GeoEntityRenderer;
 
 import javax.annotation.Nullable;
 
 @OnlyIn(Dist.CLIENT)
-public class VilarRenderer extends MobRenderer<EntityVilar, VilarModel> {
+public class VilarRenderer extends GeoEntityRenderer<EntityVilar> {
 
     public VilarRenderer(EntityRendererManager renderManagerIn) {
-        super(renderManagerIn, new VilarModel(), 0.5f);
+        super(renderManagerIn, new VilarModel());
     }
 
     @Nullable

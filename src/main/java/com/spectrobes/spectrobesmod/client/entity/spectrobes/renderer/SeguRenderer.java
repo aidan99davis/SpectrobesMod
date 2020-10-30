@@ -10,14 +10,15 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import software.bernie.geckolib.renderers.geo.GeoEntityRenderer;
 
 import javax.annotation.Nullable;
 
 @OnlyIn(Dist.CLIENT)
-public class SeguRenderer extends MobRenderer<EntitySegu, SeguModel> {
+public class SeguRenderer extends GeoEntityRenderer<EntitySegu> {
 
     public SeguRenderer(EntityRendererManager renderManagerIn) {
-        super(renderManagerIn, new SeguModel(), 0.5f);
+        super(renderManagerIn, new SeguModel());
     }
 
     @Nullable

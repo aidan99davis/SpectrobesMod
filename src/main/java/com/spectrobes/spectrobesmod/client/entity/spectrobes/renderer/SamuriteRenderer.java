@@ -10,14 +10,15 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import software.bernie.geckolib.renderers.geo.GeoEntityRenderer;
 
 import javax.annotation.Nullable;
 
 @OnlyIn(Dist.CLIENT)
-public class SamuriteRenderer extends MobRenderer<EntitySamurite, SamuriteModel> {
+public class SamuriteRenderer extends GeoEntityRenderer<EntitySamurite> {
 
     public SamuriteRenderer(EntityRendererManager renderManagerIn) {
-        super(renderManagerIn, new SamuriteModel(), 0.5f);
+        super(renderManagerIn, new SamuriteModel());
     }
 
     @Nullable

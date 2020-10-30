@@ -8,14 +8,15 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import software.bernie.geckolib.renderers.geo.GeoEntityRenderer;
 
 import javax.annotation.Nullable;
 
 @OnlyIn(Dist.CLIENT)
-public class SpikanRenderer extends MobRenderer<EntitySpikan, SpikanModel> {
+public class SpikanRenderer extends GeoEntityRenderer<EntitySpikan> {
 
     public SpikanRenderer(EntityRendererManager renderManagerIn) {
-        super(renderManagerIn, new SpikanModel(), 0.5f);
+        super(renderManagerIn, new SpikanModel());
     }
 
     @Nullable

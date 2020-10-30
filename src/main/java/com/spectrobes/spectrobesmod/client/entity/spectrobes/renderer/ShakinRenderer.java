@@ -10,14 +10,15 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import software.bernie.geckolib.renderers.geo.GeoEntityRenderer;
 
 import javax.annotation.Nullable;
 
 @OnlyIn(Dist.CLIENT)
-public class ShakinRenderer extends MobRenderer<EntityShakin, ShakinModel> {
+public class ShakinRenderer extends GeoEntityRenderer<EntityShakin> {
 
     public ShakinRenderer(EntityRendererManager renderManagerIn) {
-        super(renderManagerIn, new ShakinModel(), 0.5f);
+        super(renderManagerIn, new ShakinModel());
     }
 
     @Nullable
