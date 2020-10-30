@@ -25,11 +25,13 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.*;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import software.bernie.geckolib.GeckoLib;
+import software.bernie.geckolib.resource.ResourceListener;
 
 import javax.annotation.Nullable;
 
@@ -44,6 +46,8 @@ public class SpectrobesMod
     final IEventBus modEventBus;
 
     public SpectrobesMod() {
+        GeckoLib.initialize();
+        DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> ResourceListener::registerReloadListener);
         Instance = this;
         modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
@@ -60,7 +64,6 @@ public class SpectrobesMod
         KrawlEntities.ENTITY_TYPES.register(modEventBus);
         MinecraftForge.EVENT_BUS.register(this);
         SpectrobesNetwork.init();
-        GeckoLib.initialize();
     }
 
     private void setup(final FMLCommonSetupEvent event)
