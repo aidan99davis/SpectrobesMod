@@ -41,6 +41,5 @@ public class PlayerSpectrobeMasterDispatcher implements ICapabilitySerializable<
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
         playerSpectrobeMaster.deserializeNBT(nbt);
-        SpectrobesInfo.LOGGER.warn("player pectrobes count: " + playerSpectrobeMaster.getOwnedSpectrobesCount());
     }
 }

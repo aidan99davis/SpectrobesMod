@@ -70,4 +70,9 @@ public class EntitySamurite extends EntityMammalSpectrobe {
         //returning null makes canEvolve always evaluate to false.
         return null;
     }
+
+    @Override
+    public int getLitterSize() {
+        return 3;
+    }
 }

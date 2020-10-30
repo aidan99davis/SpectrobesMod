@@ -1,5 +1,6 @@
 package com.spectrobes.spectrobesmod.common.capability;
 
+import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.nbt.CompoundNBT;
@@ -15,11 +16,39 @@ public class PlayerSpectrobeMaster {
     //index 6 : child form
     private Map<Integer,UUID> currentTeam = new HashMap<>(7);
 
+    private int currentSelected;
+
     private List<Spectrobe>
         ownedSpectrobes;
 
     public boolean canFight() {
         return currentTeam.get(0) != null && currentTeam.get(1) != null;
+    }
+
+    public Spectrobe getCurrentTeamMember() {
+        UUID selectedUUID = getCurrentTeamUuids().get(currentSelected);
+
+        for(Spectrobe s : ownedSpectrobes) {
+            if(s.SpectrobeUUID.equals(selectedUUID)) {
+                return s;
+            }
+        }
+        return null;
+    }
+
+    public void changeSelected(int direction) {
+        if(direction != -1 && direction != 1) {
+            SpectrobesInfo.LOGGER.error("UNKNOWN DIRECTION");
+            return;
+        }
+        currentSelected += direction;
+
+        if(currentSelected == 7) {
+            currentSelected = 0;
+        }
+        if(currentSelected == -1) {
+            currentSelected = 6;
+        }
     }
 
     public PlayerSpectrobeMaster() {
@@ -66,6 +95,7 @@ public class PlayerSpectrobeMaster {
             if(currentTeam.get(i) != null)
                 currentTeamNbt.putString(String.valueOf(i), currentTeam.get(i).toString());
         }
+        myData.putInt("currentSelected", currentSelected);
         myData.put("spectrobesOwned", spectrobes);
         myData.put("currentTeam", currentTeamNbt);
         return myData;
@@ -79,6 +109,16 @@ public class PlayerSpectrobeMaster {
         }
         ListNBT ownedSpectrobesNbt = (ListNBT) nbt.get("spectrobesOwned");
         CompoundNBT currentTeamNbt = (CompoundNBT) nbt.get("currentTeam");
+
+        int selected;
+        try {
+            selected = nbt.getInt("currentSelected");
+        } catch(NullPointerException ex) {
+            selected = 0;
+        }
+
+        currentSelected = selected;
+
         List<Spectrobe> spectrobes = new ArrayList<>();
         for(INBT spectrobeNbt : ownedSpectrobesNbt) {
             spectrobes.add(Spectrobe.read((CompoundNBT)spectrobeNbt));
@@ -124,7 +164,7 @@ public class PlayerSpectrobeMaster {
 
     private void validateTeam() {
         for(Spectrobe s : ownedSpectrobes) {
-            if(currentTeam.get(6).equals(s.SpectrobeUUID)) {
+            if(currentTeam.get(6) != null && currentTeam.get(6).equals(s.SpectrobeUUID)) {
                 if(s.properties.getStage() != SpectrobeProperties.Stage.CHILD) {
                     removeTeamMember(6);
                 }
@@ -146,5 +186,9 @@ public class PlayerSpectrobeMaster {
                 s.active = true;
             }
         });
+    }
+
+    public void spawnCurrent() {
+        getCurrentTeamMember().setActive();
     }
 }

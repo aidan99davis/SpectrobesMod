@@ -113,4 +113,8 @@ public class TeamSpectrobesList extends Widget {
 
         return false;
     }
+
+    public void setSlotCurrent(int i) {
+        gridData[i].toggleCurrent();
+    }
 }

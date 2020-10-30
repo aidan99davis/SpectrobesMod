@@ -5,6 +5,7 @@ import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeStats;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.util.ResourceLocation;
 
+import java.util.Random;
 import java.util.UUID;
 
 public class SpectrobeBuilder {
@@ -50,8 +51,10 @@ public class SpectrobeBuilder {
         newSpectrobe.setMasterUUID(spectrobe.MasterUUID);
         if(copyUUID) {
             newSpectrobe.setSpectrobeUUID(spectrobe.SpectrobeUUID);
+            newSpectrobe.setVariant(spectrobe.Variant);
+        } else {
+            newSpectrobe.setVariant(new Random().nextInt(3));
         }
-        newSpectrobe.setVariant(spectrobe.Variant);
         newSpectrobe.setName(spectrobe.name);
         newSpectrobe.setProperties(spectrobe.properties.copy());
         newSpectrobe.setStats(spectrobe.stats.copy());

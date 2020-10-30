@@ -15,8 +15,6 @@ public class Containers {
 
     public static void init() {
         PrizmodContainer.PRIZMOD = CONTAINERS.register("prizmod",
-                () -> IForgeContainerType.create((windowId, inv, data) -> {
-                    return new PrizmodContainer(windowId, inv.player);
-                }));
+                () -> IForgeContainerType.create((windowId, inv, data) -> new PrizmodContainer(windowId, inv.player)));
     }
 }
