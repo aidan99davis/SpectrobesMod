@@ -16,7 +16,7 @@ public class SpikanModel extends AnimatedGeoModel<EntitySpikan> {
     @Override
     public ResourceLocation getTextureLocation(EntitySpikan object)
     {
-        return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/spikan.png");
+        return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/spectrobe/spikan.png");
     }
 
     @Override

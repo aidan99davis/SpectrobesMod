@@ -20,7 +20,7 @@ public class SwarModel extends AnimatedGeoModel<EntitySwar> {
 	@Override
 	public ResourceLocation getTextureLocation(EntitySwar object)
 	{
-		return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/swar.png");
+		return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/krawl/swar.png");
 	}
 
 	@Override

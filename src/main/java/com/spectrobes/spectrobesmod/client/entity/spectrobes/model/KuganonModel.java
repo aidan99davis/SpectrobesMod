@@ -16,7 +16,7 @@ public class KuganonModel extends AnimatedGeoModel<EntityKuganon> {
     @Override
     public ResourceLocation getTextureLocation(EntityKuganon object)
     {
-        return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/kuganon.png");
+        return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/spectrobe/kuganon.png");
     }
 
     @Override

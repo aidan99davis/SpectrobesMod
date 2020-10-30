@@ -16,7 +16,7 @@ public class SamukabuModel extends AnimatedGeoModel<EntitySamukabu> {
     @Override
     public ResourceLocation getTextureLocation(EntitySamukabu object)
     {
-        return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/samukabu.png");
+        return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/spectrobe/samukabu.png");
     }
 
     @Override

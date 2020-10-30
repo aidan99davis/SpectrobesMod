@@ -16,7 +16,7 @@ public class SamuriteModel extends AnimatedGeoModel<EntitySamurite> {
     @Override
     public ResourceLocation getTextureLocation(EntitySamurite object)
     {
-        return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/samurite.png");
+        return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/spectrobe/samurite.png");
     }
 
     @Override

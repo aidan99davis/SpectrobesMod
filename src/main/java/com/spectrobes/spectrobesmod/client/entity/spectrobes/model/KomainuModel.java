@@ -16,7 +16,7 @@ public class KomainuModel extends AnimatedGeoModel<EntityKomainu> {
 	@Override
 	public ResourceLocation getTextureLocation(EntityKomainu object)
 	{
-		return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/komainu_0.png");
+		return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/spectrobe/komainu_0.png");
 	}
 
 	@Override

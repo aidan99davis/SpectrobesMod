@@ -16,7 +16,7 @@ public class KubakuModel extends AnimatedGeoModel<EntityKubaku> {
     @Override
     public ResourceLocation getTextureLocation(EntityKubaku object)
     {
-        return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/kubaku.png");
+        return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/spectrobe/kubaku.png");
     }
 
     @Override

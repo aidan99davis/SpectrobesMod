@@ -16,7 +16,7 @@ public class KomanotoModel extends AnimatedGeoModel<EntityKomanoto> {
 	@Override
 	public ResourceLocation getTextureLocation(EntityKomanoto object)
 	{
-		return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/komanoto.png");
+		return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/spectrobe/komanoto.png");
 	}
 
 	@Override

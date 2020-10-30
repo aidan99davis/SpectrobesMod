@@ -16,7 +16,7 @@ public class VilarModel extends AnimatedGeoModel<EntityVilar> {
     @Override
     public ResourceLocation getTextureLocation(EntityVilar object)
     {
-        return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/vilar.png");
+        return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/spectrobe/vilar.png");
     }
 
     @Override

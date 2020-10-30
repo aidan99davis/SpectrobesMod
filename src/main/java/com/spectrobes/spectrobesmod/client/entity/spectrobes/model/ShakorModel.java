@@ -16,7 +16,7 @@ public class ShakorModel extends AnimatedGeoModel<EntityShakor> {
     @Override
     public ResourceLocation getTextureLocation(EntityShakor object)
     {
-        return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/shakor.png");
+        return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/spectrobe/shakor.png");
     }
 
     @Override

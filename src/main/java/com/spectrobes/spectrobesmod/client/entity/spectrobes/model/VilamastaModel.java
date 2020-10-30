@@ -16,7 +16,7 @@ public class VilamastaModel extends AnimatedGeoModel<EntityVilamasta> {
     @Override
     public ResourceLocation getTextureLocation(EntityVilamasta object)
     {
-        return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/vilamasta.png");
+        return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/spectrobe/vilamasta.png");
     }
 
     @Override

@@ -16,7 +16,7 @@ public class SpikoModel extends AnimatedGeoModel<EntitySpiko> {
     @Override
     public ResourceLocation getTextureLocation(EntitySpiko object)
     {
-        return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/spiko.png");
+        return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/spectrobe/spiko.png");
     }
 
     @Override

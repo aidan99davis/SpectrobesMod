@@ -16,7 +16,7 @@ public class SeguModel extends AnimatedGeoModel<EntitySegu> {
     @Override
     public ResourceLocation getTextureLocation(EntitySegu object)
     {
-        return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/segu.png");
+        return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/spectrobe/segu.png");
     }
 
     @Override

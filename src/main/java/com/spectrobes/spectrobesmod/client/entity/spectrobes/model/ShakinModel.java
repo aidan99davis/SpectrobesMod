@@ -16,7 +16,7 @@ public class ShakinModel extends AnimatedGeoModel<EntityShakin> {
     @Override
     public ResourceLocation getTextureLocation(EntityShakin object)
     {
-        return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/shakin.png");
+        return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/spectrobe/shakin.png");
     }
 
     @Override
