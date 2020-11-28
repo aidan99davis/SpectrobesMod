@@ -7,7 +7,7 @@ package com.spectrobes.spectrobesmod.client.entity.krawl.model;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntitySwar;
 import net.minecraft.util.ResourceLocation;
-import software.bernie.geckolib.model.AnimatedGeoModel;
+import software.bernie.geckolib3.model.AnimatedGeoModel;
 
 public class SwarModel extends AnimatedGeoModel<EntitySwar> {
 

@@ -9,10 +9,10 @@ import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.world.World;
-import software.bernie.geckolib.core.PlayState;
-import software.bernie.geckolib.core.builder.AnimationBuilder;
-import software.bernie.geckolib.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib.core.manager.AnimationFactory;
+import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 public class EntitySamukabu extends EntityMammalSpectrobe {
 
@@ -53,15 +53,15 @@ public class EntitySamukabu extends EntityMammalSpectrobe {
     }
 
     @Override
-    public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> entityAnimationTestEvent) {
-        moveAnimationController.transitionLengthTicks = 2;
-        if(entityAnimationTestEvent.isMoving())
+    public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event) {
+        event.getController().transitionLengthTicks = 2;
+        if(event.isMoving())
         {
-            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.samukabu.walk", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.samukabu.walk", true));
             return PlayState.CONTINUE;
         }
-        else if(entityAnimationTestEvent.getAnimatable().isSitting()) {
-            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.samukabu.sitting", true));
+        else if(event.getAnimatable().isSitting()) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.samukabu.sitting", true));
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;

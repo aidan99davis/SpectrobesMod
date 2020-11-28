@@ -3,7 +3,7 @@ package com.spectrobes.spectrobesmod.client.entity.spectrobes.model;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.komainu.EntityKomanoto;
 import net.minecraft.util.ResourceLocation;
-import software.bernie.geckolib.model.AnimatedGeoModel;
+import software.bernie.geckolib3.model.AnimatedGeoModel;
 
 public class KomanotoModel extends AnimatedGeoModel<EntityKomanoto> {
 
@@ -16,7 +16,7 @@ public class KomanotoModel extends AnimatedGeoModel<EntityKomanoto> {
 	@Override
 	public ResourceLocation getTextureLocation(EntityKomanoto object)
 	{
-		return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/spectrobe/komanoto.png");
+		return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/spectrobe/komanoto_0.png");
 	}
 
 	@Override

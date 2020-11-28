@@ -3,7 +3,7 @@ package com.spectrobes.spectrobesmod.client.entity.spectrobes.model;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.vilar.EntityVilamasta;
 import net.minecraft.util.ResourceLocation;
-import software.bernie.geckolib.model.AnimatedGeoModel;
+import software.bernie.geckolib3.model.AnimatedGeoModel;
 
 public class VilamastaModel extends AnimatedGeoModel<EntityVilamasta> {
 

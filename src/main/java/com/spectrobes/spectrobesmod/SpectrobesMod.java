@@ -31,8 +31,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.*;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import software.bernie.geckolib.GeckoLib;
-import software.bernie.geckolib.resource.ResourceListener;
+import software.bernie.geckolib3.GeckoLib;
+import software.bernie.geckolib3.resource.ResourceListener;
 
 import javax.annotation.Nullable;
 

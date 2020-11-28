@@ -5,10 +5,10 @@ import com.spectrobes.spectrobesmod.common.registry.KrawlRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.world.World;
-import software.bernie.geckolib.core.PlayState;
-import software.bernie.geckolib.core.builder.AnimationBuilder;
-import software.bernie.geckolib.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib.core.manager.AnimationFactory;
+import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 public class EntitySwar extends EntityKrawl {
     public EntitySwar(EntityType<? extends MonsterEntity> type, World worldIn) {
@@ -21,15 +21,15 @@ public class EntitySwar extends EntityKrawl {
     }
 
     @Override
-    public <ENTITY extends EntityKrawl> PlayState moveController(AnimationEvent<ENTITY> entityAnimationTestEvent) {
-        moveController.transitionLengthTicks = 2;
-        if(!IsAttacking()) {
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.swar.idle", true));
+    public <ENTITY extends EntityKrawl> PlayState moveController(AnimationEvent<ENTITY> event) {
+        event.getController().transitionLengthTicks = 2;
+        if(event.isMoving()) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.swar.walk", true));
             return PlayState.CONTINUE;
 
         } else {
-            moveController.setAnimation(new AnimationBuilder().addAnimation("animation.swar.attack", true));
-            return PlayState.CONTINUE;
+//            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.swar.attack", true));
+            return PlayState.STOP;
         }
     }
 

@@ -23,7 +23,7 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
     private static final EntityPredicate field_213810_bA = (new EntityPredicate()).setDistance(10.0D).allowFriendlyFire().allowInvulnerable().setLineOfSiteRequired();
     public EntityAquaticSpectrobe(EntityType<? extends EntitySpectrobe> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
-        this.setPathPriority(PathNodeType.WATER, 0.0F);
+        this.setPathPriority(PathNodeType.WATER, 1.0F);
         this.setPathPriority(PathNodeType.WALKABLE, 1.0F);
         this.moveController = new MoveHelperController(this);
         this.lookController = new SpectrobeLookController(this, 10);
@@ -64,7 +64,7 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
     protected void registerGoals() {
         super.registerGoals();
 //        this.goalSelector.addGoal(0, new BreatheAirGoal(this));
-        this.goalSelector.addGoal(0, new SwimWithPlayerGoal(this, 1.0D));
+        this.goalSelector.addGoal(0, new SwimWithPlayerGoal(this, 2.0D));
         this.goalSelector.addGoal(2, new RandomSwimmingGoal(this, 1.0D, 1));
         this.goalSelector.addGoal(2, new FindWaterGoal(this));
         this.goalSelector.addGoal(4, new LookRandomlyGoal(this));

@@ -9,13 +9,12 @@ import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.world.World;
-import software.bernie.geckolib.core.PlayState;
-import software.bernie.geckolib.core.builder.AnimationBuilder;
-import software.bernie.geckolib.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib.core.manager.AnimationFactory;
+import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 public class EntityKuganon extends EntityMammalSpectrobe {
-
 
     public EntityKuganon(EntityType<EntityKuganon> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
@@ -54,16 +53,16 @@ public class EntityKuganon extends EntityMammalSpectrobe {
     }
 
     @Override
-    public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> entityAnimationTestEvent)
+    public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event)
     {
         moveAnimationController.transitionLengthTicks = 2;
-        if(entityAnimationTestEvent.isMoving())
+        if(event.isMoving())
         {
-            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.kuganon.walk", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.kuganon.walk", true));
             return PlayState.CONTINUE;
         } else {
             if(this.IsAttacking()) {
-                moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.kuganon.attack", true));
+                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.kuganon.attack", true));
                 return PlayState.CONTINUE;
             }
         }

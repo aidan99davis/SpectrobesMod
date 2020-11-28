@@ -9,10 +9,10 @@ import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.world.World;
-import software.bernie.geckolib.core.PlayState;
-import software.bernie.geckolib.core.builder.AnimationBuilder;
-import software.bernie.geckolib.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib.core.manager.AnimationFactory;
+import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 public class EntityShakor extends EntityAquaticSpectrobe {
 
@@ -59,22 +59,22 @@ public class EntityShakor extends EntityAquaticSpectrobe {
     }
 
     @Override
-    public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> entityAnimationTestEvent)
+    public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event)
     {
-        if(entityAnimationTestEvent.isMoving())
+        if(event.isMoving())
         {
-            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.shakor.walk", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.shakor.walk", true));
             return PlayState.CONTINUE;
         }
-        else if(entityAnimationTestEvent.getAnimatable().isSitting()) {
-            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.shakor.idle", true));
+        else if(event.getAnimatable().isSitting()) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.shakor.idle", true));
             return PlayState.CONTINUE;
-        } else if(entityAnimationTestEvent.getAnimatable().isSwimming()) {
-            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.shakor.walk", true));
+        } else if(event.getAnimatable().isSwimming()) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.shakor.walk", true));
             return PlayState.CONTINUE;
         } else {
             if(this.IsAttacking()) {
-                moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.shakor.attack", true));
+                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.shakor.attack", true));
                 return PlayState.CONTINUE;
             }
         }

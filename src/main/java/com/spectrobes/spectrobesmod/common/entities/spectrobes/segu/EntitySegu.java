@@ -9,10 +9,10 @@ import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.world.World;
-import software.bernie.geckolib.core.PlayState;
-import software.bernie.geckolib.core.builder.AnimationBuilder;
-import software.bernie.geckolib.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib.core.manager.AnimationFactory;
+import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 public class EntitySegu extends EntityMammalSpectrobe {
 
@@ -53,15 +53,15 @@ public class EntitySegu extends EntityMammalSpectrobe {
     }
 
     @Override
-    public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> entityAnimationTestEvent) {
-        moveAnimationController.transitionLengthTicks = 2;
+    public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event) {
+        event.getController().transitionLengthTicks = 2;
         if(!(limbSwingAmount > -0.15F && limbSwingAmount < 0.15F))
         {
-            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.segu.walk", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.segu.walk", true));
             return PlayState.CONTINUE;
         }
         if(this.isSitting()) {
-            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.segu.idle", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.segu.idle", true));
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
