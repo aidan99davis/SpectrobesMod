@@ -63,7 +63,6 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
     @Override
     protected void registerGoals() {
         super.registerGoals();
-//        this.goalSelector.addGoal(0, new BreatheAirGoal(this));
         this.goalSelector.addGoal(0, new SwimWithPlayerGoal(this, 2.0D));
         this.goalSelector.addGoal(2, new RandomSwimmingGoal(this, 1.0D, 1));
         this.goalSelector.addGoal(2, new FindWaterGoal(this));
@@ -242,13 +241,6 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
                         this.dolphin.setAIMoveSpeed(f1);
                     }
                 }
-//            } else {
-//                this.dolphin.setAIMoveSpeed(0.0F);
-//                this.dolphin.setMoveStrafing(0.0F);
-//                this.dolphin.setMoveVertical(0.0F);
-//                this.dolphin.setMoveForward(0.0F);
-//            }
-
         }
     }
 
