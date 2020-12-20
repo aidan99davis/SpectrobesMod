@@ -3,22 +3,39 @@
 	"animations": {
 		"animation.swar.walk": {
 			"loop": true,
-			"animation_length": 0.44,
+			"animation_length": 0.6,
 			"bones": {
-				"body": {
-					"position": {
+				"body_lower": {
+					"rotation": {
 						"0.0": {
 							"vector": [0, 0, 0]
 						},
 						"0.16": {
-							"vector": [0, 4, -4]
+							"vector": [-12.5, 0, 0]
 						},
 						"0.32": {
-							"vector": [0, 0, -4]
+							"vector": [0, 0, 0]
+						}
+					}
+				},
+				"body_upper": {
+					"rotation": {
+						"0.32": {
+							"vector": [-7.5, 0, 0]
 						},
 						"0.44": {
 							"vector": [0, 0, 0]
 						}
+					}
+				},
+				"shoulder_left": {
+					"rotation": {
+						"vector": [0, -20, 0]
+					}
+				},
+				"shoulder_right": {
+					"rotation": {
+						"vector": [0, 20, 0]
 					}
 				}
 			}
