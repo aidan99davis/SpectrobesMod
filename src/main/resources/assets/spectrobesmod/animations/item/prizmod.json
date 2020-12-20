@@ -1,0 +1,59 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.prizmod.open": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 0.36,
+			"bones": {
+				"lid_1": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.36": {
+							"vector": [0, 180, 0]
+						}
+					}
+				},
+				"lid_2": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.36": {
+							"vector": [0, -180, 0],
+							"easing": "easeInQuad"
+						}
+					}
+				}
+			}
+		},
+		"animation.prizmod.close": {
+			"loop": true,
+			"animation_length": 0.36,
+			"bones": {
+				"lid_1": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 180, 0]
+						},
+						"0.36": {
+							"vector": [0, 0, 0]
+						}
+					}
+				},
+				"lid_2": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, -180, 0]
+						},
+						"0.36": {
+							"vector": [0, 0, 0]
+						}
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

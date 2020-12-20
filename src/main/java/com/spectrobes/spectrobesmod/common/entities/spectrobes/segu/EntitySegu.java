@@ -9,9 +9,10 @@ import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.world.World;
-import software.bernie.geckolib.animation.builder.AnimationBuilder;
-import software.bernie.geckolib.event.AnimationTestEvent;
-import software.bernie.geckolib.manager.EntityAnimationManager;
+import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 public class EntitySegu extends EntityMammalSpectrobe {
 
@@ -25,7 +26,7 @@ public class EntitySegu extends EntityMammalSpectrobe {
 
     @Override
     public EntityType<? extends EntitySpectrobe> getEvolutionRegistry() {
-        return null;//SpectrobesEntities.ENTITY_SPIKAN.get();
+        return null;
     }
 
     @Override
@@ -47,25 +48,23 @@ public class EntitySegu extends EntityMammalSpectrobe {
     }
 
     @Override
-    public EntityAnimationManager getAnimationManager() {
+    public AnimationFactory getFactory() {
         return animationControllers;
     }
 
     @Override
-    public <ENTITY extends EntitySpectrobe> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent) {
-        moveAnimationController.transitionLengthTicks = 2;
+    public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event) {
+        event.getController().transitionLengthTicks = 2;
         if(!(limbSwingAmount > -0.15F && limbSwingAmount < 0.15F))
         {
-            animationControllers.setAnimationSpeed(1);
-            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.segu.walk", true));
-            return true;
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.segu.walk", true));
+            return PlayState.CONTINUE;
         }
         if(this.isSitting()) {
-            animationControllers.setAnimationSpeed(0.5);
-            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.segu.idle", true));
-            return true;
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.segu.idle", true));
+            return PlayState.CONTINUE;
         }
-        return false;
+        return PlayState.STOP;
     }
 
     @Override

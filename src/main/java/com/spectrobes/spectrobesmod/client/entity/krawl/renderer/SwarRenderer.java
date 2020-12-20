@@ -10,14 +10,15 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 import javax.annotation.Nullable;
 
 @OnlyIn(Dist.CLIENT)
-public class SwarRenderer extends MobRenderer<EntitySwar, SwarModel> {
+public class SwarRenderer extends GeoEntityRenderer<EntitySwar> {
 
     public SwarRenderer(EntityRendererManager renderManagerIn) {
-        super(renderManagerIn, new SwarModel(), 0.5f);
+        super(renderManagerIn, new SwarModel());
     }
 
     @Nullable

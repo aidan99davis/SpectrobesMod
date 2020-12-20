@@ -9,9 +9,10 @@ import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.world.World;
-import software.bernie.geckolib.animation.builder.AnimationBuilder;
-import software.bernie.geckolib.event.AnimationTestEvent;
-import software.bernie.geckolib.manager.EntityAnimationManager;
+import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 public class EntityKomainu extends EntityMammalSpectrobe {
 
@@ -46,28 +47,27 @@ public class EntityKomainu extends EntityMammalSpectrobe {
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(5);
     }
 
-
     @Override
-    public EntityAnimationManager getAnimationManager() {
-        return animationControllers;
+    public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event) {
+        event.getController().transitionLengthTicks = 2;
+        if(event.isMoving())
+        {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.komainu.walk", true));
+            return PlayState.CONTINUE;
+        }
+        else if(event.getAnimatable().isSitting()) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.komainu.sit", false));
+            return PlayState.CONTINUE;
+        } else {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.komainu.idle", true));
+            return PlayState.CONTINUE;
+        }
     }
 
-    @Override
-    public <ENTITY extends EntitySpectrobe> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent) {
-        moveAnimationController.transitionLengthTicks = 2;
-        if(entityAnimationTestEvent.isWalking())
-        {
-            animationControllers.setAnimationSpeed(2);
-            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.komainu.jump", true));
-            return true;
-        }
-        else if(entityAnimationTestEvent.getEntity().isSitting()) {
-            animationControllers.setAnimationSpeed(1);
-            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.komainu.sit", false));
-            return true;
-        }
-        return false;
 
+    @Override
+    public AnimationFactory getFactory() {
+        return animationControllers;
     }
 
     @Override

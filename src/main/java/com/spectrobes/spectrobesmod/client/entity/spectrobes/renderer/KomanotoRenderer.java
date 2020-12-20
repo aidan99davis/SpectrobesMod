@@ -6,18 +6,18 @@ import com.spectrobes.spectrobesmod.client.entity.spectrobes.model.KomanotoModel
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.komainu.EntityKomanoto;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 import javax.annotation.Nullable;
 
 @OnlyIn(Dist.CLIENT)
-public class KomanotoRenderer extends MobRenderer<EntityKomanoto, KomanotoModel> {
+public class KomanotoRenderer extends GeoEntityRenderer<EntityKomanoto> {
 
     public KomanotoRenderer(EntityRendererManager renderManagerIn) {
-        super(renderManagerIn, new KomanotoModel(), 0.5f);
+        super(renderManagerIn, new KomanotoModel());
     }
 
     @Nullable

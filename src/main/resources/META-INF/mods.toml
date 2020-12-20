@@ -47,10 +47,3 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed mollis lacinia magn
     versionRange="[1.15.2]"
     ordering="NONE"
     side="BOTH"
-
-[[dependencies.spectrobesmod]]
-    modId="geckolib"
-    mandatory=true
-    versionRange="[2.0.0,)"
-    ordering="NONE"
-    side="BOTH"

@@ -3,16 +3,16 @@ package com.spectrobes.spectrobesmod.common.entities.spectrobes.kubaku;
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityMammalSpectrobe;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
-import com.spectrobes.spectrobesmod.common.entities.spectrobes.komainu.EntityKomainu;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.world.World;
-import software.bernie.geckolib.animation.builder.AnimationBuilder;
-import software.bernie.geckolib.event.AnimationTestEvent;
-import software.bernie.geckolib.manager.EntityAnimationManager;
+import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 public class EntityKubaku extends EntityMammalSpectrobe {
 
@@ -47,24 +47,23 @@ public class EntityKubaku extends EntityMammalSpectrobe {
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(5);
     }
 
-
     @Override
-    public EntityAnimationManager getAnimationManager() {
+    public AnimationFactory getFactory() {
         return animationControllers;
     }
 
     @Override
-    public <ENTITY extends EntitySpectrobe> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent) {
-        if(entityAnimationTestEvent.isWalking())
+    public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event) {
+        if(event.isMoving())
         {
-            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.kubaku.walk", true));
-            return true;
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.kubaku.walk", true));
+            return PlayState.CONTINUE;
         }
-        else if(entityAnimationTestEvent.getEntity().isSitting()) {
-            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.kubaku.idle", true));
-            return true;
+        else if(event.getAnimatable().isSitting()) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.kubaku.idle", true));
+            return PlayState.CONTINUE;
         }
-        return false;
+        return PlayState.STOP;
 
     }
 

@@ -10,14 +10,15 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 import javax.annotation.Nullable;
 
 @OnlyIn(Dist.CLIENT)
-public class ShakorRenderer extends MobRenderer<EntityShakor, ShakorModel> {
+public class ShakorRenderer extends GeoEntityRenderer<EntityShakor> {
 
     public ShakorRenderer(EntityRendererManager renderManagerIn) {
-        super(renderManagerIn, new ShakorModel(), 0.5f);
+        super(renderManagerIn, new ShakorModel());
     }
 
     @Nullable

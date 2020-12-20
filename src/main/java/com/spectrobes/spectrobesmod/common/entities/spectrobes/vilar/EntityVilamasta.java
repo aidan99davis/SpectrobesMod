@@ -9,9 +9,10 @@ import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.world.World;
-import software.bernie.geckolib.animation.builder.AnimationBuilder;
-import software.bernie.geckolib.event.AnimationTestEvent;
-import software.bernie.geckolib.manager.EntityAnimationManager;
+import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 public class EntityVilamasta extends EntityMammalSpectrobe {
 
@@ -47,34 +48,30 @@ public class EntityVilamasta extends EntityMammalSpectrobe {
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(5);
     }
 
-
     @Override
-    public EntityAnimationManager getAnimationManager() {
+    public AnimationFactory getFactory() {
         return animationControllers;
     }
 
     @Override
-    public <ENTITY extends EntitySpectrobe> boolean moveController(AnimationTestEvent<ENTITY> entityAnimationTestEvent)
+    public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event)
     {
-        moveAnimationController.transitionLengthTicks = 2;
-        if(entityAnimationTestEvent.isWalking())
+        event.getController().transitionLengthTicks = 2;
+        if(event.isMoving())
         {
-            animationControllers.setAnimationSpeed(1);
-            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.vilamasta.walk", true));
-            return true;
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.vilamasta.walk", true));
+            return PlayState.CONTINUE;
         }
-        else if(entityAnimationTestEvent.getEntity().isSitting()) {
-            animationControllers.setAnimationSpeed(0.25);
-            moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.vilamasta.idle", true));
-            return true;
+        else if(this.isSitting()) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.vilamasta.idle", true));
+            return PlayState.CONTINUE;
         } else {
             if(this.IsAttacking()) {
-                animationControllers.setAnimationSpeed(1);
-                moveAnimationController.setAnimation(new AnimationBuilder().addAnimation("animation.vilamasta.attack", true));
-                return true;
+                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.vilamasta.attack", true));
+                return PlayState.CONTINUE;
             }
         }
-        return false;
+        return PlayState.STOP;
     }
 
     @Override

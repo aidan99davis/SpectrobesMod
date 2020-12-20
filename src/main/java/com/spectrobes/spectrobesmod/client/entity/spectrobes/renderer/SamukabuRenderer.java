@@ -8,14 +8,15 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 import javax.annotation.Nullable;
 
 @OnlyIn(Dist.CLIENT)
-public class SamukabuRenderer extends MobRenderer<EntitySamukabu, SamukabuModel> {
+public class SamukabuRenderer extends GeoEntityRenderer<EntitySamukabu> {
 
     public SamukabuRenderer(EntityRendererManager renderManagerIn) {
-        super(renderManagerIn, new SamukabuModel(), 0.5f);
+        super(renderManagerIn, new SamukabuModel());
     }
 
     @Nullable
