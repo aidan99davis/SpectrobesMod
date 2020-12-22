@@ -3,6 +3,7 @@ package com.spectrobes.spectrobesmod.client.entity.spectrobes;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.renderer.*;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.grilda.EntityGrilda;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.harumi.EntityHarumi;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.komainu.EntityKomainu;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.komainu.EntityKomanoto;
@@ -22,7 +23,6 @@ import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.RegistryObject;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -134,6 +134,13 @@ public class SpectrobesEntities {
                     .size(0.5f, 0.75f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "harumi").toString()));
 
+    public static final RegistryObject<EntityType<EntityGrilda>> ENTITY_GRILDA
+            = ENTITY_TYPES.register("entity_grilda",
+            () -> EntityType.Builder.create(EntityGrilda::new,
+                    EntityClassification.CREATURE)
+                    .size(1f, 1f)
+                    .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "grilda").toString()));
+
     public static <T extends Entity> RegistryObject<EntityType<T>> BuildEntity(EntityType.IFactory<T> entity, Class<T> entityClass, float width, float height)
     {
         String name = entityClass.getSimpleName().toLowerCase();
@@ -161,6 +168,7 @@ public class SpectrobesEntities {
         SPECTROBES.put("vilamasta", ENTITY_VILAMASTA.get());
         SPECTROBES.put("segu", ENTITY_SEGU.get());
         SPECTROBES.put("harumi", ENTITY_HARUMI.get());
+        SPECTROBES.put("grilda", ENTITY_GRILDA.get());
     }
 
     public static EntityType<? extends EntitySpectrobe> getByName(String name) throws ClassNotFoundException {

@@ -10,7 +10,6 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 @OnlyIn(Dist.CLIENT)
 public class SpectrobeRendererManager {
     public static void init() {
-
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_KOMAINU.get(), manager -> new KomainuRenderer(manager));
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_KOMANOTO.get(), manager -> new KomanotoRenderer(manager));
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_VILAR.get(), manager -> new VilarRenderer(manager));
@@ -25,8 +24,7 @@ public class SpectrobeRendererManager {
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SHAKOR.get(), manager -> new ShakorRenderer(manager));
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SEGU.get(), manager -> new SeguRenderer(manager));
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_HARUMI.get(), manager -> new HarumiRenderer(manager));
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_GRILDA.get(), manager -> new GrildaRenderer(manager));
         RenderingRegistry.registerEntityRenderingHandler(KrawlEntities.ENTITY_SWAR.get(), manager -> new SwarRenderer(manager));
-
-
     }
 }
