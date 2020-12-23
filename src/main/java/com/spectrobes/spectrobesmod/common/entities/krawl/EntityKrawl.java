@@ -3,9 +3,9 @@ package com.spectrobes.spectrobesmod.common.entities.krawl;
 import com.spectrobes.spectrobesmod.common.entities.IHasNature;
 import com.spectrobes.spectrobesmod.common.entities.goals.AttackSpectrobeGoal;
 import com.spectrobes.spectrobesmod.common.entities.goals.AttackSpectrobeMasterGoal;
-import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
+import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -75,9 +75,26 @@ public abstract class EntityKrawl extends MonsterEntity implements IAnimatable, 
     }
 
     @Override
-    public void damageEntity(DamageSource source, float amount) {
-        if(source.getImmediateSource() instanceof EntitySpectrobe){
-            super.damageEntity(source,amount);
+    protected void damageEntity(DamageSource damageSrc, float damageAmount) {
+        if(damageSrc.getImmediateSource() instanceof IHasNature) {
+            IHasNature attacker = (IHasNature)damageSrc.getImmediateSource();
+            int advantage = Spectrobe.hasTypeAdvantage(attacker, this);
+            float scaledAmount;
+
+            switch (advantage) {
+                case -1:
+                    scaledAmount = damageAmount * 0.75f;
+                    break;
+                case 1:
+                    scaledAmount = damageAmount * 1.25f;
+                    break;
+                default:
+                    scaledAmount = damageAmount;
+                    break;
+            }
+            super.damageEntity(damageSrc, scaledAmount);
+        } else {
+            super.damageEntity(damageSrc, damageAmount);
         }
     }
 

@@ -21,7 +21,6 @@ public class AttackSpectrobeMasterGoal extends TargetGoal {
         tryKill = toKill;
     }
 
-
     /**
      * Returns whether the EntityAIBase should begin execution.
      */
@@ -36,7 +35,7 @@ public class AttackSpectrobeMasterGoal extends TargetGoal {
         toAttack.set(null);
 
         for(PlayerEntity player : nearbyPlayers) {
-            if(toAttack.get() != null) {
+            if (toAttack.get() != null || player.isCreative()) {
                 break;
             }
             player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {

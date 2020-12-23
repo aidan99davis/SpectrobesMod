@@ -23,7 +23,7 @@ public class FindMineralsGoal extends Goal {
     }
 
     public boolean shouldExecute() {
-        if(entity.getStage() == SpectrobeProperties.Stage.CHILD) {
+        if(entity.getStage() == SpectrobeProperties.Stage.CHILD && entity.isSearching()) {
             List<ItemEntity> lvt_1_1_ = entity.world.getEntitiesWithinAABB(ItemEntity.class, this.entity.getBoundingBox().grow(8.0D, 8.0D, 8.0D), EntitySpectrobe.MINERAL_SELECTOR);
             return !lvt_1_1_.isEmpty();
         }
@@ -33,7 +33,7 @@ public class FindMineralsGoal extends Goal {
     @Override
     public boolean shouldContinueExecuting() {
         List<ItemEntity> lvt_1_1_ = entity.world.getEntitiesWithinAABB(ItemEntity.class, this.entity.getBoundingBox().grow(8.0D, 8.0D, 8.0D), EntitySpectrobe.MINERAL_SELECTOR);
-        return !lvt_1_1_.isEmpty();
+        return !lvt_1_1_.isEmpty() && entity.isSearching();
     }
 
     public void startExecuting() {
