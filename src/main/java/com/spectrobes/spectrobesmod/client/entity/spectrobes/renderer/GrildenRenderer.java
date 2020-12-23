@@ -39,6 +39,7 @@ public class GrildenRenderer extends GeoEntityRenderer<EntityGrilden> {
 
     @Override
     public void render(EntityGrilden entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
+        matrixStackIn.scale(0.5f, 0.5f, 0.5f);
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }
 }
