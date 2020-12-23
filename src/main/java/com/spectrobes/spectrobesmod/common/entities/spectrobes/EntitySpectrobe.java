@@ -2,9 +2,7 @@ package com.spectrobes.spectrobesmod.common.entities.spectrobes;
 
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.entities.IHasNature;
-import com.spectrobes.spectrobesmod.common.entities.goals.AttackKrawlGoal;
-import com.spectrobes.spectrobesmod.common.entities.goals.FindMineralsGoal;
-import com.spectrobes.spectrobesmod.common.entities.goals.FollowMasterGoal;
+import com.spectrobes.spectrobesmod.common.entities.goals.*;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
 import com.spectrobes.spectrobesmod.common.items.minerals.SpecialMineralItem;
@@ -62,9 +60,12 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
             EntityDataManager.createKey(EntitySpectrobe.class,
                     DataSerializers.BOOLEAN);
 
-    private static final DataParameter<Boolean> IS_SITTING =
+    //State 0: following
+    //State 1: Sitting
+    //state 2: searching
+    private static final DataParameter<Integer> STATE =
             EntityDataManager.createKey(EntitySpectrobe.class,
-                    DataSerializers.BOOLEAN);
+                    DataSerializers.VARINT);
 
     private static final DataParameter<Spectrobe> SPECTROBE_DATA =
             EntityDataManager.createKey(EntitySpectrobe.class,
@@ -83,18 +84,22 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     protected void registerGoals()
     {
         super.registerGoals();
-        this.goalSelector.addGoal(0, new AttackKrawlGoal(this, true, false));
-        this.goalSelector.addGoal(0, new FindMineralsGoal(this));
+        this.goalSelector.addGoal(0, new AttackKrawlGoal(this, true, true));
+        this.goalSelector.addGoal(1, new FindMineralsGoal(this));
+        this.goalSelector.addGoal(1, new FindMineralOreGoal(this));
+        this.goalSelector.addGoal(1, new FindFossilsGoal(this));
         this.goalSelector.addGoal(0, new MeleeAttackGoal(this, 0.5, false));
-        this.goalSelector.addGoal(1, new FollowMasterGoal(this,0.3f , 3, 12, true));
+        this.goalSelector.addGoal(2, new FollowMasterGoal(this,0.3f , 1, 15, true));
 //        this.goalSelector.addGoal(5, new BreedGoal(this,1));
         this.goalSelector.addGoal(5, new LookAtGoal(this, PlayerEntity.class, 6.0F));
     }
 
     @Override
     public boolean isSitting() {
-        return dataManager.get(IS_SITTING);
+        return dataManager.get(STATE) == 1;
     }
+
+    public void setState(int state) { dataManager.set(STATE, state); }
 
     @Override
     public boolean processInteract(PlayerEntity player, Hand hand) {
@@ -102,13 +107,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         if(getSpectrobeData() != null) {
             if(!recentInteract && itemstack.isEmpty()) {
                 if(player.getUniqueID().equals(getOwnerId()) && player.isSneaking()) {
-                    dataManager.set(IS_SITTING, (!dataManager.get(IS_SITTING)));
-                    if(world.isRemote()) {
-                        player.sendMessage(new StringTextComponent(
-                                dataManager.get(IS_SITTING)?
-                                        "Your spectrobe is now sitting"
-                                        : "Your spectrobe is no longer sitting."));
-                    }
+                    cycleState(player);
                 } else {
                     printSpectrobeToChat(player);
                 }
@@ -131,6 +130,32 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         recentInteract = true;
         ticksTillInteract = 15;
         return super.processInteract(player, hand);
+    }
+
+    private void cycleState(PlayerEntity player) {
+        int oldstate = dataManager.get(STATE);
+
+        int newstate = oldstate + 1;
+
+        //first check is to prevent non child forms from searching. 2nd is to cycle fully for children
+        if((getStage() != Stage.CHILD && newstate > 1) || newstate > 2) {
+            newstate = 0;
+        }
+
+        dataManager.set(STATE, newstate);
+        if(world.isRemote()) {
+            switch(newstate) {
+                case 0:
+                    player.sendMessage(new StringTextComponent("Your spectrobe is now following."));
+                    break;
+                case 1:
+                    player.sendMessage(new StringTextComponent("Your spectrobe is now sitting."));
+                    break;
+                case 2:
+                    player.sendMessage(new StringTextComponent("Your spectrobe is now searching."));
+                    break;
+            }
+        }
     }
 
     //prevent spectrobes from despawning naturally. they should only stop existing via prizmod recall feature, or death.
@@ -228,13 +253,17 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         super.registerData();
         dataManager.register(SPECTROBE_DATA, GetNewSpectrobeInstance());
         dataManager.register(TICKS_TILL_MATE, 400);
+        dataManager.register(STATE, 0);
         dataManager.register(IS_ATTACKING, false);
-        dataManager.register(IS_SITTING, false);
+    }
+
+    public boolean isSearching() {
+        return dataManager.get(STATE) == 2;
     }
 
     @Override
     public Vec3d getMotion() {
-        if(!dataManager.get(IS_SITTING)) {
+        if(!isSitting()) {
             return super.getMotion();
         }
         return Vec3d.ZERO;
@@ -261,19 +290,14 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
 
     @Override
     public void writeSpawnData(PacketBuffer buffer) {
-//        if(!world.isRemote) {
             if(getSpectrobeData() != null)
                 buffer.writeCompoundTag(getSpectrobeData().write());
-//        }
     }
 
     @Override
     public void readSpawnData(PacketBuffer additionalData) {
-//        if(!world.isRemote) {
             setSpectrobeData(Spectrobe.read(additionalData.readCompoundTag()));
             updateEntityAttributes();
-
-//        }
     }
 
     //Animation
@@ -484,6 +508,21 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         builder2.append("Hp: " + spectrobeInstance.stats.getHpLevel() + ", ");
         builder2.append("Atk: " + spectrobeInstance.stats.getAtkLevel() + ", ");
         builder2.append("Def: " + spectrobeInstance.stats.getDefLevel() + ", ");
+        String status;
+        switch (dataManager.get(STATE)) {
+            case 0:
+                status = "Following";
+                break;
+            case 1:
+                status = "Sitting";
+                break;
+            case 2:
+                status = "Searching";
+                break;
+            default:
+                status = "Unknown.";
+        }
+        builder2.append("Status: " + status);
         if(world.isRemote()) {
             player.sendMessage(new StringTextComponent(builder3.toString()));
             player.sendMessage(new StringTextComponent(builder1.toString()));

@@ -24,7 +24,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorldReader;
 
 public class FollowMasterGoal extends Goal {
-    private final TameableEntity tameable;
+    private final EntitySpectrobe tameable;
     private LivingEntity owner;
     private final IWorldReader world;
     private final double followSpeed;
@@ -35,7 +35,7 @@ public class FollowMasterGoal extends Goal {
     private float oldWaterCost;
     private final boolean teleportToLeaves;
 
-    public FollowMasterGoal(TameableEntity p_i225711_1_, double p_i225711_2_, float p_i225711_4_, float p_i225711_5_, boolean p_i225711_6_) {
+    public FollowMasterGoal(EntitySpectrobe p_i225711_1_, double p_i225711_2_, float p_i225711_4_, float p_i225711_5_, boolean p_i225711_6_) {
         this.tameable = p_i225711_1_;
         this.world = p_i225711_1_.world;
         this.followSpeed = p_i225711_2_;
@@ -54,6 +54,8 @@ public class FollowMasterGoal extends Goal {
             return false;
         } else if (this.tameable.isSitting()) {
             return false;
+        } else if (this.tameable.isSearching()) {
+            return false;
         } else if (this.tameable.getDistanceSq(lvt_1_1_) < (double)(this.minDist * this.minDist)) {
             return false;
         } else {
@@ -66,6 +68,8 @@ public class FollowMasterGoal extends Goal {
         if (this.navigator.noPath()) {
             return false;
         } else if (this.tameable.isSitting()) {
+            return false;
+        } else if (this.tameable.isSearching()) {
             return false;
         } else {
             return this.tameable.getDistanceSq(this.owner) > (double)(this.maxDist * this.maxDist);

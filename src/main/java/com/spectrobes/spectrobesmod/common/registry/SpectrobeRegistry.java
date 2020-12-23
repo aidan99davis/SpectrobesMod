@@ -77,6 +77,13 @@ public class SpectrobeRegistry {
             .withStats(100,75,75)
             .build();
 
+    public static final Spectrobe Grilden
+            = new SpectrobeBuilder()
+            .withName("Grilden")
+            .withProperties(SpectrobePropertyRegistry.GRILDEN)
+            .withStats(158,150,112)
+            .build();
+
     //Flash Spectrobes
     public static final Spectrobe Samukabu
             = new SpectrobeBuilder()

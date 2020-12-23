@@ -28,6 +28,7 @@ public class SpectrobePropertyRegistry {
 
 
     public static SpectrobeProperties GRILDA = new SpectrobeProperties(SpectrobeProperties.Nature.AURORA, SpectrobeProperties.Stage.CHILD);
+    public static SpectrobeProperties GRILDEN = new SpectrobeProperties(SpectrobeProperties.Nature.AURORA, SpectrobeProperties.Stage.ADULT);
 
     //FLASH
 

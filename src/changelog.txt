@@ -4,7 +4,9 @@ Updated Geckolib to 3.0. meaning better models and animations!
 Krawl only attack players with an adult form in the top two slots of the prizmod line up
 Added chroma minerals
 Added chroma variants for komainu, komanoto, shakin, shakor.
-Added Grilda.
+Added Grilda and Grilden.
+Added an extra state to spectrobes: searching. Cycle through the states with shift right click.
+Added child forms searching for minerals and fossil ore blocks when in searching state
 
 V1.3.2
 ======
@@ -14,7 +16,6 @@ V1.3.1
 ======
 Fixed Segu fossil & vilar fossil using other fossil textures.
 Fixed segu, shakin and vilar item names.
-
 
 V1.3
 =====
