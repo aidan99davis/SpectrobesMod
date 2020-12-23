@@ -1,6 +1,7 @@
 package com.spectrobes.spectrobesmod.common.spectrobes;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
+import com.spectrobes.spectrobesmod.common.entities.IHasNature;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralProperties;
 import com.spectrobes.spectrobesmod.common.registry.IconRegistry;
 import com.spectrobes.spectrobesmod.util.SpectrobeBuilder;
@@ -137,6 +138,43 @@ public class Spectrobe {
         setVariant(spectrobeInstance.Variant);
         setStats(spectrobeInstance.stats);
         setMasterUUID(spectrobeInstance.MasterUUID);
+    }
+
+    //Checks if the attacker should have the attack multiplier bonus applied.
+    public static int hasTypeAdvantage(IHasNature attacker, IHasNature defender) {
+        int toReturn = 0;
+
+        if(attacker == defender)
+            return toReturn;
+
+        SpectrobeProperties.Nature attackerNature = attacker.getNature();
+        SpectrobeProperties.Nature defenderNature = defender.getNature();
+
+        switch(attackerNature){
+            case FLASH:
+                if(defenderNature == SpectrobeProperties.Nature.CORONA)
+                    toReturn = 1;
+                if(defenderNature == SpectrobeProperties.Nature.AURORA)
+                    toReturn = -1;
+                break;
+            case AURORA:
+                if(defenderNature == SpectrobeProperties.Nature.FLASH)
+                    toReturn = 1;
+                if(defenderNature == SpectrobeProperties.Nature.CORONA)
+                    toReturn = -1;
+                break;
+            case CORONA:
+                if(defenderNature == SpectrobeProperties.Nature.AURORA)
+                    toReturn = 1;
+                if(defenderNature == SpectrobeProperties.Nature.FLASH)
+                    toReturn = -1;
+                break;
+            default:
+                toReturn = 0;
+                break;
+        }
+
+        return toReturn;
     }
 
     public static class SpectrobeSerializer implements IDataSerializer<Spectrobe> {

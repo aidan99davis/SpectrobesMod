@@ -90,7 +90,6 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         this.goalSelector.addGoal(1, new FindFossilsGoal(this));
         this.goalSelector.addGoal(0, new MeleeAttackGoal(this, 0.5, false));
         this.goalSelector.addGoal(2, new FollowMasterGoal(this,0.3f , 1, 15, true));
-//        this.goalSelector.addGoal(5, new BreedGoal(this,1));
         this.goalSelector.addGoal(5, new LookAtGoal(this, PlayerEntity.class, 6.0F));
     }
 
@@ -406,6 +405,30 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     }
 
     @Override
+    protected void damageEntity(DamageSource damageSrc, float damageAmount) {
+        if(damageSrc.getImmediateSource() instanceof IHasNature) {
+            IHasNature attacker = (IHasNature)damageSrc.getImmediateSource();
+            int advantage = Spectrobe.hasTypeAdvantage(attacker, this);
+            float scaledAmount;
+
+            switch (advantage) {
+                case -1:
+                    scaledAmount = damageAmount * 0.75f;
+                    break;
+                case 1:
+                    scaledAmount = damageAmount * 1.25f;
+                    break;
+                default:
+                    scaledAmount = damageAmount;
+                    break;
+            }
+            super.damageEntity(damageSrc, scaledAmount);
+        } else {
+            super.damageEntity(damageSrc, damageAmount);
+        }
+    }
+
+    @Override
     public void setAggroed(boolean hasAggro) {
         if(!hasAggro){
             setIsAttacking(false);
@@ -430,43 +453,6 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
                 });
             }
         }
-    }
-
-    //Checks if the attacker should have the attack multiplier bonus applied.
-    private int hasTypeAdvantage(IHasNature attacker, IHasNature defender) {
-        int toReturn = 0;
-
-        if(attacker == defender)
-            return toReturn;
-
-        Nature attackerNature = attacker.getNature();
-        Nature defenderNature = defender.getNature();
-
-        switch(attackerNature){
-            case FLASH:
-                if(defenderNature == Nature.CORONA)
-                    toReturn = 1;
-                if(defenderNature == Nature.AURORA)
-                    toReturn = -1;
-                break;
-            case AURORA:
-                if(defenderNature == Nature.FLASH)
-                    toReturn = 1;
-                if(defenderNature == Nature.CORONA)
-                    toReturn = -1;
-                break;
-            case CORONA:
-                if(defenderNature == Nature.AURORA)
-                    toReturn = 1;
-                if(defenderNature == Nature.FLASH)
-                    toReturn = -1;
-                break;
-            default:
-                toReturn = 0;
-                break;
-        }
-
-        return toReturn;
     }
 
     public Nature getNature() {
