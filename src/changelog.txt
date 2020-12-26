@@ -8,6 +8,7 @@ Added Grilda and Grilden.
 Added an extra state to spectrobes: searching. Cycle through the states with shift right click.
 Added child forms searching for minerals and fossil ore blocks when in searching state
 Added type advantage check when damaging krawl/spectrobes
+Added Zoza and Zozane.
 
 V1.3.2
 ======

@@ -13,6 +13,10 @@ public class SpectrobePropertyRegistry {
     public static SpectrobeProperties VILAR = new SpectrobeProperties(SpectrobeProperties.Nature.CORONA, SpectrobeProperties.Stage.CHILD);
     public static SpectrobeProperties VILAMASTA = new SpectrobeProperties(SpectrobeProperties.Nature.CORONA, SpectrobeProperties.Stage.ADULT);
 
+    //ZOZA LINE
+    public static SpectrobeProperties ZOZA = new SpectrobeProperties(SpectrobeProperties.Nature.CORONA, SpectrobeProperties.Stage.CHILD);
+    public static SpectrobeProperties ZOZANE = new SpectrobeProperties(SpectrobeProperties.Nature.CORONA, SpectrobeProperties.Stage.ADULT);
+
     //AURORA
 
     //SPIKO LINE

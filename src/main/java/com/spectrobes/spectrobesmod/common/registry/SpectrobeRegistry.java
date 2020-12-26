@@ -34,6 +34,20 @@ public class SpectrobeRegistry {
             .withStats(225,175,255)
             .build();
 
+    public static final Spectrobe Zoza
+            = new SpectrobeBuilder()
+            .withName("Zoza")
+            .withProperties(SpectrobePropertyRegistry.ZOZA)
+            .withStats(55,65,50)
+            .build();
+
+    public static final Spectrobe Zozane
+            = new SpectrobeBuilder()
+            .withName("Zozane")
+            .withProperties(SpectrobePropertyRegistry.ZOZANE)
+            .withStats(120,125,90)
+            .build();
+
     //Aurora Spectrobes
     public static final Spectrobe Spiko
             = new SpectrobeBuilder()

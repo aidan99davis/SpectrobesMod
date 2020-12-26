@@ -1,6 +1,5 @@
 package com.spectrobes.spectrobesmod.common.entities.goals;
 
-import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
@@ -37,9 +36,23 @@ public class AttackKrawlGoal extends TargetGoal {
     }
 
     @Override
+    public boolean shouldContinueExecuting() {
+        boolean shouldContinue = super.shouldContinueExecuting();
+
+        if(shouldContinue) {
+            ((EntitySpectrobe)this.goalOwner).setIsAttacking(true);
+        } else {
+            ((EntitySpectrobe)this.goalOwner).setIsAttacking(false);
+        }
+
+        return shouldContinue;
+    }
+
+    @Override
     public void startExecuting() {
 
         this.goalOwner.setAttackTarget(this.target);
+        ((EntitySpectrobe)this.goalOwner).setIsAttacking(true);
         this.goalOwner.getNavigator().setPath(this.goalOwner.getNavigator().getPathToEntity(this.target, 1), 3);
         this.goalOwner.setAggroed(true);
         super.startExecuting();

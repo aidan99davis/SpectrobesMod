@@ -75,6 +75,7 @@ public class SpectrobesItems {
     public static final Item vilar_fossil_item = null;
     public static final Item harumi_fossil_item = null;
     public static final Item grilda_fossil_item = null;
+    public static final Item zoza_fossil_item = null;
 
     //Tools
     public static final Item prizmod_item = null;
@@ -175,6 +176,13 @@ public class SpectrobesItems {
         all_fossils.add(fossil);
 
         fossil = new GrildaFossilItem(
+                new Item.Properties()
+                        .group(SpectrobesFossilsItemGroup.Instance));
+
+        event.getRegistry().register(fossil);
+        all_fossils.add(fossil);
+
+        fossil = new ZozaFossilItem(
                 new Item.Properties()
                         .group(SpectrobesFossilsItemGroup.Instance));
 
