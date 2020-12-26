@@ -565,4 +565,8 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     public abstract EntityType<? extends EntitySpectrobe> getEvolutionRegistry();
 
     public abstract String getRegistryName();
+
+    public boolean isAttacking() {
+        return IS_ATTACKING.equals(true);
+    }
 }

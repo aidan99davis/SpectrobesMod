@@ -1,8 +1,7 @@
 package com.spectrobes.spectrobesmod.client.entity.spectrobes;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.client.entity.spectrobes.renderer.*;
-import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.*;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.grilda.EntityGrilda;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.grilda.EntityGrilden;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.harumi.EntityHarumi;
@@ -19,6 +18,8 @@ import com.spectrobes.spectrobesmod.common.entities.spectrobes.spiko.EntitySpika
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.spiko.EntitySpiko;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.vilar.EntityVilamasta;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.vilar.EntityVilar;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.zoza.EntityZoza;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.zoza.EntityZozane;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
@@ -128,6 +129,20 @@ public class SpectrobesEntities {
                     .size(0.5f, 0.75f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "segu").toString()));
 
+    public static final RegistryObject<EntityType<EntityZoza>> ENTITY_ZOZA
+            = ENTITY_TYPES.register("entity_zoza",
+            () -> EntityType.Builder.create(EntityZoza::new,
+                    EntityClassification.CREATURE)
+                    .size(0.5f, 0.75f)
+                    .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "zoza").toString()));
+
+    public static final RegistryObject<EntityType<EntityZozane>> ENTITY_ZOZANE
+            = ENTITY_TYPES.register("entity_zozane",
+            () -> EntityType.Builder.create(EntityZozane::new,
+                    EntityClassification.CREATURE)
+                    .size(1, 2)
+                    .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "zozane").toString()));
+
     public static final RegistryObject<EntityType<EntityHarumi>> ENTITY_HARUMI
             = ENTITY_TYPES.register("entity_harumi",
             () -> EntityType.Builder.create(EntityHarumi::new,
@@ -178,6 +193,8 @@ public class SpectrobesEntities {
         SPECTROBES.put("harumi", ENTITY_HARUMI.get());
         SPECTROBES.put("grilda", ENTITY_GRILDA.get());
         SPECTROBES.put("grilden", ENTITY_GRILDEN.get());
+        SPECTROBES.put("zoza", ENTITY_ZOZA.get());
+        SPECTROBES.put("zozane", ENTITY_ZOZANE.get());
     }
 
     public static EntityType<? extends EntitySpectrobe> getByName(String name) throws ClassNotFoundException {
