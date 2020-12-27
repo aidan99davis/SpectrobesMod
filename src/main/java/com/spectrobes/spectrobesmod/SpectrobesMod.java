@@ -13,11 +13,13 @@ import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.registry.Containers;
 import com.spectrobes.spectrobesmod.common.registry.IconRegistry;
 import com.spectrobes.spectrobesmod.common.registry.MineralRegistry;
+import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.worldgen.SpectrobesOreGen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
+import net.minecraft.network.datasync.IDataSerializer;
 import net.minecraft.util.Direction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -88,6 +90,8 @@ public class SpectrobesMod
     {
         ScreenManager.registerFactory(PrizmodContainer.PRIZMOD.get(), PrizmodScreen::new);
         SpectrobeRendererManager.init();
+        //force load the serializer to prevent clients crashing
+        IDataSerializer serializer = Spectrobe.SpectrobeSerializer;
         KrawlEntities.init();
         KrawlRendererManager.init();
         MineralRegistry.init();

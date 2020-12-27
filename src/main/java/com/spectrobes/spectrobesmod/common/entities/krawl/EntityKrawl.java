@@ -111,10 +111,10 @@ public abstract class EntityKrawl extends MonsterEntity implements IAnimatable, 
     protected void registerGoals()
     {
 //        this.goalSelector.addGoal(5, new BreedGoal(this,10)); todo: Make krawl eat mass and duplicate?
+        this.goalSelector.addGoal(1, new AttackSpectrobeGoal(this, true, true));
         this.goalSelector.addGoal(2, new RestrictSunGoal(this));
         this.goalSelector.addGoal(3, new FleeSunGoal(this, 1.0D));
         this.goalSelector.addGoal(2, new RandomWalkingGoal(this, 0.2d));
-        this.goalSelector.addGoal(2, new AttackSpectrobeGoal(this, true, true));
         this.goalSelector.addGoal(2, new AttackSpectrobeMasterGoal(this, true, true));
         this.goalSelector.addGoal(5, new LookAtGoal(this, PlayerEntity.class, 10.0F));
         this.goalSelector.addGoal(5, new LookRandomlyGoal(this));

@@ -75,6 +75,5 @@
     "entity.spectrobesmod.entity_shakor": "Shakor",
     "key.prizmod.category": "Prizmod Controls",
     "key.prizmod.cycle.left": "Cycle team left",
-    "key.prizmod.cycle.right": "Cycle team right",
-    "key.prizmod.open": "Open Prizmod"
+    "key.prizmod.cycle.right": "Cycle team right"
 }

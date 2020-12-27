@@ -1,3 +1,11 @@
+V1.4.1
+======
+Fixed spectrobe serializer not being registered in time
+fixed shakor textures
+removed open prizmod keybinding due to bug where using the key before using a prizmod item causes all spectrobes to be deleted from a player.
+Fixed komanoto model
+fixed spikan model
+
 V1.4
 =====
 Updated Geckolib to 3.0. meaning better models and animations!

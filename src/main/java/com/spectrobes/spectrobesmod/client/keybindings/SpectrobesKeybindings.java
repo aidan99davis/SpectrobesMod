@@ -27,7 +27,6 @@ import java.util.UUID;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = SpectrobesInfo.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class SpectrobesKeybindings {
-    public static KeyBinding OPEN_TOOL_MENU_KEYBIND;
     public static KeyBinding CYCLE_TOOL_MENU_LEFT_KEYBIND;
     public static KeyBinding CYCLE_TOOL_MENU_RIGHT_KEYBIND;
 
@@ -37,9 +36,6 @@ public class SpectrobesKeybindings {
 
     public static void initKeybinds()
     {
-        ClientRegistry.registerKeyBinding(OPEN_TOOL_MENU_KEYBIND =
-                new KeyBinding("key.prizmod.open", GLFW.GLFW_KEY_R, "key.prizmod.category"));
-
         ClientRegistry.registerKeyBinding(CYCLE_TOOL_MENU_LEFT_KEYBIND =
                 new KeyBinding("key.prizmod.cycle.left",  InputMappings.INPUT_INVALID.getKeyCode(), "key.prizmod.category"));
 
@@ -56,22 +52,6 @@ public class SpectrobesKeybindings {
         if (mc.currentScreen == null && mc.player.inventory
                 .hasItemStack(new ItemStack(SpectrobesItems.prizmod_item)))
         {
-            boolean toolMenuKeyIsDown = OPEN_TOOL_MENU_KEYBIND.isKeyDown();
-            if (toolMenuKeyIsDown && !toolMenuKeyWasDown)
-            {
-                while (OPEN_TOOL_MENU_KEYBIND.isPressed())
-                {
-                    if (mc.currentScreen == null)
-                    {
-                            mc.displayGuiScreen(new PrizmodScreen(
-                                    PrizmodContainer.PRIZMOD.get()
-                                            .create(0, mc.player.inventory),
-                                    mc.player.inventory, new StringTextComponent("")));
-
-                    }
-                }
-            }
-            toolMenuKeyWasDown = toolMenuKeyIsDown;
 
             boolean cycleLeftKeyIsDown = CYCLE_TOOL_MENU_LEFT_KEYBIND.isKeyDown();
             if (cycleLeftKeyIsDown && !cycleLeftKeyWasDown)
