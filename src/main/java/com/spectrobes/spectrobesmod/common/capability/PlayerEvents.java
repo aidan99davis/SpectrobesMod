@@ -1,8 +1,12 @@
 package com.spectrobes.spectrobesmod.common.capability;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
+import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.CSyncSpectrobeMasterPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSyncSpectrobeMasterPacket;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -29,6 +33,15 @@ public class PlayerEvents {
                 event.getPlayer().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(newStore -> {
                     newStore.copyFrom(oldStore);
                 });
+            });
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        if(!event.getPlayer().world.isRemote()) {
+            event.getPlayer().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(newStore -> {
+                SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(newStore), (ServerPlayerEntity) event.getPlayer());
             });
         }
     }

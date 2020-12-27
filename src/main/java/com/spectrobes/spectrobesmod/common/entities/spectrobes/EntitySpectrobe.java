@@ -256,6 +256,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         dataManager.register(TICKS_TILL_MATE, 400);
         dataManager.register(STATE, 0);
         dataManager.register(IS_ATTACKING, false);
+        updateEntityAttributes();
     }
 
     public boolean isSearching() {
@@ -555,6 +556,8 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
 
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(
                 spectrobeInstance.stats.getHpLevel());
+
+        this.setHealth(this.getMaxHealth());
 
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(
                 spectrobeInstance.stats.getAtkLevel());
