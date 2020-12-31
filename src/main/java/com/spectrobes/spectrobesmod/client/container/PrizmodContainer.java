@@ -5,10 +5,7 @@ import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.items.tools.PrizmodItem;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.CSyncSpectrobeMasterPacket;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.CUpdateSpectrobeSlotPacket;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSyncSpectrobeMasterPacket;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.SUpdateSpectrobeSlotPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.*;
 import com.spectrobes.spectrobesmod.common.registry.Containers;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.entity.player.PlayerEntity;
@@ -83,17 +80,17 @@ public class PrizmodContainer extends Container {
     }
 
     public List<Spectrobe> getOwnedSpectrobes() {
-        for(Spectrobe s : capability.getOwnedSpectrobes()) {
-        }
         return capability.getOwnedSpectrobes();
     }
 
     public void spawnSpectrobe(Spectrobe spectrobe) {
-        capability.spawnSpectrobe(spectrobe);
-        if(player.world.isRemote()) {
+        synchronized (capability) {
+            capability.spawnSpectrobe(spectrobe);
+            if(player.world.isRemote()) {
 
+            }
+            markDirty();
         }
-        markDirty();
     }
 
     public void setTeamMember(int index, UUID spectrobeUUID) {
@@ -111,5 +108,15 @@ public class PrizmodContainer extends Container {
 
     public UUID getCurrentSelectedUUID() {
         return capability.getCurrentTeamMember() != null? capability.getCurrentTeamMember().SpectrobeUUID : null;
+    }
+
+    public void releaseSpectrobe(Spectrobe spectrobe) {
+        synchronized (capability) {
+            capability.releaseSpectrobe(spectrobe);
+        if(player.world.isRemote()) {
+            SpectrobesNetwork.sendToServer(new SReleaseSpectrobePacket(spectrobe));
+        }
+            markDirty();
+        }
     }
 }

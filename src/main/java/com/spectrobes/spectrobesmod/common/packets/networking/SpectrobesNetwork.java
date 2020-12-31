@@ -55,6 +55,12 @@ public class SpectrobesNetwork {
                 .consumer(SSpawnSpectrobePacket::handle)
                 .add();
 
+        INSTANCE.messageBuilder(SReleaseSpectrobePacket.class, nextID())
+                .encoder(SReleaseSpectrobePacket::toBytes)
+                .decoder(SReleaseSpectrobePacket::fromBytes)
+                .consumer(SReleaseSpectrobePacket::handle)
+                .add();
+
         INSTANCE.messageBuilder(SDespawnSpectrobePacket.class, nextID())
                 .encoder(SDespawnSpectrobePacket::toBytes)
                 .decoder(SDespawnSpectrobePacket::fromBytes)

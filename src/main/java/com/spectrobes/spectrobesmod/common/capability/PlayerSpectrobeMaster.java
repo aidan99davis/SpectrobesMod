@@ -184,11 +184,18 @@ public class PlayerSpectrobeMaster {
         this.ownedSpectrobes.forEach(s -> {
             if(s.SpectrobeUUID == spectrobeData.SpectrobeUUID) {
                 s.active = true;
+                return;
             }
         });
+    }
+
+    public void releaseSpectrobe(Spectrobe spectrobe) {
+        this.ownedSpectrobes.removeIf(s -> s.SpectrobeUUID == spectrobe.SpectrobeUUID);
     }
 
     public void spawnCurrent() {
         getCurrentTeamMember().setActive();
     }
+
+
 }

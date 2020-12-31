@@ -18,6 +18,8 @@ import java.util.List;
 
 public class SpectrobePiece extends AbstractGui {
 
+    private static ResourceLocation CROSS = new ResourceLocation("spectrobesmod:textures/gui/cross.png");
+
     public Spectrobe spectrobe;
     private int x, y;
     public int posX;
@@ -88,6 +90,10 @@ public class SpectrobePiece extends AbstractGui {
 
             RenderSystem.enableAlphaTest();
             GuiUtils.drawTexture(iconInfo.icon(), posX + marginleft, posY + margintop, iconInfo.getWidth() * scalex, iconInfo.getHeight() * scaley, 100);
+
+            if(Screen.hasAltDown()) {
+                GuiUtils.drawTexture(CROSS, posX, posY, 32, 32, 101);
+            }
         }
     }
 
