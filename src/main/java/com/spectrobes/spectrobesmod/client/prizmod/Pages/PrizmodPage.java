@@ -29,11 +29,6 @@ public abstract class PrizmodPage extends Widget {
         }
     }
 
-//    @Override
-//    public List<? extends IGuiEventListener> children() {
-//        return buttons;
-//    }
-
     public List<Widget> getButtons() {
         return buttons;
     }

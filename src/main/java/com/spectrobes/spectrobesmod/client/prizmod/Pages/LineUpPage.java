@@ -1,22 +1,17 @@
 package com.spectrobes.spectrobesmod.client.prizmod.Pages;
 
-import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.client.prizmod.Components.AllSpectrobesList;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.components.SpectrobePiece;
 import com.spectrobes.spectrobesmod.client.prizmod.Components.MenuButton;
 import com.spectrobes.spectrobesmod.client.prizmod.Components.SpectrobeButton;
 import com.spectrobes.spectrobesmod.client.prizmod.Components.TeamSpectrobesList;
 import com.spectrobes.spectrobesmod.client.prizmod.PrizmodScreen;
-import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSpawnSpectrobePacket;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.util.text.StringTextComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -113,6 +108,14 @@ public class LineUpPage extends PrizmodPage {
                                 parent.getContainer().spawnSpectrobe(spectrobe);
                             }
                         }
+                    } else if (Screen.hasAltDown()) {
+                        if(sp.spectrobe != null) {
+                            if(parent.player.world.isRemote()) {
+                                Spectrobe spectrobe = sp.spectrobe;
+                                parent.getContainer().releaseSpectrobe(spectrobe);
+                                populateGrid();
+                            }
+                        }
                     } else {
                         setSelectedSpectrobe(((SpectrobeButton)onClick));
                     }
@@ -140,11 +143,6 @@ public class LineUpPage extends PrizmodPage {
                 if(TeamSpectrobesGrid.swapSpectrobes(
                         TeamSpectrobesGrid.getAll().indexOf(button.piece),
                         TeamSpectrobesGrid.getAll().indexOf(selectedButton.piece))) {
-//                    Spectrobe temp = button.piece.spectrobe;
-//                    parent.getContainer().setTeamMember(TeamSpectrobesGrid.getAll().indexOf(button.piece),
-//                            selectedButton.piece.spectrobe.SpectrobeUUID);
-//                    parent.getContainer().setTeamMember(TeamSpectrobesGrid.getAll().indexOf(selectedButton.piece),
-//                            selectedButton.piece.spectrobe.SpectrobeUUID);
                     populateGrid();
                 }
 

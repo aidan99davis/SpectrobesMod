@@ -69,14 +69,11 @@ public class PrizmodScreen extends ContainerScreen<PrizmodContainer> {
         RenderSystem.color3f(1F, 1F, 1F);
         getMinecraft().getTextureManager().bindTexture(texture);
 
-        //RenderSystem.scalef(0.75f, 0.75f, 1);
-
         GuiUtils.blit(0, 0,0,0,0,
                 (width),
                 (height),
                 height, width);
 
-//        RenderSystem.translatef(0,0,1);
         RenderSystem.popMatrix();
     }
 
@@ -107,22 +104,15 @@ public class PrizmodScreen extends ContainerScreen<PrizmodContainer> {
         RenderSystem.color3f(1F, 1F, 1F);
         getMinecraft().getTextureManager().bindTexture(texture);
 
-        //RenderSystem.scalef(0.75f, 0.75f, 1);
-
         GuiUtils.blit(0, 0,0,0,0,
                 (width),
                 (height),
                 height, width);
 
-//        RenderSystem.translatef(0,0,1);
         RenderSystem.popMatrix();
     }
 
     public void setMenuPage(PrizmodPage prizmodPage) {
-//        this.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
-//            this.playerData = sm;
-//        });
-
         this.buttons.clear();
         this.prizmodPage = prizmodPage;
         this.prizmodPage.init();
@@ -133,10 +123,6 @@ public class PrizmodScreen extends ContainerScreen<PrizmodContainer> {
     @Override public void tick() {
         this.prizmodPage.tick();
         this.getContainer().tick();
-
-//        this.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
-//            this.playerData = sm;
-//        });
     }
 
     public void addButtons(List<Widget> buttonList) {
