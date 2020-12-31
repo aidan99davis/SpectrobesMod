@@ -14,15 +14,5 @@ public class MenuButton extends Button {
     public void renderButton(int mouseX, int mouseY, float pTicks) {
         RenderSystem.translatef(0,0,16);
         super.renderButton(mouseX, mouseY, pTicks);
-//        if (active) {
-//            boolean hover = par2 >= x && par3 >= y && par2 < x + width && par3 < y + height;
-//
-//            Minecraft.getInstance().textureManager.bindTexture(WIDGETS_LOCATION);
-//            RenderSystem.color4f(1F, 1F, 1F, 1F);
-//            blit(x, y, hover ? 216 : 198, right ? 145 : 155, width, height);
-//
-//            if (hover) {
-//            }
-//        }
     }
 }
