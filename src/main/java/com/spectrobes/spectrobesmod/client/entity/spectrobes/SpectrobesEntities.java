@@ -12,6 +12,7 @@ import com.spectrobes.spectrobesmod.common.entities.spectrobes.kubaku.EntityKuga
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.samubaku.EntitySamukabu;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.samubaku.EntitySamurite;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.segu.EntitySegu;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.segu.EntitySegulos;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.shakin.EntityShakin;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.shakin.EntityShakor;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.spiko.EntitySpikan;
@@ -129,6 +130,13 @@ public class SpectrobesEntities {
                     .size(0.5f, 0.75f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "segu").toString()));
 
+    public static final RegistryObject<EntityType<EntitySegulos>> ENTITY_SEGULOS
+            = ENTITY_TYPES.register("entity_segulos",
+            () -> EntityType.Builder.create(EntitySegulos::new,
+                    EntityClassification.CREATURE)
+                    .size(1f, 1.5f)
+                    .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "segulos").toString()));
+
     public static final RegistryObject<EntityType<EntityZoza>> ENTITY_ZOZA
             = ENTITY_TYPES.register("entity_zoza",
             () -> EntityType.Builder.create(EntityZoza::new,
@@ -190,6 +198,7 @@ public class SpectrobesEntities {
         SPECTROBES.put("vilar", ENTITY_VILAR.get());
         SPECTROBES.put("vilamasta", ENTITY_VILAMASTA.get());
         SPECTROBES.put("segu", ENTITY_SEGU.get());
+        SPECTROBES.put("segulos", ENTITY_SEGULOS.get());
         SPECTROBES.put("harumi", ENTITY_HARUMI.get());
         SPECTROBES.put("grilda", ENTITY_GRILDA.get());
         SPECTROBES.put("grilden", ENTITY_GRILDEN.get());

@@ -1,3 +1,11 @@
+V1.4.2
+=====
+Added segulos
+Added krawl vortex - only natural spawning krawl. spawns krawl in waves and drops minerals upon defeat
+Made spectrobes drop their fossil upon death.
+Fixed Komainu and Komanoto variant skins
+Added segu and segulos variant skins.
+
 V1.4.1
 ======
 Fixed spectrobe serializer not being registered in time

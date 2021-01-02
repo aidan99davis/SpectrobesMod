@@ -4,6 +4,8 @@ import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.entities.IHasNature;
 import com.spectrobes.spectrobesmod.common.entities.goals.*;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
+import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
+import com.spectrobes.spectrobesmod.common.items.fossils.FossilItem;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
 import com.spectrobes.spectrobesmod.common.items.minerals.SpecialMineralItem;
 import com.spectrobes.spectrobesmod.common.items.tools.PrizmodItem;
@@ -43,6 +45,7 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
+import java.util.Random;
 import java.util.function.Predicate;
 
 public abstract class EntitySpectrobe extends TameableEntity implements IEntityAdditionalSpawnData, IAnimatable, IHasNature {
@@ -91,7 +94,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         this.goalSelector.addGoal(0, new MeleeAttackGoal(this, 0.5, false));
         this.goalSelector.addGoal(2, new FollowMasterGoal(this,0.3f , 1, 15, true));
         this.goalSelector.addGoal(5, new LookAtGoal(this, PlayerEntity.class, 6.0F));
-        this.targetSelector.addGoal(0, new NearestAttackableTargetGoal(this, EntityKrawl.class, true));
+        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal(this, EntityKrawl.class, true));
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
     }
@@ -397,6 +400,12 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         if(getOwner() != null) {
             despawn();
         } else {
+            ItemEntity lvt_10_1_ = new ItemEntity(world,
+                    this.getPosX() + 0.5D,
+                    (this.getPosY() + 1),
+                    this.getPosZ() + 0.5D, getFossil().getDefaultInstance());
+            lvt_10_1_.setDefaultPickupDelay();
+            world.addEntity(lvt_10_1_);
             super.onDeath(cause);
         }
     }
@@ -547,7 +556,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
             }
         } else {
             if(getOwner() != null)
-                Minecraft.getInstance().player.sendChatMessage("his mineral is the wrong nature.");
+                Minecraft.getInstance().player.sendChatMessage("This mineral is the wrong nature.");
         }
     }
 
@@ -565,6 +574,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         this.getAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(spectrobeInstance.stats.getDefLevel());
     }
 
+    protected abstract FossilItem getFossil();
     protected abstract EntityType<? extends EntitySpectrobe> getChildForLineage();
     public abstract Spectrobe GetNewSpectrobeInstance();
     public abstract EntityType<? extends EntitySpectrobe> getEvolutionRegistry();

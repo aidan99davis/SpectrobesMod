@@ -3,6 +3,8 @@ package com.spectrobes.spectrobesmod.common.entities.spectrobes.shakin;
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityAquaticSpectrobe;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
+import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
+import com.spectrobes.spectrobesmod.common.items.fossils.FossilItem;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
@@ -79,6 +81,11 @@ public class EntityShakor extends EntityAquaticSpectrobe {
             }
         }
         return PlayState.STOP;
+    }
+
+    @Override
+    protected FossilItem getFossil() {
+        return (FossilItem) SpectrobesItems.shakin_fossil_item.getItem();
     }
 
     @Override

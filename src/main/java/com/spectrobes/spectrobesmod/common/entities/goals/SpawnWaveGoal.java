@@ -33,7 +33,6 @@ public class SpawnWaveGoal extends TargetGoal {
         }
 
         if(((EntityVortex)goalOwner).getWaves() > 0 && (goalOwner).getAttackTarget() != null) {
-            SpectrobesInfo.LOGGER.info("ABLE TO SPAWN WAVE");
             return true;
         }
         return false;
@@ -52,7 +51,6 @@ public class SpawnWaveGoal extends TargetGoal {
 
     @Override
     public void startExecuting() {
-        SpectrobesInfo.LOGGER.info("STARTING TO SPAWN WAVES");
         vortexNature = ((EntityKrawl)goalOwner).getNature();
         goalOwner.setInvulnerable(true);
         goalOwner.setAIMoveSpeed(0);
@@ -60,11 +58,9 @@ public class SpawnWaveGoal extends TargetGoal {
 
     @Override
     public void tick() {
-        SpectrobesInfo.LOGGER.info("TICKING");
         ((EntityVortex)goalOwner).validateWave();
 
         if (((EntityVortex)goalOwner).getKrawlWave().isEmpty()) {
-            SpectrobesInfo.LOGGER.info("SPAWNING NEW WAVE");
             spawnWave();
         }
     }
@@ -75,7 +71,6 @@ public class SpawnWaveGoal extends TargetGoal {
 
         for (int i = 0; i < krawlInWave; i++) {
             EntityType<? extends EntityKrawl> krawl = KrawlEntities.getByNature(vortexNature);
-            SpectrobesInfo.LOGGER.info("SPAWNING KRAWL");
             ((EntityVortex)goalOwner).addKrawl(krawl.create(goalOwner.world));
         }
 

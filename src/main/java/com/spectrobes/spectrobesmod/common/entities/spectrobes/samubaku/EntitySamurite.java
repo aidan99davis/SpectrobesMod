@@ -3,6 +3,8 @@ package com.spectrobes.spectrobesmod.common.entities.spectrobes.samubaku;
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityMammalSpectrobe;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
+import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
+import com.spectrobes.spectrobesmod.common.items.fossils.FossilItem;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
@@ -69,6 +71,11 @@ public class EntitySamurite extends EntityMammalSpectrobe {
     protected EvolutionRequirements getEvolutionRequirements() {
         //returning null makes canEvolve always evaluate to false.
         return null;
+    }
+
+    @Override
+    protected FossilItem getFossil() {
+        return (FossilItem) SpectrobesItems.samukabu_fossil_item.getItem();
     }
 
     @Override

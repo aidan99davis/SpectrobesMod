@@ -127,9 +127,6 @@ public abstract class EntityCrustaceanSpectrobe extends EntitySpectrobe {
                 float lvt_10_1_ = (float)(this.speed * this.fish.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getValue());
                 this.fish.setAIMoveSpeed(MathHelper.lerp(0.125F, this.fish.getAIMoveSpeed(), lvt_10_1_));
                 this.fish.setMotion(this.fish.getMotion().add(0.0D, (double)this.fish.getAIMoveSpeed() * lvt_3_1_ * 0.1D, 0.0D));
-//            } else {
-//                this.fish.setAIMoveSpeed(0.0F);
-//            }
         }
     }
 

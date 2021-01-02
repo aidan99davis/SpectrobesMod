@@ -84,6 +84,13 @@ public class SpectrobeRegistry {
             .withStats(25,15,45)
             .build();
 
+    public static final Spectrobe Segulos
+            = new SpectrobeBuilder()
+            .withName("Segulos")
+            .withProperties(SpectrobePropertyRegistry.SEGULOS)
+            .withStats(85,90,145)
+            .build();
+
     public static final Spectrobe Grilda
             = new SpectrobeBuilder()
             .withName("Grilda")

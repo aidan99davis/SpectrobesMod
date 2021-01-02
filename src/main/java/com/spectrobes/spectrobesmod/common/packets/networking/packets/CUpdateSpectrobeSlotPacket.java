@@ -21,7 +21,6 @@ public class CUpdateSpectrobeSlotPacket {
     public CUpdateSpectrobeSlotPacket(int slot, UUID spectrobeUUID) {
         this.slot = slot;
         this.spectrobeUUID = spectrobeUUID;
-        SpectrobesInfo.LOGGER.info("instantiated packet with SpectrobeUUID: " + spectrobeUUID.toString());
     }
 
     public void toBytes(PacketBuffer buf) {

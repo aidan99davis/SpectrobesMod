@@ -63,10 +63,10 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(0, new SwimWithPlayerGoal(this, 2.0D));
-        this.goalSelector.addGoal(2, new RandomSwimmingGoal(this, 1.0D, 1));
-        this.goalSelector.addGoal(2, new FindWaterGoal(this));
-        this.goalSelector.addGoal(4, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(0, new SwimWithPlayerGoal(this, 1.0D));
+        this.goalSelector.addGoal(0, new RandomSwimmingGoal(this, 1.0D, 5));
+        this.goalSelector.addGoal(1, new FindWaterGoal(this));
+        this.goalSelector.addGoal(2, new LookRandomlyGoal(this));
         this.goalSelector.addGoal(8, new FollowBoatGoal(this));
     }
 
@@ -229,7 +229,7 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
                     this.dolphin.rotationYawHead = this.dolphin.rotationYaw;
                     float f1 = (float)(this.speed * this.dolphin.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getValue());
                     if (this.dolphin.isInWater()) {
-                        this.dolphin.setAIMoveSpeed(f1 * 0.2F);
+                        this.dolphin.setAIMoveSpeed(f1 * 0.5F);
                         float f2 = -((float)(MathHelper.atan2(d1, (double)MathHelper.sqrt(d0 * d0 + d2 * d2)) * 57.2957763671875D));
                         f2 = MathHelper.clamp(MathHelper.wrapDegrees(f2), -85.0F, 85.0F);
                         this.dolphin.rotationPitch = this.limitAngle(this.dolphin.rotationPitch, f2, 5.0F);

@@ -27,13 +27,13 @@ public class SeguRenderer extends GeoEntityRenderer<EntitySegu> {
     {
         switch (entity.getSpectrobeData().Variant) {
             case 0:
-                return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/segu.png");
+                return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/segu_0.png");
             case 1:
-                return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/segu.png");
+                return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/segu_1.png");
             case 2:
-                return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/segu.png");
+                return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/segu_2.png");
             default:
-                return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/segu.png");
+                return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/segu_0.png");
 
         }
     }

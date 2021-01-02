@@ -23,6 +23,7 @@ public class SpectrobeRendererManager {
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SHAKIN.get(), manager -> new ShakinRenderer(manager));
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SHAKOR.get(), manager -> new ShakorRenderer(manager));
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SEGU.get(), manager -> new SeguRenderer(manager));
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SEGULOS.get(), manager -> new SegulosRenderer(manager));
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_HARUMI.get(), manager -> new HarumiRenderer(manager));
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_GRILDA.get(), manager -> new GrildaRenderer(manager));
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_GRILDEN.get(), manager -> new GrildenRenderer(manager));

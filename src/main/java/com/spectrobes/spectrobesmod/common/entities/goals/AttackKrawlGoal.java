@@ -61,4 +61,12 @@ public class AttackKrawlGoal extends TargetGoal {
         this.goalOwner.setAggroed(true);
         super.startExecuting();
     }
+
+    @Override
+    public void resetTask() {
+        ((EntitySpectrobe)this.goalOwner).setIsAttacking(false);
+        this.goalOwner.getNavigator().clearPath();
+        this.goalOwner.setAggroed(false);
+        super.resetTask();
+    }
 }

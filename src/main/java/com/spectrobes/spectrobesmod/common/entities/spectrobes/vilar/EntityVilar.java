@@ -3,6 +3,8 @@ package com.spectrobes.spectrobesmod.common.entities.spectrobes.vilar;
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityMammalSpectrobe;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
+import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
+import com.spectrobes.spectrobesmod.common.items.fossils.FossilItem;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
@@ -71,6 +73,11 @@ public class EntityVilar extends EntityMammalSpectrobe {
     @Override
     protected EvolutionRequirements getEvolutionRequirements() {
         return new EvolutionRequirements(1, 5, 0);
+    }
+
+    @Override
+    protected FossilItem getFossil() {
+        return (FossilItem) SpectrobesItems.vilar_fossil_item.getItem();
     }
 
     @Override

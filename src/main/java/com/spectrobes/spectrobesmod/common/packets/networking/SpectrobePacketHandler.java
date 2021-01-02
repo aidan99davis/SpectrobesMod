@@ -14,7 +14,6 @@ import java.util.function.Supplier;
 public class SpectrobePacketHandler {
 
     public static boolean handlePacket(SSyncSpectrobeMasterPacket packet, Supplier<NetworkEvent.Context> ctx) {
-        SpectrobesInfo.LOGGER.info("handling spectrobe master sync packet");
         ctx.get().enqueueWork(() -> {
             PlayerEntity player = Minecraft.getInstance().player;
             PlayerSpectrobeMaster clientCap = player
@@ -27,7 +26,6 @@ public class SpectrobePacketHandler {
     }
 
     public static boolean handlePacket(CUpdateSpectrobeSlotPacket packet, Supplier<NetworkEvent.Context> ctx) {
-        SpectrobesInfo.LOGGER.info("handling spectrobe slot update packet");
         ctx.get().enqueueWork(() -> {
             PlayerEntity player = Minecraft.getInstance().player;
             PlayerSpectrobeMaster clientCap = player
