@@ -57,15 +57,12 @@ public class EntityZozane extends EntityMammalSpectrobe {
     @Override
     public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event)
     {
-        SpectrobesInfo.LOGGER.info("setting animation");
         if(event.getAnimatable().isAttacking()) {
-            SpectrobesInfo.LOGGER.info("setting attack animation");
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.zozane.attack", true));
             return PlayState.CONTINUE;
         }
         if(event.isMoving())
         {
-            SpectrobesInfo.LOGGER.info("setting walk animation");
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.zozane.walk", true));
             return PlayState.CONTINUE;
         } else {

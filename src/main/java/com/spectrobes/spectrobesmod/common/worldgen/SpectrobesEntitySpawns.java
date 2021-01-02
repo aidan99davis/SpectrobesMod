@@ -18,7 +18,7 @@ public class SpectrobesEntitySpawns {
     public static void spawnEntities(FMLLoadCompleteEvent event) {
         for(Biome biome : ForgeRegistries.BIOMES) {
             biome.getSpawns(EntityClassification.MONSTER)
-                    .add(new Biome.SpawnListEntry(KrawlEntities.ENTITY_SWAR.get(), 10, 1, 4));
+                    .add(new Biome.SpawnListEntry(KrawlEntities.ENTITY_VORTEX.get(), 5, 1, 2));
 
         }
     }

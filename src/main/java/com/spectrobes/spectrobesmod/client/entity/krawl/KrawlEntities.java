@@ -1,23 +1,27 @@
 package com.spectrobes.spectrobesmod.client.entity.krawl;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.client.entity.krawl.renderer.SwarRenderer;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntitySwar;
+import com.spectrobes.spectrobesmod.common.entities.krawl.EntityVortex;
+import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.RegistryObject;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class KrawlEntities {
 
-    private static final Map<String, EntityType<? extends EntityKrawl>> KRAWL = new HashMap<>();
+    private static final ArrayList<EntityType<? extends EntityKrawl>> AURORA_KRAWL = new ArrayList<>();
+    private static final ArrayList<EntityType<? extends EntityKrawl>> FLASH_KRAWL = new ArrayList<>();
+    private static final ArrayList<EntityType<? extends EntityKrawl>> CORONA_KRAWL = new ArrayList<>();
+    private static final ArrayList<EntityType<? extends EntityKrawl>> OTHER_KRAWL = new ArrayList<>();
+    private static final ArrayList<EntityType<? extends EntityKrawl>> SPECIAL_KRAWL = new ArrayList<>();
 
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES
             = new DeferredRegister<>(ForgeRegistries.ENTITIES, SpectrobesInfo.MOD_ID);
@@ -29,21 +33,81 @@ public class KrawlEntities {
                     .size(0.5f, 0.75f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "swar").toString()));
 
+    public static final RegistryObject<EntityType<EntityVortex>> ENTITY_VORTEX
+            = ENTITY_TYPES.register("entity_vortex",
+            () -> EntityType.Builder.create(EntityVortex::new,
+                    EntityClassification.MONSTER)
+                    .size(2f, 2f)
+                    .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "vortex").toString()));
+
     public static void init() {
-        populateMap();
+        populateMaps();
     }
 
-    private static void populateMap() {
-        KRAWL.put("swar", ENTITY_SWAR.get());
+    private static void populateMaps() {
+        SPECIAL_KRAWL.add(ENTITY_VORTEX.get());
+
+        OTHER_KRAWL.add(ENTITY_SWAR.get());
     }
 
-    public static EntityType<? extends EntityKrawl> getByName(String name) throws ClassNotFoundException {
-        EntityType<? extends EntityKrawl> krawl = KRAWL.get(name.toLowerCase());
-        if(krawl != null) {
-            return krawl;
+//    public static EntityType<? extends EntityKrawl> getByName(String name) throws ClassNotFoundException {
+//        EntityType<? extends EntityKrawl> krawl = KRAWL.get(name.toLowerCase());
+//        if(krawl != null) {
+//            return krawl;
+//        }
+//        throw new ClassNotFoundException("could not find the krawl's " +
+//                "entity registry. " +
+//                "is its name spelled correctly?");
+//    }
+
+    public static EntityType<? extends EntityKrawl> getByNature(SpectrobeProperties.Nature nature) {
+        EntityType<? extends EntityKrawl> toReturn = null;
+        switch(nature) {
+            case FLASH:
+
+                toReturn = getFlashKrawl();
+                break;
+            case CORONA:
+                toReturn = getCoronaKrawl();
+                break;
+            case AURORA:
+                toReturn = getAuroraKrawl();
+                break;
         }
-        throw new ClassNotFoundException("could not find the krawl's " +
-                "entity registry. " +
-                "is its name spelled correctly?");
+        if(toReturn == null) {
+            toReturn = OTHER_KRAWL.get(0);
+        }
+
+        return toReturn;
+    }
+
+    private static EntityType<? extends EntityKrawl> getCoronaKrawl() {
+        if(CORONA_KRAWL.size() == 0) {
+            return null;
+        }
+        int range = CORONA_KRAWL.size();
+        int randomInt = new Random().nextInt(range);
+
+        return CORONA_KRAWL.get(randomInt);
+    }
+
+    private static EntityType<? extends EntityKrawl> getAuroraKrawl() {
+        if(AURORA_KRAWL.size() == 0) {
+            return null;
+        }
+        int range = AURORA_KRAWL.size();
+        int randomInt = new Random().nextInt(range);
+
+        return AURORA_KRAWL.get(randomInt);
+    }
+
+    private static EntityType<? extends EntityKrawl> getFlashKrawl() {
+        if(FLASH_KRAWL.size() == 0) {
+            return null;
+        }
+        int range = FLASH_KRAWL.size();
+        int randomInt = new Random().nextInt(range);
+
+        return FLASH_KRAWL.get(randomInt);
     }
 }

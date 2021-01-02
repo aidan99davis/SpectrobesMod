@@ -1,6 +1,7 @@
 package com.spectrobes.spectrobesmod.common.entities.goals;
 
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
+import com.spectrobes.spectrobesmod.common.entities.krawl.EntityVortex;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.entity.ai.goal.TargetGoal;
@@ -28,6 +29,9 @@ public class AttackKrawlGoal extends TargetGoal {
             return false;
 
         List<EntityKrawl> nearbyMobs = goalOwner.world.getEntitiesWithinAABB(EntityKrawl.class, goalOwner.getBoundingBox().grow(20, 20, 20));
+
+        nearbyMobs.removeIf(entityKrawl -> entityKrawl instanceof EntityVortex);
+
         if (!nearbyMobs.isEmpty()) {
             this.target = nearbyMobs.get(0);
             return true;

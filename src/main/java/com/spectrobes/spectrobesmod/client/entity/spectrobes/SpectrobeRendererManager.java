@@ -28,6 +28,5 @@ public class SpectrobeRendererManager {
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_GRILDEN.get(), manager -> new GrildenRenderer(manager));
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_ZOZA.get(), manager -> new ZozaRenderer(manager));
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_ZOZANE.get(), manager -> new ZozaneRenderer(manager));
-        RenderingRegistry.registerEntityRenderingHandler(KrawlEntities.ENTITY_SWAR.get(), manager -> new SwarRenderer(manager));
     }
 }

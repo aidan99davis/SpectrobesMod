@@ -156,24 +156,6 @@ public abstract class EntityKrawl extends MonsterEntity implements IAnimatable, 
     }
 
     @Override
-    public void onDeath(DamageSource source) {
-        Random random = new Random();
-
-        int mineralCount = random.nextInt(3);
-
-        ItemStack mineralStack =SpectrobesItems.getRandomMineral();
-        mineralStack.grow(mineralCount);
-
-        ItemEntity lvt_10_1_ = new ItemEntity(world,
-                this.getPosX() + 0.5D,
-                (this.getPosY() + 1),
-                this.getPosZ() + 0.5D, mineralStack);
-        lvt_10_1_.setDefaultPickupDelay();
-        world.addEntity(lvt_10_1_);
-        super.onDeath(source);
-    }
-
-    @Override
     public SpectrobeProperties.Nature getNature() {
         return krawlProperties.getNature();
     }

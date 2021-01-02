@@ -66,6 +66,7 @@ public class AttackSpectrobeMasterGoal extends TargetGoal {
     @Override
     public void startExecuting() {
         this.goalOwner.setAttackTarget(this.target);
+        ((EntityKrawl)this.goalOwner).setIsAttacking(true);
         this.goalOwner.getNavigator().setPath(this.goalOwner.getNavigator().getPathToEntity(this.target, 1), 3);
         this.goalOwner.setAggroed(true);
         super.startExecuting();
