@@ -1,19 +1,14 @@
 package com.spectrobes.spectrobesmod.common.entities.goals;
 
-import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
-import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityVortex;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.TargetGoal;
-import net.minecraft.entity.player.PlayerEntity;
 
-import java.util.List;
 import java.util.Random;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class SpawnWaveGoal extends TargetGoal {
     SpectrobeProperties.Nature vortexNature;
@@ -40,7 +35,8 @@ public class SpawnWaveGoal extends TargetGoal {
 
     @Override
     public boolean shouldContinueExecuting() {
-        boolean shouldContinue = ((EntityVortex)goalOwner).getWaves() > 0;
+        EntityVortex owner = ((EntityVortex)goalOwner);
+        boolean shouldContinue = owner.getWaves() > 0;
 
         if(!shouldContinue) {
             goalOwner.onKillCommand();
@@ -68,11 +64,9 @@ public class SpawnWaveGoal extends TargetGoal {
     private void spawnWave() {
         Random random = new Random();
         int krawlInWave = random.nextInt(2) + 1;
-
         for (int i = 0; i < krawlInWave; i++) {
             EntityType<? extends EntityKrawl> krawl = KrawlEntities.getByNature(vortexNature);
             ((EntityVortex)goalOwner).addKrawl(krawl.create(goalOwner.world));
         }
-
     }
 }

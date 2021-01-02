@@ -251,6 +251,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     @Override
     protected void registerAttributes() {
         super.registerAttributes();
+        this.getAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK).setBaseValue(2);
     }
 
     @Override

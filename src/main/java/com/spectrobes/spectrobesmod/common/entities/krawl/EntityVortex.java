@@ -65,6 +65,18 @@ public class EntityVortex extends EntityKrawl {
     }
 
 
+    //cant be seen once its spawned krawl.
+    @Override
+    public boolean isInvisible() {
+        return !children.isEmpty();
+    }
+
+    //can only be "killed" by defeating all waves of krawl.
+    @Override
+    public boolean isInvulnerable() {
+        return true;
+    }
+
     @Nullable
     @Override
     public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {

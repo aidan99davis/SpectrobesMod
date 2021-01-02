@@ -1,9 +1,7 @@
 package com.spectrobes.spectrobesmod.client.entity.krawl;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
-import com.spectrobes.spectrobesmod.common.entities.krawl.EntitySwar;
-import com.spectrobes.spectrobesmod.common.entities.krawl.EntityVortex;
+import com.spectrobes.spectrobesmod.common.entities.krawl.*;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
@@ -33,6 +31,20 @@ public class KrawlEntities {
                     .size(0.5f, 0.75f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "swar").toString()));
 
+    public static final RegistryObject<EntityType<EntitySubar>> ENTITY_SUBAR
+            = ENTITY_TYPES.register("entity_subar",
+            () -> EntityType.Builder.create(EntitySubar::new,
+                    EntityClassification.MONSTER)
+                    .size(1.5f, 1.25f)
+                    .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "subar").toString()));
+
+    public static final RegistryObject<EntityType<EntityVizbar>> ENTITY_VIZBAR
+            = ENTITY_TYPES.register("entity_vizbar",
+            () -> EntityType.Builder.create(EntityVizbar::new,
+                    EntityClassification.MONSTER)
+                    .size(1.5f, 1.25f)
+                    .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "vizbar").toString()));
+
     public static final RegistryObject<EntityType<EntityVortex>> ENTITY_VORTEX
             = ENTITY_TYPES.register("entity_vortex",
             () -> EntityType.Builder.create(EntityVortex::new,
@@ -48,6 +60,8 @@ public class KrawlEntities {
         SPECIAL_KRAWL.add(ENTITY_VORTEX.get());
 
         OTHER_KRAWL.add(ENTITY_SWAR.get());
+        FLASH_KRAWL.add(ENTITY_SUBAR.get());
+        AURORA_KRAWL.add(ENTITY_VIZBAR.get());
     }
 
 //    public static EntityType<? extends EntityKrawl> getByName(String name) throws ClassNotFoundException {
