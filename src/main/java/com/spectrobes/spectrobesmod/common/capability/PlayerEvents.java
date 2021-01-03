@@ -3,6 +3,7 @@ package com.spectrobes.spectrobesmod.common.capability;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.CSyncSpectrobeMasterPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.SDespawnSpectrobePacket;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSyncSpectrobeMasterPacket;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -30,6 +31,9 @@ public class PlayerEvents {
         if (event.isWasDeath()) {
             // We need to copyFrom the capabilities
             event.getOriginal().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(oldStore -> {
+//                if(oldStore.getCurrentTeamMember().active) {
+                    SpectrobesNetwork.sendToServer(new SDespawnSpectrobePacket(event.getOriginal().getPosition()));
+//                }
                 event.getPlayer().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(newStore -> {
                     newStore.copyFrom(oldStore);
                 });

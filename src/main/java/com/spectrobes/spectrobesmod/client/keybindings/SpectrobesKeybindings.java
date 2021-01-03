@@ -136,7 +136,7 @@ public class SpectrobesKeybindings {
                 }
             }
             if(mc.player.world.isRemote()) {
-                SpectrobesNetwork.sendToServer(new SDespawnSpectrobePacket(currentMember));
+                SpectrobesNetwork.sendToServer(new SDespawnSpectrobePacket(mc.player.getPosition()));
             }
 
         }
