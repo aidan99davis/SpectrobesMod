@@ -6,6 +6,8 @@ Made spectrobes drop their fossil upon death.
 Fixed Komainu and Komanoto variant skins
 Added segu and segulos variant skins.
 Added Subar and Vizbar
+Added Gris and Grisen
+Added Harumite with colour variants
 
 V1.4.1
 ======

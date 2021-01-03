@@ -118,7 +118,7 @@ public abstract class EntityKrawl extends MonsterEntity implements IAnimatable, 
         this.goalSelector.addGoal(2, new AttackSpectrobeMasterGoal(this, true, true));
         this.goalSelector.addGoal(5, new LookAtGoal(this, PlayerEntity.class, 10.0F));
         this.goalSelector.addGoal(5, new LookRandomlyGoal(this));
-        this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 0.8D));
+        this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 0.2D));
         this.goalSelector.addGoal(3, new MeleeAttackGoal(this,0.3f , true));
     }
 

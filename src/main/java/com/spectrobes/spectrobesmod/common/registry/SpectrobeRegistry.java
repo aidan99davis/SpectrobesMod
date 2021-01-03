@@ -142,4 +142,11 @@ public class SpectrobeRegistry {
             .withProperties(SpectrobePropertyRegistry.HARUMI)
             .withStats(25,15,45)
             .build();
+
+    public static final Spectrobe Harumite
+            = new SpectrobeBuilder()
+            .withName("Harumite")
+            .withProperties(SpectrobePropertyRegistry.HARUMITE)
+            .withStats(81,85,180)
+            .build();
 }

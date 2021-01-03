@@ -41,6 +41,30 @@ public class KrawlRegistry {
             .withXpWorth(25)
             .build();
 
+    public static final KrawlProperties Gris_Properties
+            = new KrawlPropertiesBuilder()
+            .withNature(SpectrobeProperties.Nature.CORONA)
+            .withAtkLevel(150)
+            .withAtkOffset(5)
+            .withDefLevel(100)
+            .withDefOffset(6)
+            .withHpLevel(250)
+            .withHpOffset(15)
+            .withXpWorth(25)
+            .build();
+
+    public static final KrawlProperties Grisen_Properties
+            = new KrawlPropertiesBuilder()
+            .withNature(SpectrobeProperties.Nature.AURORA)
+            .withAtkLevel(150)
+            .withAtkOffset(5)
+            .withDefLevel(100)
+            .withDefOffset(6)
+            .withHpLevel(250)
+            .withHpOffset(15)
+            .withXpWorth(25)
+            .build();
+
     public static final KrawlProperties Vortex_Properties =
             new KrawlPropertiesBuilder()
             .withNature(SpectrobeProperties.Nature.OTHER)

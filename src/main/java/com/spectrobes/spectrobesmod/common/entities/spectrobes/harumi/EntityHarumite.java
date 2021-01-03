@@ -16,24 +16,24 @@ import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class EntityHarumi extends EntityCrustaceanSpectrobe {
+public class EntityHarumite extends EntityCrustaceanSpectrobe {
 
-    public EntityHarumi(EntityType<EntityHarumi> entityTypeIn, World worldIn) {
+    public EntityHarumite(EntityType<EntityHarumite> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
     }
 
     public Spectrobe GetNewSpectrobeInstance() {
-        return SpectrobeRegistry.Harumi.copy(false);
+        return SpectrobeRegistry.Harumite.copy(false);
     }
 
     @Override
     public EntityType<? extends EntitySpectrobe> getEvolutionRegistry() {
-        return SpectrobesEntities.ENTITY_HARUMITE.get();
+        return null;
     }
 
     @Override
     public String getRegistryName() {
-        return "entity_harumi";
+        return "entity_harumite";
     }
 
     @Override
@@ -62,14 +62,9 @@ public class EntityHarumi extends EntityCrustaceanSpectrobe {
 
     @Override
     public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event) {
-//        moveAnimationController.transitionLengthTicks = 2;
-        if(event.isMoving())
+        if(event.isMoving() || event.getAnimatable().isSwimming())
         {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.harumi.walk", true));
-            return PlayState.CONTINUE;
-        }
-        else if(event.getAnimatable().isSitting()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.harumi.idle", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.harumite.walk", true));
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;

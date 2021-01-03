@@ -46,4 +46,5 @@ public class SpectrobePropertyRegistry {
     public static SpectrobeProperties SHAKOR = new SpectrobeProperties(SpectrobeProperties.Nature.FLASH, SpectrobeProperties.Stage.ADULT);
 
     public static SpectrobeProperties HARUMI = new SpectrobeProperties(SpectrobeProperties.Nature.FLASH, SpectrobeProperties.Stage.CHILD);
+    public static SpectrobeProperties HARUMITE = new SpectrobeProperties(SpectrobeProperties.Nature.FLASH, SpectrobeProperties.Stage.ADULT);
 }

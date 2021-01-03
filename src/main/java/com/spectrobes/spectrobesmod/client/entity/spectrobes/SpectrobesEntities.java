@@ -5,6 +5,7 @@ import com.spectrobes.spectrobesmod.common.entities.spectrobes.*;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.grilda.EntityGrilda;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.grilda.EntityGrilden;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.harumi.EntityHarumi;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.harumi.EntityHarumite;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.komainu.EntityKomainu;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.komainu.EntityKomanoto;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.kubaku.EntityKubaku;
@@ -134,7 +135,7 @@ public class SpectrobesEntities {
             = ENTITY_TYPES.register("entity_segulos",
             () -> EntityType.Builder.create(EntitySegulos::new,
                     EntityClassification.CREATURE)
-                    .size(1f, 1.5f)
+                    .size(1.5f, 2f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "segulos").toString()));
 
     public static final RegistryObject<EntityType<EntityZoza>> ENTITY_ZOZA
@@ -157,6 +158,13 @@ public class SpectrobesEntities {
                     EntityClassification.CREATURE)
                     .size(0.5f, 0.75f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "harumi").toString()));
+
+    public static final RegistryObject<EntityType<EntityHarumite>> ENTITY_HARUMITE
+            = ENTITY_TYPES.register("entity_harumite",
+            () -> EntityType.Builder.create(EntityHarumite::new,
+                    EntityClassification.CREATURE)
+                    .size(2f, 2f)
+                    .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "harumite").toString()));
 
     public static final RegistryObject<EntityType<EntityGrilda>> ENTITY_GRILDA
             = ENTITY_TYPES.register("entity_grilda",
@@ -200,6 +208,7 @@ public class SpectrobesEntities {
         SPECTROBES.put("segu", ENTITY_SEGU.get());
         SPECTROBES.put("segulos", ENTITY_SEGULOS.get());
         SPECTROBES.put("harumi", ENTITY_HARUMI.get());
+        SPECTROBES.put("harumite", ENTITY_HARUMITE.get());
         SPECTROBES.put("grilda", ENTITY_GRILDA.get());
         SPECTROBES.put("grilden", ENTITY_GRILDEN.get());
         SPECTROBES.put("zoza", ENTITY_ZOZA.get());

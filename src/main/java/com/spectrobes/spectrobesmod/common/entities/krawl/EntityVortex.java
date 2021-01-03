@@ -1,5 +1,6 @@
 package com.spectrobes.spectrobesmod.common.entities.krawl;
 
+import com.spectrobes.spectrobesmod.common.entities.goals.AttackSpectrobeGoal;
 import com.spectrobes.spectrobesmod.common.entities.goals.AttackSpectrobeMasterGoal;
 import com.spectrobes.spectrobesmod.common.entities.goals.SpawnWaveGoal;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
@@ -51,7 +52,8 @@ public class EntityVortex extends EntityKrawl {
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new AttackSpectrobeMasterGoal(this, true, true));
-        this.goalSelector.addGoal(0, new SpawnWaveGoal(this));
+        this.goalSelector.addGoal(0, new AttackSpectrobeGoal(this, true, true));
+        this.goalSelector.addGoal(1, new SpawnWaveGoal(this));
     }
 
     @Override

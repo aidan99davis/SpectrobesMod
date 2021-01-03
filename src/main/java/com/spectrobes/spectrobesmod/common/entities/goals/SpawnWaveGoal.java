@@ -37,7 +37,6 @@ public class SpawnWaveGoal extends TargetGoal {
     public boolean shouldContinueExecuting() {
         EntityVortex owner = ((EntityVortex)goalOwner);
         boolean shouldContinue = owner.getWaves() > 0;
-
         if(!shouldContinue) {
             goalOwner.onKillCommand();
         }

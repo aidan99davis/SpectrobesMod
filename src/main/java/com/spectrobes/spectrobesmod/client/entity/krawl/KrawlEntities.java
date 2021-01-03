@@ -15,11 +15,11 @@ import java.util.Random;
 
 public class KrawlEntities {
 
-    private static final ArrayList<EntityType<? extends EntityKrawl>> AURORA_KRAWL = new ArrayList<>();
-    private static final ArrayList<EntityType<? extends EntityKrawl>> FLASH_KRAWL = new ArrayList<>();
-    private static final ArrayList<EntityType<? extends EntityKrawl>> CORONA_KRAWL = new ArrayList<>();
-    private static final ArrayList<EntityType<? extends EntityKrawl>> OTHER_KRAWL = new ArrayList<>();
-    private static final ArrayList<EntityType<? extends EntityKrawl>> SPECIAL_KRAWL = new ArrayList<>();
+    private static ArrayList<EntityType<? extends EntityKrawl>> AURORA_KRAWL = new ArrayList<>();
+    private static ArrayList<EntityType<? extends EntityKrawl>> FLASH_KRAWL = new ArrayList<>();
+    private static ArrayList<EntityType<? extends EntityKrawl>> CORONA_KRAWL = new ArrayList<>();
+    private static ArrayList<EntityType<? extends EntityKrawl>> OTHER_KRAWL = new ArrayList<>();
+    private static ArrayList<EntityType<? extends EntityKrawl>> SPECIAL_KRAWL = new ArrayList<>();
 
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES
             = new DeferredRegister<>(ForgeRegistries.ENTITIES, SpectrobesInfo.MOD_ID);
@@ -45,6 +45,20 @@ public class KrawlEntities {
                     .size(1.5f, 1.25f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "vizbar").toString()));
 
+    public static final RegistryObject<EntityType<EntityGris>> ENTITY_GRIS
+            = ENTITY_TYPES.register("entity_gris",
+            () -> EntityType.Builder.create(EntityGris::new,
+                    EntityClassification.MONSTER)
+                    .size(1.5f, 1.25f)
+                    .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "gris").toString()));
+
+    public static final RegistryObject<EntityType<EntityGrisen>> ENTITY_GRISEN
+            = ENTITY_TYPES.register("entity_grisen",
+            () -> EntityType.Builder.create(EntityGrisen::new,
+                    EntityClassification.MONSTER)
+                    .size(1.5f, 1.25f)
+                    .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "grisen").toString()));
+
     public static final RegistryObject<EntityType<EntityVortex>> ENTITY_VORTEX
             = ENTITY_TYPES.register("entity_vortex",
             () -> EntityType.Builder.create(EntityVortex::new,
@@ -59,26 +73,19 @@ public class KrawlEntities {
     private static void populateMaps() {
         SPECIAL_KRAWL.add(ENTITY_VORTEX.get());
 
-        OTHER_KRAWL.add(ENTITY_SWAR.get());
+        CORONA_KRAWL.add(ENTITY_SWAR.get());
+        CORONA_KRAWL.add(ENTITY_GRIS.get());
         FLASH_KRAWL.add(ENTITY_SUBAR.get());
         AURORA_KRAWL.add(ENTITY_VIZBAR.get());
+        AURORA_KRAWL.add(ENTITY_GRISEN.get());
+        //Emergency backup krawl
+        OTHER_KRAWL.add(ENTITY_SWAR.get());
     }
-
-//    public static EntityType<? extends EntityKrawl> getByName(String name) throws ClassNotFoundException {
-//        EntityType<? extends EntityKrawl> krawl = KRAWL.get(name.toLowerCase());
-//        if(krawl != null) {
-//            return krawl;
-//        }
-//        throw new ClassNotFoundException("could not find the krawl's " +
-//                "entity registry. " +
-//                "is its name spelled correctly?");
-//    }
 
     public static EntityType<? extends EntityKrawl> getByNature(SpectrobeProperties.Nature nature) {
         EntityType<? extends EntityKrawl> toReturn = null;
         switch(nature) {
             case FLASH:
-
                 toReturn = getFlashKrawl();
                 break;
             case CORONA:
