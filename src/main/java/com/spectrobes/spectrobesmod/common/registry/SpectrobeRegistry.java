@@ -149,4 +149,11 @@ public class SpectrobeRegistry {
             .withProperties(SpectrobePropertyRegistry.HARUMITE)
             .withStats(81,85,180)
             .build();
+
+    public static final Spectrobe Nagu
+            = new SpectrobeBuilder()
+            .withName("Nagu")
+            .withProperties(SpectrobePropertyRegistry.NAGU)
+            .withStats(81,85,180)
+            .build();
 }

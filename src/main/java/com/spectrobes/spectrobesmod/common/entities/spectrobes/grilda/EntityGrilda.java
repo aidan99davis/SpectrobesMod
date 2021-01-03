@@ -40,6 +40,11 @@ public class EntityGrilda extends EntityMammalSpectrobe {
     }
 
     @Override
+    public Class getSpectrobeClass() {
+        return EntityGrilda.class;
+    }
+
+    @Override
     protected EntityType<? extends EntitySpectrobe> getChildForLineage() {
         return SpectrobesEntities.ENTITY_GRILDA.get();
     }

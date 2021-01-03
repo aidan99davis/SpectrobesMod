@@ -37,6 +37,11 @@ public class EntitySegu extends EntityMammalSpectrobe {
     }
 
     @Override
+    public Class getSpectrobeClass() {
+        return EntitySegu.class;
+    }
+
+    @Override
     protected EntityType<? extends EntitySpectrobe> getChildForLineage() {
         return SpectrobesEntities.ENTITY_SEGU.get();
     }

@@ -45,6 +45,8 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
+import javax.management.AttributeList;
+import java.util.List;
 import java.util.Random;
 import java.util.function.Predicate;
 
@@ -63,6 +65,10 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
             EntityDataManager.createKey(EntitySpectrobe.class,
                     DataSerializers.BOOLEAN);
 
+    protected static final DataParameter<Boolean> HAS_MATED =
+            EntityDataManager.createKey(EntitySpectrobe.class,
+                    DataSerializers.BOOLEAN);
+
     //State 0: following
     //State 1: Sitting
     //state 2: searching
@@ -76,6 +82,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
 
     public AnimationFactory animationControllers = new AnimationFactory(this);
     protected AnimationController moveAnimationController = new AnimationController(this, "moveAnimationController", 10F, this::moveController);
+    private List<? extends EntitySpectrobe> children;
 
 
     public EntitySpectrobe(EntityType<? extends EntitySpectrobe> entityTypeIn,
@@ -252,6 +259,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     protected void registerAttributes() {
         super.registerAttributes();
         this.getAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK).setBaseValue(2);
+        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.5f);
     }
 
     @Override
@@ -261,6 +269,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         dataManager.register(TICKS_TILL_MATE, 400);
         dataManager.register(STATE, 0);
         dataManager.register(IS_ATTACKING, false);
+        dataManager.register(HAS_MATED, false);
     }
 
     public boolean isSearching() {
@@ -332,10 +341,9 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     //spectrobe special time
 
     public void tryMate() {
-        if(getStage() != Stage.CHILD && getOwner() == null) {
+        if(getStage() != Stage.CHILD && getOwner() == null && !dataManager.get(HAS_MATED)) {
             if(getTicksTillMate() == 0) {
                 mate();
-                setTicksTillMate(16000);
             } else {
                 setTicksTillMate(getTicksTillMate() - 1);
             }
@@ -581,6 +589,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     public abstract EntityType<? extends EntitySpectrobe> getEvolutionRegistry();
 
     public abstract String getRegistryName();
+    public abstract Class getSpectrobeClass();
 
     public boolean isAttacking() {
         return IS_ATTACKING.equals(true);

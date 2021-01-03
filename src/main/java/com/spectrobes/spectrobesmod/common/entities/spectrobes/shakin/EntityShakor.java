@@ -93,4 +93,9 @@ public class EntityShakor extends EntityAquaticSpectrobe {
         //returning null makes canEvolve always evaluate to false.
         return null;
     }
+
+    @Override
+    public Class getSpectrobeClass() {
+        return EntityShakor.class;
+    }
 }

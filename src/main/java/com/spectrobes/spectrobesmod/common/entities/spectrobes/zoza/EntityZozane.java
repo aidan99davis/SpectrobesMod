@@ -1,6 +1,5 @@
 package com.spectrobes.spectrobesmod.common.entities.spectrobes.zoza;
 
-import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityMammalSpectrobe;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
@@ -36,6 +35,11 @@ public class EntityZozane extends EntityMammalSpectrobe {
     @Override
     public String getRegistryName() {
         return "entity_zozane";
+    }
+
+    @Override
+    public Class getSpectrobeClass() {
+        return EntityZozane.class;
     }
 
     @Override

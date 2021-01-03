@@ -47,4 +47,7 @@ public class SpectrobePropertyRegistry {
 
     public static SpectrobeProperties HARUMI = new SpectrobeProperties(SpectrobeProperties.Nature.FLASH, SpectrobeProperties.Stage.CHILD);
     public static SpectrobeProperties HARUMITE = new SpectrobeProperties(SpectrobeProperties.Nature.FLASH, SpectrobeProperties.Stage.ADULT);
+
+    //NAGU LINE
+    public static SpectrobeProperties NAGU = new SpectrobeProperties(SpectrobeProperties.Nature.FLASH, SpectrobeProperties.Stage.CHILD);
 }

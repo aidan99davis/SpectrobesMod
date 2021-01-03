@@ -37,6 +37,11 @@ public class EntityKuganon extends EntityMammalSpectrobe {
     }
 
     @Override
+    public Class getSpectrobeClass() {
+        return EntityKuganon.class;
+    }
+
+    @Override
     protected EntityType<? extends EntitySpectrobe> getChildForLineage() {
         return SpectrobesEntities.ENTITY_KUBAKU.get();
     }

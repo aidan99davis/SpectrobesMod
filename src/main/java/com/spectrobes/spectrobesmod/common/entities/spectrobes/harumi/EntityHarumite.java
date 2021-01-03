@@ -37,6 +37,11 @@ public class EntityHarumite extends EntityCrustaceanSpectrobe {
     }
 
     @Override
+    public Class getSpectrobeClass() {
+        return EntityHarumite.class;
+    }
+
+    @Override
     protected EntityType<? extends EntitySpectrobe> getChildForLineage() {
         return SpectrobesEntities.ENTITY_HARUMI.get();
     }

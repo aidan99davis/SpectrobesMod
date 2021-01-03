@@ -1,4 +1,4 @@
-package com.spectrobes.spectrobesmod.common.entities.spectrobes.spiko;
+package com.spectrobes.spectrobesmod.common.entities.spectrobes.nagu;
 
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityMammalSpectrobe;
@@ -16,15 +16,14 @@ import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class EntitySpikan extends EntityMammalSpectrobe {
+public class EntityNagu extends EntityMammalSpectrobe {
 
-
-    public EntitySpikan(EntityType<EntitySpikan> entityTypeIn, World worldIn) {
+    public EntityNagu(EntityType<EntityNagu> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
     }
 
     public Spectrobe GetNewSpectrobeInstance() {
-        return SpectrobeRegistry.Spikan.copy(false);
+        return SpectrobeRegistry.Nagu.copy(false);
     }
 
     @Override
@@ -34,17 +33,17 @@ public class EntitySpikan extends EntityMammalSpectrobe {
 
     @Override
     public String getRegistryName() {
-        return "entity_spikan";
+        return "entity_nagu";
     }
 
     @Override
     public Class getSpectrobeClass() {
-        return EntitySpikan.class;
+        return EntityNagu.class;
     }
 
     @Override
     protected EntityType<? extends EntitySpectrobe> getChildForLineage() {
-        return SpectrobesEntities.ENTITY_SPIKO.get();
+        return SpectrobesEntities.ENTITY_NAGU.get();
     }
 
     @Override
@@ -56,44 +55,34 @@ public class EntitySpikan extends EntityMammalSpectrobe {
     }
 
     @Override
+    public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event) {
+        if(event.isMoving())
+        {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.nagu.idle", true));
+            return PlayState.CONTINUE;
+        } else {
+            return PlayState.STOP;
+        }
+    }
+
+
+    @Override
     public AnimationFactory getFactory() {
         return animationControllers;
     }
 
     @Override
-    public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event)
-    {
-        event.getController().transitionLengthTicks = 2;
-        if(event.isMoving())
-        {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.spikan.walk", true));
-            return PlayState.CONTINUE;
-        }
-        else if(this.isSitting()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.spikan.sit", false));
-            return PlayState.CONTINUE;
-        } else {
-            if(this.getAttackingEntity() != null) {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.spikan.walk", true));
-                return PlayState.CONTINUE;
-            }
-        }
-        return PlayState.STOP;
-    }
-
-    @Override
     protected EvolutionRequirements getEvolutionRequirements() {
-        //returning null makes canEvolve always evaluate to false.
-        return null;
+        return new EvolutionRequirements(1, 4, 0);
     }
 
     @Override
     protected FossilItem getFossil() {
-        return (FossilItem) SpectrobesItems.spiko_fossil_item.getItem();
+        return (FossilItem) SpectrobesItems.nagu_fossil_item.getItem();
     }
 
     @Override
     public int getLitterSize() {
-        return 2;
+        return 0;
     }
 }

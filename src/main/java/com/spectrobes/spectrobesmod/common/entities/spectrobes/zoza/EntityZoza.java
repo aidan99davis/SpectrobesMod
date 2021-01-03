@@ -37,6 +37,11 @@ public class EntityZoza extends EntityMammalSpectrobe {
     }
 
     @Override
+    public Class getSpectrobeClass() {
+        return EntityZoza.class;
+    }
+
+    @Override
     protected EntityType<? extends EntitySpectrobe> getChildForLineage() {
         return SpectrobesEntities.ENTITY_ZOZA.get();
     }

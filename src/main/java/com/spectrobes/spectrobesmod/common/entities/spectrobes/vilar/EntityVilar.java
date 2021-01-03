@@ -37,6 +37,11 @@ public class EntityVilar extends EntityMammalSpectrobe {
     }
 
     @Override
+    public Class getSpectrobeClass() {
+        return EntityVilar.class;
+    }
+
+    @Override
     protected EntityType<EntityVilar> getChildForLineage() {
         return SpectrobesEntities.ENTITY_VILAR.get();
     }

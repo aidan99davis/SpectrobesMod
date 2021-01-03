@@ -38,6 +38,11 @@ public class EntityKomanoto extends EntityMammalSpectrobe {
     }
 
     @Override
+    public Class getSpectrobeClass() {
+        return EntityKomanoto.class;
+    }
+
+    @Override
     protected EntityType<? extends EntitySpectrobe> getChildForLineage() {
         return SpectrobesEntities.ENTITY_KOMAINU.get();
     }
@@ -90,6 +95,6 @@ public class EntityKomanoto extends EntityMammalSpectrobe {
 
     @Override
     public int getLitterSize() {
-        return 2;
+        return 3;
     }
 }

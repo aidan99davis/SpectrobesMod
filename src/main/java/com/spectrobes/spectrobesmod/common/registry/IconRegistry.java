@@ -36,6 +36,7 @@ public class IconRegistry {
         icons.put("grilden", new SpectrobeIconInfo("grilden", 32, 31));
         icons.put("zoza", new SpectrobeIconInfo("zoza", 31, 20));
         icons.put("zozane", new SpectrobeIconInfo("zozane", 32, 22));
+        icons.put("nagu", new SpectrobeIconInfo("nagu", 32, 28));
     }
 
     public static IconRegistry getInstance() {

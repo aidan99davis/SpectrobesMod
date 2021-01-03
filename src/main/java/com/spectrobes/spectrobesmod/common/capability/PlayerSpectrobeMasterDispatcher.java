@@ -1,6 +1,5 @@
 package com.spectrobes.spectrobesmod.common.capability;
 
-import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;

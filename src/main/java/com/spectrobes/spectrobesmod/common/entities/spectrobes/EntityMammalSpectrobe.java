@@ -26,16 +26,31 @@ public abstract class EntityMammalSpectrobe extends EntitySpectrobe {
     @Override
     public void mate() {
         List<? extends EntityMammalSpectrobe> mates
-                = world.getEntitiesWithinAABB(getClass(),
+                = world.getEntitiesWithinAABB(getSpectrobeClass(),
                 this.getBoundingBox()
                         .grow(10, 10, 10));
-        this.setTicksTillMate(16000);
-
         if(mates.isEmpty()) {
             return;
         }
 
-        mates.get(0).setTicksTillMate(16000);
+        EntityMammalSpectrobe mate = null;
+
+        for (EntityMammalSpectrobe spec : mates) {
+            if(mate == null) {
+                if(spec.getTicksTillMate() <= 100) {
+                    mate = spec;
+                }
+            }
+        }
+
+        if(mate == null) {
+            return;
+        }
+
+        this.dataManager.set(HAS_MATED, true);
+
+        this.setTicksTillMate(16000);
+        mate.setTicksTillMate(16000);
         Random random = new Random();
         int litterSize = random.nextInt(getLitterSize());
 

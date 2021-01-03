@@ -78,7 +78,7 @@ public abstract class EntityCrustaceanSpectrobe extends EntitySpectrobe {
     @Override
     public void mate() {
         List<? extends EntityCrustaceanSpectrobe> mates
-                    = world.getEntitiesWithinAABB(getClass(),
+                    = world.getEntitiesWithinAABB(getSpectrobeClass(),
                         this.getBoundingBox()
                         .grow(10, 10, 10));
         if(mates.isEmpty()) {
@@ -86,7 +86,24 @@ public abstract class EntityCrustaceanSpectrobe extends EntitySpectrobe {
             return;
         }
 
-        mates.get(0).setTicksTillMate(16000);
+        EntityCrustaceanSpectrobe mate = null;
+
+        for (EntityCrustaceanSpectrobe spec : mates) {
+            if(mate == null) {
+                if(spec.getTicksTillMate() <= 0) {
+                    mate = spec;
+                }
+            }
+        }
+
+        if(mate == null) {
+            this.setTicksTillMate(16000);
+            return;
+        }
+
+        this.dataManager.set(HAS_MATED, true);
+
+        mate.setTicksTillMate(16000);
         Random random = new Random();
         int litterSize = random.nextInt(getMaxLitterSize());
 

@@ -37,6 +37,11 @@ public class EntityShakin extends EntityAquaticSpectrobe {
     }
 
     @Override
+    public Class getSpectrobeClass() {
+        return EntityShakin.class;
+    }
+
+    @Override
     protected EntityType<? extends EntitySpectrobe> getChildForLineage() {
         return SpectrobesEntities.ENTITY_SHAKIN.get();
     }

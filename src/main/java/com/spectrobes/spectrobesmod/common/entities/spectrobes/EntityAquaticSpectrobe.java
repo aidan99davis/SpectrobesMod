@@ -63,8 +63,8 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(0, new SwimWithPlayerGoal(this, 1.0D));
-        this.goalSelector.addGoal(0, new RandomSwimmingGoal(this, 1.0D, 5));
+//        this.goalSelector.addGoal(0, new SwimWithPlayerGoal(this, 1.0D));
+        this.goalSelector.addGoal(0, new RandomSwimmingGoal(this, .5D, 5));
         this.goalSelector.addGoal(1, new FindWaterGoal(this));
         this.goalSelector.addGoal(2, new LookRandomlyGoal(this));
         this.goalSelector.addGoal(8, new FollowBoatGoal(this));
@@ -78,7 +78,7 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
     @Override
     public void mate() {
         List<? extends EntityAquaticSpectrobe> mates
-                    = world.getEntitiesWithinAABB(getClass(),
+                    = world.getEntitiesWithinAABB(getSpectrobeClass(),
                         this.getBoundingBox()
                         .grow(10, 10, 10));
         if(mates.isEmpty()) {
@@ -86,7 +86,24 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
             return;
         }
 
-        mates.get(0).setTicksTillMate(16000);
+        EntityAquaticSpectrobe mate = null;
+
+        for (EntityAquaticSpectrobe spec : mates) {
+            if(mate == null) {
+                if(spec.getTicksTillMate() <= 0) {
+                    mate = spec;
+                }
+            }
+        }
+
+        if(mate == null) {
+            this.setTicksTillMate(16000);
+            return;
+        }
+
+        this.dataManager.set(HAS_MATED, true);
+
+        mate.setTicksTillMate(16000);
         Random random = new Random();
         int litterSize = random.nextInt(getMaxLitterSize());
 
