@@ -9,6 +9,7 @@ import com.spectrobes.spectrobesmod.common.items.minerals.SpecialMineralItem;
 import com.spectrobes.spectrobesmod.common.items.minerals.chroma.ChromaMineralItem;
 import com.spectrobes.spectrobesmod.common.items.tools.PrizmodItem;
 import com.spectrobes.spectrobesmod.common.registry.MineralRegistry;
+import com.spectrobes.spectrobesmod.common.registry.SpectrobesItemsRegistry;
 import net.minecraft.item.*;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -68,23 +69,10 @@ public class SpectrobesItems {
     public static final Item chroma_mineral_item_one = null;
     public static final Item chroma_mineral_item_two = null;
 
-    //Fossils
-    public static final Item komainu_fossil_item = null;
-    public static final Item spiko_fossil_item = null;
-    public static final Item samukabu_fossil_item = null;
-    public static final Item kubaku_fossil_item = null;
-    public static final Item shakin_fossil_item = null;
-    public static final Item segu_fossil_item = null;
-    public static final Item vilar_fossil_item = null;
-    public static final Item harumi_fossil_item = null;
-//    public static final Item grilda_fossil_item = null;
-    public static final Item zoza_fossil_item = null;
-    public static final Item nagu_fossil_item = null;
     //Tools
     public static final Item prizmod_item = null;
 
     private static List<Item> all_minerals = new ArrayList<>();
-    private static List<Item> all_fossils = new ArrayList<>();
 
     @SubscribeEvent
     public static void registerItems(final RegistryEvent.Register<Item> event) {
@@ -120,85 +108,6 @@ public class SpectrobesItems {
 
         event.getRegistry().register(specialMineralItem);
 
-        Item fossil;
-
-        fossil = new KomainuFossilItem(
-                        new Item.Properties()
-                                .group(SpectrobesFossilsItemGroup.Instance));
-
-        event.getRegistry().register(fossil);
-        all_fossils.add(fossil);
-
-        fossil = new SpikoFossilItem(
-                    new Item.Properties()
-                        .group(SpectrobesFossilsItemGroup.Instance));
-
-        event.getRegistry().register(fossil);
-        all_fossils.add(fossil);
-
-        fossil = new SamukabuFossilItem(
-                        new Item.Properties()
-                                .group(SpectrobesFossilsItemGroup.Instance));
-
-        event.getRegistry().register(fossil);
-        all_fossils.add(fossil);
-
-        fossil = new KubakuFossilItem(
-                new Item.Properties()
-                        .group(SpectrobesFossilsItemGroup.Instance));
-
-        event.getRegistry().register(fossil);
-        all_fossils.add(fossil);
-
-        fossil = new ShakinFossilItem(
-                new Item.Properties()
-                        .group(SpectrobesFossilsItemGroup.Instance));
-
-        event.getRegistry().register(fossil);
-        all_fossils.add(fossil);
-
-        fossil = new SeguFossilItem(
-                new Item.Properties()
-                        .group(SpectrobesFossilsItemGroup.Instance));
-
-        event.getRegistry().register(fossil);
-        all_fossils.add(fossil);
-
-        fossil = new VilarFossilItem(
-                new Item.Properties()
-                        .group(SpectrobesFossilsItemGroup.Instance));
-
-        event.getRegistry().register(fossil);
-        all_fossils.add(fossil);
-
-        fossil = new HarumiFossilItem(
-                new Item.Properties()
-                        .group(SpectrobesFossilsItemGroup.Instance));
-
-        event.getRegistry().register(fossil);
-        all_fossils.add(fossil);
-
-//        fossil = new GrildaFossilItem(
-//                new Item.Properties()
-//                        .group(SpectrobesFossilsItemGroup.Instance));
-//
-//        event.getRegistry().register(fossil);
-//        all_fossils.add(fossil);
-
-        fossil = new ZozaFossilItem(
-                new Item.Properties()
-                        .group(SpectrobesFossilsItemGroup.Instance));
-
-        event.getRegistry().register(fossil);
-        all_fossils.add(fossil);
-
-        fossil = new NaguFossilItem(
-                new Item.Properties()
-                        .group(SpectrobesFossilsItemGroup.Instance));
-
-        event.getRegistry().register(fossil);
-        all_fossils.add(fossil);
-
         event.getRegistry().register(
                 new PrizmodItem(
                         new Item.Properties()
@@ -219,12 +128,6 @@ public class SpectrobesItems {
         Random random = new Random();
         int index = random.nextInt(all_minerals.size());
         return new ItemStack(all_minerals.get(index));
-    }
-
-    public static ItemStack getRandomFossil() {
-        Random random = new Random();
-        int index = random.nextInt(all_fossils.size());
-        return new ItemStack(all_fossils.get(index));
     }
 
     //Creative Tabs
@@ -253,7 +156,7 @@ public class SpectrobesItems {
 
         @Override
         public ItemStack createIcon() {
-            return SpectrobesItems.komainu_fossil_item.getDefaultInstance();
+            return SpectrobesItemsRegistry.komainu_fossil_item.get().getDefaultInstance();
         }
     }
 

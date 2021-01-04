@@ -1,6 +1,74 @@
 {
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "spectrobesmod:items/nagu_fossil"
+  "credit": "Made with Blockbench",
+  "parent": "builtin/entity",
+  "texture_size": [
+    32,
+    32
+  ],
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        50,
+        0,
+        90
+      ],
+      "translation": [
+        3,
+        0,
+        0
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        50,
+        0,
+        -90
+      ],
+      "translation": [
+        -2.5,
+        0,
+        0
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        0,
+        0,
+        85
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        0,
+        0,
+        -85
+      ]
+    },
+    "gui": {
+      "rotation": [
+        96,
+        107,
+        2
+      ]
+    },
+    "head": {
+      "translation": [
+        0,
+        5.75,
+        0
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        90,
+        114,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        -4.75
+      ]
+    }
   }
 }

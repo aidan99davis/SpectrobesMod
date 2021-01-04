@@ -19,14 +19,12 @@ import java.util.Random;
 public class MineralBlock extends SpectrobesBlock {
     private static Block.Properties props = Block.Properties.create(Material.ROCK)
             .harvestTool(ToolType.PICKAXE)
-            .hardnessAndResistance(0.5f)
+            .hardnessAndResistance(1.5f)
             .sound(SoundType.STONE)
             .harvestLevel(2);
 
     public MineralBlock() {
         super(props);
-
-//        setRegistryName("mineral_block");
     }
 
     @Override

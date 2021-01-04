@@ -1,6 +1,50 @@
 {
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "spectrobesmod:items/segu_fossil"
+  "credit": "Made with Blockbench",
+  "parent": "builtin/entity",
+  "texture_size": [
+    32,
+    32
+  ],
+  "display": {
+    "firstperson_righthand": {
+      "rotation": [
+        -71,
+        0,
+        0
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        -65,
+        0,
+        0
+      ]
+    },
+    "gui": {
+      "rotation": [
+        -77,
+        0,
+        0
+      ]
+    },
+    "head": {
+      "rotation": [
+        -78,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        10.5,
+        0
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        -72,
+        0,
+        0
+      ]
+    }
   }
 }

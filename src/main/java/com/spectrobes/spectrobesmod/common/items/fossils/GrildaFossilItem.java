@@ -1,12 +1,14 @@
 package com.spectrobes.spectrobesmod.common.items.fossils;
 
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
+import com.spectrobes.spectrobesmod.common.registry.SpectrobesBlocks;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
+import net.minecraft.block.Block;
 
-public class GrildaFossilItem extends FossilItem {
+public class GrildaFossilItem extends FossilBlockItem {
 
-    public GrildaFossilItem(Properties properties) {
-        super(properties,"grilda_fossil_item");
+    public GrildaFossilItem(Block block, Properties properties) {
+        super(block, properties);
     }
 
     @Override

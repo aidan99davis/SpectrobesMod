@@ -205,6 +205,10 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
             return false;
         }
 
+        if(source.isFireDamage() && getNature() == Nature.CORONA) {
+            return true;
+        }
+
         return true;
     }
 
@@ -217,6 +221,8 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         if(getSpectrobeData() == null)
             setSpectrobeData(GetNewSpectrobeInstance());
 
+        dataManager.set(HAS_MATED, compound.getBoolean("sterile"));
+
         updateEntityAttributes();
     }
 
@@ -225,6 +231,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         super.writeAdditional(compound);
 
         compound.put("SpectrobeData", getSpectrobeData().write());
+        compound.putBoolean("sterile", dataManager.get(HAS_MATED));
 
     }
 

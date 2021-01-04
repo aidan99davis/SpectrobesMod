@@ -1,6 +1,99 @@
 {
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "spectrobesmod:items/zoza_fossil"
+  "credit": "Made with Blockbench",
+  "parent": "builtin/entity",
+  "texture_size": [
+    64,
+    64
+  ],
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        0,
+        0,
+        90
+      ],
+      "translation": [
+        1.5,
+        0,
+        0
+      ],
+      "scale": [
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        0,
+        0,
+        -90
+      ],
+      "translation": [
+        -1.5,
+        0,
+        0
+      ],
+      "scale": [
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        0,
+        0,
+        94
+      ],
+      "translation": [
+        4.5,
+        0,
+        0
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        0,
+        0,
+        -94
+      ],
+      "translation": [
+        -4.5,
+        0,
+        0
+      ]
+    },
+    "gui": {
+      "rotation": [
+        87,
+        89,
+        0
+      ],
+      "scale": [
+        0.65,
+        0.65,
+        0.65
+      ]
+    },
+    "head": {
+      "translation": [
+        0,
+        5.25,
+        0
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        0,
+        74,
+        92
+      ],
+      "translation": [
+        0,
+        0,
+        -5.5
+      ]
+    }
   }
 }

@@ -1,5 +1,6 @@
 package com.spectrobes.spectrobesmod.common.blocks.tile;
 
+import com.spectrobes.spectrobesmod.common.registry.SpectrobesTileRegistry;
 import net.minecraft.tileentity.TileEntity;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;

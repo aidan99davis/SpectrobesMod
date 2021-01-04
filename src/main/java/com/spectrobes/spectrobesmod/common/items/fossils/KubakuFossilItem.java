@@ -2,11 +2,12 @@ package com.spectrobes.spectrobesmod.common.items.fossils;
 
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
+import net.minecraft.block.Block;
 
-public class KubakuFossilItem extends FossilItem {
+public class KubakuFossilItem extends FossilBlockItem {
 
-    public KubakuFossilItem(Properties properties) {
-        super(properties,"kubaku_fossil_item");
+    public KubakuFossilItem(Block blockIn, Properties builder) {
+        super(blockIn, builder);
     }
 
     @Override
