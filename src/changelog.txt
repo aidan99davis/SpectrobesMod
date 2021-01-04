@@ -10,6 +10,7 @@ Added Gris and Grisen
 Added Harumite with colour variants
 Fixed bug where spectrobes dont despawn when you die.
 Changed wild spectrobes to breed once then become "sterile" until they evolve again. - prevents wild spectrobe populations booming way too fast.
+Changed fossil and mineral harvest level.
 
 V1.4.1
 ======

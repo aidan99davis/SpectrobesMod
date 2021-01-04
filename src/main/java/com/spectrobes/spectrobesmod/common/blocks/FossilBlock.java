@@ -24,12 +24,12 @@ public class FossilBlock extends SpectrobesBlock {
             .harvestTool(ToolType.PICKAXE)
             .hardnessAndResistance(0.5f)
             .sound(SoundType.STONE)
-            .harvestLevel(3);
+            .harvestLevel(2);
 
     public FossilBlock() {
         super(props);
 
-        setRegistryName("fossil_block");
+//        setRegistryName("fossil_block");
     }
 
     @Override

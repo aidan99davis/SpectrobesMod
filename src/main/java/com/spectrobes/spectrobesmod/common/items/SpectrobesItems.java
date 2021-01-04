@@ -1,7 +1,7 @@
 package com.spectrobes.spectrobesmod.common.items;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.common.blocks.SpectrobesBlocks;
+import com.spectrobes.spectrobesmod.common.registry.SpectrobesBlocks;
 import com.spectrobes.spectrobesmod.common.items.fossils.*;
 import com.spectrobes.spectrobesmod.common.items.minerals.Mineral;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
@@ -12,8 +12,11 @@ import com.spectrobes.spectrobesmod.common.registry.MineralRegistry;
 import net.minecraft.item.*;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
@@ -74,10 +77,9 @@ public class SpectrobesItems {
     public static final Item segu_fossil_item = null;
     public static final Item vilar_fossil_item = null;
     public static final Item harumi_fossil_item = null;
-    public static final Item grilda_fossil_item = null;
+//    public static final Item grilda_fossil_item = null;
     public static final Item zoza_fossil_item = null;
     public static final Item nagu_fossil_item = null;
-
     //Tools
     public static final Item prizmod_item = null;
 
@@ -176,12 +178,12 @@ public class SpectrobesItems {
         event.getRegistry().register(fossil);
         all_fossils.add(fossil);
 
-        fossil = new GrildaFossilItem(
-                new Item.Properties()
-                        .group(SpectrobesFossilsItemGroup.Instance));
-
-        event.getRegistry().register(fossil);
-        all_fossils.add(fossil);
+//        fossil = new GrildaFossilItem(
+//                new Item.Properties()
+//                        .group(SpectrobesFossilsItemGroup.Instance));
+//
+//        event.getRegistry().register(fossil);
+//        all_fossils.add(fossil);
 
         fossil = new ZozaFossilItem(
                 new Item.Properties()
@@ -237,7 +239,7 @@ public class SpectrobesItems {
 
         @Override
         public ItemStack createIcon() {
-            return SpectrobesBlocks.fossil_block.asItem().getDefaultInstance();
+            return SpectrobesBlocks.fossil_block.get().asItem().getDefaultInstance();
         }
     }
 

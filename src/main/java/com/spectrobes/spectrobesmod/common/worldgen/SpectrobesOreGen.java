@@ -1,7 +1,7 @@
 package com.spectrobes.spectrobesmod.common.worldgen;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.common.blocks.SpectrobesBlocks;
+import com.spectrobes.spectrobesmod.common.registry.SpectrobesBlocks;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.Feature;
@@ -24,11 +24,11 @@ public class SpectrobesOreGen {
             ConfiguredPlacement fossilOreConfig = Placement.COUNT_RANGE.configure(new CountRangeConfig(20, 20,  4, 128));
             biome.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES,
                     Feature.ORE.withConfiguration(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.NATURAL_STONE,
-                            SpectrobesBlocks.fossil_block.getDefaultState(), 4))
+                            SpectrobesBlocks.fossil_block.get().getDefaultState(), 4))
                             .withPlacement(fossilOreConfig));
             biome.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES,
                     Feature.ORE.withConfiguration(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.NATURAL_STONE,
-                            SpectrobesBlocks.mineral_block.getDefaultState(), 4))
+                            SpectrobesBlocks.mineral_block.get().getDefaultState(), 4))
                             .withPlacement(mineralOreConfig));
         }
     }
