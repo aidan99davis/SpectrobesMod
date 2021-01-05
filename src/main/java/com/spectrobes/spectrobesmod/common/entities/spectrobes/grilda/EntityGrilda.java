@@ -95,7 +95,8 @@ public class EntityGrilda extends EntityMammalSpectrobe {
 
     @Override
     protected FossilItem getFossil() {
-        return (FossilItem) SpectrobesItems.grilda_fossil_item.getItem();
+        return null;
+//        return (FossilItem) SpectrobesItemsRegistry.grilda_fossil_item.getItem();
     }
 
     @Override

@@ -2,11 +2,12 @@ package com.spectrobes.spectrobesmod.common.items.fossils;
 
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
+import net.minecraft.block.Block;
 
-public class VilarFossilItem extends FossilItem {
+public class VilarFossilItem extends FossilBlockItem {
 
-    public VilarFossilItem(Properties properties) {
-        super(properties,"vilar_fossil_item");
+    public VilarFossilItem(Block blockIn, Properties builder) {
+        super(blockIn, builder);
     }
 
     @Override

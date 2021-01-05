@@ -1,6 +1,74 @@
 {
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "spectrobesmod:items/shakin_fossil"
+  "credit": "Made with Blockbench",
+  "parent": "builtin/entity",
+  "texture_size": [
+    32,
+    32
+  ],
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        87,
+        0,
+        76
+      ],
+      "translation": [
+        2.25,
+        4.25,
+        0.75
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        86,
+        0,
+        -77
+      ],
+      "translation": [
+        -2.25,
+        3.5,
+        0.5
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        57,
+        0,
+        76
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        58,
+        0,
+        -75
+      ]
+    },
+    "gui": {
+      "rotation": [
+        94,
+        60,
+        0
+      ]
+    },
+    "head": {
+      "translation": [
+        0,
+        4.75,
+        0
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        70,
+        97,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        -2.75
+      ]
+    }
   }
 }

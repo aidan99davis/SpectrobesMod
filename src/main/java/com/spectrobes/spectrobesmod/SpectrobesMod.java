@@ -1,5 +1,6 @@
 package com.spectrobes.spectrobesmod;
 
+import com.spectrobes.spectrobesmod.client.blocks.BlockRendererManager;
 import com.spectrobes.spectrobesmod.client.container.PrizmodContainer;
 import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
 import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlRendererManager;
@@ -7,38 +8,29 @@ import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobeRendererMa
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.client.keybindings.SpectrobesKeybindings;
 import com.spectrobes.spectrobesmod.client.prizmod.PrizmodScreen;
+import com.spectrobes.spectrobesmod.common.registry.*;
+import com.spectrobes.spectrobesmod.common.registry.SpectrobesTileRegistry;
 import com.spectrobes.spectrobesmod.common.capability.PlayerEvents;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
-import com.spectrobes.spectrobesmod.common.registry.Containers;
-import com.spectrobes.spectrobesmod.common.registry.IconRegistry;
-import com.spectrobes.spectrobesmod.common.registry.MineralRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
-import com.spectrobes.spectrobesmod.common.worldgen.SpectrobesOreGen;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.network.datasync.IDataSerializer;
 import net.minecraft.util.Direction;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.*;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import software.bernie.geckolib3.GeckoLib;
-import software.bernie.geckolib3.resource.ResourceListener;
 
 import javax.annotation.Nullable;
-
-import static net.minecraftforge.fml.common.Mod.EventBusSubscriber.*;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(SpectrobesInfo.MOD_ID)
@@ -58,11 +50,14 @@ public class SpectrobesMod
         // Register ourselves for server and other game events we are interested in
 
         MinecraftForge.EVENT_BUS.register(this);
+        KrawlEntities.ENTITY_TYPES.register(modEventBus);
+        SpectrobesEntities.ENTITY_TYPES.register(modEventBus);
+        SpectrobesItemsRegistry.ITEMS.register(modEventBus);
+        SpectrobesTileRegistry.TILES.register(modEventBus);
+        SpectrobesBlocks.BLOCKS.register(modEventBus);
         Containers.CONTAINERS.register(modEventBus);
         Containers.init();
         SpectrobesNetwork.init();
-        KrawlEntities.ENTITY_TYPES.register(modEventBus);
-        SpectrobesEntities.ENTITY_TYPES.register(modEventBus);
         Instance = this;
     }
 
@@ -92,6 +87,7 @@ public class SpectrobesMod
         SpectrobeRendererManager.init();
         //force load the serializer to prevent clients crashing
         IDataSerializer serializer = Spectrobe.SpectrobeSerializer;
+        BlockRendererManager.init();
         KrawlEntities.init();
         KrawlRendererManager.init();
         MineralRegistry.init();

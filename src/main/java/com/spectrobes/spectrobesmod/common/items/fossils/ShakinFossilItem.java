@@ -2,11 +2,12 @@ package com.spectrobes.spectrobesmod.common.items.fossils;
 
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
+import net.minecraft.block.Block;
 
-public class ShakinFossilItem extends FossilItem {
+public class ShakinFossilItem extends FossilBlockItem {
 
-    public ShakinFossilItem(Properties properties) {
-        super(properties,"shakin_fossil_item");
+    public ShakinFossilItem(Block blockIn, Properties builder) {
+        super(blockIn, builder);
     }
 
     @Override

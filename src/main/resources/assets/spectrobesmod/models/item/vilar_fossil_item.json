@@ -1,6 +1,111 @@
 {
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "spectrobesmod:items/vilar_fossil"
+  "credit": "Made with Blockbench",
+  "parent": "builtin/entity",
+  "texture_size": [
+    64,
+    64
+  ],
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        0,
+        -180,
+        0
+      ],
+      "translation": [
+        0,
+        -3.5,
+        -3.75
+      ],
+      "scale": [
+        0.4,
+        0.4,
+        0.4
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        0,
+        -180,
+        0
+      ],
+      "translation": [
+        0,
+        -3.5,
+        -3.75
+      ],
+      "scale": [
+        0.4,
+        0.4,
+        0.4
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        -73,
+        -178,
+        0
+      ],
+      "scale": [
+        0.6,
+        0.6,
+        0.6
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        -73,
+        -180,
+        0
+      ],
+      "scale": [
+        0.6,
+        0.6,
+        0.6
+      ]
+    },
+    "ground": {
+      "scale": [
+        0.64,
+        0.64,
+        0.64
+      ]
+    },
+    "gui": {
+      "rotation": [
+        86,
+        -51,
+        0
+      ],
+      "scale": [
+        0.53,
+        0.53,
+        0.53
+      ]
+    },
+    "head": {
+      "translation": [
+        0,
+        4.75,
+        1.25
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        84,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        -5
+      ],
+      "scale": [
+        0.74,
+        0.74,
+        0.74
+      ]
+    }
   }
 }

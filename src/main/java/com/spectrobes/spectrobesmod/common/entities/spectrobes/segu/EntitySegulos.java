@@ -6,6 +6,7 @@ import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
 import com.spectrobes.spectrobesmod.common.items.fossils.FossilItem;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
+import com.spectrobes.spectrobesmod.common.registry.SpectrobesItemsRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.entity.EntityType;
@@ -99,7 +100,7 @@ public class EntitySegulos extends EntityMammalSpectrobe {
 
     @Override
     protected FossilItem getFossil() {
-        return (FossilItem) SpectrobesItems.segu_fossil_item.getItem();
+        return (FossilItem) SpectrobesItemsRegistry.segu_fossil_item.get().getItem();
     }
 
     @Override
