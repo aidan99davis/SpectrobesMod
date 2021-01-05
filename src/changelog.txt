@@ -14,7 +14,7 @@ Changed fossil and mineral harvest level.
 Made minerals and fossils mine-able with an iron pick.
 Changed Prizmod recipe to use an Emerald instead.
 Made corona spectrobes immune to fire damage
-Added place-able fossil blocks
+Added place-able fossil blocks with custom models
 
 V1.4.1
 ======

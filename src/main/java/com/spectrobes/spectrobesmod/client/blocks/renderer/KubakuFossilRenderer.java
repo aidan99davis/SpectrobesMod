@@ -13,4 +13,5 @@ public class KubakuFossilRenderer extends GeoBlockRenderer<KubakuFossilBlockTile
     public KubakuFossilRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn, new KubakuFossilModel());
     }
+
 }

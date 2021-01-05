@@ -108,6 +108,14 @@ public class SpectrobesItems {
 
         event.getRegistry().register(specialMineralItem);
 
+        event.getRegistry().register(new BlockItem(SpectrobesBlocks.mineral_block.get(),
+                new Item.Properties().group(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
+                .setRegistryName("mineral_block"));
+
+        event.getRegistry().register(new BlockItem(SpectrobesBlocks.fossil_block.get(),
+                new Item.Properties().group(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
+                .setRegistryName("fossil_block"));
+
         event.getRegistry().register(
                 new PrizmodItem(
                         new Item.Properties()

@@ -4,8 +4,14 @@ import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.blocks.FossilBlock;
 import com.spectrobes.spectrobesmod.common.blocks.fossils.*;
 import com.spectrobes.spectrobesmod.common.blocks.MineralBlock;
+import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
 import net.minecraft.block.Block;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
