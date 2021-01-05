@@ -30,14 +30,16 @@ public class PlayerEvents {
     public void onPlayerCloned(PlayerEvent.Clone event) {
         if (event.isWasDeath()) {
             // We need to copyFrom the capabilities
-            event.getOriginal().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(oldStore -> {
-//                if(oldStore.getCurrentTeamMember().active) {
+
+            if(event.getPlayer().world.isRemote()) {
+                event.getOriginal().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(oldStore -> {
                     SpectrobesNetwork.sendToServer(new SDespawnSpectrobePacket(event.getOriginal().getPosition()));
-//                }
-                event.getPlayer().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(newStore -> {
-                    newStore.copyFrom(oldStore);
+                    event.getPlayer().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(newStore -> {
+                        newStore.copyFrom(oldStore);
+                    });
                 });
-            });
+
+            }
         }
     }
 

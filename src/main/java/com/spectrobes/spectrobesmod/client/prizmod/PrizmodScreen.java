@@ -26,8 +26,8 @@ public class PrizmodScreen extends ContainerScreen<PrizmodContainer> {
     public static final ResourceLocation SPECTROBE_SLOT_CURRENT_TEXTURE = new ResourceLocation("spectrobesmod:textures/gui/spectrobe_slot_current.png");
 
     public PlayerEntity player;
-    public int pageX = width / 3;
-    public int pageY = (int) (height * 0.65);
+    public int pageX = xSize / 3;
+    public int pageY = (int) (ySize * 0.65);
 
     private PrizmodPage prizmodPage;
 

@@ -8,6 +8,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
+import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkEvent;
 
@@ -21,7 +22,7 @@ public class SDespawnSpectrobePacket {
     private BlockPos playerPos;
 
     public SDespawnSpectrobePacket(BlockPos player) {
-        this.playerPos = player;
+        this.playerPos = player.toImmutable();
     }
 
     public void toBytes(PacketBuffer buf) {
@@ -41,7 +42,7 @@ public class SDespawnSpectrobePacket {
 
     public boolean handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            ServerWorld world = (ServerWorld) ctx.get().getSender().world;
+            World world = ctx.get().getSender().world;
 
             MutableBoundingBox boundingBox = MutableBoundingBox.createProper(playerPos.getX(), playerPos.getY(), playerPos.getZ(), playerPos.getX(), playerPos.getY(), playerPos.getZ());
             AxisAlignedBB axisAlignedBB = AxisAlignedBB.toImmutable(boundingBox);
