@@ -50,4 +50,7 @@ public class SpectrobePropertyRegistry {
 
     //NAGU LINE
     public static SpectrobeProperties NAGU = new SpectrobeProperties(SpectrobeProperties.Nature.FLASH, SpectrobeProperties.Stage.CHILD);
+
+    //MOSSARI
+    public static SpectrobeProperties MOSSARI = new SpectrobeProperties(SpectrobeProperties.Nature.FLASH, SpectrobeProperties.Stage.CHILD);
 }

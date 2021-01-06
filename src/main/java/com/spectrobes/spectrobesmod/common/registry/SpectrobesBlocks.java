@@ -29,6 +29,7 @@ public class SpectrobesBlocks {
     public static final RegistryObject<SpikoFossilBlock> spiko_fossil = BLOCKS.register("spiko_fossil", SpikoFossilBlock::new);
     public static final RegistryObject<VilarFossilBlock> vilar_fossil = BLOCKS.register("vilar_fossil", VilarFossilBlock::new);
     public static final RegistryObject<ZozaFossilBlock> zoza_fossil = BLOCKS.register("zoza_fossil", ZozaFossilBlock::new);
+    public static final RegistryObject<MossariFossilBlock> mossari_fossil = BLOCKS.register("mossari_fossil", MossariFossilBlock::new);
 
     public static final RegistryObject<Block> mineral_block = BLOCKS.register("mineral_block", MineralBlock::new);
     public static final RegistryObject<Block> fossil_block = BLOCKS.register("fossil_block", FossilBlock::new);
