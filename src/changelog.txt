@@ -1,3 +1,14 @@
+V1.4.4
+======
+Added Mossari
+
+V1.4.3
+======
+Hotfix release.
+
+Fixed render scale for spectrobe fossil blocks.
+Fixed bug preventing respawn in multiplayer.
+
 V1.4.2
 =====
 Added segulos

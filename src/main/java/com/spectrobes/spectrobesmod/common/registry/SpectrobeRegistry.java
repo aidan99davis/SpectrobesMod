@@ -156,4 +156,11 @@ public class SpectrobeRegistry {
             .withProperties(SpectrobePropertyRegistry.NAGU)
             .withStats(81,85,180)
             .build();
+
+    public static final Spectrobe Mossari
+            = new SpectrobeBuilder()
+            .withName("Mossari")
+            .withProperties(SpectrobePropertyRegistry.MOSSARI)
+            .withStats(40,50,35)
+            .build();
 }

@@ -51,6 +51,7 @@
     "block.spectrobesmod.harumi_fossil": "Harupod",
     "block.spectrobesmod.zoza_fossil": "Zozapod",
     "block.spectrobesmod.nagu_fossil": "Nagupod",
+    "block.spectrobesmod.mossari_fossil": "Mossapod",
     "block.spectrobesmod.mineral_block": "Mineral Block",
     "block.spectrobesmod.fossil_block": "Fossil Block",
     "itemGroup.spectrobestab.fossils": "Spectrobes Fossils",
@@ -74,6 +75,8 @@
     "entity.spectrobesmod.entity_segu": "Segu",
     "entity.spectrobesmod.entity_shakin": "Shakin",
     "entity.spectrobesmod.entity_shakor": "Shakor",
+    "entity.spectrobesmod.entity_nagu": "Nagu",
+    "entity.spectrobesmod.entity_mossari": "Mossari",
     "key.prizmod.category": "Prizmod Controls",
     "key.prizmod.cycle.left": "Cycle team left",
     "key.prizmod.cycle.right": "Cycle team right"
