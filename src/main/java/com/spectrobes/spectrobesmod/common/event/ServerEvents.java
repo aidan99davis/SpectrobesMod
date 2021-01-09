@@ -16,9 +16,11 @@ public class ServerEvents {
 
     @SubscribeEvent
     public static void OnPlayerJoin(PlayerEvent.PlayerLoggedInEvent evt) {
-        evt.getPlayer().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
-            SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(sm),
-                    (ServerPlayerEntity) evt.getPlayer());
-        });
+        if(!evt.getPlayer().world.isRemote()) {
+            evt.getPlayer().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
+                SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(sm),
+                        (ServerPlayerEntity) evt.getPlayer());
+            });
+        }
     }
 }

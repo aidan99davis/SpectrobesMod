@@ -1,6 +1,8 @@
 V1.4.4
 ======
 Added Mossari
+Fixed crash in multiplayer.
+Fixed bug causing prizmod to desync when first joining a server.
 
 V1.4.3
 ======

@@ -66,6 +66,8 @@ public class SpectrobesMod
         MinecraftForge.EVENT_BUS.register(PlayerEvents.instance);
         IconRegistry.init();
         SpectrobesEntities.init();
+        KrawlEntities.init();
+
         CapabilityManager.INSTANCE.register(PlayerSpectrobeMaster.class, new Capability.IStorage<PlayerSpectrobeMaster>() {
             @Nullable
             @Override
@@ -88,7 +90,6 @@ public class SpectrobesMod
         //force load the serializer to prevent clients crashing
         IDataSerializer serializer = Spectrobe.SpectrobeSerializer;
         BlockRendererManager.init();
-        KrawlEntities.init();
         KrawlRendererManager.init();
         MineralRegistry.init();
         SpectrobesKeybindings.initKeybinds();
