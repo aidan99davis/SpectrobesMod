@@ -1,11 +1,9 @@
 package com.spectrobes.spectrobesmod.common.entities.spectrobes.grilda;
 
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
-import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityCrustaceanSpectrobe;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityMammalSpectrobe;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
-import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
-import com.spectrobes.spectrobesmod.common.items.fossils.FossilItem;
+import com.spectrobes.spectrobesmod.common.items.fossils.FossilBlockItem;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
@@ -94,7 +92,7 @@ public class EntityGrilda extends EntityMammalSpectrobe {
     }
 
     @Override
-    protected FossilItem getFossil() {
+    protected FossilBlockItem getFossil() {
         return null;
 //        return (FossilItem) SpectrobesItemsRegistry.grilda_fossil_item.getItem();
     }

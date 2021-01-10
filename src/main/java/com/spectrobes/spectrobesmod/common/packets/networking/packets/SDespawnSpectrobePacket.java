@@ -1,15 +1,11 @@
 package com.spectrobes.spectrobesmod.common.packets.networking.packets;
 
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
-import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import javax.annotation.Nullable;
@@ -22,21 +18,21 @@ public class SDespawnSpectrobePacket {
     private BlockPos playerPos;
 
     public SDespawnSpectrobePacket(BlockPos player) {
-        this.playerPos = player.toImmutable();
+        this.playerPos = player;
     }
 
     public void toBytes(PacketBuffer buf) {
         if(playerPos != null) {
-            buf.writeVarInt(playerPos.getX());
-            buf.writeVarInt(playerPos.getY());
-            buf.writeVarInt(playerPos.getZ());
+            buf.writeInt(playerPos.getX());
+            buf.writeInt(playerPos.getY());
+            buf.writeInt(playerPos.getZ());
         }
     }
 
     public static SDespawnSpectrobePacket fromBytes(PacketBuffer buf) {
-        int x = buf.readVarInt();
-        int y = buf.readVarInt();
-        int z = buf.readVarInt();
+        int x = buf.readInt();
+        int y = buf.readInt();
+        int z = buf.readInt();
         return new SDespawnSpectrobePacket(new BlockPos(x, y, z));
     }
 
@@ -55,7 +51,6 @@ public class SDespawnSpectrobePacket {
                     spectrobe.despawn();
                 }
             }
-
         });
         return true;
     }

@@ -126,13 +126,13 @@ public class PlayerSpectrobeMaster {
         ownedSpectrobes.addAll(spectrobes);
 
         for(int i = 0; i < 7; i++) {
-                    try {
-                        currentTeam.replace(i, UUID.fromString(
-                                currentTeamNbt.getString(String.valueOf(i))));
+            try {
+                currentTeam.replace(i, UUID.fromString(
+                        currentTeamNbt.getString(String.valueOf(i))));
 
-                    } catch(Exception ex){
-                    }
+            } catch(Exception ex){
             }
+        }
 //        }
 
     }
@@ -140,7 +140,7 @@ public class PlayerSpectrobeMaster {
     public void copyFrom(PlayerSpectrobeMaster oldStore) {
         ownedSpectrobes = oldStore.ownedSpectrobes;
         currentTeam = oldStore.currentTeam;
-
+        currentSelected = oldStore.currentSelected;
     }
 
     public int getOwnedSpectrobesCount() {

@@ -1,11 +1,11 @@
 package com.spectrobes.spectrobesmod.common.entities.spectrobes;
 
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
+import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.entities.IHasNature;
 import com.spectrobes.spectrobesmod.common.entities.goals.*;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
-import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
-import com.spectrobes.spectrobesmod.common.items.fossils.FossilItem;
+import com.spectrobes.spectrobesmod.common.items.fossils.FossilBlockItem;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
 import com.spectrobes.spectrobesmod.common.items.minerals.SpecialMineralItem;
 import com.spectrobes.spectrobesmod.common.items.tools.PrizmodItem;
@@ -45,9 +45,8 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
-import javax.management.AttributeList;
 import java.util.List;
-import java.util.Random;
+import java.util.UUID;
 import java.util.function.Predicate;
 
 public abstract class EntitySpectrobe extends TameableEntity implements IEntityAdditionalSpawnData, IAnimatable, IHasNature {
@@ -178,12 +177,22 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
 
     public void despawn() {
         this.getSpectrobeData().setInactive();
-        if(this.getOwner() != null) {
+        if(this.getOwnerId() != null) {
             this.getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
                 sm.setSpectrobeInactive(this.getSpectrobeData());
             });
         }
-        if(world.isRemote) {
+        if(world.isRemote()) {
+            Minecraft.getInstance().world.addParticle(ParticleTypes.FIREWORK, getPosX() + 0.5D, getPosY() + 1.0D, getPosZ() + 0.5D, 0.0D, 1.0D, 0.0D);
+        }
+        this.remove(false);
+    }
+
+    public void despawn(PlayerSpectrobeMaster compat) {
+        this.getSpectrobeData().setInactive();
+        compat.setSpectrobeInactive(this.getSpectrobeData());
+
+        if(world.isRemote()) {
             Minecraft.getInstance().world.addParticle(ParticleTypes.FIREWORK, getPosX() + 0.5D, getPosY() + 1.0D, getPosZ() + 0.5D, 0.0D, 1.0D, 0.0D);
         }
         this.remove(false);
@@ -312,14 +321,14 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
 
     @Override
     public void writeSpawnData(PacketBuffer buffer) {
-            if(getSpectrobeData() != null)
-                buffer.writeCompoundTag(getSpectrobeData().write());
+        if(getSpectrobeData() != null)
+            buffer.writeCompoundTag(getSpectrobeData().write());
     }
 
     @Override
     public void readSpawnData(PacketBuffer additionalData) {
-            setSpectrobeData(Spectrobe.read(additionalData.readCompoundTag()));
-            updateEntityAttributes();
+        setSpectrobeData(Spectrobe.read(additionalData.readCompoundTag()));
+        updateEntityAttributes();
     }
 
     //Animation
@@ -590,7 +599,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         this.getAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(spectrobeInstance.stats.getDefLevel());
     }
 
-    protected abstract FossilItem getFossil();
+    protected abstract FossilBlockItem getFossil();
     protected abstract EntityType<? extends EntitySpectrobe> getChildForLineage();
     public abstract Spectrobe GetNewSpectrobeInstance();
     public abstract EntityType<? extends EntitySpectrobe> getEvolutionRegistry();

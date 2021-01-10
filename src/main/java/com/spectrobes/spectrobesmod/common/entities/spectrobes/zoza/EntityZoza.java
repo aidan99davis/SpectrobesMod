@@ -3,7 +3,7 @@ package com.spectrobes.spectrobesmod.common.entities.spectrobes.zoza;
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityMammalSpectrobe;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
-import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
+import com.spectrobes.spectrobesmod.common.items.fossils.FossilBlockItem;
 import com.spectrobes.spectrobesmod.common.items.fossils.FossilItem;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobesItemsRegistry;
@@ -87,7 +87,7 @@ public class EntityZoza extends EntityMammalSpectrobe {
     }
 
     @Override
-    protected FossilItem getFossil() {
-        return (FossilItem) SpectrobesItemsRegistry.zoza_fossil_item.get().getItem();
+    protected FossilBlockItem getFossil() {
+        return (FossilBlockItem) SpectrobesItemsRegistry.zoza_fossil_item.get().getItem();
     }
 }

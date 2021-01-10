@@ -3,7 +3,7 @@ package com.spectrobes.spectrobesmod.common.entities.spectrobes.kubaku;
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityMammalSpectrobe;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
-import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
+import com.spectrobes.spectrobesmod.common.items.fossils.FossilBlockItem;
 import com.spectrobes.spectrobesmod.common.items.fossils.FossilItem;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobesItemsRegistry;
@@ -84,8 +84,8 @@ public class EntityKuganon extends EntityMammalSpectrobe {
     }
 
     @Override
-    protected FossilItem getFossil() {
-        return (FossilItem) SpectrobesItemsRegistry.kubaku_fossil_item.get().getItem();
+    protected FossilBlockItem getFossil() {
+        return (FossilBlockItem) SpectrobesItemsRegistry.kubaku_fossil_item.get().getItem();
     }
 
     @Override
