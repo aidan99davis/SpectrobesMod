@@ -20,14 +20,14 @@ public class SpectrobesOreGen {
     @SubscribeEvent
     public static void generateOre(FMLLoadCompleteEvent event) {
         for(Biome biome : ForgeRegistries.BIOMES) {
-            ConfiguredPlacement mineralOreConfig = Placement.COUNT_RANGE.configure(new CountRangeConfig(20, 23, 2, 128));
+            ConfiguredPlacement mineralOreConfig = Placement.RANGE.configure(new OreFeatureConfig(20, 23, 2, 128));
             ConfiguredPlacement fossilOreConfig = Placement.COUNT_RANGE.configure(new CountRangeConfig(20, 20,  4, 128));
             biome.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES,
-                    Feature.ORE.withConfiguration(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.NATURAL_STONE,
+                    Feature.ORE.withConfiguration(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.BASE_STONE_OVERWORLD,
                             SpectrobesBlocks.fossil_block.get().getDefaultState(), 4))
                             .withPlacement(fossilOreConfig));
             biome.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES,
-                    Feature.ORE.withConfiguration(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.NATURAL_STONE,
+                    Feature.ORE.withConfiguration(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.BASE_STONE_OVERWORLD,
                             SpectrobesBlocks.mineral_block.get().getDefaultState(), 4))
                             .withPlacement(mineralOreConfig));
         }

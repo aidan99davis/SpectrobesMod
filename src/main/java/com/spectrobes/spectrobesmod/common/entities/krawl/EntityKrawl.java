@@ -9,7 +9,7 @@ import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.monster.MonsterEntity;
@@ -123,10 +123,10 @@ public abstract class EntityKrawl extends MonsterEntity implements IAnimatable, 
     }
 
     @Override
-    protected void registerAttributes() {
+    public void registerAttributes() {
         super.registerAttributes();
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(5);
+        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(20);
+        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(5);
     }
 
     @Override

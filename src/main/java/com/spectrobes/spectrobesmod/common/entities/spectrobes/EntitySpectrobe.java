@@ -16,6 +16,8 @@ import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.passive.TameableEntity;
@@ -30,6 +32,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties.Nature;
@@ -45,7 +48,6 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.UUID;
 import java.util.function.Predicate;
 
 public abstract class EntitySpectrobe extends TameableEntity implements IEntityAdditionalSpawnData, IAnimatable, IHasNature {
@@ -156,13 +158,13 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         if(world.isRemote()) {
             switch(newstate) {
                 case 0:
-                    player.sendMessage(new StringTextComponent("Your spectrobe is now following."));
+                    player.sendMessage(new StringTextComponent("Your spectrobe is now following."),player.getUniqueID());
                     break;
                 case 1:
-                    player.sendMessage(new StringTextComponent("Your spectrobe is now sitting."));
+                    player.sendMessage(new StringTextComponent("Your spectrobe is now sitting."), player.getUniqueID());
                     break;
                 case 2:
-                    player.sendMessage(new StringTextComponent("Your spectrobe is now searching."));
+                    player.sendMessage(new StringTextComponent("Your spectrobe is now searching."), player.getUniqueID());
                     break;
             }
         }
@@ -271,13 +273,6 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     }
 
     @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.getAttribute(SharedMonsterAttributes.ATTACK_KNOCKBACK).setBaseValue(2);
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25f);
-    }
-
-    @Override
     protected void registerData() {
         super.registerData();
         dataManager.register(SPECTROBE_DATA, GetNewSpectrobeInstance());
@@ -292,11 +287,11 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     }
 
     @Override
-    public Vec3d getMotion() {
+    public Vector3d getMotion() {
         if(!isSitting()) {
             return super.getMotion();
         }
-        return Vec3d.ZERO;
+        return Vector3d.ZERO;
     }
 
     /**
@@ -546,9 +541,9 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         }
         builder2.append("Status: " + status);
         if(world.isRemote()) {
-            player.sendMessage(new StringTextComponent(builder3.toString()));
-            player.sendMessage(new StringTextComponent(builder1.toString()));
-            player.sendMessage(new StringTextComponent(builder2.toString()));
+            player.sendMessage(new StringTextComponent(builder3.toString()), player.getUniqueID());
+            player.sendMessage(new StringTextComponent(builder1.toString()), player.getUniqueID());
+            player.sendMessage(new StringTextComponent(builder2.toString()), player.getUniqueID());
         }
     }
 
@@ -587,15 +582,15 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     private void updateEntityAttributes() {
         Spectrobe spectrobeInstance = getSpectrobeData();
 
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(
+        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(
                 spectrobeInstance.stats.getHpLevel());
 
         this.setHealth(this.getMaxHealth());
 
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(
+        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(
                 spectrobeInstance.stats.getAtkLevel());
 
-        this.getAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(spectrobeInstance.stats.getDefLevel());
+        this.getAttribute(Attributes.ARMOR).setBaseValue(spectrobeInstance.stats.getDefLevel());
     }
 
     protected abstract FossilBlockItem getFossil();

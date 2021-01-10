@@ -6,7 +6,7 @@ import net.minecraft.entity.ai.goal.WaterAvoidingRandomFlyingGoal;
 import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
 import net.minecraft.entity.passive.IFlyingAnimal;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 public abstract class EntityAvianSpectrobe extends EntitySpectrobe implements IFlyingAnimal {
@@ -49,7 +49,7 @@ public abstract class EntityAvianSpectrobe extends EntitySpectrobe implements IF
         }
 
         this.flapping = (float)((double)this.flapping * 0.9D);
-        Vec3d vec3d = this.getMotion();
+        Vector3d vec3d = this.getMotion();
         if (!this.onGround && vec3d.y < 0.0D) {
             this.setMotion(vec3d.mul(1.0D, 0.6D, 1.0D));
         }

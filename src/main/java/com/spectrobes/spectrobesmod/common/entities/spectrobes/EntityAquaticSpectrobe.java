@@ -2,6 +2,7 @@ package com.spectrobes.spectrobesmod.common.entities.spectrobes;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.LookController;
 import net.minecraft.entity.ai.controller.MovementController;
 import net.minecraft.entity.ai.goal.*;
@@ -34,8 +35,7 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
         super.registerAttributes();
 
 
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(
-                1);
+        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(1);
     }
 
 
@@ -185,7 +185,7 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
                 float lvt_9_1_ = (float)(MathHelper.atan2(lvt_5_1_, lvt_1_1_) * 57.2957763671875D) - 90.0F;
                 this.fish.rotationYaw = this.limitAngle(this.fish.rotationYaw, lvt_9_1_, 90.0F);
                 this.fish.renderYawOffset = this.fish.rotationYaw;
-                float lvt_10_1_ = (float)(this.speed * this.fish.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getValue());
+                float lvt_10_1_ = (float)(this.speed * this.fish.getAttribute(Attributes.MOVEMENT_SPEED).getValue());
                 this.fish.setAIMoveSpeed(MathHelper.lerp(0.125F, this.fish.getAIMoveSpeed(), lvt_10_1_));
                 this.fish.setMotion(this.fish.getMotion().add(0.0D, (double)this.fish.getAIMoveSpeed() * lvt_3_1_ * 0.1D, 0.0D));
 //            } else {
@@ -244,7 +244,7 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
                     this.dolphin.rotationYaw = this.limitAngle(this.dolphin.rotationYaw, f, 10.0F);
                     this.dolphin.renderYawOffset = this.dolphin.rotationYaw;
                     this.dolphin.rotationYawHead = this.dolphin.rotationYaw;
-                    float f1 = (float)(this.speed * this.dolphin.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getValue());
+                    float f1 = (float)(this.speed * this.dolphin.getAttribute(Attributes.MOVEMENT_SPEED).getValue());
                     if (this.dolphin.isInWater()) {
                         this.dolphin.setAIMoveSpeed(f1 * 0.5F);
                         float f2 = -((float)(MathHelper.atan2(d1, (double)MathHelper.sqrt(d0 * d0 + d2 * d2)) * 57.2957763671875D));
