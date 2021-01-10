@@ -30,6 +30,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.vector.Vector3d;
@@ -37,6 +38,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties.Nature;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties.Stage;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -114,7 +116,8 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     public void setState(int state) { dataManager.set(STATE, state); }
 
     @Override
-    public boolean processInteract(PlayerEntity player, Hand hand) {
+    //processInteract
+    public ActionResultType func_230254_b_(PlayerEntity player, Hand hand) {
         ItemStack itemstack = player.getHeldItem(hand);
         if(getSpectrobeData() != null) {
             if(!recentInteract && itemstack.isEmpty()) {
@@ -141,7 +144,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
 
         recentInteract = true;
         ticksTillInteract = 15;
-        return super.processInteract(player, hand);
+        return super.func_230254_b_(player, hand);
     }
 
     private void cycleState(PlayerEntity player) {
@@ -506,7 +509,8 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
 
     @Nullable
     @Override
-    public AgeableEntity createChild(AgeableEntity ageable)
+    //createChild
+    public AgeableEntity func_241840_a(ServerWorld world, AgeableEntity ageable)
     {
         //gonna handle this myself
         return null;
