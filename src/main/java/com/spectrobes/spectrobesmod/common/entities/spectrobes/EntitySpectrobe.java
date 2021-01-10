@@ -30,7 +30,6 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties.Nature;

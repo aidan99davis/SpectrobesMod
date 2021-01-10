@@ -10,7 +10,6 @@ import com.spectrobes.spectrobesmod.common.registry.SpectrobesItemsRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.world.World;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
