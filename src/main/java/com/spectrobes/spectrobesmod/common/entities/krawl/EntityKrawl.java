@@ -3,18 +3,16 @@ package com.spectrobes.spectrobesmod.common.entities.krawl;
 import com.spectrobes.spectrobesmod.common.entities.IHasNature;
 import com.spectrobes.spectrobesmod.common.entities.goals.AttackSpectrobeGoal;
 import com.spectrobes.spectrobesmod.common.entities.goals.AttackSpectrobeMasterGoal;
-import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -122,11 +120,8 @@ public abstract class EntityKrawl extends MonsterEntity implements IAnimatable, 
         this.goalSelector.addGoal(3, new MeleeAttackGoal(this,0.3f , true));
     }
 
-    @Override
-    public void registerAttributes() {
-        super.registerAttributes();
-        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(20);
-        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(5);
+    public static AttributeModifierMap.MutableAttribute registerAttributes() {
+        return MonsterEntity.registerAttributes();
     }
 
     @Override

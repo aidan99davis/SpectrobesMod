@@ -1,24 +1,16 @@
 package com.spectrobes.spectrobesmod.common.blocks;
 
-import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
-import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobesItemsRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.storage.loot.LootContext;
+import net.minecraft.loot.LootContext;
+
 import net.minecraftforge.common.ToolType;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
 public class FossilBlock extends SpectrobesBlock {
     private static Properties props = Properties.create(Material.ROCK)
@@ -29,8 +21,6 @@ public class FossilBlock extends SpectrobesBlock {
 
     public FossilBlock() {
         super(props);
-
-//        setRegistryName("fossil_block");
     }
 
     @Override
