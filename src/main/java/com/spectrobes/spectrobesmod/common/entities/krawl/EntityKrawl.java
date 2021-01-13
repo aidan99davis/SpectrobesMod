@@ -8,6 +8,7 @@ import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
@@ -27,6 +28,7 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
+import javax.annotation.PostConstruct;
 import java.util.Random;
 
 public abstract class EntityKrawl extends MonsterEntity implements IAnimatable, IHasNature {
@@ -120,14 +122,17 @@ public abstract class EntityKrawl extends MonsterEntity implements IAnimatable, 
         this.goalSelector.addGoal(3, new MeleeAttackGoal(this,0.3f , true));
     }
 
-    public static AttributeModifierMap.MutableAttribute registerAttributes() {
-        return MonsterEntity.registerAttributes();
-    }
-
     @Override
     protected void registerData() {
         super.registerData();
         dataManager.register(IS_ATTACKING, false);
+    }
+
+    public static AttributeModifierMap.MutableAttribute setCustomAttributes() {
+        return MonsterEntity.func_233666_p_()
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, (double)0.5F)
+                .createMutableAttribute(Attributes.MAX_HEALTH, 20.0D)
+                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 5.0D);
     }
 
     //Networking

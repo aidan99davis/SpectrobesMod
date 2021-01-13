@@ -11,6 +11,7 @@ import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import javax.annotation.Nullable;
@@ -49,7 +50,7 @@ public class SSpawnSpectrobePacket {
             EntitySpectrobe spectrobe1 = null;
             try {
                 spectrobe1 = SpectrobesEntities.getByName(spectrobe.name).spawn(
-                        player.world,
+                        (ServerWorld) player.world,
                         spectrobe.write(),
                         new StringTextComponent(spectrobe.name),
                         player,

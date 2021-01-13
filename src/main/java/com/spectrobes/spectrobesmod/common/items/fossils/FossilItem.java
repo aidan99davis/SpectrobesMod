@@ -37,7 +37,7 @@ public abstract class FossilItem extends Item {
                         (ServerPlayerEntity) playerIn);
             });
         } else {
-            Minecraft.getInstance().player.sendMessage(new StringTextComponent("A new spectrobe has been sent to your prizmod."));
+            Minecraft.getInstance().player.sendMessage(new StringTextComponent("A new spectrobe has been sent to your prizmod."), Minecraft.getInstance().player.getUniqueID());
         }
         return new ActionResult<>(ActionResultType.SUCCESS, itemStack);
     }

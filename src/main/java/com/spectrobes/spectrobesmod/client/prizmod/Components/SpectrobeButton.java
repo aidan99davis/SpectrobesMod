@@ -1,8 +1,10 @@
 package com.spectrobes.spectrobesmod.client.prizmod.Components;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.components.SpectrobePiece;
 import com.spectrobes.spectrobesmod.client.prizmod.PrizmodScreen;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.util.text.StringTextComponent;
 
 public class SpectrobeButton extends Button {
     public SpectrobePiece piece;
@@ -10,19 +12,19 @@ public class SpectrobeButton extends Button {
     private boolean selected;
 
     public SpectrobeButton(PrizmodScreen gui, SpectrobePiece piece, IPressable pressable) {
-        super(piece.posX, piece.posY, 32, 32, "", pressable);
+        super(piece.posX, piece.posY, 32, 32, new StringTextComponent(""), pressable);
         this.gui = gui;
         this.piece = piece;
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
-        super.render(mouseX, mouseY, partialTicks);
-        this.renderButton(mouseX, mouseY, partialTicks);
+    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+        super.render(stack, mouseX, mouseY, partialTicks);
+        this.renderButton(stack, mouseX, mouseY, partialTicks);
     }
 
     @Override
-    public void renderButton(int mouseX, int mouseY, float partialTicks) {
+    public void renderButton(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         piece.draw();
         if(selected) {
             renderInfo();

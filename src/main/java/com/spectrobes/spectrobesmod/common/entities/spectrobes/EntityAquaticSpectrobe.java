@@ -31,16 +31,6 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
     }
 
     @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-
-
-        this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(1);
-    }
-
-
-
-    @Override
     public boolean isPushedByWater() {
         return false;
     }

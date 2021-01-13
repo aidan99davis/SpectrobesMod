@@ -20,6 +20,7 @@ import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -106,6 +107,13 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         this.targetSelector.addGoal(5, new NearestAttackableTargetGoal(this, EntityKrawl.class, true));
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
+    }
+
+    public static AttributeModifierMap.MutableAttribute setCustomAttributes() {
+        return MonsterEntity.func_233666_p_()
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, (double)0.5F)
+                .createMutableAttribute(Attributes.MAX_HEALTH, 20.0D)
+                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 5.0D);
     }
 
     @Override
@@ -200,15 +208,6 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
             Minecraft.getInstance().world.addParticle(ParticleTypes.FIREWORK, getPosX() + 0.5D, getPosY() + 1.0D, getPosZ() + 0.5D, 0.0D, 1.0D, 0.0D);
         }
         this.remove(false);
-    }
-
-    @Override
-    public void onKillEntity(LivingEntity entityLivingIn) {
-        if(entityLivingIn instanceof EntityKrawl) {
-            awardKillStats(((EntityKrawl)entityLivingIn).krawlProperties);
-            updateEntityAttributes();
-        }
-        super.onKillEntity(entityLivingIn);
     }
 
     @Override
@@ -475,7 +474,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         spectrobeInstance.stats.addStats(spectrobeData.stats);
     }
 
-    private void awardKillStats(KrawlProperties krawlProperties) {
+    public void awardKillStats(KrawlProperties krawlProperties) {
         if(world.isRemote()) {
             Spectrobe spectrobeInstance = getSpectrobeData();
             spectrobeInstance.stats.addStats(krawlProperties);
@@ -583,7 +582,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         }
     }
 
-    private void updateEntityAttributes() {
+    public void updateEntityAttributes() {
         Spectrobe spectrobeInstance = getSpectrobeData();
 
         this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(

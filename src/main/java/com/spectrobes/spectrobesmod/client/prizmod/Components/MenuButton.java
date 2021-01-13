@@ -1,18 +1,20 @@
 package com.spectrobes.spectrobesmod.client.prizmod.Components;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.util.text.StringTextComponent;
 
 public class MenuButton extends Button {
 
     public MenuButton(int xIn, int yIn, int width, int height, String text, IPressable onPress) {
-        super(xIn, yIn, width, height, text, onPress);
+        super(xIn, yIn, width, height, new StringTextComponent(text), onPress);
 
     }
 
     @Override
-    public void renderButton(int mouseX, int mouseY, float pTicks) {
-        RenderSystem.translatef(0,0,16);
-        super.renderButton(mouseX, mouseY, pTicks);
+    public void renderButton(MatrixStack stack, int mouseX, int mouseY, float pTicks) {
+        stack.translate(0,0,16);
+        super.renderButton(stack, mouseX, mouseY, pTicks);
     }
 }

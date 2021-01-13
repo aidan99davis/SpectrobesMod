@@ -1,5 +1,6 @@
 package com.spectrobes.spectrobesmod.client.prizmod.Pages;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.spectrobes.spectrobesmod.client.prizmod.Components.AllSpectrobesList;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.components.SpectrobePiece;
 import com.spectrobes.spectrobesmod.client.prizmod.Components.MenuButton;
@@ -12,6 +13,7 @@ import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.util.text.StringTextComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +39,8 @@ public class LineUpPage extends PrizmodPage {
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
-        super.render(mouseX, mouseY, partialTicks);
+    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+        super.render(stack, mouseX, mouseY, partialTicks);
         AllSpectrobesGrid.draw();
         TeamSpectrobesGrid.draw();
         if(selectedButton != null) {
@@ -52,12 +54,12 @@ public class LineUpPage extends PrizmodPage {
             parent.setMenuPage(new MenuPage(parent));
         }));
 
-        this.addButton(new Button(parent.width / 2 - 60, 45, 60, 20, "Prev", button -> {
+        this.addButton(new Button(parent.width / 2 - 60, 45, 60, 20, new StringTextComponent("Prev"), button -> {
             this.AllSpectrobesGrid.previousPage();
             this.populateGrid();
         }));
 
-        this.addButton(new Button(parent.width / 2, 45, 60, 20, "Next", button -> {
+        this.addButton(new Button(parent.width / 2, 45, 60, 20, new StringTextComponent("Next"), button -> {
             this.AllSpectrobesGrid.nextPage();
             this.populateGrid();
         }));

@@ -7,6 +7,7 @@ import com.spectrobes.spectrobesmod.client.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.Widget;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -29,7 +30,7 @@ public class AllSpectrobesList extends Widget {
     private PrizmodPage parent;
 
     public AllSpectrobesList(PrizmodPage parent) {
-        super(parent.x, parent.y, "");
+        super(parent.x, parent.y, 160, 160, new StringTextComponent(""));
         this.parent = parent;
         gridData_paged = new HashMap<>();
         int specCount = this.parent.parent.getContainer().getOwnedSpectrobesCount();
@@ -72,12 +73,6 @@ public class AllSpectrobesList extends Widget {
 
     public static boolean exists(int x, int y) {
         return x >= 0 && y >= 0 && x < GRID_SIZE && y < GRID_SIZE;
-    }
-
-
-    public AllSpectrobesList() {
-        super(32, 32, "");
-
     }
 
     public void addSpectrobe(Spectrobe piece) {

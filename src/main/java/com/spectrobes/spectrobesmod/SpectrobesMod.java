@@ -14,6 +14,8 @@ import com.spectrobes.spectrobesmod.common.capability.PlayerEvents;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
+import com.spectrobes.spectrobesmod.common.worldgen.SpectrobesEntitySpawns;
+import com.spectrobes.spectrobesmod.common.worldgen.SpectrobesOreGen;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
@@ -24,6 +26,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.*;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
@@ -47,9 +50,11 @@ public class SpectrobesMod
         //register listeners to the event bus
         modEventBus.addListener(this::setup);
         modEventBus.addListener(this::doClientStuff);
-        // Register ourselves for server and other game events we are interested in
 
+        // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(new SpectrobesOreGen());
+        MinecraftForge.EVENT_BUS.register(new SpectrobesEntitySpawns());
         KrawlEntities.ENTITY_TYPES.register(modEventBus);
         SpectrobesEntities.ENTITY_TYPES.register(modEventBus);
         SpectrobesItemsRegistry.ITEMS.register(modEventBus);
@@ -63,6 +68,7 @@ public class SpectrobesMod
 
     private void setup(final FMLCommonSetupEvent event)
     {
+        DeferredWorkQueue.runLater(SpectrobesOreGen::registerOres);
         MinecraftForge.EVENT_BUS.register(PlayerEvents.instance);
         IconRegistry.init();
         SpectrobesEntities.init();

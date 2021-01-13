@@ -1,5 +1,6 @@
 package com.spectrobes.spectrobesmod.client.prizmod.Pages;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.spectrobes.spectrobesmod.client.prizmod.Components.MenuButton;
 import com.spectrobes.spectrobesmod.client.prizmod.PrizmodScreen;
@@ -11,8 +12,8 @@ public class MenuPage extends PrizmodPage {
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
-        super.render(mouseX, mouseY, partialTicks);
+    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+        super.render(stack, mouseX, mouseY, partialTicks);
         RenderSystem.pushMatrix();
 
         RenderSystem.popMatrix();

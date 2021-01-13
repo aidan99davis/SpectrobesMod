@@ -124,7 +124,7 @@ public class GuiUtils {
     {
         Minecraft mc = Minecraft.getInstance();
 
-        boolean flag4 = !modelIn.func_230044_c_();
+        boolean flag4 = !modelIn.isGui3d();
         if(renderTypeOverride != null)
         {
             //ItemRenderer.renderItemModelIntoGUI
@@ -153,13 +153,13 @@ public class GuiUtils {
             modelIn = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(matrixStackIn, modelIn, ItemCameraTransforms.TransformType.NONE, false);
             matrixStackIn.translate(-0.5D, -0.5D, -0.5D);
             if (!modelIn.isBuiltInRenderer()) {
-                RenderType rendertype = RenderTypeLookup.getRenderType(itemStackIn);
+                RenderType rendertype = RenderTypeLookup.func_239219_a_(itemStackIn, true);
                 RenderType rendertype1;
                 if(renderTypeOverride != null)
                 {
                     rendertype1 = renderTypeOverride;
                 }
-                else if (Objects.equals(rendertype, Atlases.getTranslucentBlockType())) {
+                else if (Objects.equals(rendertype, Atlases.getTranslucentCullBlockType())) {
                     rendertype1 = Atlases.getTranslucentCullBlockType();
                 } else {
                     rendertype1 = rendertype;
@@ -170,7 +170,7 @@ public class GuiUtils {
                 renderModel(modelIn, itemStackIn, 0xf000f0, OverlayTexture.NO_OVERLAY, matrixStackIn, ivertexbuilder);
                 //end renderModel
             } else {
-                itemStackIn.getItem().getItemStackTileEntityRenderer().render(itemStackIn, matrixStackIn, buffer, 15728880, OverlayTexture.NO_OVERLAY);
+                itemStackIn.getItem().getItemStackTileEntityRenderer().func_239207_a_(itemStackIn, ItemCameraTransforms.TransformType.GUI, matrixStackIn, buffer, 15728880, OverlayTexture.NO_OVERLAY);
             }
 
             matrixStackIn.pop();
