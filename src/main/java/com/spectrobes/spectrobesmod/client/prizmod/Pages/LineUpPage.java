@@ -56,15 +56,17 @@ public class LineUpPage extends PrizmodPage {
             parent.setMenuPage(new MenuPage(parent));
         }));
 
-        this.addButton(new Button(parent.width / 2 - 60, 45, 60, 20, new StringTextComponent("Prev"), button -> {
-            this.AllSpectrobesGrid.previousPage();
-            this.init();
-        }));
-
-        this.addButton(new Button(parent.width / 2, 45, 60, 20, new StringTextComponent("Next"), button -> {
-            this.AllSpectrobesGrid.nextPage();
-            this.init();
-        }));
+//        this.addButton(new Button(parent.width / 2 - 60, 45, 60, 20, new StringTextComponent("Prev"), button -> {
+//            this.AllSpectrobesGrid.previousPage();
+//            this.init();
+//            this.parent.changeFocus(true);
+//        }));
+//
+//        this.addButton(new Button(parent.width / 2, 45, 60, 20, new StringTextComponent("Next"), button -> {
+//            this.AllSpectrobesGrid.nextPage();
+//            this.init();
+//            this.parent.changeFocus(true);
+//        }));
 
         populateGrid();
 
