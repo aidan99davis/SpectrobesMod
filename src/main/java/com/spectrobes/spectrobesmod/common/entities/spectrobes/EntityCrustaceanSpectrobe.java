@@ -68,8 +68,8 @@ public abstract class EntityCrustaceanSpectrobe extends EntitySpectrobe {
     @Override
     public void mate() {
         List<? extends EntityCrustaceanSpectrobe> mates
-                    = world.getEntitiesWithinAABB(getSpectrobeClass(),
-                        this.getBoundingBox()
+                = world.getEntitiesWithinAABB(getSpectrobeClass(),
+                this.getBoundingBox()
                         .grow(10, 10, 10));
         if(mates.isEmpty()) {
             this.setTicksTillMate(16000);

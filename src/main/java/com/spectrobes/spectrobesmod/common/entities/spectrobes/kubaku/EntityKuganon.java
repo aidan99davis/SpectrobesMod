@@ -80,6 +80,6 @@ public class EntityKuganon extends EntityMammalSpectrobe {
 
     @Override
     public int getLitterSize() {
-        return 2;
+        return 3;
     }
 }

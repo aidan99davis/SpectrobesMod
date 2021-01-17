@@ -66,10 +66,8 @@ public class PrizmodScreen extends ContainerScreen<PrizmodContainer> {
 
     @Override
     public void renderBackground(MatrixStack stack) {
-//        super.renderBackground(stack);
         RenderSystem.pushMatrix();
         RenderSystem.translatef(0, 0, 10);
-//        RenderSystem.color3f(1F, 1F, 1F);
         getMinecraft().getTextureManager().bindTexture(texture);
 
         GuiUtils.blit(0, 0,0,0,0,

@@ -85,6 +85,6 @@ public class EntitySpikan extends EntityMammalSpectrobe {
 
     @Override
     public int getLitterSize() {
-        return 2;
+        return 3;
     }
 }

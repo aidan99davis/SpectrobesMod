@@ -47,7 +47,7 @@ public class EntityHarumite extends EntityCrustaceanSpectrobe {
 
     @Override
     protected int getMaxLitterSize() {
-        return 0;
+        return 4;
     }
 
     @Override

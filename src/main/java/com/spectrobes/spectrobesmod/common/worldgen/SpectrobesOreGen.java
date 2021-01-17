@@ -1,10 +1,13 @@
 package com.spectrobes.spectrobesmod.common.worldgen;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
+import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobesBlocks;
+import net.minecraft.entity.EntityClassification;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.Feature;
@@ -16,6 +19,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Mod.EventBusSubscriber(modid = SpectrobesInfo.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class SpectrobesOreGen {
@@ -28,14 +32,14 @@ public class SpectrobesOreGen {
     public static void registerOres(){
         //Overworld Ore Register
         overworldOres.add(register("mineral_ore", Feature.ORE.withConfiguration(new OreFeatureConfig(
-                OreFeatureConfig.FillerBlockType.BASE_STONE_OVERWORLD, SpectrobesBlocks.mineral_block.get().getDefaultState(), 3))
+                OreFeatureConfig.FillerBlockType.BASE_STONE_OVERWORLD, SpectrobesBlocks.mineral_block.get().getDefaultState(), 5))
                 .range(180).square()
-                .func_242731_b(16)));
+                .func_242731_b(128)));
 
         overworldOres.add(register("fossil_ore", Feature.ORE.withConfiguration(new OreFeatureConfig(
-                OreFeatureConfig.FillerBlockType.BASE_STONE_OVERWORLD, SpectrobesBlocks.fossil_block.get().getDefaultState(), 2)) //Vein Size
-                .range(180).square() //max spawn height
-                .func_242731_b(16))); //amount of veins
+                OreFeatureConfig.FillerBlockType.BASE_STONE_OVERWORLD, SpectrobesBlocks.fossil_block.get().getDefaultState(), 3)) //Vein Size
+                .range(180).square()
+                .func_242731_b(128)));
 
     }
 
@@ -57,7 +61,6 @@ public class SpectrobesOreGen {
                 }
             }
         }
-
     }
 
     private static <FC extends IFeatureConfig> ConfiguredFeature<FC, ?> register(String name, ConfiguredFeature<FC, ?> configuredFeature) {

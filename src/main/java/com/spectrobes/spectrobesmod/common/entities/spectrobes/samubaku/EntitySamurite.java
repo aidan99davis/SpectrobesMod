@@ -76,6 +76,6 @@ public class EntitySamurite extends EntityMammalSpectrobe {
 
     @Override
     public int getLitterSize() {
-        return 3;
+        return 4;
     }
 }

@@ -43,7 +43,7 @@ public class EntityShakor extends EntityAquaticSpectrobe {
 
     @Override
     protected int getMaxLitterSize() {
-        return 3;
+        return 4;
     }
 
     @Override

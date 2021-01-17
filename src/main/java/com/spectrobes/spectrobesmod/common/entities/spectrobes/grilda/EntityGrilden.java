@@ -5,6 +5,7 @@ import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityMammalSpect
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.items.fossils.FossilBlockItem;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
+import com.spectrobes.spectrobesmod.common.registry.SpectrobesItemsRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.entity.EntityType;
@@ -84,8 +85,7 @@ public class EntityGrilden extends EntityMammalSpectrobe {
 
     @Override
     protected FossilBlockItem getFossil() {
-        return null;
-//        return (FossilItem) SpectrobesItemsRegistry.grilda_fossil_item.getItem();
+        return (FossilBlockItem) SpectrobesItemsRegistry.grilda_fossil_item.get();
     }
 
     @Override

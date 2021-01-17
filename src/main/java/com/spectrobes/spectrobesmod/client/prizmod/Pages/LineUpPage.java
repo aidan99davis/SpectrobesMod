@@ -36,6 +36,7 @@ public class LineUpPage extends PrizmodPage {
     @Override
     public void tick() {
         //this.populateGrid();
+        this.changeFocus(true);
     }
 
     @Override

@@ -1,3 +1,16 @@
+V1.4.7.1
+========
+Fixed crash when harumite breeds.
+Increased max litter size for most spectrobes.
+
+V1.4.7
+======
+Increased ore spawn rates.
+
+V1.4.6
+======
+Ported to 1.16.4
+
 V1.4.5
 ======
 Bug fixes and tidying up.

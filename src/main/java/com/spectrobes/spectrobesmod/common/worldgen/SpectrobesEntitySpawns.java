@@ -13,7 +13,7 @@ import java.util.List;
 
 import static net.minecraftforge.fml.common.Mod.EventBusSubscriber.*;
 
-@Mod.EventBusSubscriber(modid = SpectrobesInfo.MOD_ID, bus = Bus.MOD)
+@Mod.EventBusSubscriber(modid = SpectrobesInfo.MOD_ID, bus = Bus.FORGE)
 public class SpectrobesEntitySpawns {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
