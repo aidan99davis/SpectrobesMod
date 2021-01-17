@@ -117,9 +117,9 @@ public class PrizmodScreen extends ContainerScreen<PrizmodContainer> {
         this.buttons.clear();
         this.prizmodPage.changeFocus(false);
         this.prizmodPage = prizmodPage;
+        this.addButton(this.prizmodPage);
         this.prizmodPage.init();
         this.prizmodPage.changeFocus(true);
-        this.addButton(this.prizmodPage);
     }
 
     @Override public void tick() {

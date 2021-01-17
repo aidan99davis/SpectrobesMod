@@ -51,18 +51,19 @@ public class LineUpPage extends PrizmodPage {
 
     @Override
     public void init() {
+        buttons.clear();
         this.addButton(new MenuButton(parent.width / 2 - 30, 25, 60, 20, "Menu", button -> {
             parent.setMenuPage(new MenuPage(parent));
         }));
 
         this.addButton(new Button(parent.width / 2 - 60, 45, 60, 20, new StringTextComponent("Prev"), button -> {
             this.AllSpectrobesGrid.previousPage();
-            this.populateGrid();
+            this.init();
         }));
 
         this.addButton(new Button(parent.width / 2, 45, 60, 20, new StringTextComponent("Next"), button -> {
             this.AllSpectrobesGrid.nextPage();
-            this.populateGrid();
+            this.init();
         }));
 
         populateGrid();
@@ -71,7 +72,6 @@ public class LineUpPage extends PrizmodPage {
     }
 
     private void populateGrid() {
-//        buttons.clear();
         this.TeamSpectrobesGrid.clear();
         this.AllSpectrobesGrid.clear();
         Map<Integer, UUID> teamUuids =  parent.getContainer().getCurrentTeamUUIDs();

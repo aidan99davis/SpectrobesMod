@@ -21,7 +21,7 @@ public abstract class PrizmodPage extends Widget {
 
 
     public PrizmodPage(PrizmodScreen parent) {
-        super(parent.pageX, parent.pageY, parent.pageWidth, parent.pageHeight, new StringTextComponent("test"));
+        super(parent.pageX, parent.pageY, 0, 0, new StringTextComponent("test"));
         this.parent = parent;
     }
 
