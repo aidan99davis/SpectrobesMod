@@ -9,6 +9,7 @@ import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.Widget;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -24,7 +25,7 @@ public class TeamSpectrobesList extends Widget {
     private PrizmodPage parent;
 
     public TeamSpectrobesList(PrizmodPage parent) {
-        super(parent.x, parent.y, "");
+        super(parent.x, parent.y, 64, 128,  new StringTextComponent(""));
         this.parent = parent;
         gridData = new SpectrobePiece[GRID_SIZE];
         gridData[0] = new SpectrobePiece(null, 6, 0);

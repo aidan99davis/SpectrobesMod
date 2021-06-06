@@ -1,5 +1,6 @@
 package com.spectrobes.spectrobesmod.client.prizmod;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.spectrobes.spectrobesmod.client.container.PrizmodContainer;
 import com.spectrobes.spectrobesmod.client.gui.utils.GuiUtils;
@@ -28,6 +29,8 @@ public class PrizmodScreen extends ContainerScreen<PrizmodContainer> {
     public PlayerEntity player;
     public int pageX = xSize / 3;
     public int pageY = (int) (ySize * 0.65);
+    public int pageWidth = xSize;
+    public int pageHeight = ySize;
 
     private PrizmodPage prizmodPage;
 
@@ -46,8 +49,6 @@ public class PrizmodScreen extends ContainerScreen<PrizmodContainer> {
         this.ySize = mc.getMainWindow().getHeight();
     }
 
-    @Override public List<Widget> children() {return buttons;}
-
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int partialTicks) {
         super.mouseClicked(mouseX, mouseY, partialTicks);
@@ -56,17 +57,17 @@ public class PrizmodScreen extends ContainerScreen<PrizmodContainer> {
 
     @Override
     public void init() {
+        this.changeFocus(true);
         this.prizmodPage = new MenuPage(this);
         this.prizmodPage.init();
-        this.setFocused(prizmodPage);
+        this.prizmodPage.changeFocus(true);
         this.addButton(this.prizmodPage);
     }
 
     @Override
-    public void renderBackground() {
-        super.renderBackground();
+    public void renderBackground(MatrixStack stack) {
         RenderSystem.pushMatrix();
-        RenderSystem.color3f(1F, 1F, 1F);
+        RenderSystem.translatef(0, 0, 10);
         getMinecraft().getTextureManager().bindTexture(texture);
 
         GuiUtils.blit(0, 0,0,0,0,
@@ -79,15 +80,15 @@ public class PrizmodScreen extends ContainerScreen<PrizmodContainer> {
 
 
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
-        super.render(mouseX, mouseY,partialTicks);
+    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+        super.render(stack, mouseX, mouseY,partialTicks);
         RenderSystem.pushMatrix();
         RenderSystem.translatef(0,0,-16);
-        renderBackground();
+        renderBackground(stack);
 
         RenderSystem.popMatrix();
         RenderSystem.translatef(0,0,32);
-        this.prizmodPage.render(mouseX,mouseY,partialTicks);
+        this.prizmodPage.render(stack, mouseX,mouseY,partialTicks);
 
     }
 
@@ -99,9 +100,9 @@ public class PrizmodScreen extends ContainerScreen<PrizmodContainer> {
      * @param mouseY
      */
     @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+    protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.pushMatrix();
-        RenderSystem.color3f(1F, 1F, 1F);
+//        RenderSystem.color3f(1F, 1F, 1F);
         getMinecraft().getTextureManager().bindTexture(texture);
 
         GuiUtils.blit(0, 0,0,0,0,
@@ -115,9 +116,9 @@ public class PrizmodScreen extends ContainerScreen<PrizmodContainer> {
     public void setMenuPage(PrizmodPage prizmodPage) {
         this.buttons.clear();
         this.prizmodPage = prizmodPage;
-        this.prizmodPage.init();
-        this.setFocused(prizmodPage);
         this.addButton(this.prizmodPage);
+        this.prizmodPage.init();
+        this.prizmodPage.changeFocus(true);
     }
 
     @Override public void tick() {

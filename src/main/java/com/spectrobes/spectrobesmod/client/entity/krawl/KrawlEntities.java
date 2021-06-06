@@ -5,7 +5,9 @@ import com.spectrobes.spectrobesmod.common.entities.krawl.*;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -22,7 +24,7 @@ public class KrawlEntities {
     private static ArrayList<EntityType<? extends EntityKrawl>> SPECIAL_KRAWL = new ArrayList<>();
 
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES
-            = new DeferredRegister<>(ForgeRegistries.ENTITIES, SpectrobesInfo.MOD_ID);
+            = DeferredRegister.create(ForgeRegistries.ENTITIES, SpectrobesInfo.MOD_ID);
 
     public static final RegistryObject<EntityType<EntitySwar>> ENTITY_SWAR
             = ENTITY_TYPES.register("entity_swar",
@@ -67,6 +69,15 @@ public class KrawlEntities {
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "vortex").toString()));
 
     public static void init() {
+        DeferredWorkQueue.runLater(() -> {
+            GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_VORTEX.get(), EntityVortex.setCustomAttributes().create());
+            GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_SWAR.get(), EntitySwar.setCustomAttributes().create());
+            GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_GRIS.get(), EntityGris.setCustomAttributes().create());
+            GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_GRISEN.get(), EntityGrisen.setCustomAttributes().create());
+            GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_SUBAR.get(), EntitySubar.setCustomAttributes().create());
+            GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_VIZBAR.get(), EntityVizbar.setCustomAttributes().create());
+        });
+
         populateMaps();
     }
 

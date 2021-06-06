@@ -22,6 +22,7 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
+import java.util.UUID;
 
 public abstract class FossilBlockItem extends BlockItem implements IAnimatable {
 
@@ -43,7 +44,8 @@ public abstract class FossilBlockItem extends BlockItem implements IAnimatable {
                             (ServerPlayerEntity) context.getPlayer());
                 });
             } else {
-                Minecraft.getInstance().player.sendMessage(new StringTextComponent("A new spectrobe has been sent to your prizmod."));
+                UUID playerUUID = Minecraft.getInstance().player.getUniqueID();
+                Minecraft.getInstance().player.sendMessage(new StringTextComponent("A new spectrobe has been sent to your prizmod."), playerUUID);
             }
             return ActionResultType.CONSUME;
         } else {

@@ -3,23 +3,24 @@ package com.spectrobes.spectrobesmod.common.worldgen;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
 import net.minecraft.entity.EntityClassification;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.MobSpawnInfo;
+import net.minecraftforge.event.world.BiomeLoadingEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
-import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.List;
 
 import static net.minecraftforge.fml.common.Mod.EventBusSubscriber.*;
 
-@Mod.EventBusSubscriber(modid = SpectrobesInfo.MOD_ID, bus = Bus.MOD)
+@Mod.EventBusSubscriber(modid = SpectrobesInfo.MOD_ID, bus = Bus.FORGE)
 public class SpectrobesEntitySpawns {
 
-    @SubscribeEvent
-    public static void spawnEntities(FMLLoadCompleteEvent event) {
-        for(Biome biome : ForgeRegistries.BIOMES) {
-            biome.getSpawns(EntityClassification.MONSTER)
-                    .add(new Biome.SpawnListEntry(KrawlEntities.ENTITY_VORTEX.get(), 10, 1, 3));
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public void onBiomeLoadingEvent(BiomeLoadingEvent event) {
+        List<MobSpawnInfo.Spawners> spawns =
+                event.getSpawns().getSpawner(EntityClassification.MONSTER);
 
-        }
+        spawns.add(new MobSpawnInfo.Spawners(KrawlEntities.ENTITY_VORTEX.get(), 100, 1, 2));
     }
 }

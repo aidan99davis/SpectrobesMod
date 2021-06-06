@@ -104,7 +104,7 @@ public class FollowMasterGoal extends Goal {
     }
 
     private void tryToTeleportNearEntity() {
-        BlockPos lvt_1_1_ = new BlockPos(this.owner);
+        BlockPos lvt_1_1_ = this.owner.getPosition().toImmutable();
 
         for(int lvt_2_1_ = 0; lvt_2_1_ < 10; ++lvt_2_1_) {
             int lvt_3_1_ = this.getRandomNumber(-3, 3);
@@ -131,7 +131,7 @@ public class FollowMasterGoal extends Goal {
     }
 
     private boolean isTeleportFriendlyBlock(BlockPos p_226329_1_) {
-        PathNodeType lvt_2_1_ = WalkNodeProcessor.func_227480_b_(this.world, p_226329_1_.getX(), p_226329_1_.getY(), p_226329_1_.getZ());
+        PathNodeType lvt_2_1_ = new WalkNodeProcessor().getPathNodeType(this.world, p_226329_1_.getX(), p_226329_1_.getY(), p_226329_1_.getZ());
         if (lvt_2_1_ != PathNodeType.WALKABLE) {
             if(tameable instanceof EntityAquaticSpectrobe && (lvt_2_1_ == PathNodeType.WATER || lvt_2_1_ == PathNodeType.WATER_BORDER)) {
                 return true;
@@ -142,7 +142,7 @@ public class FollowMasterGoal extends Goal {
             if (!this.teleportToLeaves && lvt_3_1_.getBlock() instanceof LeavesBlock) {
                 return false;
             } else {
-                BlockPos lvt_4_1_ = p_226329_1_.subtract(new BlockPos(this.tameable));
+                BlockPos lvt_4_1_ = p_226329_1_.subtract(this.tameable.getPosition().toImmutable());
                 return this.world.hasNoCollisions(this.tameable, this.tameable.getBoundingBox().offset(lvt_4_1_));
             }
         }

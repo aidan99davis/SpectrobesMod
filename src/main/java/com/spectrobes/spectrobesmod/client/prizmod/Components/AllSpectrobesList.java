@@ -7,6 +7,7 @@ import com.spectrobes.spectrobesmod.client.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.Widget;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -29,7 +30,7 @@ public class AllSpectrobesList extends Widget {
     private PrizmodPage parent;
 
     public AllSpectrobesList(PrizmodPage parent) {
-        super(parent.x, parent.y, "");
+        super(parent.x, parent.y, 0, 0, new StringTextComponent(""));
         this.parent = parent;
         gridData_paged = new HashMap<>();
         int specCount = this.parent.parent.getContainer().getOwnedSpectrobesCount();
@@ -40,11 +41,11 @@ public class AllSpectrobesList extends Widget {
         }
         if(pages == 0)
             pages++;
-        for(int a = 0; a < this.pages; a ++) {
+        for(int a = 0; a < this.pages; a++) {
             SpectrobePiece[][] newGridData = new SpectrobePiece[GRID_SIZE][GRID_SIZE];
             for (int i = 0; i < GRID_SIZE; i++) {
                 for (int j = 0; j < GRID_SIZE; j++) {
-                    newGridData[i][j] = new SpectrobePiece(null, i, j);
+                    newGridData[j][i] = new SpectrobePiece(null, j, i);
                 }
             }
             gridData_paged.put(a, newGridData);
@@ -74,12 +75,6 @@ public class AllSpectrobesList extends Widget {
         return x >= 0 && y >= 0 && x < GRID_SIZE && y < GRID_SIZE;
     }
 
-
-    public AllSpectrobesList() {
-        super(32, 32, "");
-
-    }
-
     public void addSpectrobe(Spectrobe piece) {
         int i = 0;
         int j = 0;
@@ -88,9 +83,9 @@ public class AllSpectrobesList extends Widget {
         for(int a = 0; a < this.pages && !added; a++) {
             for (i = 0; i < GRID_SIZE && !added; i++) {
                 for (j = 0; j < GRID_SIZE && !added; j++) {
-                    SpectrobePiece p = gridData_paged.get(a)[i][j];
+                    SpectrobePiece p = gridData_paged.get(a)[j][i];
                     if (p.spectrobe == null) {
-                        gridData_paged.get(a)[i][j].spectrobe = piece;
+                        gridData_paged.get(a)[j][i].spectrobe = piece;
                         added = true;
                     }
                 }
@@ -112,15 +107,17 @@ public class AllSpectrobesList extends Widget {
         List<SpectrobePiece> toReturn = new ArrayList<>();
         for (int i = 0; i < GRID_SIZE; i++) {
             for (int j = 0; j < GRID_SIZE; j++) {
-                toReturn.add(gridData_paged.get(currentPage)[i][j]);
+                toReturn.add(gridData_paged.get(currentPage)[j][i]);
             }
         }
         return toReturn;
     }
 
     public void previousPage() {
-        if(currentPage > 0) {
+        if(currentPage - 1 >= 0) {
             currentPage --;
+        } else {
+            currentPage = pages - 1;
         }
     }
 

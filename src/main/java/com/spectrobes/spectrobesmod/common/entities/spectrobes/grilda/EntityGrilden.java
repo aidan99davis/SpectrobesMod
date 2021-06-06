@@ -5,10 +5,10 @@ import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityMammalSpect
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.items.fossils.FossilBlockItem;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
+import com.spectrobes.spectrobesmod.common.registry.SpectrobesItemsRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.world.World;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -48,14 +48,6 @@ public class EntityGrilden extends EntityMammalSpectrobe {
         return SpectrobesEntities.ENTITY_GRILDA.get();
     }
 
-    @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20);
-        this.getAttributes().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(5);
-    }
-
     public <ENTITY extends EntitySpectrobe> PlayState headController(AnimationEvent<ENTITY> event) {
         event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.grilden.idle", true));
         return PlayState.CONTINUE;
@@ -93,8 +85,7 @@ public class EntityGrilden extends EntityMammalSpectrobe {
 
     @Override
     protected FossilBlockItem getFossil() {
-        return null;
-//        return (FossilItem) SpectrobesItemsRegistry.grilda_fossil_item.getItem();
+        return (FossilBlockItem) SpectrobesItemsRegistry.grilda_fossil_item.get();
     }
 
     @Override
