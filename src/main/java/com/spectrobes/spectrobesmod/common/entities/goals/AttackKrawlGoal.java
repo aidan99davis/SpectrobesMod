@@ -4,69 +4,67 @@ import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityVortex;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
+import net.minecraft.entity.EntityPredicate;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.ai.goal.TargetGoal;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.util.math.AxisAlignedBB;
 
+import javax.annotation.Nullable;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class AttackKrawlGoal extends TargetGoal {
-    EntityKrawl target;
+    protected final Class targetClass = EntityKrawl.class;
+    protected final int targetChance;
+    protected LivingEntity nearestTarget;
+    protected EntityPredicate targetEntitySelector;
 
-
-    public AttackKrawlGoal(EntitySpectrobe mobIn, boolean checkSight) {
-        super(mobIn, checkSight);
+    public AttackKrawlGoal(MobEntity goalOwnerIn, boolean checkSight, boolean nearbyOnlyIn) {
+        this(goalOwnerIn, 10, checkSight, nearbyOnlyIn, (Predicate)null);
     }
 
-    public AttackKrawlGoal(EntitySpectrobe mobIn, boolean checkSight, boolean nearbyOnlyIn) {
-        super(mobIn, checkSight, nearbyOnlyIn);
+    public AttackKrawlGoal(MobEntity goalOwnerIn, int targetChanceIn, boolean checkSight, boolean nearbyOnlyIn, @Nullable Predicate<LivingEntity> targetPredicate) {
+        super(goalOwnerIn, checkSight, nearbyOnlyIn);
+        this.targetChance = targetChanceIn;
+        this.setMutexFlags(EnumSet.of(Flag.TARGET));
+        this.targetEntitySelector = (new EntityPredicate()).setDistance(this.getTargetDistance()).setCustomPredicate(targetPredicate);
     }
 
-    /**
-     * Returns whether the EntityAIBase should begin execution.
-     */
-    @Override
     public boolean shouldExecute() {
-        if(((EntitySpectrobe)goalOwner).getStage() == SpectrobeProperties.Stage.CHILD )
+        if(((EntitySpectrobe)goalOwner).getSpectrobeData().properties.getStage() == SpectrobeProperties.Stage.CHILD)
             return false;
-
-        List<EntityKrawl> nearbyMobs = goalOwner.world.getEntitiesWithinAABB(EntityKrawl.class, goalOwner.getBoundingBox().grow(20, 20, 20));
-
-        nearbyMobs.removeIf(entityKrawl -> entityKrawl instanceof EntityVortex);
-
-        if (!nearbyMobs.isEmpty()) {
-            this.target = nearbyMobs.get(0);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean shouldContinueExecuting() {
-        boolean shouldContinue = super.shouldContinueExecuting();
-
-        if(shouldContinue) {
-            ((EntitySpectrobe)this.goalOwner).setIsAttacking(true);
+        if (this.targetChance > 0 && this.goalOwner.getRNG().nextInt(this.targetChance) != 0) {
+            return false;
         } else {
-            ((EntitySpectrobe)this.goalOwner).setIsAttacking(false);
+            this.findNearestTarget();
+            return this.nearestTarget != null;
         }
-
-        return shouldContinue;
     }
 
-    @Override
-    public void startExecuting() {
+    protected AxisAlignedBB getTargetableArea(double targetDistance) {
+        return this.goalOwner.getBoundingBox().grow(targetDistance, 4.0D, targetDistance);
+    }
 
-        this.goalOwner.setAttackTarget(this.target);
-        ((EntitySpectrobe)this.goalOwner).setIsAttacking(true);
-        this.goalOwner.getNavigator().setPath(this.goalOwner.getNavigator().getPathToEntity(this.target, 1), 3);
-        this.goalOwner.setAggroed(true);
+    protected void findNearestTarget() {
+        if (this.targetClass != PlayerEntity.class && this.targetClass != ServerPlayerEntity.class) {
+            this.nearestTarget = this.goalOwner.world.func_225318_b(this.targetClass, this.targetEntitySelector, this.goalOwner, this.goalOwner.getPosX(), this.goalOwner.getPosYEye(), this.goalOwner.getPosZ(), this.getTargetableArea(this.getTargetDistance()));
+        } else {
+            this.nearestTarget = this.goalOwner.world.getClosestPlayer(this.targetEntitySelector, this.goalOwner, this.goalOwner.getPosX(), this.goalOwner.getPosYEye(), this.goalOwner.getPosZ());
+        }
+
+    }
+
+    public void startExecuting() {
+        this.goalOwner.setAttackTarget(this.nearestTarget);
         super.startExecuting();
     }
 
-    @Override
-    public void resetTask() {
-        ((EntitySpectrobe)this.goalOwner).setIsAttacking(false);
-        this.goalOwner.getNavigator().clearPath();
-        this.goalOwner.setAggroed(false);
-        super.resetTask();
+    public void setNearestTarget(@Nullable LivingEntity target) {
+        this.nearestTarget = target;
     }
 }

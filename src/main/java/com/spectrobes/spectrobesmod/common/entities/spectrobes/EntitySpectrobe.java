@@ -99,12 +99,10 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         super.registerGoals();
         this.goalSelector.addGoal(0, new AttackKrawlGoal(this, true, true));
         this.goalSelector.addGoal(1, new FindMineralsGoal(this));
-        this.goalSelector.addGoal(1, new FindMineralOreGoal(this));
         this.goalSelector.addGoal(1, new FindFossilsGoal(this));
-        this.goalSelector.addGoal(0, new MeleeAttackGoal(this, 0.5, false));
+        this.goalSelector.addGoal(1, new FindMineralOreGoal(this));
         this.goalSelector.addGoal(2, new FollowMasterGoal(this,0.3f , 1, 15, true));
         this.goalSelector.addGoal(5, new LookAtGoal(this, PlayerEntity.class, 6.0F));
-        this.targetSelector.addGoal(5, new NearestAttackableTargetGoal(this, EntityKrawl.class, true));
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
     }

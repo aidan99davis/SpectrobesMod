@@ -6,6 +6,7 @@ import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.LookController;
 import net.minecraft.entity.ai.controller.MovementController;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.passive.DolphinEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.pathfinding.*;
 import net.minecraft.potion.EffectInstance;
@@ -54,7 +55,7 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
     protected void registerGoals() {
         super.registerGoals();
 //        this.goalSelector.addGoal(0, new SwimWithPlayerGoal(this, 1.0D));
-        this.goalSelector.addGoal(0, new RandomSwimmingGoal(this, .5D, 5));
+        this.goalSelector.addGoal(3, new RandomSwimmingGoal(this, .5D, 5));
         this.goalSelector.addGoal(1, new FindWaterGoal(this));
         this.goalSelector.addGoal(2, new LookRandomlyGoal(this));
         this.goalSelector.addGoal(8, new FollowBoatGoal(this));
@@ -153,34 +154,51 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
         }
     }
     static class MoveHelperController_ONE extends MovementController {
-        private final EntityAquaticSpectrobe fish;
+        private final EntityAquaticSpectrobe dolphin;
 
-        MoveHelperController_ONE(EntityAquaticSpectrobe p_i48857_1_) {
-            super(p_i48857_1_);
-            this.fish = p_i48857_1_;
+        public MoveHelperController_ONE(EntityAquaticSpectrobe dolphinIn) {
+            super(dolphinIn);
+            this.dolphin = dolphinIn;
         }
 
-
         public void tick() {
-            if (this.fish.areEyesInFluid(FluidTags.WATER)) {
-                this.fish.setMotion(this.fish.getMotion().add(0.0D, 0.005D, 0.0D));
+            if (this.dolphin.isInWater()) {
+                this.dolphin.setMotion(this.dolphin.getMotion().add(0.0D, 0.005D, 0.0D));
             }
 
-//            if (this.action == Action.MOVE_TO && !this.fish.getNavigator().noPath()) {
-                double lvt_1_1_ = this.posX - this.fish.getPosX();
-                double lvt_3_1_ = this.posY - this.fish.getPosY();
-                double lvt_5_1_ = this.posZ - this.fish.getPosZ();
-                double lvt_7_1_ = (double)MathHelper.sqrt(lvt_1_1_ * lvt_1_1_ + lvt_3_1_ * lvt_3_1_ + lvt_5_1_ * lvt_5_1_);
-                lvt_3_1_ /= lvt_7_1_;
-                float lvt_9_1_ = (float)(MathHelper.atan2(lvt_5_1_, lvt_1_1_) * 57.2957763671875D) - 90.0F;
-                this.fish.rotationYaw = this.limitAngle(this.fish.rotationYaw, lvt_9_1_, 90.0F);
-                this.fish.renderYawOffset = this.fish.rotationYaw;
-                float lvt_10_1_ = (float)(this.speed * this.fish.getAttribute(Attributes.MOVEMENT_SPEED).getValue());
-                this.fish.setAIMoveSpeed(MathHelper.lerp(0.125F, this.fish.getAIMoveSpeed(), lvt_10_1_));
-                this.fish.setMotion(this.fish.getMotion().add(0.0D, (double)this.fish.getAIMoveSpeed() * lvt_3_1_ * 0.1D, 0.0D));
-//            } else {
-//                this.fish.setAIMoveSpeed(0.0F);
-//            }
+            if (this.action == Action.MOVE_TO && !this.dolphin.getNavigator().noPath()) {
+                double d0 = this.posX - this.dolphin.getPosX();
+                double d1 = this.posY - this.dolphin.getPosY();
+                double d2 = this.posZ - this.dolphin.getPosZ();
+                double d3 = d0 * d0 + d1 * d1 + d2 * d2;
+                if (d3 < 2.500000277905201E-7D) {
+                    this.mob.setMoveForward(0.0F);
+                } else {
+                    float f = (float)(MathHelper.atan2(d2, d0) * 57.2957763671875D) - 90.0F;
+                    this.dolphin.rotationYaw = this.limitAngle(this.dolphin.rotationYaw, f, 10.0F);
+                    this.dolphin.renderYawOffset = this.dolphin.rotationYaw;
+                    this.dolphin.rotationYawHead = this.dolphin.rotationYaw;
+                    float f1 = (float)(this.speed * this.dolphin.getAttributeValue(Attributes.MOVEMENT_SPEED));
+                    if (this.dolphin.isInWater()) {
+                        this.dolphin.setAIMoveSpeed(f1 * 0.02F);
+                        float f2 = -((float)(MathHelper.atan2(d1, (double)MathHelper.sqrt(d0 * d0 + d2 * d2)) * 57.2957763671875D));
+                        f2 = MathHelper.clamp(MathHelper.wrapDegrees(f2), -85.0F, 85.0F);
+                        this.dolphin.rotationPitch = this.limitAngle(this.dolphin.rotationPitch, f2, 5.0F);
+                        float f3 = MathHelper.cos(this.dolphin.rotationPitch * 0.017453292F);
+                        float f4 = MathHelper.sin(this.dolphin.rotationPitch * 0.017453292F);
+                        this.dolphin.moveForward = f3 * f1;
+                        this.dolphin.moveVertical = -f4 * f1;
+                    } else {
+                        this.dolphin.setAIMoveSpeed(f1 * 0.1F);
+                    }
+                }
+            } else {
+                this.dolphin.setAIMoveSpeed(0.0F);
+                this.dolphin.setMoveStrafing(0.0F);
+                this.dolphin.setMoveVertical(0.0F);
+                this.dolphin.setMoveForward(0.0F);
+            }
+
         }
     }
 

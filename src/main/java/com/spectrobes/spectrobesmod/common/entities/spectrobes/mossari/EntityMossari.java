@@ -72,7 +72,7 @@ public class EntityMossari extends EntityMammalSpectrobe {
 
     @Override
     protected FossilBlockItem getFossil() {
-        return (FossilBlockItem) SpectrobesItemsRegistry.nagu_fossil_item.get().getItem();
+        return (FossilBlockItem) SpectrobesItemsRegistry.mossari_fossil_item.get().getItem();
     }
 
     @Override

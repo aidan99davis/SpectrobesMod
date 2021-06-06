@@ -19,7 +19,7 @@ public class PlayerSpectrobeMasterDispatcher implements ICapabilitySerializable<
         if (cap == PlayerProperties.PLAYER_SPECTROBE_MASTER) {
             return LazyOptional.of(() -> (T) playerSpectrobeMaster);
         }
-        return null;
+        return LazyOptional.empty();
     }
 
     @Override
