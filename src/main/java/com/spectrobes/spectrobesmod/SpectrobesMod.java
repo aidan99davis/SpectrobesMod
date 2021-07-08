@@ -55,8 +55,8 @@ public class SpectrobesMod
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new SpectrobesOreGen());
         MinecraftForge.EVENT_BUS.register(new SpectrobesEntitySpawns());
-        KrawlEntities.ENTITY_TYPES.register(modEventBus);
         SpectrobesEntities.ENTITY_TYPES.register(modEventBus);
+        KrawlEntities.ENTITY_TYPES.register(modEventBus);
         SpectrobesItemsRegistry.ITEMS.register(modEventBus);
         SpectrobesTileRegistry.TILES.register(modEventBus);
         SpectrobesBlocks.BLOCKS.register(modEventBus);

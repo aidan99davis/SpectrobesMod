@@ -11,7 +11,7 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 public class EntitySwar extends EntityKrawl {
-    public EntitySwar(EntityType<? extends MonsterEntity> type, World worldIn) {
+    public EntitySwar(EntityType<? extends EntityKrawl> type, World worldIn) {
         super(type, worldIn);
     }
 

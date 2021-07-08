@@ -30,7 +30,7 @@ public class KrawlEntities {
             = ENTITY_TYPES.register("entity_swar",
             () -> EntityType.Builder.create(EntitySwar::new,
                     EntityClassification.MONSTER)
-                    .size(0.5f, 0.75f)
+                    .size(1f, 2f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "swar").toString()));
 
     public static final RegistryObject<EntityType<EntitySubar>> ENTITY_SUBAR

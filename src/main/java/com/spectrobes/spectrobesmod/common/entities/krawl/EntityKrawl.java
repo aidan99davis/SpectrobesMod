@@ -122,6 +122,10 @@ public abstract class EntityKrawl extends MonsterEntity implements IAnimatable, 
         this.goalSelector.addGoal(3, new MeleeAttackGoal(this,0.3f , true));
     }
 
+    public boolean isVortex() {
+        return false;
+    }
+
     @Override
     protected void registerData() {
         super.registerData();
@@ -132,6 +136,7 @@ public abstract class EntityKrawl extends MonsterEntity implements IAnimatable, 
         return MonsterEntity.func_233666_p_()
                 .createMutableAttribute(Attributes.MOVEMENT_SPEED, (double)0.5F)
                 .createMutableAttribute(Attributes.MAX_HEALTH, 20.0D)
+                .createMutableAttribute(Attributes.ATTACK_SPEED, 0.25f)
                 .createMutableAttribute(Attributes.ATTACK_DAMAGE, 5.0D);
     }
 

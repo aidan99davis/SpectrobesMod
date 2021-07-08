@@ -64,6 +64,11 @@ public class EntityVortex extends EntityKrawl {
         dataManager.register(WAVES_REMAINING, calculateKrawlWaves());
     }
 
+    @Override
+    public boolean isVortex() {
+        return true;
+    }
+
     public List<EntityKrawl> getKrawlWave() {
         return children;
     }
