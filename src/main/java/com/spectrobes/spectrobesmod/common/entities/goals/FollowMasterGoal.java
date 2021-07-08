@@ -54,6 +54,8 @@ public class FollowMasterGoal extends Goal {
             return false;
         } else if (this.tameable.isSitting()) {
             return false;
+        } else if (this.tameable.IsAttacking()) {
+            return false;
         } else if (this.tameable.isSearching()) {
             return false;
         } else if (this.tameable.getDistanceSq(lvt_1_1_) < (double)(this.minDist * this.minDist)) {
@@ -68,6 +70,8 @@ public class FollowMasterGoal extends Goal {
         if (this.navigator.noPath()) {
             return false;
         } else if (this.tameable.isSitting()) {
+            return false;
+        } else if (this.tameable.IsAttacking()) {
             return false;
         } else if (this.tameable.isSearching()) {
             return false;

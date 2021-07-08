@@ -54,8 +54,11 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public abstract class EntitySpectrobe extends TameableEntity implements IEntityAdditionalSpawnData, IAnimatable, IHasNature {
-    public static final Predicate<ItemEntity> MINERAL_SELECTOR = (itemEntity) -> {
-        return !itemEntity.cannotPickup() && itemEntity.isAlive() && itemEntity.getItem().getItem() instanceof MineralItem;
+    public static final Predicate<ItemEntity> MINERAL_SELECTOR = (itemEntity) -> !itemEntity.cannotPickup() && itemEntity.isAlive() && itemEntity.getItem().getItem() instanceof MineralItem;
+    private static final Predicate<LivingEntity> TARGET_KRAWL = (entity) -> {
+        EntityType<?> entitytype = entity.getType();
+        return entitytype.getClass().isAssignableFrom(EntityKrawl.class)
+                && !((EntityKrawl)entity).isVortex();
     };
     private boolean recentInteract = false;
     private int ticksTillInteract = 0;
@@ -103,15 +106,23 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         this.goalSelector.addGoal(1, new FindMineralOreGoal(this));
         this.goalSelector.addGoal(2, new FollowMasterGoal(this,0.3f , 1, 15, true));
         this.goalSelector.addGoal(5, new LookAtGoal(this, PlayerEntity.class, 6.0F));
+        this.goalSelector.addGoal(3, new MeleeAttackGoal(this,1f , true));
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
+        this.targetSelector.addGoal(1, new OwnerHurtTargetGoal(this));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal(this, EntityKrawl.class, 10, true, false, (entity) -> true));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal(this, EntityKrawl.class, true));
+        this.targetSelector.addGoal(3, (new HurtByTargetGoal(this, new Class[0])).setCallsForHelp(new Class[0]));
+        this.targetSelector.addGoal(5, new NonTamedTargetGoal(this, EntityKrawl.class, false, TARGET_KRAWL));
     }
 
     public static AttributeModifierMap.MutableAttribute setCustomAttributes() {
         return MonsterEntity.func_233666_p_()
                 .createMutableAttribute(Attributes.MOVEMENT_SPEED, (double)0.5F)
                 .createMutableAttribute(Attributes.MAX_HEALTH, 20.0D)
-                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 5.0D);
+                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 5.0D)
+                .createMutableAttribute(Attributes.ATTACK_SPEED, 0.25f)
+                .createMutableAttribute(Attributes.FOLLOW_RANGE, 10.0D)
+                .createMutableAttribute(Attributes.ATTACK_KNOCKBACK, 5.0D);
     }
 
     @Override
@@ -288,10 +299,10 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
 
     @Override
     public Vector3d getMotion() {
-        if(!isSitting()) {
-            return super.getMotion();
+        if(isSitting()) {
+            return Vector3d.ZERO;
         }
-        return Vector3d.ZERO;
+        return super.getMotion();
     }
 
     /**
@@ -430,12 +441,6 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     }
 
     @Override
-    public boolean attackEntityAsMob(Entity toAttack) {
-        setIsAttacking(true);
-        return super.attackEntityAsMob(toAttack);
-    }
-
-    @Override
     protected void damageEntity(DamageSource damageSrc, float damageAmount) {
         if(damageSrc.getImmediateSource() instanceof IHasNature) {
             IHasNature attacker = (IHasNature)damageSrc.getImmediateSource();
@@ -457,6 +462,12 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         } else {
             super.damageEntity(damageSrc, damageAmount);
         }
+    }
+
+    @Override
+    public boolean attackEntityAsMob(Entity toAttack) {
+        setIsAttacking(true);
+        return super.attackEntityAsMob(toAttack);
     }
 
     @Override
