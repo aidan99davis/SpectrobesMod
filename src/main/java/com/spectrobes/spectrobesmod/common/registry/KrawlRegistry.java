@@ -15,6 +15,7 @@ public class KrawlRegistry {
             .withHpLevel(250)
             .withHpOffset(15)
             .withXpWorth(25)
+            .withGuraWorth(25)
             .build();
 
     public static final KrawlProperties Subar_Properties
@@ -27,6 +28,7 @@ public class KrawlRegistry {
             .withHpLevel(250)
             .withHpOffset(15)
             .withXpWorth(25)
+            .withGuraWorth(25)
             .build();
 
     public static final KrawlProperties Vizbar_Properties
@@ -39,6 +41,7 @@ public class KrawlRegistry {
             .withHpLevel(250)
             .withHpOffset(15)
             .withXpWorth(25)
+            .withGuraWorth(25)
             .build();
 
     public static final KrawlProperties Gris_Properties
@@ -51,6 +54,7 @@ public class KrawlRegistry {
             .withHpLevel(250)
             .withHpOffset(15)
             .withXpWorth(25)
+            .withGuraWorth(25)
             .build();
 
     public static final KrawlProperties Grisen_Properties
@@ -63,6 +67,7 @@ public class KrawlRegistry {
             .withHpLevel(250)
             .withHpOffset(15)
             .withXpWorth(25)
+            .withGuraWorth(25)
             .build();
 
     public static final KrawlProperties Vortex_Properties =
@@ -75,5 +80,6 @@ public class KrawlRegistry {
             .withHpLevel(10000000)
             .withHpOffset(0)
             .withXpWorth(0)
+            .withGuraWorth(0)
             .build();
 }

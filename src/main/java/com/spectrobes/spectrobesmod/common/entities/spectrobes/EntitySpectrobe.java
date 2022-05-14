@@ -1,5 +1,6 @@
 package com.spectrobes.spectrobesmod.common.entities.spectrobes;
 
+import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.entities.IHasNature;
@@ -491,7 +492,15 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
             if(getOwner() != null) {
                 getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
                     sm.updateSpectrobe(spectrobeInstance);
+                    sm.addGura(krawlProperties.getGura_worth());
+
                     SpectrobesNetwork.sendToServer(new SSyncSpectrobeMasterPacket(sm));
+                });
+            }
+        } else {
+            if(getOwner() != null) {
+                getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
+                    getOwner().sendMessage(new StringTextComponent("You gained: " + krawlProperties.getGura_worth() + " gura. You now have: " + sm.getPlayerGura()), getOwner().getUniqueID());
                 });
             }
         }

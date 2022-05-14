@@ -16,10 +16,36 @@ public class PlayerSpectrobeMaster {
     //index 6 : child form
     private Map<Integer,UUID> currentTeam = new HashMap<>(7);
 
+    private int playerGura;
+
     private int currentSelected;
 
     private List<Spectrobe>
         ownedSpectrobes;
+
+    public PlayerSpectrobeMaster() {
+        this.ownedSpectrobes = new ArrayList<>();
+        this.playerGura = 0;
+        for(int i = 0; i < 7; i++) {
+            this.currentTeam.put(i, null);
+        }
+    }
+
+    public int getPlayerGura() {
+        return playerGura;
+    }
+
+    public void addGura(int guraWorth) {
+        this.playerGura = playerGura + guraWorth;
+    }
+
+    public boolean spendGura(int guraCost) {
+        if(this.playerGura - guraCost >= 0) {
+            this.playerGura = this.playerGura - guraCost;
+            return true;
+        }
+        return false;
+    }
 
     public boolean canFight() {
         return currentTeam.get(0) != null && currentTeam.get(1) != null;
@@ -51,13 +77,6 @@ public class PlayerSpectrobeMaster {
         }
     }
 
-    public PlayerSpectrobeMaster() {
-        this.ownedSpectrobes = new ArrayList<>();
-        for(int i = 0; i < 7; i++) {
-            this.currentTeam.put(i, null);
-        }
-    }
-
     public void addSpectrobe(Spectrobe spectrobeInstance) {
         ownedSpectrobes.add(spectrobeInstance);
     }
@@ -81,66 +100,6 @@ public class PlayerSpectrobeMaster {
         }
 
         return new ArrayList<>();
-    }
-
-    public CompoundNBT serializeNBT() {
-        CompoundNBT myData = new CompoundNBT();
-        CompoundNBT currentTeamNbt = new CompoundNBT();
-        ListNBT spectrobes = new ListNBT();
-        for(Spectrobe s : ownedSpectrobes) {
-            spectrobes.add(s.write());
-        }
-
-        for(int i = 0; i < 7; i++) {
-            if(currentTeam.get(i) != null)
-                currentTeamNbt.putString(String.valueOf(i), currentTeam.get(i).toString());
-        }
-        myData.putInt("currentSelected", currentSelected);
-        myData.put("spectrobesOwned", spectrobes);
-        myData.put("currentTeam", currentTeamNbt);
-        return myData;
-    }
-
-    public void deserializeNBT(CompoundNBT nbt) {
-        this.ownedSpectrobes = new ArrayList<>();
-        this.currentTeam = new HashMap<>(7);
-        for(int i = 0; i < 7; i++) {
-            this.currentTeam.put(i, null);
-        }
-        ListNBT ownedSpectrobesNbt = (ListNBT) nbt.get("spectrobesOwned");
-        CompoundNBT currentTeamNbt = (CompoundNBT) nbt.get("currentTeam");
-
-        int selected;
-        try {
-            selected = nbt.getInt("currentSelected");
-        } catch(NullPointerException ex) {
-            selected = 0;
-        }
-
-        currentSelected = selected;
-
-        List<Spectrobe> spectrobes = new ArrayList<>();
-        for(INBT spectrobeNbt : ownedSpectrobesNbt) {
-            spectrobes.add(Spectrobe.read((CompoundNBT)spectrobeNbt));
-        }
-        ownedSpectrobes.addAll(spectrobes);
-
-        for(int i = 0; i < 7; i++) {
-            try {
-                currentTeam.replace(i, UUID.fromString(
-                        currentTeamNbt.getString(String.valueOf(i))));
-
-            } catch(Exception ex){
-            }
-        }
-//        }
-
-    }
-
-    public void copyFrom(PlayerSpectrobeMaster oldStore) {
-        ownedSpectrobes = oldStore.ownedSpectrobes;
-        currentTeam = oldStore.currentTeam;
-        currentSelected = oldStore.currentSelected;
     }
 
     public int getOwnedSpectrobesCount() {
@@ -197,5 +156,71 @@ public class PlayerSpectrobeMaster {
         getCurrentTeamMember().setActive();
     }
 
+    public CompoundNBT serializeNBT() {
+        CompoundNBT myData = new CompoundNBT();
+        CompoundNBT currentTeamNbt = new CompoundNBT();
+        ListNBT spectrobes = new ListNBT();
+        for(Spectrobe s : ownedSpectrobes) {
+            spectrobes.add(s.write());
+        }
 
+        for(int i = 0; i < 7; i++) {
+            if(currentTeam.get(i) != null)
+                currentTeamNbt.putString(String.valueOf(i), currentTeam.get(i).toString());
+        }
+        myData.putInt("currentSelected", currentSelected);
+        myData.put("spectrobesOwned", spectrobes);
+        myData.put("currentTeam", currentTeamNbt);
+        myData.putInt("playerGura", playerGura);
+        return myData;
+    }
+
+    public void deserializeNBT(CompoundNBT nbt) {
+        this.ownedSpectrobes = new ArrayList<>();
+        this.currentTeam = new HashMap<>(7);
+        for(int i = 0; i < 7; i++) {
+            this.currentTeam.put(i, null);
+        }
+        ListNBT ownedSpectrobesNbt = (ListNBT) nbt.get("spectrobesOwned");
+        CompoundNBT currentTeamNbt = (CompoundNBT) nbt.get("currentTeam");
+
+        int selected;
+        try {
+            selected = nbt.getInt("currentSelected");
+        } catch(NullPointerException ex) {
+            selected = 0;
+        }
+
+        int gura;
+        try {
+            gura = nbt.getInt("playerGura");
+        } catch(NullPointerException ex) {
+            gura = 0;
+        }
+
+        currentSelected = selected;
+        playerGura = gura;
+
+        List<Spectrobe> spectrobes = new ArrayList<>();
+        for(INBT spectrobeNbt : ownedSpectrobesNbt) {
+            spectrobes.add(Spectrobe.read((CompoundNBT)spectrobeNbt));
+        }
+        ownedSpectrobes.addAll(spectrobes);
+
+        for(int i = 0; i < 7; i++) {
+            try {
+                currentTeam.replace(i, UUID.fromString(
+                        currentTeamNbt.getString(String.valueOf(i))));
+
+            } catch(Exception ex){
+            }
+        }
+    }
+
+    public void copyFrom(PlayerSpectrobeMaster oldStore) {
+        ownedSpectrobes = oldStore.ownedSpectrobes;
+        currentTeam = oldStore.currentTeam;
+        currentSelected = oldStore.currentSelected;
+        playerGura = oldStore.playerGura;
+    }
 }

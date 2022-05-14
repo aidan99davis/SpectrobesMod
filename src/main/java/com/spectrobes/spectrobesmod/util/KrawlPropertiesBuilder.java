@@ -13,6 +13,7 @@ public class KrawlPropertiesBuilder {
     private int defOffset;
     private int hpOffset;
     private int xp_worth;
+    private int gura_worth;
 
     public KrawlPropertiesBuilder withNature(SpectrobeProperties.Nature nature) {
         this.nature = nature;
@@ -54,6 +55,11 @@ public class KrawlPropertiesBuilder {
         return this;
     }
 
+    public KrawlPropertiesBuilder withGuraWorth(int guraWorth) {
+        this.gura_worth = guraWorth;
+        return this;
+    }
+
     public KrawlProperties build() {
         KrawlProperties properties = new KrawlProperties();
 
@@ -65,6 +71,7 @@ public class KrawlPropertiesBuilder {
         properties.setHpLevel(this.hpLevel);
         properties.setHpOffset(this.hpOffset);
         properties.setXpWorth(this.xp_worth);
+        properties.setGuraWorth(this.gura_worth);
 
         return properties;
     }
