@@ -24,7 +24,7 @@ public class MossariRenderer extends GeoEntityRenderer<EntityMossari> {
 
     @Nullable
     @Override
-    public ResourceLocation getEntityTexture(EntityMossari entity)
+    public ResourceLocation getTextureLocation(EntityMossari entity)
     {
         switch (entity.getSpectrobeData().Variant) {
             case 0:

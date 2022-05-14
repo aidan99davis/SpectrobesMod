@@ -21,28 +21,28 @@ import java.util.Random;
 
 
 public abstract class EntityCrustaceanSpectrobe extends EntitySpectrobe {
-    private static final EntityPredicate field_213810_bA = (new EntityPredicate()).setDistance(10.0D).allowFriendlyFire().allowInvulnerable().setLineOfSiteRequired();
+    private static final EntityPredicate SWIM_WITH_PLAYER_TARGETING = (new EntityPredicate()).range(10.0D).allowSameTeam().allowInvulnerable().allowUnseeable();
     public EntityCrustaceanSpectrobe(EntityType<? extends EntitySpectrobe> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
-        this.setPathPriority(PathNodeType.WATER, 0.0F);
-        this.setPathPriority(PathNodeType.WALKABLE, 1.0F);
-        this.moveController = new MoveHelperController(this);
-        this.lookController = new SpectrobeLookController(this, 10);
+        this.setPathfindingMalus(PathNodeType.WATER, 0.0F);
+        this.setPathfindingMalus(PathNodeType.WALKABLE, 1.0F);
+        this.moveControl = new MoveHelperController(this);
+        this.lookControl = new SpectrobeLookController(this, 10);
     }
 
     @Override
-    public boolean isPushedByWater() {
+    public boolean isPushedByFluid() {
         return false;
     }
 
     @Override
-    public CreatureAttribute getCreatureAttribute() {
+    public CreatureAttribute getMobType() {
         return CreatureAttribute.WATER;
     }
 
     @Override
-    public void livingTick() {
-        super.livingTick();
+    public void aiStep() {
+        super.aiStep();
     }
 
 //    protected PathNavigator createNavigator(World world) {
@@ -68,9 +68,9 @@ public abstract class EntityCrustaceanSpectrobe extends EntitySpectrobe {
     @Override
     public void mate() {
         List<? extends EntityCrustaceanSpectrobe> mates
-                = world.getEntitiesWithinAABB(getSpectrobeClass(),
+                = level.getEntitiesOfClass(getSpectrobeClass(),
                 this.getBoundingBox()
-                        .grow(10, 10, 10));
+                        .inflate(10, 10, 10));
         if(mates.isEmpty()) {
             this.setTicksTillMate(16000);
             return;
@@ -91,7 +91,7 @@ public abstract class EntityCrustaceanSpectrobe extends EntitySpectrobe {
             return;
         }
 
-        this.dataManager.set(HAS_MATED, true);
+        this.entityData.set(HAS_MATED, true);
 
         mate.setTicksTillMate(16000);
         Random random = new Random();
@@ -99,9 +99,9 @@ public abstract class EntityCrustaceanSpectrobe extends EntitySpectrobe {
 
         for(int i = 0; i < litterSize; i++) {
             EntitySpectrobe spectrobe = getChildForLineage()
-                    .create(world);
-            this.world.addEntity(spectrobe);
-            spectrobe.setPositionAndUpdate(getPosX(), getPosY(), getPosZ());
+                    .create(level);
+            this.level.addFreshEntity(spectrobe);
+            spectrobe.teleportTo(getX(), getY(), getZ());
         }
         //todo: aquatic breeding. eggs? livebirth? - livebirth for now, with a litter size.
     }
@@ -118,22 +118,22 @@ public abstract class EntityCrustaceanSpectrobe extends EntitySpectrobe {
 
 
         public void tick() {
-            if (this.fish.areEyesInFluid(FluidTags.WATER)) {
-                this.fish.setMotion(this.fish.getMotion().add(0.0D, 0.005D, 0.0D));
+            if (this.fish.isEyeInFluid(FluidTags.WATER)) {
+                this.fish.setDeltaMovement(this.fish.getDeltaMovement().add(0.0D, 0.005D, 0.0D));
             }
 
 //            if (this.action == Action.MOVE_TO && !this.fish.getNavigator().noPath()) {
-                double lvt_1_1_ = this.posX - this.fish.getPosX();
-                double lvt_3_1_ = this.posY - this.fish.getPosY();
-                double lvt_5_1_ = this.posZ - this.fish.getPosZ();
+                double lvt_1_1_ = this.wantedX - this.fish.getX();
+                double lvt_3_1_ = this.wantedY - this.fish.getY();
+                double lvt_5_1_ = this.wantedZ - this.fish.getZ();
                 double lvt_7_1_ = (double)MathHelper.sqrt(lvt_1_1_ * lvt_1_1_ + lvt_3_1_ * lvt_3_1_ + lvt_5_1_ * lvt_5_1_);
                 lvt_3_1_ /= lvt_7_1_;
                 float lvt_9_1_ = (float)(MathHelper.atan2(lvt_5_1_, lvt_1_1_) * 57.2957763671875D) - 90.0F;
-                this.fish.rotationYaw = this.limitAngle(this.fish.rotationYaw, lvt_9_1_, 90.0F);
-                this.fish.renderYawOffset = this.fish.rotationYaw;
-                float lvt_10_1_ = (float)(this.speed * this.fish.getAttribute(Attributes.MOVEMENT_SPEED).getValue());
-                this.fish.setAIMoveSpeed(MathHelper.lerp(0.125F, this.fish.getAIMoveSpeed(), lvt_10_1_));
-                this.fish.setMotion(this.fish.getMotion().add(0.0D, (double)this.fish.getAIMoveSpeed() * lvt_3_1_ * 0.1D, 0.0D));
+                this.fish.yRot = this.rotlerp(this.fish.yRot, lvt_9_1_, 90.0F);
+                this.fish.yBodyRot = this.fish.yRot;
+                float lvt_10_1_ = (float)(this.speedModifier * this.fish.getAttribute(Attributes.MOVEMENT_SPEED).getValue());
+                this.fish.setSpeed(MathHelper.lerp(0.125F, this.fish.getSpeed(), lvt_10_1_));
+                this.fish.setDeltaMovement(this.fish.getDeltaMovement().add(0.0D, (double)this.fish.getSpeed() * lvt_3_1_ * 0.1D, 0.0D));
         }
     }
 
@@ -142,23 +142,23 @@ public abstract class EntityCrustaceanSpectrobe extends EntitySpectrobe {
             super(p_i48815_1_, p_i48815_2_);
         }
 
-        protected boolean canNavigate() {
+        protected boolean canUpdatePath() {
             return true;
         }
 
-        protected PathFinder getPathFinder(int p_179679_1_) {
-            this.nodeProcessor = new WalkAndSwimNodeProcessor();
-            return new PathFinder(this.nodeProcessor, p_179679_1_);
+        protected PathFinder createPathFinder(int p_179679_1_) {
+            this.nodeEvaluator = new WalkAndSwimNodeProcessor();
+            return new PathFinder(this.nodeEvaluator, p_179679_1_);
         }
 
-        public boolean canEntityStandOnPos(BlockPos p_188555_1_) {
-            if (this.entity instanceof EntityCrustaceanSpectrobe) {
+        public boolean isStableDestination(BlockPos p_188555_1_) {
+            if (this.mob instanceof EntityCrustaceanSpectrobe) {
 
-                return this.world.getBlockState(p_188555_1_).getBlock() == Blocks.WATER
-                        || !this.world.getBlockState(p_188555_1_.down()).isAir();
+                return this.level.getBlockState(p_188555_1_).getBlock() == Blocks.WATER
+                        || !this.level.getBlockState(p_188555_1_.below()).isAir();
             }
 
-            return !this.world.getBlockState(p_188555_1_.down()).isAir();
+            return !this.level.getBlockState(p_188555_1_.below()).isAir();
         }
     }
 
@@ -172,33 +172,33 @@ public abstract class EntityCrustaceanSpectrobe extends EntitySpectrobe {
 
         public void tick() {
             if (this.dolphin.isInWater()) {
-                this.dolphin.setMotion(this.dolphin.getMotion().add(0.0D, 0.005D, 0.0D));
+                this.dolphin.setDeltaMovement(this.dolphin.getDeltaMovement().add(0.0D, 0.005D, 0.0D));
             }
 
 //            if (this.action == Action.MOVE_TO && !this.dolphin.getNavigator().noPath()) {
-                double d0 = this.posX - this.dolphin.getPosX();
-                double d1 = this.posY - this.dolphin.getPosY();
-                double d2 = this.posZ - this.dolphin.getPosZ();
+                double d0 = this.wantedX - this.dolphin.getX();
+                double d1 = this.wantedY - this.dolphin.getY();
+                double d2 = this.wantedZ - this.dolphin.getZ();
                 double d3 = d0 * d0 + d1 * d1 + d2 * d2;
                 if (d3 < 2.500000277905201E-7D) {
-                    this.mob.setMoveForward(0.0F);
+                    this.mob.setZza(0.0F);
                 } else {
                     float f = (float)(MathHelper.atan2(d2, d0) * 57.2957763671875D) - 90.0F;
-                    this.dolphin.rotationYaw = this.limitAngle(this.dolphin.rotationYaw, f, 10.0F);
-                    this.dolphin.renderYawOffset = this.dolphin.rotationYaw;
-                    this.dolphin.rotationYawHead = this.dolphin.rotationYaw;
-                    float f1 = (float)(this.speed * this.dolphin.getAttribute(Attributes.MOVEMENT_SPEED).getValue());
+                    this.dolphin.yRot = this.rotlerp(this.dolphin.yRot, f, 10.0F);
+                    this.dolphin.yBodyRot = this.dolphin.yRot;
+                    this.dolphin.yHeadRot = this.dolphin.yRot;
+                    float f1 = (float)(this.speedModifier * this.dolphin.getAttribute(Attributes.MOVEMENT_SPEED).getValue());
                     if (this.dolphin.isInWater()) {
-                        this.dolphin.setAIMoveSpeed(f1 * 0.2F);
+                        this.dolphin.setSpeed(f1 * 0.2F);
                         float f2 = -((float)(MathHelper.atan2(d1, (double)MathHelper.sqrt(d0 * d0 + d2 * d2)) * 57.2957763671875D));
                         f2 = MathHelper.clamp(MathHelper.wrapDegrees(f2), -85.0F, 85.0F);
-                        this.dolphin.rotationPitch = this.limitAngle(this.dolphin.rotationPitch, f2, 5.0F);
-                        float f3 = MathHelper.cos(this.dolphin.rotationPitch * 0.017453292F);
-                        float f4 = MathHelper.sin(this.dolphin.rotationPitch * 0.017453292F);
-                        this.dolphin.moveForward = f3 * f1;
-                        this.dolphin.moveVertical = -f4 * f1;
+                        this.dolphin.xRot = this.rotlerp(this.dolphin.xRot, f2, 5.0F);
+                        float f3 = MathHelper.cos(this.dolphin.xRot * 0.017453292F);
+                        float f4 = MathHelper.sin(this.dolphin.xRot * 0.017453292F);
+                        this.dolphin.zza = f3 * f1;
+                        this.dolphin.yya = -f4 * f1;
                     } else {
-                        this.dolphin.setAIMoveSpeed(f1);
+                        this.dolphin.setSpeed(f1);
                     }
                 }
 //            } else {
@@ -212,34 +212,34 @@ public abstract class EntityCrustaceanSpectrobe extends EntitySpectrobe {
     }
 
     public class SpectrobeLookController extends LookController {
-        private final int field_205139_h;
+        private final int maxYRotFromCenter;
 
         public SpectrobeLookController(MobEntity p_i48942_1_, int p_i48942_2_) {
             super(p_i48942_1_);
-            this.field_205139_h = p_i48942_2_;
+            this.maxYRotFromCenter = p_i48942_2_;
         }
 
         /**
          * Updates look
          */
         public void tick() {
-            if (this.isLooking) {
-                this.isLooking = false;
-                this.mob.rotationYawHead = this.clampedRotate(this.mob.rotationYawHead, this.getTargetYaw() + 20.0F, this.deltaLookYaw);
-                this.mob.rotationPitch = this.clampedRotate(this.mob.rotationPitch, this.getTargetPitch() + 10.0F, this.deltaLookPitch);
+            if (this.hasWanted) {
+                this.hasWanted = false;
+                this.mob.yHeadRot = this.rotateTowards(this.mob.yHeadRot, this.getYRotD() + 20.0F, this.yMaxRotSpeed);
+                this.mob.xRot = this.rotateTowards(this.mob.xRot, this.getXRotD() + 10.0F, this.xMaxRotAngle);
             } else {
-                if (this.mob.getNavigator().noPath()) {
-                    this.mob.rotationPitch = this.clampedRotate(this.mob.rotationPitch, 0.0F, 5.0F);
+                if (this.mob.getNavigation().isDone()) {
+                    this.mob.xRot = this.rotateTowards(this.mob.xRot, 0.0F, 5.0F);
                 }
 
-                this.mob.rotationYawHead = this.clampedRotate(this.mob.rotationYawHead, this.mob.renderYawOffset, this.deltaLookYaw);
+                this.mob.yHeadRot = this.rotateTowards(this.mob.yHeadRot, this.mob.yBodyRot, this.yMaxRotSpeed);
             }
 
-            float f = MathHelper.wrapDegrees(this.mob.rotationYawHead - this.mob.renderYawOffset);
-            if (f < (float)(-this.field_205139_h)) {
-                this.mob.renderYawOffset -= 4.0F;
-            } else if (f > (float)this.field_205139_h) {
-                this.mob.renderYawOffset += 4.0F;
+            float f = MathHelper.wrapDegrees(this.mob.yHeadRot - this.mob.yBodyRot);
+            if (f < (float)(-this.maxYRotFromCenter)) {
+                this.mob.yBodyRot -= 4.0F;
+            } else if (f > (float)this.maxYRotFromCenter) {
+                this.mob.yBodyRot += 4.0F;
             }
 
         }

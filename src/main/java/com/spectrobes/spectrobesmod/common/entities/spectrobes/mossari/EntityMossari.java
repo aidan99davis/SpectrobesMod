@@ -51,7 +51,7 @@ public class EntityMossari extends EntityMammalSpectrobe {
         {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.mossari.walk", true));
             return PlayState.CONTINUE;
-        } else if(event.getAnimatable().isSitting()) {
+        } else if(event.getAnimatable().isOrderedToSit()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.mossari.sit", false));
             return PlayState.CONTINUE;
         }else {

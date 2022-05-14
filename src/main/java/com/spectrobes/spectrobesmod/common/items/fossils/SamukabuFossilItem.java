@@ -4,6 +4,8 @@ import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.block.Block;
 
+import net.minecraft.item.Item.Properties;
+
 public class SamukabuFossilItem extends FossilBlockItem {
 
     public SamukabuFossilItem(Block blockIn, Properties builder) {

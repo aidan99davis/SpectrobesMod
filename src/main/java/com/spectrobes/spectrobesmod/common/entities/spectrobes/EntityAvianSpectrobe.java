@@ -18,12 +18,12 @@ public abstract class EntityAvianSpectrobe extends EntitySpectrobe implements IF
 
     public EntityAvianSpectrobe(EntityType<? extends EntitySpectrobe> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
-        this.moveController = new FlyingMovementController(this, 10, false);
+        this.moveControl = new FlyingMovementController(this, 10, false);
     }
 
     @Override
-    public void livingTick() {
-        super.livingTick();
+    public void aiStep() {
+        super.aiStep();
         this.calculateFlapping();
     }
 
@@ -49,9 +49,9 @@ public abstract class EntityAvianSpectrobe extends EntitySpectrobe implements IF
         }
 
         this.flapping = (float)((double)this.flapping * 0.9D);
-        Vector3d vec3d = this.getMotion();
+        Vector3d vec3d = this.getDeltaMovement();
         if (!this.onGround && vec3d.y < 0.0D) {
-            this.setMotion(vec3d.mul(1.0D, 0.6D, 1.0D));
+            this.setDeltaMovement(vec3d.multiply(1.0D, 0.6D, 1.0D));
         }
 
         this.flap += this.flapping * 2.0F;

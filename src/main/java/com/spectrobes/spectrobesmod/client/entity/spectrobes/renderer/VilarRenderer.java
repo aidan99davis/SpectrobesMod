@@ -22,7 +22,7 @@ public class VilarRenderer extends GeoEntityRenderer<EntityVilar> {
 
     @Nullable
     @Override
-    public ResourceLocation getEntityTexture(EntityVilar entity)
+    public ResourceLocation getTextureLocation(EntityVilar entity)
     {
         return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/vilar.png");
     }

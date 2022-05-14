@@ -57,7 +57,7 @@ public class EntityKubaku extends EntityMammalSpectrobe {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.kubaku.walk", true));
             return PlayState.CONTINUE;
         }
-        else if(event.getAnimatable().isSitting()) {
+        else if(event.getAnimatable().isOrderedToSit()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.kubaku.idle", true));
             return PlayState.CONTINUE;
         }

@@ -54,7 +54,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public abstract class EntitySpectrobe extends TameableEntity implements IEntityAdditionalSpawnData, IAnimatable, IHasNature {
-    public static final Predicate<ItemEntity> MINERAL_SELECTOR = (itemEntity) -> !itemEntity.cannotPickup() && itemEntity.isAlive() && itemEntity.getItem().getItem() instanceof MineralItem;
+    public static final Predicate<ItemEntity> MINERAL_SELECTOR = (itemEntity) -> !itemEntity.hasPickUpDelay() && itemEntity.isAlive() && itemEntity.getItem().getItem() instanceof MineralItem;
     private static final Predicate<LivingEntity> TARGET_KRAWL = (entity) -> {
         EntityType<?> entitytype = entity.getType();
         return entitytype.getClass().isAssignableFrom(EntityKrawl.class)
@@ -64,26 +64,26 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     private int ticksTillInteract = 0;
 
     private static final DataParameter<Integer> TICKS_TILL_MATE =
-            EntityDataManager.createKey(EntitySpectrobe.class,
-            DataSerializers.VARINT);
+            EntityDataManager.defineId(EntitySpectrobe.class,
+            DataSerializers.INT);
 
     private static final DataParameter<Boolean> IS_ATTACKING =
-            EntityDataManager.createKey(EntitySpectrobe.class,
+            EntityDataManager.defineId(EntitySpectrobe.class,
                     DataSerializers.BOOLEAN);
 
     protected static final DataParameter<Boolean> HAS_MATED =
-            EntityDataManager.createKey(EntitySpectrobe.class,
+            EntityDataManager.defineId(EntitySpectrobe.class,
                     DataSerializers.BOOLEAN);
 
     //State 0: following
     //State 1: Sitting
     //state 2: searching
     private static final DataParameter<Integer> STATE =
-            EntityDataManager.createKey(EntitySpectrobe.class,
-                    DataSerializers.VARINT);
+            EntityDataManager.defineId(EntitySpectrobe.class,
+                    DataSerializers.INT);
 
     private static final DataParameter<Spectrobe> SPECTROBE_DATA =
-            EntityDataManager.createKey(EntitySpectrobe.class,
+            EntityDataManager.defineId(EntitySpectrobe.class,
                     Spectrobe.SpectrobeSerializer);
 
     public AnimationFactory animationControllers = new AnimationFactory(this);
@@ -111,34 +111,34 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         this.targetSelector.addGoal(1, new OwnerHurtTargetGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal(this, EntityKrawl.class, 10, true, false, (entity) -> true));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal(this, EntityKrawl.class, true));
-        this.targetSelector.addGoal(3, (new HurtByTargetGoal(this, new Class[0])).setCallsForHelp(new Class[0]));
+        this.targetSelector.addGoal(3, (new HurtByTargetGoal(this, new Class[0])).setAlertOthers(new Class[0]));
         this.targetSelector.addGoal(5, new NonTamedTargetGoal(this, EntityKrawl.class, false, TARGET_KRAWL));
     }
 
     public static AttributeModifierMap.MutableAttribute setCustomAttributes() {
-        return MonsterEntity.func_233666_p_()
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, (double)0.5F)
-                .createMutableAttribute(Attributes.MAX_HEALTH, 20.0D)
-                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 5.0D)
-                .createMutableAttribute(Attributes.ATTACK_SPEED, 0.25f)
-                .createMutableAttribute(Attributes.FOLLOW_RANGE, 10.0D)
-                .createMutableAttribute(Attributes.ATTACK_KNOCKBACK, 5.0D);
+        return MonsterEntity.createMobAttributes()
+                .add(Attributes.MOVEMENT_SPEED, (double)0.5F)
+                .add(Attributes.MAX_HEALTH, 20.0D)
+                .add(Attributes.ATTACK_DAMAGE, 5.0D)
+                .add(Attributes.ATTACK_SPEED, 0.25f)
+                .add(Attributes.FOLLOW_RANGE, 10.0D)
+                .add(Attributes.ATTACK_KNOCKBACK, 5.0D);
     }
 
     @Override
-    public boolean isSitting() {
-        return dataManager.get(STATE) == 1;
+    public boolean isOrderedToSit() {
+        return entityData.get(STATE) == 1;
     }
 
-    public void setState(int state) { dataManager.set(STATE, state); }
+    public void setState(int state) { entityData.set(STATE, state); }
 
     @Override
     //processInteract
-    public ActionResultType func_230254_b_(PlayerEntity player, Hand hand) {
-        ItemStack itemstack = player.getHeldItem(hand);
+    public ActionResultType mobInteract(PlayerEntity player, Hand hand) {
+        ItemStack itemstack = player.getItemInHand(hand);
         if(getSpectrobeData() != null) {
             if(!recentInteract && itemstack.isEmpty()) {
-                if(player.getUniqueID().equals(getOwnerId()) && player.isSneaking()) {
+                if(player.getUUID().equals(getOwnerUUID()) && player.isShiftKeyDown()) {
                     cycleState(player);
                 } else {
                     printSpectrobeToChat(player);
@@ -152,7 +152,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
                 SpecialMineralItem mineralItem = (SpecialMineralItem)itemstack.getItem();
                 applySpecialMineral(mineralItem);
                 itemstack.shrink(1);
-            } else if(itemstack.getItem() instanceof PrizmodItem && player.isSneaking()) {
+            } else if(itemstack.getItem() instanceof PrizmodItem && player.isShiftKeyDown()) {
                 if(player == getOwner()) {
                     despawn();
                 }
@@ -161,11 +161,11 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
 
         recentInteract = true;
         ticksTillInteract = 15;
-        return super.func_230254_b_(player, hand);
+        return super.mobInteract(player, hand);
     }
 
     private void cycleState(PlayerEntity player) {
-        int oldstate = dataManager.get(STATE);
+        int oldstate = entityData.get(STATE);
 
         int newstate = oldstate + 1;
 
@@ -174,17 +174,17 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
             newstate = 0;
         }
 
-        dataManager.set(STATE, newstate);
-        if(world.isRemote()) {
+        entityData.set(STATE, newstate);
+        if(level.isClientSide()) {
             switch(newstate) {
                 case 0:
-                    player.sendMessage(new StringTextComponent("Your spectrobe is now following."),player.getUniqueID());
+                    player.sendMessage(new StringTextComponent("Your spectrobe is now following."),player.getUUID());
                     break;
                 case 1:
-                    player.sendMessage(new StringTextComponent("Your spectrobe is now sitting."), player.getUniqueID());
+                    player.sendMessage(new StringTextComponent("Your spectrobe is now sitting."), player.getUUID());
                     break;
                 case 2:
-                    player.sendMessage(new StringTextComponent("Your spectrobe is now searching."), player.getUniqueID());
+                    player.sendMessage(new StringTextComponent("Your spectrobe is now searching."), player.getUUID());
                     break;
             }
         }
@@ -192,19 +192,19 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
 
     //prevent spectrobes from despawning naturally. they should only stop existing via prizmod recall feature, or death.
     @Override
-    public boolean preventDespawn() {
+    public boolean requiresCustomPersistence() {
         return true;
     }
 
     public void despawn() {
         this.getSpectrobeData().setInactive();
-        if(this.getOwnerId() != null) {
+        if(this.getOwnerUUID() != null) {
             this.getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
                 sm.setSpectrobeInactive(this.getSpectrobeData());
             });
         }
-        if(world.isRemote()) {
-            Minecraft.getInstance().world.addParticle(ParticleTypes.FIREWORK, getPosX() + 0.5D, getPosY() + 1.0D, getPosZ() + 0.5D, 0.0D, 1.0D, 0.0D);
+        if(level.isClientSide()) {
+            Minecraft.getInstance().level.addParticle(ParticleTypes.FIREWORK, getX() + 0.5D, getY() + 1.0D, getZ() + 0.5D, 0.0D, 1.0D, 0.0D);
         }
         this.remove(false);
     }
@@ -213,20 +213,20 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         this.getSpectrobeData().setInactive();
         compat.setSpectrobeInactive(this.getSpectrobeData());
 
-        if(world.isRemote()) {
-            Minecraft.getInstance().world.addParticle(ParticleTypes.FIREWORK, getPosX() + 0.5D, getPosY() + 1.0D, getPosZ() + 0.5D, 0.0D, 1.0D, 0.0D);
+        if(level.isClientSide()) {
+            Minecraft.getInstance().level.addParticle(ParticleTypes.FIREWORK, getX() + 0.5D, getY() + 1.0D, getZ() + 0.5D, 0.0D, 1.0D, 0.0D);
         }
         this.remove(false);
     }
 
     @Override
     public boolean isInvulnerableTo(DamageSource source) {
-        if(source.getImmediateSource() instanceof EntitySpectrobe
-                || source.getImmediateSource() instanceof EntityKrawl){
+        if(source.getDirectEntity() instanceof EntitySpectrobe
+                || source.getDirectEntity() instanceof EntityKrawl){
             return false;
         }
 
-        if(source.isFireDamage() && getNature() == Nature.CORONA) {
+        if(source.isFire() && getNature() == Nature.CORONA) {
             return true;
         }
 
@@ -234,84 +234,84 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     }
 
     @Override
-    public void readAdditional(CompoundNBT compound) {
-        super.readAdditional(compound);
+    public void readAdditionalSaveData(CompoundNBT compound) {
+        super.readAdditionalSaveData(compound);
         if(compound.get("SpectrobeData") != null) {
             setSpectrobeData(Spectrobe.read((CompoundNBT) compound.get("SpectrobeData")));
         }
         if(getSpectrobeData() == null)
             setSpectrobeData(GetNewSpectrobeInstance());
 
-        dataManager.set(HAS_MATED, compound.getBoolean("sterile"));
+        entityData.set(HAS_MATED, compound.getBoolean("sterile"));
 
         updateEntityAttributes();
     }
 
     @Override
-    public void writeAdditional(CompoundNBT compound) {
-        super.writeAdditional(compound);
+    public void addAdditionalSaveData(CompoundNBT compound) {
+        super.addAdditionalSaveData(compound);
 
         compound.put("SpectrobeData", getSpectrobeData().write());
-        compound.putBoolean("sterile", dataManager.get(HAS_MATED));
+        compound.putBoolean("sterile", entityData.get(HAS_MATED));
 
     }
 
     public Spectrobe getSpectrobeData() {
-        return dataManager.get(SPECTROBE_DATA);
+        return entityData.get(SPECTROBE_DATA);
     }
     public void setSpectrobeData(Spectrobe spectrobe) {
-        dataManager.set(SPECTROBE_DATA, spectrobe);
+        entityData.set(SPECTROBE_DATA, spectrobe);
     }
 
     public boolean IsAttacking() {
-        return dataManager.get(IS_ATTACKING);
+        return entityData.get(IS_ATTACKING);
     }
     public void setIsAttacking(boolean attacking) {
-        dataManager.set(IS_ATTACKING, attacking);
+        entityData.set(IS_ATTACKING, attacking);
     }
 
     public int getTicksTillMate() {
-        return dataManager.get(TICKS_TILL_MATE);
+        return entityData.get(TICKS_TILL_MATE);
     }
     public void setTicksTillMate(int ticksTillMate) {
-        dataManager.set(TICKS_TILL_MATE, ticksTillMate);
+        entityData.set(TICKS_TILL_MATE, ticksTillMate);
     }
 
     //Networking
     @Override
-    public IPacket<?> createSpawnPacket() {
+    public IPacket<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override
-    protected void registerData() {
-        super.registerData();
-        dataManager.register(SPECTROBE_DATA, GetNewSpectrobeInstance());
-        dataManager.register(TICKS_TILL_MATE, 400);
-        dataManager.register(STATE, 0);
-        dataManager.register(IS_ATTACKING, false);
-        dataManager.register(HAS_MATED, false);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        entityData.define(SPECTROBE_DATA, GetNewSpectrobeInstance());
+        entityData.define(TICKS_TILL_MATE, 400);
+        entityData.define(STATE, 0);
+        entityData.define(IS_ATTACKING, false);
+        entityData.define(HAS_MATED, false);
     }
 
     public boolean isSearching() {
-        return dataManager.get(STATE) == 2;
+        return entityData.get(STATE) == 2;
     }
 
     @Override
-    public Vector3d getMotion() {
-        if(isSitting()) {
+    public Vector3d getDeltaMovement() {
+        if(isOrderedToSit()) {
             return Vector3d.ZERO;
         }
-        return super.getMotion();
+        return super.getDeltaMovement();
     }
 
     /**
      * Called to update the entity's position/logic.
      */
     @Override
-    public void livingTick() {
-        super.livingTick();
-        if(!this.isSitting())  {
+    public void aiStep() {
+        super.aiStep();
+        if(!this.isOrderedToSit())  {
             //check if the spectrobe has an evolution, and meets the requirements to evolve.
             tryMate();
 
@@ -327,12 +327,12 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     @Override
     public void writeSpawnData(PacketBuffer buffer) {
         if(getSpectrobeData() != null)
-            buffer.writeCompoundTag(getSpectrobeData().write());
+            buffer.writeNbt(getSpectrobeData().write());
     }
 
     @Override
     public void readSpawnData(PacketBuffer additionalData) {
-        setSpectrobeData(Spectrobe.read(additionalData.readCompoundTag()));
+        setSpectrobeData(Spectrobe.read(additionalData.readNbt()));
         updateEntityAttributes();
     }
 
@@ -362,7 +362,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     //spectrobe special time
 
     public void tryMate() {
-        if(getStage() != Stage.CHILD && getOwner() == null && !dataManager.get(HAS_MATED)) {
+        if(getStage() != Stage.CHILD && getOwner() == null && !entityData.get(HAS_MATED)) {
             if(getTicksTillMate() == 0) {
                 mate();
             } else {
@@ -393,11 +393,11 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
 
     private void evolve() {
         Spectrobe spectrobeInstance = getSpectrobeData();
-        if(!world.isRemote()) {
-            EntitySpectrobe spectrobe = getEvolutionRegistry().create(world);
-            spectrobe.setLocationAndAngles(getPosX(), getPosY(), getPosZ(), 0.0F, 0.0F);
-            this.world.addEntity(spectrobe);
-            spectrobe.setPosition(getPosX(), getPosY(), getPosZ());
+        if(!level.isClientSide()) {
+            EntitySpectrobe spectrobe = getEvolutionRegistry().create(level);
+            spectrobe.moveTo(getX(), getY(), getZ(), 0.0F, 0.0F);
+            this.level.addFreshEntity(spectrobe);
+            spectrobe.setPos(getX(), getY(), getZ());
             spectrobeInstance.evolve(spectrobe.getSpectrobeData());
             spectrobe.setSpectrobeData(spectrobeInstance);
             spectrobe.setCustomName(new StringTextComponent(spectrobeInstance.name));
@@ -406,7 +406,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
                     sm.updateSpectrobe(spectrobe.getSpectrobeData());
 //                    SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket(sm));
                 });
-                spectrobe.setOwnerId(getOwnerId());
+                spectrobe.setOwnerUUID(getOwnerUUID());
             }
         } else {
             if(getOwner() != null) {
@@ -415,7 +415,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
                     SpectrobesNetwork.sendToServer(new SSyncSpectrobeMasterPacket(sm));
                 });
             }
-            world.addParticle(ParticleTypes.FLASH, getPosX() + 0.5D, getPosY() + 1.0D, getPosZ() + 0.5D, 0.0D, 0.0D, 0.0D);
+            level.addParticle(ParticleTypes.FLASH, getX() + 0.5D, getY() + 1.0D, getZ() + 0.5D, 0.0D, 0.0D, 0.0D);
         }
 
         this.remove();
@@ -426,24 +426,24 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     }
 
     @Override
-    public void onDeath(DamageSource cause) {
+    public void die(DamageSource cause) {
         if(getOwner() != null) {
             despawn();
         } else {
-            ItemEntity lvt_10_1_ = new ItemEntity(world,
-                    this.getPosX() + 0.5D,
-                    (this.getPosY() + 1),
-                    this.getPosZ() + 0.5D, getFossil().getDefaultInstance());
-            lvt_10_1_.setDefaultPickupDelay();
-            world.addEntity(lvt_10_1_);
-            super.onDeath(cause);
+            ItemEntity lvt_10_1_ = new ItemEntity(level,
+                    this.getX() + 0.5D,
+                    (this.getY() + 1),
+                    this.getZ() + 0.5D, getFossil().getDefaultInstance());
+            lvt_10_1_.setDefaultPickUpDelay();
+            level.addFreshEntity(lvt_10_1_);
+            super.die(cause);
         }
     }
 
     @Override
-    protected void damageEntity(DamageSource damageSrc, float damageAmount) {
-        if(damageSrc.getImmediateSource() instanceof IHasNature) {
-            IHasNature attacker = (IHasNature)damageSrc.getImmediateSource();
+    protected void actuallyHurt(DamageSource damageSrc, float damageAmount) {
+        if(damageSrc.getDirectEntity() instanceof IHasNature) {
+            IHasNature attacker = (IHasNature)damageSrc.getDirectEntity();
             int advantage = Spectrobe.hasTypeAdvantage(attacker, this);
             float scaledAmount;
 
@@ -458,24 +458,24 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
                     scaledAmount = damageAmount;
                     break;
             }
-            super.damageEntity(damageSrc, scaledAmount);
+            super.actuallyHurt(damageSrc, scaledAmount);
         } else {
-            super.damageEntity(damageSrc, damageAmount);
+            super.actuallyHurt(damageSrc, damageAmount);
         }
     }
 
     @Override
-    public boolean attackEntityAsMob(Entity toAttack) {
+    public boolean doHurtTarget(Entity toAttack) {
         setIsAttacking(true);
-        return super.attackEntityAsMob(toAttack);
+        return super.doHurtTarget(toAttack);
     }
 
     @Override
-    public void setAggroed(boolean hasAggro) {
+    public void setAggressive(boolean hasAggro) {
         if(!hasAggro){
             setIsAttacking(false);
         }
-        super.setAggroed(hasAggro);
+        super.setAggressive(hasAggro);
     }
 
     private void addStats(Spectrobe spectrobeData) {
@@ -484,7 +484,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     }
 
     public void awardKillStats(KrawlProperties krawlProperties) {
-        if(world.isRemote()) {
+        if(level.isClientSide()) {
             Spectrobe spectrobeInstance = getSpectrobeData();
             spectrobeInstance.stats.addStats(krawlProperties);
             updateEntityAttributes();
@@ -518,7 +518,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     @Nullable
     @Override
     //createChild
-    public AgeableEntity func_241840_a(ServerWorld world, AgeableEntity ageable)
+    public AgeableEntity getBreedOffspring(ServerWorld world, AgeableEntity ageable)
     {
         //gonna handle this myself
         return null;
@@ -538,7 +538,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         builder2.append("Atk: " + spectrobeInstance.stats.getAtkLevel() + ", ");
         builder2.append("Def: " + spectrobeInstance.stats.getDefLevel() + ", ");
         String status;
-        switch (dataManager.get(STATE)) {
+        switch (entityData.get(STATE)) {
             case 0:
                 status = "Following";
                 break;
@@ -552,10 +552,10 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
                 status = "Unknown.";
         }
         builder2.append("Status: " + status);
-        if(world.isRemote()) {
-            player.sendMessage(new StringTextComponent(builder3.toString()), player.getUniqueID());
-            player.sendMessage(new StringTextComponent(builder1.toString()), player.getUniqueID());
-            player.sendMessage(new StringTextComponent(builder2.toString()), player.getUniqueID());
+        if(level.isClientSide()) {
+            player.sendMessage(new StringTextComponent(builder3.toString()), player.getUUID());
+            player.sendMessage(new StringTextComponent(builder1.toString()), player.getUUID());
+            player.sendMessage(new StringTextComponent(builder2.toString()), player.getUUID());
         }
     }
 
@@ -587,7 +587,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
             }
         } else {
             if(getOwner() != null)
-                Minecraft.getInstance().player.sendChatMessage("This mineral is the wrong nature.");
+                Minecraft.getInstance().player.chat("This mineral is the wrong nature.");
         }
     }
 

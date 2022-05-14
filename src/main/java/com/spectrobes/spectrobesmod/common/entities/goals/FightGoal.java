@@ -10,20 +10,20 @@ public class FightGoal extends MeleeAttackGoal {
     }
 
     @Override
-    public boolean shouldContinueExecuting() {
-        boolean shouldContinue = super.shouldContinueExecuting();
+    public boolean canContinueToUse() {
+        boolean shouldContinue = super.canContinueToUse();
 
         if(shouldContinue) {
-            ((EntitySpectrobe)this.attacker).setIsAttacking(true);
+            ((EntitySpectrobe)this.mob).setIsAttacking(true);
         } else {
-            ((EntitySpectrobe)this.attacker).setIsAttacking(false);
+            ((EntitySpectrobe)this.mob).setIsAttacking(false);
         }
 
         return shouldContinue;
     }
 
     @Override
-    public void startExecuting() {
-        super.startExecuting();
+    public void start() {
+        super.start();
     }
 }

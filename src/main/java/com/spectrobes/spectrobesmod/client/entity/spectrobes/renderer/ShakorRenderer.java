@@ -23,7 +23,7 @@ public class ShakorRenderer extends GeoEntityRenderer<EntityShakor> {
 
     @Nullable
     @Override
-    public ResourceLocation getEntityTexture(EntityShakor entity)
+    public ResourceLocation getTextureLocation(EntityShakor entity)
     {
         switch (entity.getSpectrobeData().Variant) {
             case 0:

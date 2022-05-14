@@ -28,54 +28,54 @@ public class KrawlEntities {
 
     public static final RegistryObject<EntityType<EntitySwar>> ENTITY_SWAR
             = ENTITY_TYPES.register("entity_swar",
-            () -> EntityType.Builder.create(EntitySwar::new,
+            () -> EntityType.Builder.of(EntitySwar::new,
                     EntityClassification.MONSTER)
-                    .size(1f, 2f)
+                    .sized(1f, 2f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "swar").toString()));
 
     public static final RegistryObject<EntityType<EntitySubar>> ENTITY_SUBAR
             = ENTITY_TYPES.register("entity_subar",
-            () -> EntityType.Builder.create(EntitySubar::new,
+            () -> EntityType.Builder.of(EntitySubar::new,
                     EntityClassification.MONSTER)
-                    .size(1.5f, 1.25f)
+                    .sized(1.5f, 1.25f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "subar").toString()));
 
     public static final RegistryObject<EntityType<EntityVizbar>> ENTITY_VIZBAR
             = ENTITY_TYPES.register("entity_vizbar",
-            () -> EntityType.Builder.create(EntityVizbar::new,
+            () -> EntityType.Builder.of(EntityVizbar::new,
                     EntityClassification.MONSTER)
-                    .size(1.5f, 1.25f)
+                    .sized(1.5f, 1.25f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "vizbar").toString()));
 
     public static final RegistryObject<EntityType<EntityGris>> ENTITY_GRIS
             = ENTITY_TYPES.register("entity_gris",
-            () -> EntityType.Builder.create(EntityGris::new,
+            () -> EntityType.Builder.of(EntityGris::new,
                     EntityClassification.MONSTER)
-                    .size(1.5f, 1.25f)
+                    .sized(1.5f, 1.25f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "gris").toString()));
 
     public static final RegistryObject<EntityType<EntityGrisen>> ENTITY_GRISEN
             = ENTITY_TYPES.register("entity_grisen",
-            () -> EntityType.Builder.create(EntityGrisen::new,
+            () -> EntityType.Builder.of(EntityGrisen::new,
                     EntityClassification.MONSTER)
-                    .size(1.5f, 1.25f)
+                    .sized(1.5f, 1.25f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "grisen").toString()));
 
     public static final RegistryObject<EntityType<EntityVortex>> ENTITY_VORTEX
             = ENTITY_TYPES.register("entity_vortex",
-            () -> EntityType.Builder.create(EntityVortex::new,
+            () -> EntityType.Builder.of(EntityVortex::new,
                     EntityClassification.MONSTER)
-                    .size(2f, 2f)
+                    .sized(2f, 2f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "vortex").toString()));
 
     public static void init() {
         DeferredWorkQueue.runLater(() -> {
-            GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_VORTEX.get(), EntityVortex.setCustomAttributes().create());
-            GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_SWAR.get(), EntitySwar.setCustomAttributes().create());
-            GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_GRIS.get(), EntityGris.setCustomAttributes().create());
-            GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_GRISEN.get(), EntityGrisen.setCustomAttributes().create());
-            GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_SUBAR.get(), EntitySubar.setCustomAttributes().create());
-            GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_VIZBAR.get(), EntityVizbar.setCustomAttributes().create());
+            GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_VORTEX.get(), EntityVortex.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_SWAR.get(), EntitySwar.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_GRIS.get(), EntityGris.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_GRISEN.get(), EntityGrisen.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_SUBAR.get(), EntitySubar.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_VIZBAR.get(), EntityVizbar.setCustomAttributes().build());
         });
 
         populateMaps();

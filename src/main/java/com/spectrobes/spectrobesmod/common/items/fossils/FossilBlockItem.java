@@ -24,6 +24,8 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
+import net.minecraft.item.Item.Properties;
+
 public abstract class FossilBlockItem extends BlockItem implements IAnimatable {
 
     public AnimationFactory factory = new AnimationFactory(this);
@@ -33,10 +35,10 @@ public abstract class FossilBlockItem extends BlockItem implements IAnimatable {
     }
 
     @Override
-    public ActionResultType onItemUse(ItemUseContext context) {
-        if(context.getPlayer().isSneaking()) {
-            context.getItem().shrink(1);
-            if(!context.getWorld().isRemote) {
+    public ActionResultType useOn(ItemUseContext context) {
+        if(context.getPlayer().isShiftKeyDown()) {
+            context.getItemInHand().shrink(1);
+            if(!context.getLevel().isClientSide) {
                 Spectrobe spectrobe = getSpectrobeInstance();
                 context.getPlayer().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(playerCap -> {
                     playerCap.addSpectrobe(spectrobe);
@@ -44,12 +46,12 @@ public abstract class FossilBlockItem extends BlockItem implements IAnimatable {
                             (ServerPlayerEntity) context.getPlayer());
                 });
             } else {
-                UUID playerUUID = Minecraft.getInstance().player.getUniqueID();
+                UUID playerUUID = Minecraft.getInstance().player.getUUID();
                 Minecraft.getInstance().player.sendMessage(new StringTextComponent("A new spectrobe has been sent to your prizmod."), playerUUID);
             }
             return ActionResultType.CONSUME;
         } else {
-            return super.onItemUse(context);
+            return super.useOn(context);
         }
     }
 

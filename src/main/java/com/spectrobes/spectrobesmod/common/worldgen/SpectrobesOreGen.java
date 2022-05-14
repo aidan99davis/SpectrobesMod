@@ -31,15 +31,15 @@ public class SpectrobesOreGen {
 
     public static void registerOres(){
         //Overworld Ore Register
-        overworldOres.add(register("mineral_ore", Feature.ORE.withConfiguration(new OreFeatureConfig(
-                OreFeatureConfig.FillerBlockType.BASE_STONE_OVERWORLD, SpectrobesBlocks.mineral_block.get().getDefaultState(), 5))
-                .range(180).square()
-                .func_242731_b(128)));
+        overworldOres.add(register("mineral_ore", Feature.ORE.configured(new OreFeatureConfig(
+                OreFeatureConfig.FillerBlockType.NATURAL_STONE, SpectrobesBlocks.mineral_block.get().defaultBlockState(), 5))
+                .range(180).squared()
+                .count(128)));
 
-        overworldOres.add(register("fossil_ore", Feature.ORE.withConfiguration(new OreFeatureConfig(
-                OreFeatureConfig.FillerBlockType.BASE_STONE_OVERWORLD, SpectrobesBlocks.fossil_block.get().getDefaultState(), 3)) //Vein Size
-                .range(180).square()
-                .func_242731_b(128)));
+        overworldOres.add(register("fossil_ore", Feature.ORE.configured(new OreFeatureConfig(
+                OreFeatureConfig.FillerBlockType.NATURAL_STONE, SpectrobesBlocks.fossil_block.get().defaultBlockState(), 3)) //Vein Size
+                .range(180).squared()
+                .count(128)));
 
     }
 
@@ -48,16 +48,16 @@ public class SpectrobesOreGen {
         BiomeGenerationSettingsBuilder generation = event.getGeneration();
         if(event.getCategory().equals(Biome.Category.NETHER)){
             for(ConfiguredFeature<?, ?> ore : netherOres){
-                if (ore != null) generation.withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, ore);
+                if (ore != null) generation.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, ore);
             }
         } else if(event.getCategory().equals(Biome.Category.THEEND)){
             for(ConfiguredFeature<?, ?> ore : endOres){
-                if (ore != null) generation.withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, ore);
+                if (ore != null) generation.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, ore);
             }
         } else {
             for(ConfiguredFeature<?, ?> ore : overworldOres){
                 if (ore != null) {
-                    generation.withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, ore);
+                    generation.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, ore);
                 }
             }
         }

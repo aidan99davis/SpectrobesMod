@@ -2,9 +2,8 @@ package com.spectrobes.spectrobesmod.client.prizmod.Components;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.client.gui.prizmod.components.SpectrobePiece;
-import com.spectrobes.spectrobesmod.client.prizmod.Pages.PrizmodPage;
-import com.spectrobes.spectrobesmod.client.prizmod.PrizmodScreen;
+import com.spectrobes.spectrobesmod.client.gui.prizmod.Pages.PrizmodPage;
+import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.client.Minecraft;
@@ -15,6 +14,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.spectrobes.spectrobesmod.client.prizmod.Components.SpectrobePiece;
+import com.spectrobes.spectrobesmod.client.prizmod.Components.TeamSpectrobesList;
 
 public class TeamSpectrobesList extends Widget {
 
@@ -43,7 +45,7 @@ public class TeamSpectrobesList extends Widget {
             SpectrobePiece p = gridData[i];
 
             RenderSystem.pushMatrix();
-            Minecraft.getInstance().textureManager.bindTexture(PrizmodScreen.SPECTROBE_SLOT_TEXTURE);
+            Minecraft.getInstance().textureManager.bind(PrizmodScreen.SPECTROBE_SLOT_TEXTURE);
             RenderSystem.enableAlphaTest();
             RenderSystem.translatef(i * 32, p.posY, 2);
             //p.draw();
@@ -67,11 +69,11 @@ public class TeamSpectrobesList extends Widget {
                 && piece.properties.getStage()
                     != SpectrobeProperties.Stage.CHILD) {
             gridData[index].spectrobe = piece;
-            parent.parent.getContainer().setTeamMember(index, piece.SpectrobeUUID);
+            parent.parent.getMenu().setTeamMember(index, piece.SpectrobeUUID);
             return true;
         } else if(index == 6 && piece.properties.getStage() == SpectrobeProperties.Stage.CHILD) {
             gridData[index].spectrobe = piece;
-            parent.parent.getContainer().setTeamMember(index, piece.SpectrobeUUID);
+            parent.parent.getMenu().setTeamMember(index, piece.SpectrobeUUID);
             return true;
         } else {
             SpectrobesInfo.LOGGER.info("unknown index, wtf?" + index);
@@ -107,8 +109,8 @@ public class TeamSpectrobesList extends Widget {
             temp = s1.spectrobe;
             gridData[i].spectrobe = s2.spectrobe;
             gridData[j].spectrobe = temp;
-            parent.parent.getContainer().setTeamMember(i, gridData[i].spectrobe != null? gridData[i].spectrobe.SpectrobeUUID : null);
-            parent.parent.getContainer().setTeamMember(j, gridData[j].spectrobe != null? gridData[j].spectrobe.SpectrobeUUID : null);
+            parent.parent.getMenu().setTeamMember(i, gridData[i].spectrobe != null? gridData[i].spectrobe.SpectrobeUUID : null);
+            parent.parent.getMenu().setTeamMember(j, gridData[j].spectrobe != null? gridData[j].spectrobe.SpectrobeUUID : null);
             return true;
         }
 

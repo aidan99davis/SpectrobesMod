@@ -21,7 +21,7 @@ public class ShakinRenderer extends GeoEntityRenderer<EntityShakin> {
 
     @Nullable
     @Override
-    public ResourceLocation getEntityTexture(EntityShakin entity)
+    public ResourceLocation getTextureLocation(EntityShakin entity)
     {
         switch (entity.getSpectrobeData().Variant) {
             case 0:

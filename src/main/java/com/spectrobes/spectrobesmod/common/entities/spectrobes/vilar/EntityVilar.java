@@ -58,7 +58,7 @@ public class EntityVilar extends EntityMammalSpectrobe {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.vilar.walk", true));
             return PlayState.CONTINUE;
         }
-        else if(this.isSitting()) {
+        else if(this.isOrderedToSit()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.vilar.idle", true));
             return PlayState.CONTINUE;
         }

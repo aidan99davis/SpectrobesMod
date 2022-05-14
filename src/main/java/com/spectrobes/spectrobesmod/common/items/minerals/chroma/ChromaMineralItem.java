@@ -3,6 +3,8 @@ package com.spectrobes.spectrobesmod.common.items.minerals.chroma;
 import com.spectrobes.spectrobesmod.common.items.minerals.SpecialMineralItem;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 
+import net.minecraft.item.Item.Properties;
+
 public class ChromaMineralItem extends SpecialMineralItem {
 
     private int variantNumber;

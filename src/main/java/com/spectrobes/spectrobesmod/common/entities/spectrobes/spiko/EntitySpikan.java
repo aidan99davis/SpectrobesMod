@@ -60,11 +60,11 @@ public class EntitySpikan extends EntityMammalSpectrobe {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.spikan.walk", true));
             return PlayState.CONTINUE;
         }
-        else if(this.isSitting()) {
+        else if(this.isOrderedToSit()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.spikan.sit", false));
             return PlayState.CONTINUE;
         } else {
-            if(this.getAttackingEntity() != null) {
+            if(this.getKillCredit() != null) {
                 event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.spikan.walk", true));
                 return PlayState.CONTINUE;
             }

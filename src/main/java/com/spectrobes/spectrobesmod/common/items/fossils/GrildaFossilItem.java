@@ -5,6 +5,8 @@ import com.spectrobes.spectrobesmod.common.registry.SpectrobesBlocks;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.block.Block;
 
+import net.minecraft.item.Item.Properties;
+
 public class GrildaFossilItem extends FossilBlockItem {
 
     public GrildaFossilItem(Block block, Properties properties) {

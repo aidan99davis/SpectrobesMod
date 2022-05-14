@@ -24,7 +24,7 @@ public class SUpdateSpectrobeSlotPacket {
 
     public void toBytes(PacketBuffer buf) {
         if(spectrobeUUID != null)
-            buf.writeUniqueId(spectrobeUUID);
+            buf.writeUUID(spectrobeUUID);
         buf.writeInt(slot);
     }
 
@@ -32,7 +32,7 @@ public class SUpdateSpectrobeSlotPacket {
         int slot = buf.readInt();
         UUID spectrobeUUID;
         try {
-            spectrobeUUID = buf.readUniqueId();
+            spectrobeUUID = buf.readUUID();
         } catch(Exception ex) {
             spectrobeUUID = null;
         }

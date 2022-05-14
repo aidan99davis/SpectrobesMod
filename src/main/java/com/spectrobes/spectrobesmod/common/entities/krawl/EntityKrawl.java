@@ -38,7 +38,7 @@ public abstract class EntityKrawl extends MonsterEntity implements IAnimatable, 
     protected AnimationController moveController = new AnimationController(this, "moveAnimationController", 10F, this::moveController);
 
     private static final DataParameter<Boolean> IS_ATTACKING =
-            EntityDataManager.createKey(EntityKrawl.class,
+            EntityDataManager.defineId(EntityKrawl.class,
                     DataSerializers.BOOLEAN);
 
     protected EntityKrawl(EntityType<? extends MonsterEntity> type, World worldIn) {
@@ -54,30 +54,30 @@ public abstract class EntityKrawl extends MonsterEntity implements IAnimatable, 
     protected abstract KrawlProperties GetKrawlProperties();
 
     public boolean IsAttacking() {
-        return dataManager.get(IS_ATTACKING);
+        return entityData.get(IS_ATTACKING);
     }
     public void setIsAttacking(boolean attacking) {
-        dataManager.set(IS_ATTACKING, attacking);
+        entityData.set(IS_ATTACKING, attacking);
     }
 
     @Override
-    public boolean attackEntityAsMob(Entity toAttack) {
+    public boolean doHurtTarget(Entity toAttack) {
         setIsAttacking(true);
-        return super.attackEntityAsMob(toAttack);
+        return super.doHurtTarget(toAttack);
     }
 
     @Override
-    public void setAggroed(boolean hasAggro) {
+    public void setAggressive(boolean hasAggro) {
         if(!hasAggro){
             setIsAttacking(false);
         }
-        super.setAggroed(hasAggro);
+        super.setAggressive(hasAggro);
     }
 
     @Override
-    protected void damageEntity(DamageSource damageSrc, float damageAmount) {
-        if(damageSrc.getImmediateSource() instanceof IHasNature) {
-            IHasNature attacker = (IHasNature)damageSrc.getImmediateSource();
+    protected void actuallyHurt(DamageSource damageSrc, float damageAmount) {
+        if(damageSrc.getDirectEntity() instanceof IHasNature) {
+            IHasNature attacker = (IHasNature)damageSrc.getDirectEntity();
             int advantage = Spectrobe.hasTypeAdvantage(attacker, this);
             float scaledAmount;
 
@@ -92,18 +92,18 @@ public abstract class EntityKrawl extends MonsterEntity implements IAnimatable, 
                     scaledAmount = damageAmount;
                     break;
             }
-            super.damageEntity(damageSrc, scaledAmount);
+            super.actuallyHurt(damageSrc, scaledAmount);
         } else {
-            super.damageEntity(damageSrc, damageAmount);
+            super.actuallyHurt(damageSrc, damageAmount);
         }
     }
 
     @Override
-    public void livingTick() {
-        super.livingTick();
+    public void aiStep() {
+        super.aiStep();
 
-        if(this.isInDaylight()) {
-            this.setFire(8);
+        if(this.isSunBurnTick()) {
+            this.setSecondsOnFire(8);
         }
     }
 
@@ -127,22 +127,22 @@ public abstract class EntityKrawl extends MonsterEntity implements IAnimatable, 
     }
 
     @Override
-    protected void registerData() {
-        super.registerData();
-        dataManager.register(IS_ATTACKING, false);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        entityData.define(IS_ATTACKING, false);
     }
 
     public static AttributeModifierMap.MutableAttribute setCustomAttributes() {
-        return MonsterEntity.func_233666_p_()
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, (double)0.5F)
-                .createMutableAttribute(Attributes.MAX_HEALTH, 20.0D)
-                .createMutableAttribute(Attributes.ATTACK_SPEED, 0.25f)
-                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 5.0D);
+        return MonsterEntity.createMobAttributes()
+                .add(Attributes.MOVEMENT_SPEED, (double)0.5F)
+                .add(Attributes.MAX_HEALTH, 20.0D)
+                .add(Attributes.ATTACK_SPEED, 0.25f)
+                .add(Attributes.ATTACK_DAMAGE, 5.0D);
     }
 
     //Networking
     @Override
-    public IPacket<?> createSpawnPacket() {
+    public IPacket<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 

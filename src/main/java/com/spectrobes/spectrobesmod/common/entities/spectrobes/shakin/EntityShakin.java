@@ -63,7 +63,7 @@ public class EntityShakin extends EntityAquaticSpectrobe {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.shakin.walk", true));
             return PlayState.CONTINUE;
         }
-        else if(event.getAnimatable().isSitting()) {
+        else if(event.getAnimatable().isOrderedToSit()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.shakin.sit", false));
             return PlayState.CONTINUE;
         }

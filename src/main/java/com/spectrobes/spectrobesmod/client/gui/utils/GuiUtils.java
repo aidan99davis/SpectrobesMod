@@ -45,7 +45,7 @@ public class GuiUtils {
     int blitOffset;
 
     public static void blit(int x0, int y0, int z, int destWidth, int destHeight, TextureAtlasSprite sprite) {
-        innerBlit(x0, x0 + destWidth, y0, y0 + destHeight, z, sprite.getMinU(), sprite.getMaxU(), sprite.getMinV(), sprite.getMaxV());
+        innerBlit(x0, x0 + destWidth, y0, y0 + destHeight, z, sprite.getU0(), sprite.getU1(), sprite.getV0(), sprite.getV1());
     }
 
     public void blit(int x0, int y0, int u0, int v0, int width, int height) {
@@ -70,13 +70,13 @@ public class GuiUtils {
 
     protected static void innerBlit(int x0, int x1, int y0, int y1, int z, float u0, float u1, float v0, float v1) {
         Tessellator lvt_9_1_ = Tessellator.getInstance();
-        BufferBuilder lvt_10_1_ = lvt_9_1_.getBuffer();
+        BufferBuilder lvt_10_1_ = lvt_9_1_.getBuilder();
         lvt_10_1_.begin(7, DefaultVertexFormats.POSITION_TEX);
-        lvt_10_1_.pos((double)x0, (double)y1, (double)z).tex(u0, v1).endVertex();
-        lvt_10_1_.pos((double)x1, (double)y1, (double)z).tex(u1, v1).endVertex();
-        lvt_10_1_.pos((double)x1, (double)y0, (double)z).tex(u1, v0).endVertex();
-        lvt_10_1_.pos((double)x0, (double)y0, (double)z).tex(u0, v0).endVertex();
-        lvt_9_1_.draw();
+        lvt_10_1_.vertex((double)x0, (double)y1, (double)z).uv(u0, v1).endVertex();
+        lvt_10_1_.vertex((double)x1, (double)y1, (double)z).uv(u1, v1).endVertex();
+        lvt_10_1_.vertex((double)x1, (double)y0, (double)z).uv(u1, v0).endVertex();
+        lvt_10_1_.vertex((double)x0, (double)y0, (double)z).uv(u0, v0).endVertex();
+        lvt_9_1_.end();
     }
 
     public static void renderModel(IBakedModel modelIn, ItemStack stack, int combinedLightIn, int combinedOverlayIn, MatrixStack matrixStackIn, IVertexBuilder bufferIn) {
@@ -94,11 +94,11 @@ public class GuiUtils {
 
     private static void renderQuads(MatrixStack matrixStackIn, IVertexBuilder bufferIn, List<BakedQuad> quadsIn, ItemStack itemStackIn, int combinedLightIn, int combinedOverlayIn) {
         boolean flag = !itemStackIn.isEmpty();
-        MatrixStack.Entry matrixstack$entry = matrixStackIn.getLast();
+        MatrixStack.Entry matrixstack$entry = matrixStackIn.last();
 
         for(BakedQuad bakedquad : quadsIn) {
             int i = -1;
-            if (flag && bakedquad.hasTintIndex()) {
+            if (flag && bakedquad.isTinted()) {
                 i = Minecraft.getInstance().getItemColors().getColor(itemStackIn, bakedquad.getTintIndex());
             }
 
@@ -117,7 +117,7 @@ public class GuiUtils {
 
     public static void renderBakedModel(IBakedModel modelIn, ItemStack itemStackIn, RenderType renderTypeOverride)
     {
-        renderBakedModel(modelIn, itemStackIn, renderTypeOverride, new MatrixStack(), Minecraft.getInstance().getRenderTypeBuffers().getBufferSource());
+        renderBakedModel(modelIn, itemStackIn, renderTypeOverride, new MatrixStack(), Minecraft.getInstance().renderBuffers().bufferSource());
     }
 
     public static void renderBakedModel(IBakedModel modelIn, ItemStack itemStackIn, RenderType renderTypeOverride, MatrixStack matrixStackIn, IRenderTypeBuffer buffer)
@@ -129,8 +129,8 @@ public class GuiUtils {
         {
             //ItemRenderer.renderItemModelIntoGUI
             RenderSystem.pushMatrix();
-            mc.getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-            mc.getTextureManager().getTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE).setBlurMipmapDirect(false, false);
+            mc.getTextureManager().bind(AtlasTexture.LOCATION_BLOCKS);
+            mc.getTextureManager().getTexture(AtlasTexture.LOCATION_BLOCKS).setFilter(false, false);
             RenderSystem.enableRescaleNormal();
             RenderSystem.enableAlphaTest();
             RenderSystem.defaultAlphaFunc();
@@ -139,54 +139,54 @@ public class GuiUtils {
             RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
             //setupGuiTransform removed
             if (flag4) {
-                net.minecraft.client.renderer.RenderHelper.setupGuiFlatDiffuseLighting();
+                net.minecraft.client.renderer.RenderHelper.setupForFlatItems();
             }
         }
 
         //renderitem
         if (!itemStackIn.isEmpty()) {
-            matrixStackIn.push();
+            matrixStackIn.pushPose();
             if (itemStackIn.getItem() == Items.TRIDENT) {
-                modelIn = mc.getItemRenderer().getItemModelMesher().getModelManager().getModel(new ModelResourceLocation("minecraft:trident#inventory"));
+                modelIn = mc.getItemRenderer().getItemModelShaper().getModelManager().getModel(new ModelResourceLocation("minecraft:trident#inventory"));
             }
 
             modelIn = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(matrixStackIn, modelIn, ItemCameraTransforms.TransformType.NONE, false);
             matrixStackIn.translate(-0.5D, -0.5D, -0.5D);
-            if (!modelIn.isBuiltInRenderer()) {
-                RenderType rendertype = RenderTypeLookup.func_239219_a_(itemStackIn, true);
+            if (!modelIn.isCustomRenderer()) {
+                RenderType rendertype = RenderTypeLookup.getRenderType(itemStackIn, true);
                 RenderType rendertype1;
                 if(renderTypeOverride != null)
                 {
                     rendertype1 = renderTypeOverride;
                 }
-                else if (Objects.equals(rendertype, Atlases.getTranslucentCullBlockType())) {
-                    rendertype1 = Atlases.getTranslucentCullBlockType();
+                else if (Objects.equals(rendertype, Atlases.translucentCullBlockSheet())) {
+                    rendertype1 = Atlases.translucentCullBlockSheet();
                 } else {
                     rendertype1 = rendertype;
                 }
 
-                IVertexBuilder ivertexbuilder = ItemRenderer.getBuffer(buffer, rendertype1, true, itemStackIn.hasEffect());
+                IVertexBuilder ivertexbuilder = ItemRenderer.getFoilBuffer(buffer, rendertype1, true, itemStackIn.hasFoil());
                 //renderModel
                 renderModel(modelIn, itemStackIn, 0xf000f0, OverlayTexture.NO_OVERLAY, matrixStackIn, ivertexbuilder);
                 //end renderModel
             } else {
-                itemStackIn.getItem().getItemStackTileEntityRenderer().func_239207_a_(itemStackIn, ItemCameraTransforms.TransformType.GUI, matrixStackIn, buffer, 15728880, OverlayTexture.NO_OVERLAY);
+                itemStackIn.getItem().getItemStackTileEntityRenderer().renderByItem(itemStackIn, ItemCameraTransforms.TransformType.GUI, matrixStackIn, buffer, 15728880, OverlayTexture.NO_OVERLAY);
             }
 
-            matrixStackIn.pop();
+            matrixStackIn.popPose();
         }
         //end renderitem
 
         if(buffer instanceof IRenderTypeBuffer.Impl)
         {
-            ((IRenderTypeBuffer.Impl)buffer).finish();
+            ((IRenderTypeBuffer.Impl)buffer).endBatch();
         }
         if(renderTypeOverride != null)
         {
             RenderSystem.enableDepthTest();
             if(flag4)
             {
-                net.minecraft.client.renderer.RenderHelper.setupGui3DDiffuseLighting();
+                net.minecraft.client.renderer.RenderHelper.setupFor3DItems();
             }
 
             RenderSystem.disableAlphaTest();
@@ -197,7 +197,7 @@ public class GuiUtils {
 
     public static void drawTexture(ResourceLocation resource, double posX, double posY, double width, double height, double zLevel)
     {
-        Minecraft.getInstance().getTextureManager().bindTexture(resource);
+        Minecraft.getInstance().getTextureManager().bind(resource);
         draw(posX, posY, width, height, zLevel);
     }
 
@@ -209,13 +209,13 @@ public class GuiUtils {
     public static void draw(double posX, double posY, double width, double height, double zLevel, double u1, double u2, double v1, double v2)
     {
         Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferbuilder = tessellator.getBuffer();
+        BufferBuilder bufferbuilder = tessellator.getBuilder();
         bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
-        bufferbuilder.pos(posX, posY + height, zLevel).tex((float)u1, (float)v2).endVertex();
-        bufferbuilder.pos(posX + width, posY + height, zLevel).tex((float)u2, (float)v2).endVertex();
-        bufferbuilder.pos(posX + width, posY, zLevel).tex((float)u2, (float)v1).endVertex();
-        bufferbuilder.pos(posX, posY, zLevel).tex((float)u1, (float)v1).endVertex();
-        tessellator.draw();
+        bufferbuilder.vertex(posX, posY + height, zLevel).uv((float)u1, (float)v2).endVertex();
+        bufferbuilder.vertex(posX + width, posY + height, zLevel).uv((float)u2, (float)v2).endVertex();
+        bufferbuilder.vertex(posX + width, posY, zLevel).uv((float)u2, (float)v1).endVertex();
+        bufferbuilder.vertex(posX, posY, zLevel).uv((float)u1, (float)v1).endVertex();
+        tessellator.end();
     }
 
     public static void drawColour(int colour, int alpha, double posX, double posY, double width, double height, double zLevel)
@@ -234,13 +234,13 @@ public class GuiUtils {
         }
         RenderSystem.disableTexture();
         Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferbuilder = tessellator.getBuffer();
+        BufferBuilder bufferbuilder = tessellator.getBuilder();
         bufferbuilder.begin(7, DefaultVertexFormats.POSITION_COLOR);
-        bufferbuilder.pos(posX, posY + height, zLevel).color(r, g, b, alpha).endVertex();
-        bufferbuilder.pos(posX + width, posY + height, zLevel).color(r, g, b, alpha).endVertex();
-        bufferbuilder.pos(posX + width, posY, zLevel).color(r, g, b, alpha).endVertex();
-        bufferbuilder.pos(posX, posY, zLevel).color(r, g, b, alpha).endVertex();
-        tessellator.draw();
+        bufferbuilder.vertex(posX, posY + height, zLevel).color(r, g, b, alpha).endVertex();
+        bufferbuilder.vertex(posX + width, posY + height, zLevel).color(r, g, b, alpha).endVertex();
+        bufferbuilder.vertex(posX + width, posY, zLevel).color(r, g, b, alpha).endVertex();
+        bufferbuilder.vertex(posX, posY, zLevel).color(r, g, b, alpha).endVertex();
+        tessellator.end();
         RenderSystem.enableTexture();
     }
 
@@ -276,8 +276,8 @@ public class GuiUtils {
     {
         Minecraft mc = Minecraft.getInstance();
 
-        double scaleW = (double)mc.getMainWindow().getFramebufferWidth() / mc.getMainWindow().getScaledWidth();
-        double scaleH = (double)mc.getMainWindow().getFramebufferHeight() / mc.getMainWindow().getScaledHeight();
+        double scaleW = (double)mc.getWindow().getWidth() / mc.getWindow().getGuiScaledWidth();
+        double scaleH = (double)mc.getWindow().getHeight() / mc.getWindow().getGuiScaledHeight();
 
         if(width <= 0 || height <= 0)
         {
@@ -294,7 +294,7 @@ public class GuiUtils {
 
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
 
-        GL11.glScissor((int)Math.floor((double)x * scaleW), (int)Math.floor((double)mc.getMainWindow().getFramebufferHeight() - ((double)(y + height) * scaleH)), (int)Math.floor((double)(x + width) * scaleW) - (int)Math.floor((double)x * scaleW), (int)Math.floor((double)mc.getMainWindow().getFramebufferHeight() - ((double)y * scaleH)) - (int)Math.floor((double)mc.getMainWindow().getFramebufferHeight() - ((double)(y + height) * scaleH))); //starts from lower left corner (minecraft starts from upper left)
+        GL11.glScissor((int)Math.floor((double)x * scaleW), (int)Math.floor((double)mc.getWindow().getHeight() - ((double)(y + height) * scaleH)), (int)Math.floor((double)(x + width) * scaleW) - (int)Math.floor((double)x * scaleW), (int)Math.floor((double)mc.getWindow().getHeight() - ((double)y * scaleH)) - (int)Math.floor((double)mc.getWindow().getHeight() - ((double)(y + height) * scaleH))); //starts from lower left corner (minecraft starts from upper left)
     }
 
     public static void endGlScissor()
@@ -307,14 +307,14 @@ public class GuiUtils {
         //Basic scissor test
         Minecraft mc = Minecraft.getInstance();
 
-        GuiUtils.startGlScissor(mc.getMainWindow().getScaledWidth() / 2 - 50, mc.getMainWindow().getScaledHeight() / 2 - 50, 100, 100);
+        GuiUtils.startGlScissor(mc.getWindow().getGuiScaledWidth() / 2 - 50, mc.getWindow().getGuiScaledHeight() / 2 - 50, 100, 100);
         //        RenderHelper.startGlScissor(10, 10, mc.getMainWindow().getScaledWidth() - 20, mc.getMainWindow().getScaledHeight() - 20);
 
         RenderSystem.pushMatrix();
 
         //        RenderSystem.translatef(-15F, 15F, 0F);
 
-        GuiUtils.drawColour(0xffffff, 255, 0, 0, mc.getMainWindow().getScaledWidth(), mc.getMainWindow().getScaledHeight(), 0);
+        GuiUtils.drawColour(0xffffff, 255, 0, 0, mc.getWindow().getGuiScaledWidth(), mc.getWindow().getGuiScaledHeight(), 0);
 
         RenderSystem.popMatrix();
 
@@ -325,23 +325,23 @@ public class GuiUtils {
     {
         //Basic stencil test
         Minecraft mc = Minecraft.getInstance();
-        MainWindow reso = mc.getMainWindow();
+        MainWindow reso = mc.getWindow();
 
         GL11.glEnable(GL11.GL_STENCIL_TEST);
 
-        GlStateManager.colorMask(false, false, false, false);
-        GlStateManager.depthMask(false);
+        GlStateManager._colorMask(false, false, false, false);
+        GlStateManager._depthMask(false);
 
         GL11.glStencilFunc(GL11.GL_NEVER, 1, 0xFF);
         GL11.glStencilOp(GL11.GL_REPLACE, GL11.GL_KEEP, GL11.GL_KEEP);
 
         GL11.glStencilMask(0xFF);
-        GlStateManager.clear(GL11.GL_STENCIL_BUFFER_BIT, Minecraft.IS_RUNNING_ON_MAC);
+        GlStateManager._clear(GL11.GL_STENCIL_BUFFER_BIT, Minecraft.ON_OSX);
 
         GuiUtils.drawColour(0xffffff, 255, 0, 0, 60, 60, 0);
 
-        GlStateManager.colorMask(true, true, true, true);
-        GlStateManager.depthMask(true);
+        GlStateManager._colorMask(true, true, true, true);
+        GlStateManager._depthMask(true);
 
         GL11.glStencilMask(0x00);
 
@@ -349,7 +349,7 @@ public class GuiUtils {
 
         GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF);
 
-        GuiUtils.drawColour(0xffffff, 255, 0, 0, reso.getScaledWidth(), reso.getScaledHeight(), 0);
+        GuiUtils.drawColour(0xffffff, 255, 0, 0, reso.getGuiScaledWidth(), reso.getGuiScaledHeight(), 0);
 
         GL11.glDisable(GL11.GL_STENCIL_TEST);
     }
@@ -359,8 +359,8 @@ public class GuiUtils {
     public static Framebuffer createFrameBuffer()
     {
         Minecraft mc = Minecraft.getInstance();
-        Framebuffer render = new Framebuffer(mc.getMainWindow().getFramebufferWidth(), mc.getMainWindow().getFramebufferHeight(), true, Minecraft.IS_RUNNING_ON_MAC);
-        if(mc.getFramebuffer().isStencilEnabled()) //if the main framebuffer is using a stencil, we might as well, too.
+        Framebuffer render = new Framebuffer(mc.getWindow().getWidth(), mc.getWindow().getHeight(), true, Minecraft.ON_OSX);
+        if(mc.getMainRenderTarget().isStencilEnabled()) //if the main framebuffer is using a stencil, we might as well, too.
         {
             render.enableStencil();
         }
@@ -370,9 +370,9 @@ public class GuiUtils {
 
     public static void deleteFrameBuffer(Framebuffer buffer)
     {
-        if(buffer.framebufferObject >= 0)
+        if(buffer.frameBufferId >= 0)
         {
-            buffer.deleteFramebuffer();
+            buffer.destroyBuffers();
         }
         frameBuffers.remove(buffer);
     }

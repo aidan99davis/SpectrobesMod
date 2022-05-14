@@ -19,45 +19,45 @@ public class FindMineralsGoal extends Goal {
 
     public FindMineralsGoal(EntitySpectrobe spectrobe) {
         this.entity = spectrobe;
-        this.world = spectrobe.world;
+        this.world = spectrobe.level;
     }
 
-    public boolean shouldExecute() {
+    public boolean canUse() {
         if(entity.getStage() == SpectrobeProperties.Stage.CHILD && (entity.isSearching() || entity.getOwner() == null)) {
-            List<ItemEntity> lvt_1_1_ = entity.world.getEntitiesWithinAABB(ItemEntity.class, this.entity.getBoundingBox().grow(8.0D, 8.0D, 8.0D), EntitySpectrobe.MINERAL_SELECTOR);
+            List<ItemEntity> lvt_1_1_ = entity.level.getEntitiesOfClass(ItemEntity.class, this.entity.getBoundingBox().inflate(8.0D, 8.0D, 8.0D), EntitySpectrobe.MINERAL_SELECTOR);
             return !lvt_1_1_.isEmpty();
         }
         return false;
     }
 
     @Override
-    public boolean shouldContinueExecuting() {
-        List<ItemEntity> lvt_1_1_ = entity.world.getEntitiesWithinAABB(ItemEntity.class, this.entity.getBoundingBox().grow(8.0D, 8.0D, 8.0D), EntitySpectrobe.MINERAL_SELECTOR);
+    public boolean canContinueToUse() {
+        List<ItemEntity> lvt_1_1_ = entity.level.getEntitiesOfClass(ItemEntity.class, this.entity.getBoundingBox().inflate(8.0D, 8.0D, 8.0D), EntitySpectrobe.MINERAL_SELECTOR);
         return !lvt_1_1_.isEmpty() && (entity.isSearching() || entity.getOwner() == null);
     }
 
-    public void startExecuting() {
-        List<ItemEntity> lvt_1_1_ = this.entity.world.getEntitiesWithinAABB(ItemEntity.class, this.entity.getBoundingBox().grow(8.0D, 8.0D, 8.0D), EntitySpectrobe.MINERAL_SELECTOR);
+    public void start() {
+        List<ItemEntity> lvt_1_1_ = this.entity.level.getEntitiesOfClass(ItemEntity.class, this.entity.getBoundingBox().inflate(8.0D, 8.0D, 8.0D), EntitySpectrobe.MINERAL_SELECTOR);
         if (!lvt_1_1_.isEmpty()) {
-            this.entity.getNavigator().tryMoveToEntityLiving(lvt_1_1_.get(0), 0.8000000476837158D);
+            this.entity.getNavigation().moveTo(lvt_1_1_.get(0), 0.8000000476837158D);
         }
     }
 
-    public void resetTask() {
-        ItemStack lvt_1_1_ = this.entity.getItemStackFromSlot(EquipmentSlotType.MAINHAND);
+    public void stop() {
+        ItemStack lvt_1_1_ = this.entity.getItemBySlot(EquipmentSlotType.MAINHAND);
         if (!lvt_1_1_.isEmpty()) {
             this.eatMineral(lvt_1_1_.getStack());
         }
-        this.entity.setItemStackToSlot(EquipmentSlotType.MAINHAND, ItemStack.EMPTY);
-        this.entity.getNavigator().clearPath();
+        this.entity.setItemSlot(EquipmentSlotType.MAINHAND, ItemStack.EMPTY);
+        this.entity.getNavigation().stop();
 
     }
 
     public void tick() {
-        List<ItemEntity> lvt_1_1_ = this.entity.world.getEntitiesWithinAABB(ItemEntity.class, this.entity.getBoundingBox().grow(2.0D, 2.0D, 2.0D), EntitySpectrobe.MINERAL_SELECTOR);
+        List<ItemEntity> lvt_1_1_ = this.entity.level.getEntitiesOfClass(ItemEntity.class, this.entity.getBoundingBox().inflate(2.0D, 2.0D, 2.0D), EntitySpectrobe.MINERAL_SELECTOR);
         if (!lvt_1_1_.isEmpty()) {
-            this.entity.getNavigator().tryMoveToEntityLiving((Entity)lvt_1_1_.get(0), 0.8000000476837158D);
-            if(this.entity.getDistance(lvt_1_1_.get(0)) < 5) {
+            this.entity.getNavigation().moveTo((Entity)lvt_1_1_.get(0), 0.8000000476837158D);
+            if(this.entity.distanceTo(lvt_1_1_.get(0)) < 5) {
                 this.eatMineral(lvt_1_1_.get(0).getItem());
                 lvt_1_1_.get(0).getItem().shrink(1);
             }

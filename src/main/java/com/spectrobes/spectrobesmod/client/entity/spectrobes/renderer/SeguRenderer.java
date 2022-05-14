@@ -23,7 +23,7 @@ public class SeguRenderer extends GeoEntityRenderer<EntitySegu> {
 
     @Nullable
     @Override
-    public ResourceLocation getEntityTexture(EntitySegu entity)
+    public ResourceLocation getTextureLocation(EntitySegu entity)
     {
         switch (entity.getSpectrobeData().Variant) {
             case 0:

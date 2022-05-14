@@ -48,190 +48,190 @@ public class SpectrobesEntities {
 
     public static final RegistryObject<EntityType<EntityKomanoto>> ENTITY_KOMANOTO
             = ENTITY_TYPES.register("entity_komanoto",
-            () -> EntityType.Builder.create(EntityKomanoto::new,
+            () -> EntityType.Builder.of(EntityKomanoto::new,
                     EntityClassification.MONSTER)
-                    .size(1.5f, 1.5f)
+                    .sized(1.5f, 1.5f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "komanoto").toString()));
 
     public static final RegistryObject<EntityType<EntityKomainu>> ENTITY_KOMAINU
             = ENTITY_TYPES.register("entity_komainu",
-            () -> EntityType.Builder.create(EntityKomainu::new,
+            () -> EntityType.Builder.of(EntityKomainu::new,
                     EntityClassification.MONSTER)
-                    .size(0.5f, 0.75f)
+                    .sized(0.5f, 0.75f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "komainu").toString()));
 
     public static final RegistryObject<EntityType<EntitySpiko>> ENTITY_SPIKO
             = ENTITY_TYPES.register("entity_spiko",
-            () -> EntityType.Builder.create(EntitySpiko::new,
+            () -> EntityType.Builder.of(EntitySpiko::new,
                     EntityClassification.MONSTER)
-                    .size(0.75f, 0.5f)
+                    .sized(0.75f, 0.5f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "spiko").toString()));
 
     public static final RegistryObject<EntityType<EntitySpikan>> ENTITY_SPIKAN
             = ENTITY_TYPES.register("entity_spikan",
-            () -> EntityType.Builder.create(EntitySpikan::new,
+            () -> EntityType.Builder.of(EntitySpikan::new,
                     EntityClassification.MONSTER)
-                    .size(1f, 2f)
+                    .sized(1f, 2f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "spikan").toString()));
 
     public static final RegistryObject<EntityType<EntitySamukabu>> ENTITY_SAMUKABU
             = ENTITY_TYPES.register("entity_samubaku",
-            () -> EntityType.Builder.create(EntitySamukabu::new,
+            () -> EntityType.Builder.of(EntitySamukabu::new,
                     EntityClassification.MONSTER)
-                    .size(1f, 1f)
+                    .sized(1f, 1f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "samubaku").toString()));
 
     public static final RegistryObject<EntityType<EntitySamurite>> ENTITY_SAMURITE
             = ENTITY_TYPES.register("entity_samurite",
-            () -> EntityType.Builder.create(EntitySamurite::new,
+            () -> EntityType.Builder.of(EntitySamurite::new,
                     EntityClassification.MONSTER)
-                    .size(1f, 2f)
+                    .sized(1f, 2f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "samurite").toString()));
 
     public static final RegistryObject<EntityType<EntityKubaku>> ENTITY_KUBAKU
             = ENTITY_TYPES.register("entity_kubaku",
-            () -> EntityType.Builder.create(EntityKubaku::new,
+            () -> EntityType.Builder.of(EntityKubaku::new,
                     EntityClassification.MONSTER)
-                    .size(0.5f, 0.75f)
+                    .sized(0.5f, 0.75f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "kubaku").toString()));
 
     public static final RegistryObject<EntityType<EntityKuganon>> ENTITY_KUGANON
             = ENTITY_TYPES.register("entity_kuganon",
-            () -> EntityType.Builder.create(EntityKuganon::new,
+            () -> EntityType.Builder.of(EntityKuganon::new,
                     EntityClassification.MONSTER)
-                    .size(0.5f, 0.75f)
+                    .sized(0.5f, 0.75f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "kuganon").toString()));
 
     public static final RegistryObject<EntityType<EntityShakin>> ENTITY_SHAKIN
             = ENTITY_TYPES.register("entity_shakin",
-            () -> EntityType.Builder.create(EntityShakin::new,
+            () -> EntityType.Builder.of(EntityShakin::new,
                     EntityClassification.MONSTER)
-                    .size(0.5f, 0.75f)
+                    .sized(0.5f, 0.75f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "shakin").toString()));
 
     public static final RegistryObject<EntityType<EntityShakor>> ENTITY_SHAKOR
             = ENTITY_TYPES.register("entity_shakor",
-            () -> EntityType.Builder.create(EntityShakor::new,
+            () -> EntityType.Builder.of(EntityShakor::new,
                     EntityClassification.MONSTER)
-                    .size(0.5f, 0.75f)
+                    .sized(0.5f, 0.75f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "shakor").toString()));
 
     public static final RegistryObject<EntityType<EntityVilar>> ENTITY_VILAR
             = ENTITY_TYPES.register("entity_vilar",
-            () -> EntityType.Builder.create(EntityVilar::new,
+            () -> EntityType.Builder.of(EntityVilar::new,
                     EntityClassification.MONSTER)
-                    .size(0.5f, 0.75f)
+                    .sized(0.5f, 0.75f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "vilar").toString()));
 
     public static final RegistryObject<EntityType<EntityVilamasta>> ENTITY_VILAMASTA
             = ENTITY_TYPES.register("entity_vilamasta",
-            () -> EntityType.Builder.create(EntityVilamasta::new,
+            () -> EntityType.Builder.of(EntityVilamasta::new,
                     EntityClassification.MONSTER)
-                    .size(0.5f, 0.75f)
+                    .sized(0.5f, 0.75f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "vilamasta").toString()));
 
     public static final RegistryObject<EntityType<EntitySegu>> ENTITY_SEGU
             = ENTITY_TYPES.register("entity_segu",
-            () -> EntityType.Builder.create(EntitySegu::new,
+            () -> EntityType.Builder.of(EntitySegu::new,
                     EntityClassification.MONSTER)
-                    .size(0.5f, 0.75f)
+                    .sized(0.5f, 0.75f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "segu").toString()));
 
     public static final RegistryObject<EntityType<EntitySegulos>> ENTITY_SEGULOS
             = ENTITY_TYPES.register("entity_segulos",
-            () -> EntityType.Builder.create(EntitySegulos::new,
+            () -> EntityType.Builder.of(EntitySegulos::new,
                     EntityClassification.MONSTER)
-                    .size(1.5f, 2f)
+                    .sized(1.5f, 2f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "segulos").toString()));
 
     public static final RegistryObject<EntityType<EntityZoza>> ENTITY_ZOZA
             = ENTITY_TYPES.register("entity_zoza",
-            () -> EntityType.Builder.create(EntityZoza::new,
+            () -> EntityType.Builder.of(EntityZoza::new,
                     EntityClassification.MONSTER)
-                    .size(0.5f, 0.75f)
+                    .sized(0.5f, 0.75f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "zoza").toString()));
 
     public static final RegistryObject<EntityType<EntityZozane>> ENTITY_ZOZANE
             = ENTITY_TYPES.register("entity_zozane",
-            () -> EntityType.Builder.create(EntityZozane::new,
+            () -> EntityType.Builder.of(EntityZozane::new,
                     EntityClassification.MONSTER)
-                    .size(1, 2)
+                    .sized(1, 2)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "zozane").toString()));
 
     public static final RegistryObject<EntityType<EntityHarumi>> ENTITY_HARUMI
             = ENTITY_TYPES.register("entity_harumi",
-            () -> EntityType.Builder.create(EntityHarumi::new,
+            () -> EntityType.Builder.of(EntityHarumi::new,
                     EntityClassification.MONSTER)
-                    .size(0.5f, 0.75f)
+                    .sized(0.5f, 0.75f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "harumi").toString()));
 
     public static final RegistryObject<EntityType<EntityHarumite>> ENTITY_HARUMITE
             = ENTITY_TYPES.register("entity_harumite",
-            () -> EntityType.Builder.create(EntityHarumite::new,
+            () -> EntityType.Builder.of(EntityHarumite::new,
                     EntityClassification.MONSTER)
-                    .size(2f, 2f)
+                    .sized(2f, 2f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "harumite").toString()));
 
     public static final RegistryObject<EntityType<EntityGrilda>> ENTITY_GRILDA
             = ENTITY_TYPES.register("entity_grilda",
-            () -> EntityType.Builder.create(EntityGrilda::new,
+            () -> EntityType.Builder.of(EntityGrilda::new,
                     EntityClassification.MONSTER)
-                    .size(1f, 1f)
+                    .sized(1f, 1f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "grilda").toString()));
 
     public static final RegistryObject<EntityType<EntityGrilden>> ENTITY_GRILDEN
             = ENTITY_TYPES.register("entity_grilden",
-            () -> EntityType.Builder.create(EntityGrilden::new,
+            () -> EntityType.Builder.of(EntityGrilden::new,
                     EntityClassification.MONSTER)
-                    .size(2f, 2f)
+                    .sized(2f, 2f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "grilden").toString()));
 
     public static final RegistryObject<EntityType<EntityNagu>> ENTITY_NAGU
             = ENTITY_TYPES.register("entity_nagu",
-            () -> EntityType.Builder.create(EntityNagu::new,
+            () -> EntityType.Builder.of(EntityNagu::new,
                     EntityClassification.MONSTER)
-                    .size(1f, 1f)
+                    .sized(1f, 1f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "nagu").toString()));
 
     public static final RegistryObject<EntityType<EntityMossari>> ENTITY_MOSSARI
             = ENTITY_TYPES.register("entity_mossari",
-            () -> EntityType.Builder.create(EntityMossari::new,
+            () -> EntityType.Builder.of(EntityMossari::new,
                     EntityClassification.MONSTER)
-                    .size(1f, 1f)
+                    .sized(1f, 1f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "mossari").toString()));
 
     public static <T extends Entity> RegistryObject<EntityType<T>> BuildEntity(EntityType.IFactory<T> entity, Class<T> entityClass, float width, float height)
     {
         String name = entityClass.getSimpleName().toLowerCase();
         return ENTITY_TYPES.register(name,
-                () -> EntityType.Builder.create(entity, EntityClassification.CREATURE)
-                        .size(width, height).build(name));
+                () -> EntityType.Builder.of(entity, EntityClassification.CREATURE)
+                        .sized(width, height).build(name));
     }
 
     public static void init() {
         DeferredWorkQueue.runLater(() -> {
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_GRILDA.get(), EntityGrilda.setCustomAttributes().create());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_GRILDEN.get(), EntityGrilden.setCustomAttributes().create());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_HARUMI.get(), EntityHarumi.setCustomAttributes().create());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_HARUMITE.get(), EntityHarumite.setCustomAttributes().create());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_KOMAINU.get(), EntityKomainu.setCustomAttributes().create());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_KOMANOTO.get(), EntityKomanoto.setCustomAttributes().create());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_KUBAKU.get(), EntityKubaku.setCustomAttributes().create());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_KUGANON.get(), EntityKuganon.setCustomAttributes().create());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_MOSSARI.get(), EntityMossari.setCustomAttributes().create());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_NAGU.get(), EntityNagu.setCustomAttributes().create());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_SAMUKABU.get(), EntitySamukabu.setCustomAttributes().create());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_SAMURITE.get(), EntitySamurite.setCustomAttributes().create());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_SEGU.get(), EntitySegu.setCustomAttributes().create());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_SEGULOS.get(), EntitySegulos.setCustomAttributes().create());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_SHAKIN.get(), EntityShakin.setCustomAttributes().create());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_SHAKOR.get(), EntityShakor.setCustomAttributes().create());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_SPIKO.get(), EntitySpiko.setCustomAttributes().create());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_SPIKAN.get(), EntitySpikan.setCustomAttributes().create());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_VILAR.get(), EntityVilar.setCustomAttributes().create());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_VILAMASTA.get(), EntityVilamasta.setCustomAttributes().create());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_ZOZA.get(), EntityZoza.setCustomAttributes().create());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_ZOZANE.get(), EntityZozane.setCustomAttributes().create());
+            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_GRILDA.get(), EntityGrilda.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_GRILDEN.get(), EntityGrilden.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_HARUMI.get(), EntityHarumi.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_HARUMITE.get(), EntityHarumite.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_KOMAINU.get(), EntityKomainu.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_KOMANOTO.get(), EntityKomanoto.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_KUBAKU.get(), EntityKubaku.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_KUGANON.get(), EntityKuganon.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_MOSSARI.get(), EntityMossari.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_NAGU.get(), EntityNagu.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_SAMUKABU.get(), EntitySamukabu.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_SAMURITE.get(), EntitySamurite.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_SEGU.get(), EntitySegu.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_SEGULOS.get(), EntitySegulos.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_SHAKIN.get(), EntityShakin.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_SHAKOR.get(), EntityShakor.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_SPIKO.get(), EntitySpiko.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_SPIKAN.get(), EntitySpikan.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_VILAR.get(), EntityVilar.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_VILAMASTA.get(), EntityVilamasta.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_ZOZA.get(), EntityZoza.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_ZOZANE.get(), EntityZozane.setCustomAttributes().build());
         });
 
         populateMap();

@@ -60,7 +60,7 @@ public class EntityKomanoto extends EntityMammalSpectrobe {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.komanoto.walk", true));
             return PlayState.CONTINUE;
         }
-        else if(event.getAnimatable().isSitting()) {
+        else if(event.getAnimatable().isOrderedToSit()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.komanoto.sit", false));
             return PlayState.CONTINUE;
         } else {

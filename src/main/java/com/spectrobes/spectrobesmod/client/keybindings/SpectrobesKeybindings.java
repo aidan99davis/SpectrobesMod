@@ -2,7 +2,7 @@ package com.spectrobes.spectrobesmod.client.keybindings;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.container.PrizmodContainer;
-import com.spectrobes.spectrobesmod.client.prizmod.PrizmodScreen;
+import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
@@ -41,10 +41,10 @@ public class SpectrobesKeybindings {
                 new KeyBinding("key.prizmod.open", GLFW.GLFW_KEY_R, "key.prizmod.category"));
 
         ClientRegistry.registerKeyBinding(CYCLE_TOOL_MENU_LEFT_KEYBIND =
-                new KeyBinding("key.prizmod.cycle.left",  InputMappings.INPUT_INVALID.getKeyCode(), "key.prizmod.category"));
+                new KeyBinding("key.prizmod.cycle.left",  InputMappings.UNKNOWN.getValue(), "key.prizmod.category"));
 
         ClientRegistry.registerKeyBinding(CYCLE_TOOL_MENU_RIGHT_KEYBIND =
-                new KeyBinding("key.prizmod.cycle.right",  InputMappings.INPUT_INVALID.getKeyCode(), "key.prizmod.category"));
+                new KeyBinding("key.prizmod.cycle.right",  InputMappings.UNKNOWN.getValue(), "key.prizmod.category"));
 
     }
 
@@ -53,17 +53,17 @@ public class SpectrobesKeybindings {
     {
         Minecraft mc = Minecraft.getInstance();
 
-        if (mc.currentScreen == null && mc.player.inventory
-                .hasItemStack(new ItemStack(SpectrobesItems.prizmod_item)))
+        if (mc.screen == null && mc.player.inventory
+                .contains(new ItemStack(SpectrobesItems.prizmod_item)))
         {
-            boolean toolMenuKeyIsDown = OPEN_TOOL_MENU_KEYBIND.isKeyDown();
+            boolean toolMenuKeyIsDown = OPEN_TOOL_MENU_KEYBIND.isDown();
             if (toolMenuKeyIsDown && !toolMenuKeyWasDown)
             {
-                while (OPEN_TOOL_MENU_KEYBIND.isPressed())
+                while (OPEN_TOOL_MENU_KEYBIND.consumeClick())
                 {
-                    if (mc.currentScreen == null)
+                    if (mc.screen == null)
                     {
-                            mc.displayGuiScreen(new PrizmodScreen(
+                            mc.setScreen(new PrizmodScreen(
                                     PrizmodContainer.PRIZMOD.get()
                                             .create(0, mc.player.inventory),
                                     mc.player.inventory, new StringTextComponent("")));
@@ -73,10 +73,10 @@ public class SpectrobesKeybindings {
             }
             toolMenuKeyWasDown = toolMenuKeyIsDown;
 
-            boolean cycleLeftKeyIsDown = CYCLE_TOOL_MENU_LEFT_KEYBIND.isKeyDown();
+            boolean cycleLeftKeyIsDown = CYCLE_TOOL_MENU_LEFT_KEYBIND.isDown();
             if (cycleLeftKeyIsDown && !cycleLeftKeyWasDown)
             {
-                while (CYCLE_TOOL_MENU_LEFT_KEYBIND.isPressed())
+                while (CYCLE_TOOL_MENU_LEFT_KEYBIND.consumeClick())
                 {
                     mc.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
                             .ifPresent(sm -> {
@@ -84,8 +84,8 @@ public class SpectrobesKeybindings {
 
                                 UUID oldUUID = currentMember != null? currentMember.SpectrobeUUID : null;
                                 sm.changeSelected(-1);
-                                List<EntitySpectrobe> spectrobes = mc.player.world
-                                        .getEntitiesWithinAABB(EntitySpectrobe.class, mc.player.getBoundingBox().grow(30, 30, 30));
+                                List<EntitySpectrobe> spectrobes = mc.player.level
+                                        .getEntitiesOfClass(EntitySpectrobe.class, mc.player.getBoundingBox().inflate(30, 30, 30));
                                 SummonPlayerSpectrobe(mc, currentMember, oldUUID, spectrobes);
                                 if(sm.getCurrentTeamMember() != null) {
                                     sm.spawnCurrent();
@@ -97,10 +97,10 @@ public class SpectrobesKeybindings {
             cycleLeftKeyIsDown = cycleLeftKeyWasDown;
 
 
-            boolean cycleRightKeyIsDown = CYCLE_TOOL_MENU_RIGHT_KEYBIND.isKeyDown();
+            boolean cycleRightKeyIsDown = CYCLE_TOOL_MENU_RIGHT_KEYBIND.isDown();
             if (cycleRightKeyIsDown && !cycleRightKeyWasDown)
             {
-                while (CYCLE_TOOL_MENU_RIGHT_KEYBIND.isPressed())
+                while (CYCLE_TOOL_MENU_RIGHT_KEYBIND.consumeClick())
                 {
                     mc.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
                             .ifPresent(sm -> {
@@ -108,8 +108,8 @@ public class SpectrobesKeybindings {
 
                                 UUID oldUUID = currentMember != null? currentMember.SpectrobeUUID : null;
                                 sm.changeSelected(1);
-                                List<EntitySpectrobe> spectrobes = mc.player.world
-                                        .getEntitiesWithinAABB(EntitySpectrobe.class, mc.player.getBoundingBox().grow(30, 30, 30));
+                                List<EntitySpectrobe> spectrobes = mc.player.level
+                                        .getEntitiesOfClass(EntitySpectrobe.class, mc.player.getBoundingBox().inflate(30, 30, 30));
 
                                 SummonPlayerSpectrobe(mc, currentMember, oldUUID, spectrobes);
 
@@ -131,12 +131,12 @@ public class SpectrobesKeybindings {
     private static void SummonPlayerSpectrobe(Minecraft mc, Spectrobe currentMember, UUID oldUUID, List<EntitySpectrobe> spectrobes) {
         if(oldUUID != null) {
             for(EntitySpectrobe spectrobe : spectrobes) {
-                if(spectrobe.getOwner() != null && spectrobe.getOwnerId().equals(mc.player.getUniqueID())) {
+                if(spectrobe.getOwner() != null && spectrobe.getOwnerUUID().equals(mc.player.getUUID())) {
                     spectrobe.despawn();
                 }
             }
-            if(mc.player.world.isRemote()) {
-                SpectrobesNetwork.sendToServer(new SDespawnSpectrobePacket(mc.player.getPosition()));
+            if(mc.player.level.isClientSide()) {
+                SpectrobesNetwork.sendToServer(new SDespawnSpectrobePacket(mc.player.blockPosition()));
             }
 
         }
@@ -144,17 +144,17 @@ public class SpectrobesKeybindings {
 
     public static boolean isKeyDown(KeyBinding keybind)
     {
-        if (keybind.isInvalid())
+        if (keybind.isUnbound())
             return false;
 
         boolean isDown = false;
         switch (keybind.getKey().getType())
         {
             case KEYSYM:
-                isDown = InputMappings.isKeyDown(Minecraft.getInstance().getMainWindow().getHandle(), keybind.getKey().getKeyCode());
+                isDown = InputMappings.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), keybind.getKey().getValue());
                 break;
             case MOUSE:
-                isDown = GLFW.glfwGetMouseButton(Minecraft.getInstance().getMainWindow().getHandle(), keybind.getKey().getKeyCode()) == GLFW.GLFW_PRESS;
+                isDown = GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), keybind.getKey().getValue()) == GLFW.GLFW_PRESS;
                 break;
         }
         return isDown && keybind.getKeyConflictContext().isActive() && keybind.getKeyModifier().isActive(keybind.getKeyConflictContext());

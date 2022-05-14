@@ -1,9 +1,9 @@
-package com.spectrobes.spectrobesmod.client.prizmod.Pages;
+package com.spectrobes.spectrobesmod.client.gui.prizmod.Pages;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.spectrobes.spectrobesmod.client.prizmod.Components.MenuButton;
-import com.spectrobes.spectrobesmod.client.prizmod.PrizmodScreen;
+import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
 
 public class MenuPage extends PrizmodPage {
 

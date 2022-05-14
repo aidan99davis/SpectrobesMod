@@ -25,11 +25,11 @@ public class AttackSpectrobeMasterGoal extends TargetGoal {
      * Returns whether the EntityAIBase should begin execution.
      */
     @Override
-    public boolean shouldExecute() {
-        if(!(goalOwner instanceof EntityKrawl))
+    public boolean canUse() {
+        if(!(mob instanceof EntityKrawl))
             return false;
 
-        List<PlayerEntity> nearbyPlayers = goalOwner.world.getEntitiesWithinAABB(PlayerEntity.class, goalOwner.getBoundingBox().grow(20, 20, 20));
+        List<PlayerEntity> nearbyPlayers = mob.level.getEntitiesOfClass(PlayerEntity.class, mob.getBoundingBox().inflate(20, 20, 20));
 
         AtomicReference<PlayerEntity> toAttack = new AtomicReference<>();
         toAttack.set(null);
@@ -53,22 +53,22 @@ public class AttackSpectrobeMasterGoal extends TargetGoal {
     }
 
     @Override
-    public boolean shouldContinueExecuting() {
+    public boolean canContinueToUse() {
         if(tryKill) {
-            return super.shouldContinueExecuting();
+            return super.canContinueToUse();
         } else {
             //spectrobe v spectrobe fights should culminate when one reaches 20% health,
             // as its more a territory fight than a death brawl.
-            return target.getHealth() / target.getMaxHealth() > 0.2f && super.shouldContinueExecuting();
+            return target.getHealth() / target.getMaxHealth() > 0.2f && super.canContinueToUse();
         }
     }
 
     @Override
-    public void startExecuting() {
-        this.goalOwner.setAttackTarget(this.target);
-        ((EntityKrawl)this.goalOwner).setIsAttacking(true);
-        this.goalOwner.getNavigator().setPath(this.goalOwner.getNavigator().getPathToEntity(this.target, 1), 3);
-        this.goalOwner.setAggroed(true);
-        super.startExecuting();
+    public void start() {
+        this.mob.setTarget(this.target);
+        ((EntityKrawl)this.mob).setIsAttacking(true);
+        this.mob.getNavigation().moveTo(this.mob.getNavigation().createPath(this.target, 1), 3);
+        this.mob.setAggressive(true);
+        super.start();
     }
 }

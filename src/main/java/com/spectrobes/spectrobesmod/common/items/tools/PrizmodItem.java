@@ -13,6 +13,8 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
+import net.minecraft.item.Item.Properties;
+
 public class PrizmodItem extends Item {
     public PrizmodItem(Properties properties) {
         super(properties);
@@ -20,11 +22,11 @@ public class PrizmodItem extends Item {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        ItemStack itemStack = new ItemStack(playerIn.getHeldItem(handIn).getItem(), 1);
-        if(playerIn.isSneaking()) {
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        ItemStack itemStack = new ItemStack(playerIn.getItemInHand(handIn).getItem(), 1);
+        if(playerIn.isShiftKeyDown()) {
         } else {
-            if(!worldIn.isRemote()) {
+            if(!worldIn.isClientSide()) {
                 NetworkHooks.openGui((ServerPlayerEntity) playerIn, new SimpleNamedContainerProvider(
                                 (id, player, stack) -> new PrizmodContainer(id, (ServerPlayerEntity)playerIn),
                                 new StringTextComponent(""))

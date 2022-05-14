@@ -16,8 +16,8 @@ public class SpectrobeProperties{
     public static SpectrobeProperties read(CompoundNBT spectrobeProperties) {
 
         return new SpectrobeProperties(
-                SpectrobeProperties.Nature.valueOf(spectrobeProperties.get("nature").getString()),
-                SpectrobeProperties.Stage.valueOf(spectrobeProperties.get("stage").getString()));
+                SpectrobeProperties.Nature.valueOf(spectrobeProperties.get("nature").getAsString()),
+                SpectrobeProperties.Stage.valueOf(spectrobeProperties.get("stage").getAsString()));
 
     }
 

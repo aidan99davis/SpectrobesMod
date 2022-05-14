@@ -59,7 +59,7 @@ public class EntityShakor extends EntityAquaticSpectrobe {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.shakor.walk", true));
             return PlayState.CONTINUE;
         }
-        else if(event.getAnimatable().isSitting()) {
+        else if(event.getAnimatable().isOrderedToSit()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.shakor.idle", true));
             return PlayState.CONTINUE;
         } else if(event.getAnimatable().isSwimming()) {

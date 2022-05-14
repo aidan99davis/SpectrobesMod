@@ -26,9 +26,9 @@ public abstract class EntityMammalSpectrobe extends EntitySpectrobe {
     @Override
     public void mate() {
         List<? extends EntityMammalSpectrobe> mates
-                = world.getEntitiesWithinAABB(getSpectrobeClass(),
+                = level.getEntitiesOfClass(getSpectrobeClass(),
                 this.getBoundingBox()
-                        .grow(10, 10, 10));
+                        .inflate(10, 10, 10));
         if(mates.isEmpty()) {
             return;
         }
@@ -47,7 +47,7 @@ public abstract class EntityMammalSpectrobe extends EntitySpectrobe {
             return;
         }
 
-        this.dataManager.set(HAS_MATED, true);
+        this.entityData.set(HAS_MATED, true);
 
         this.setTicksTillMate(16000);
         mate.setTicksTillMate(16000);
@@ -56,11 +56,11 @@ public abstract class EntityMammalSpectrobe extends EntitySpectrobe {
 
         for(int i = 0; i < litterSize; i++) {
             EntitySpectrobe spectrobe = getChildForLineage()
-                    .create(world);
+                    .create(level);
 
-            this.world.addEntity(spectrobe);
+            this.level.addFreshEntity(spectrobe);
 
-            spectrobe.setPositionAndUpdate(getPosX(), getPosY(), getPosZ());
+            spectrobe.teleportTo(getX(), getY(), getZ());
         }
         //todo: live births, gestation time, litter count.
     }

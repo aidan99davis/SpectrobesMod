@@ -12,10 +12,12 @@ import net.minecraftforge.common.ToolType;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class FossilBlock extends SpectrobesBlock {
-    private static Properties props = Properties.create(Material.ROCK)
+    private static Properties props = Properties.of(Material.STONE)
             .harvestTool(ToolType.PICKAXE)
-            .hardnessAndResistance(1.5f)
+            .strength(1.5f)
             .sound(SoundType.STONE)
             .harvestLevel(2);
 

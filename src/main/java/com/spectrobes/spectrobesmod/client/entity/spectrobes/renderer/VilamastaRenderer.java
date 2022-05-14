@@ -23,7 +23,7 @@ public class VilamastaRenderer extends GeoEntityRenderer<EntityVilamasta> {
 
     @Nullable
     @Override
-    public ResourceLocation getEntityTexture(EntityVilamasta entity)
+    public ResourceLocation getTextureLocation(EntityVilamasta entity)
     {
         return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/vilamasta.png");
     }

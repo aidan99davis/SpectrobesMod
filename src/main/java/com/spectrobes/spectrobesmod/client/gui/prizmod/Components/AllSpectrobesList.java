@@ -1,9 +1,8 @@
 package com.spectrobes.spectrobesmod.client.prizmod.Components;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.spectrobes.spectrobesmod.client.gui.prizmod.components.SpectrobePiece;
-import com.spectrobes.spectrobesmod.client.prizmod.Pages.PrizmodPage;
-import com.spectrobes.spectrobesmod.client.prizmod.PrizmodScreen;
+import com.spectrobes.spectrobesmod.client.gui.prizmod.Pages.PrizmodPage;
+import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.Widget;
@@ -15,6 +14,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.spectrobes.spectrobesmod.client.prizmod.Components.AllSpectrobesList;
+import com.spectrobes.spectrobesmod.client.prizmod.Components.SpectrobePiece;
 
 public class AllSpectrobesList extends Widget {
 
@@ -33,7 +35,7 @@ public class AllSpectrobesList extends Widget {
         super(parent.x, parent.y, 0, 0, new StringTextComponent(""));
         this.parent = parent;
         gridData_paged = new HashMap<>();
-        int specCount = this.parent.parent.getContainer().getOwnedSpectrobesCount();
+        int specCount = this.parent.parent.getMenu().getOwnedSpectrobesCount();
         int remainder = specCount % 25;
         this.pages = specCount / 25;
         if(remainder > 0) {
@@ -61,7 +63,7 @@ public class AllSpectrobesList extends Widget {
                 SpectrobePiece p = gridData[i][j];
 
                 RenderSystem.pushMatrix();
-                Minecraft.getInstance().textureManager.bindTexture(PrizmodScreen.SPECTROBE_SLOT_TEXTURE);
+                Minecraft.getInstance().textureManager.bind(PrizmodScreen.SPECTROBE_SLOT_TEXTURE);
                 RenderSystem.enableAlphaTest();
                 RenderSystem.translatef(i * 32, j * 32, 2);
                 //p.draw();

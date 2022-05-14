@@ -34,9 +34,9 @@ public class PrizmodContainer extends Container {
     }
 
     @Override
-    public void detectAndSendChanges() {
+    public void broadcastChanges() {
         if(needsSync) {
-            if(!player.world.isRemote()) {
+            if(!player.level.isClientSide()) {
                 SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(capability),
                         (ServerPlayerEntity) player);
             } else {
@@ -49,8 +49,7 @@ public class PrizmodContainer extends Container {
 
     public void tick() {
         if(needsSync) {
-//            SpectrobesInfo.LOGGER.info("DETECTED AND SENDING CHANGES");
-            detectAndSendChanges();
+            broadcastChanges();
         }
 //        capability = this.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
 //                .orElseThrow(IllegalStateException::new);
@@ -62,8 +61,8 @@ public class PrizmodContainer extends Container {
      * @param playerIn
      */
     @Override
-    public boolean canInteractWith(PlayerEntity playerIn) {
-        return playerIn.getHeldItem(playerIn.getActiveHand()).getItem() instanceof PrizmodItem;
+    public boolean stillValid(PlayerEntity playerIn) {
+        return playerIn.getItemInHand(playerIn.getUsedItemHand()).getItem() instanceof PrizmodItem;
     }
 
     public void markDirty() {
@@ -86,7 +85,7 @@ public class PrizmodContainer extends Container {
     public void spawnSpectrobe(Spectrobe spectrobe) {
         synchronized (capability) {
             capability.spawnSpectrobe(spectrobe);
-            if(player.world.isRemote()) {
+            if(player.level.isClientSide()) {
 
             }
             markDirty();
@@ -95,7 +94,7 @@ public class PrizmodContainer extends Container {
 
     public void setTeamMember(int index, UUID spectrobeUUID) {
         capability.setTeamMember(index, spectrobeUUID);
-        if(player.world.isRemote()) {
+        if(player.level.isClientSide()) {
             SpectrobesNetwork.sendToServer(new SUpdateSpectrobeSlotPacket(index, spectrobeUUID));
             markDirty();
         }
@@ -113,7 +112,7 @@ public class PrizmodContainer extends Container {
     public void releaseSpectrobe(Spectrobe spectrobe) {
         synchronized (capability) {
             capability.releaseSpectrobe(spectrobe);
-        if(player.world.isRemote()) {
+        if(player.level.isClientSide()) {
             SpectrobesNetwork.sendToServer(new SReleaseSpectrobePacket(spectrobe));
         }
             markDirty();

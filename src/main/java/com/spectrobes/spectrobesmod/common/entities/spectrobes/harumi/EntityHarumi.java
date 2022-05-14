@@ -64,7 +64,7 @@ public class EntityHarumi extends EntityCrustaceanSpectrobe {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.harumi.walk", true));
             return PlayState.CONTINUE;
         }
-        else if(event.getAnimatable().isSitting()) {
+        else if(event.getAnimatable().isOrderedToSit()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.harumi.idle", true));
             return PlayState.CONTINUE;
         }

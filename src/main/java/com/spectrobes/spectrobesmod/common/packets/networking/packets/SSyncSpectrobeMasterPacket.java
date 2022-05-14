@@ -17,12 +17,12 @@ public class SSyncSpectrobeMasterPacket {
     }
 
     public void toBytes(PacketBuffer buf) {
-        buf.writeCompoundTag(capability.serializeNBT());
+        buf.writeNbt(capability.serializeNBT());
     }
 
     public static SSyncSpectrobeMasterPacket fromBytes(PacketBuffer buf) {
         PlayerSpectrobeMaster cap = new PlayerSpectrobeMaster();
-        cap.deserializeNBT(buf.readCompoundTag());
+        cap.deserializeNBT(buf.readNbt());
 
         return new SSyncSpectrobeMasterPacket(cap);
     }

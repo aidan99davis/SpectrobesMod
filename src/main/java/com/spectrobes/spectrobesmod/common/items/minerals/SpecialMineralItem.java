@@ -10,6 +10,8 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
+import net.minecraft.item.Item.Properties;
+
 public abstract class SpecialMineralItem extends Item {
 
     public SpecialMineralItem(Properties properties, String registryName) {
@@ -18,7 +20,7 @@ public abstract class SpecialMineralItem extends Item {
     }
 
     @Override
-    public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flag) {
 
         tooltip.add(new StringTextComponent("Effect: " + getMineralEffectDescription()));
     }

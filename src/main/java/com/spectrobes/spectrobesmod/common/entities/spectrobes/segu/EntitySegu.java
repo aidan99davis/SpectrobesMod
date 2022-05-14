@@ -53,12 +53,12 @@ public class EntitySegu extends EntityMammalSpectrobe {
     @Override
     public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event) {
         event.getController().transitionLengthTicks = 2;
-        if(!(limbSwingAmount > -0.15F && limbSwingAmount < 0.15F))
+        if(!(animationSpeed > -0.15F && animationSpeed < 0.15F))
         {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.segu.walk", true));
             return PlayState.CONTINUE;
         }
-        if(this.isSitting()) {
+        if(this.isOrderedToSit()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.segu.idle", true));
             return PlayState.CONTINUE;
         }
