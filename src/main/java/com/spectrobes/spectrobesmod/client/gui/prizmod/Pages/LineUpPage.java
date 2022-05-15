@@ -1,17 +1,16 @@
 package com.spectrobes.spectrobesmod.client.gui.prizmod.Pages;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.spectrobes.spectrobesmod.client.prizmod.Components.AllSpectrobesList;
-import com.spectrobes.spectrobesmod.client.prizmod.Components.SpectrobePiece;
-import com.spectrobes.spectrobesmod.client.prizmod.Components.MenuButton;
-import com.spectrobes.spectrobesmod.client.prizmod.Components.SpectrobeButton;
-import com.spectrobes.spectrobesmod.client.prizmod.Components.TeamSpectrobesList;
+import com.spectrobes.spectrobesmod.SpectrobesInfo;
+import com.spectrobes.spectrobesmod.client.gui.prizmod.Components.*;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSpawnSpectrobePacket;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.Widget;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.util.text.StringTextComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,17 +53,19 @@ public class LineUpPage extends PrizmodPage {
             parent.setMenuPage(new MenuPage(parent));
         }));
 
-//        this.addButton(new Button(parent.width / 2 - 60, 45, 60, 20, new StringTextComponent("Prev"), button -> {
-//            this.AllSpectrobesGrid.previousPage();
-//            this.init();
-//            this.parent.changeFocus(true);
-//        }));
-//
-//        this.addButton(new Button(parent.width / 2, 45, 60, 20, new StringTextComponent("Next"), button -> {
-//            this.AllSpectrobesGrid.nextPage();
-//            this.init();
-//            this.parent.changeFocus(true);
-//        }));
+        this.addButton(new Button(parent.width / 2 - 60, 45, 60, 20, new StringTextComponent("Prev"), button -> {
+            this.AllSpectrobesGrid.previousPage();
+            this.parent.removeButtons(getButtons());
+            this.init();
+            this.changeFocus(true);
+        }));
+
+        this.addButton(new Button(parent.width / 2, 45, 60, 20, new StringTextComponent("Next"), button -> {
+            this.AllSpectrobesGrid.nextPage();
+            this.parent.removeButtons(getButtons());
+            this.init();
+            this.changeFocus(true);
+        }));
 
         populateGrid();
 
@@ -96,6 +97,7 @@ public class LineUpPage extends PrizmodPage {
         }
 
         for(SpectrobePiece sp : AllSpectrobesGrid.getAll()) {
+            SpectrobesInfo.LOGGER.debug("CREATING BUTTON FOR ALL SPECTROBES GRID");
             addButton(addSpectrobeButton(sp, false));
         }
     }

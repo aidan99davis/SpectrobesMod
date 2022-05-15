@@ -29,11 +29,7 @@ public class PrizmodScreen extends ContainerScreen<PrizmodContainer> {
     public PlayerEntity player;
     public int pageX = imageWidth / 3;
     public int pageY = (int) (imageHeight * 0.65);
-    public int pageWidth = imageWidth;
-    public int pageHeight = imageHeight;
-
     private PrizmodPage prizmodPage;
-
 
     public PrizmodScreen(PrizmodContainer container, PlayerInventory playerInv, ITextComponent text) {
         super(container, playerInv, text);
@@ -131,6 +127,16 @@ public class PrizmodScreen extends ContainerScreen<PrizmodContainer> {
             b.visible = true;
             b.active = true;
             this.addButton(b);
+        });
+    }
+
+    public void removeButtons(List<Widget> buttonList) {
+        buttonList.forEach(b -> {
+            b.visible = false;
+            b.active = false;
+            this.buttons.remove(b);
+            this.children.remove(b);
+
         });
     }
 }

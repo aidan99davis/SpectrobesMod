@@ -1,13 +1,9 @@
-package com.spectrobes.spectrobesmod.client.prizmod.Components;
+package com.spectrobes.spectrobesmod.client.gui.prizmod.Components;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.text.StringTextComponent;
-
-import com.spectrobes.spectrobesmod.client.prizmod.Components.SpectrobeButton;
-import com.spectrobes.spectrobesmod.client.prizmod.Components.SpectrobePiece;
-import net.minecraft.client.gui.widget.button.Button.IPressable;
 
 public class SpectrobeButton extends Button {
     public SpectrobePiece piece;

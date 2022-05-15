@@ -1,4 +1,4 @@
-package com.spectrobes.spectrobesmod.client.prizmod.Components;
+package com.spectrobes.spectrobesmod.client.gui.prizmod.Components;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
@@ -14,9 +14,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.spectrobes.spectrobesmod.client.prizmod.Components.SpectrobePiece;
-import com.spectrobes.spectrobesmod.client.prizmod.Components.TeamSpectrobesList;
 
 public class TeamSpectrobesList extends Widget {
 
