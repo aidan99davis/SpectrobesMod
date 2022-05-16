@@ -23,7 +23,7 @@ public class SpikoRenderer extends GeoEntityRenderer<EntitySpiko> {
 
     @Nullable
     @Override
-    public ResourceLocation getEntityTexture(EntitySpiko entity)
+    public ResourceLocation getTextureLocation(EntitySpiko entity)
     {
         return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/spiko.png");
     }

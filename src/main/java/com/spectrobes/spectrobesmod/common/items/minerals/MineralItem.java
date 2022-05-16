@@ -11,6 +11,8 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
+import net.minecraft.item.Item.Properties;
+
 public class MineralItem extends Item {
     public MineralProperties mineralProperties = null;
 
@@ -21,7 +23,7 @@ public class MineralItem extends Item {
     }
 
     @Override
-    public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flag) {
         if(mineralProperties.getNature() != SpectrobeProperties.Nature.OTHER) {
             switch(mineralProperties.getNature()) {
                 case CORONA:

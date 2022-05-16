@@ -22,7 +22,7 @@ public class HarumiRenderer extends GeoEntityRenderer<EntityHarumi> {
 
     @Nullable
     @Override
-    public ResourceLocation getEntityTexture(EntityHarumi entity)
+    public ResourceLocation getTextureLocation(EntityHarumi entity)
     {
         switch (entity.getSpectrobeData().Variant) {
             case 0:

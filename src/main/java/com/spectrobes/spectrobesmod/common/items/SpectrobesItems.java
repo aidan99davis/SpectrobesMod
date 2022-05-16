@@ -86,7 +86,7 @@ public class SpectrobesItems {
 
         specialMineralItem = new ChromaMineralItem(
                 new Item.Properties()
-                        .group(SpectrobesMineralItemGroup.Instance),
+                        .tab(SpectrobesMineralItemGroup.Instance),
                 "chroma_mineral_item_zero",
                             0);
 
@@ -94,7 +94,7 @@ public class SpectrobesItems {
 
         specialMineralItem = new ChromaMineralItem(
                 new Item.Properties()
-                        .group(SpectrobesMineralItemGroup.Instance),
+                        .tab(SpectrobesMineralItemGroup.Instance),
                 "chroma_mineral_item_one",
                 1);
 
@@ -102,30 +102,30 @@ public class SpectrobesItems {
 
         specialMineralItem = new ChromaMineralItem(
                 new Item.Properties()
-                        .group(SpectrobesMineralItemGroup.Instance),
+                        .tab(SpectrobesMineralItemGroup.Instance),
                 "chroma_mineral_item_two",
                 2);
 
         event.getRegistry().register(specialMineralItem);
 
         event.getRegistry().register(new BlockItem(SpectrobesBlocks.mineral_block.get(),
-                new Item.Properties().group(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
+                new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
                 .setRegistryName("mineral_block"));
 
         event.getRegistry().register(new BlockItem(SpectrobesBlocks.fossil_block.get(),
-                new Item.Properties().group(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
+                new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
                 .setRegistryName("fossil_block"));
 
         event.getRegistry().register(
                 new PrizmodItem(
                         new Item.Properties()
-                                .group(SpectrobesToolsItemGroup.Instance)));
+                                .tab(SpectrobesToolsItemGroup.Instance)));
     }
 
     static void registerMineral(final RegistryEvent.Register<Item> event, Mineral mineral) {
         Item newItem = new MineralItem(
                 new Item.Properties()
-                        .group(SpectrobesMineralItemGroup.Instance),
+                        .tab(SpectrobesMineralItemGroup.Instance),
                 mineral.name,
                 mineral.properties.copy());
         event.getRegistry().register(newItem);
@@ -142,55 +142,55 @@ public class SpectrobesItems {
 
     public static class SpectrobesBlocksItemGroup extends ItemGroup {
 
-        public static final SpectrobesBlocksItemGroup Instance = new SpectrobesBlocksItemGroup(ItemGroup.GROUPS.length, "spectrobestab.blocks");
+        public static final SpectrobesBlocksItemGroup Instance = new SpectrobesBlocksItemGroup(ItemGroup.TABS.length, "spectrobestab.blocks");
 
         public SpectrobesBlocksItemGroup(int index, String label) {
             super(index, label);
         }
 
         @Override
-        public ItemStack createIcon() {
+        public ItemStack makeIcon() {
             return SpectrobesBlocks.fossil_block.get().asItem().getDefaultInstance();
         }
     }
 
     public static class SpectrobesFossilsItemGroup extends ItemGroup {
 
-        public static final SpectrobesFossilsItemGroup Instance = new SpectrobesFossilsItemGroup(ItemGroup.GROUPS.length, "spectrobestab.fossils");
+        public static final SpectrobesFossilsItemGroup Instance = new SpectrobesFossilsItemGroup(ItemGroup.TABS.length, "spectrobestab.fossils");
 
         public SpectrobesFossilsItemGroup(int index, String label) {
             super(index, label);
         }
 
         @Override
-        public ItemStack createIcon() {
+        public ItemStack makeIcon() {
             return SpectrobesItemsRegistry.komainu_fossil_item.get().getDefaultInstance();
         }
     }
 
     public static class SpectrobesMineralItemGroup extends ItemGroup {
 
-        public static final SpectrobesMineralItemGroup Instance = new SpectrobesMineralItemGroup(ItemGroup.GROUPS.length, "spectrobestab.minerals");
+        public static final SpectrobesMineralItemGroup Instance = new SpectrobesMineralItemGroup(ItemGroup.TABS.length, "spectrobestab.minerals");
 
         public SpectrobesMineralItemGroup(int index, String label) {
             super(index, label);
         }
 
         @Override
-        public ItemStack createIcon() {
+        public ItemStack makeIcon() {
             return SpectrobesItems.mineral_item_power_c.getDefaultInstance();
         }
     }
     public static class SpectrobesToolsItemGroup extends ItemGroup {
 
-        public static final SpectrobesToolsItemGroup Instance = new SpectrobesToolsItemGroup(ItemGroup.GROUPS.length, "spectrobestab.tools");
+        public static final SpectrobesToolsItemGroup Instance = new SpectrobesToolsItemGroup(ItemGroup.TABS.length, "spectrobestab.tools");
 
         public SpectrobesToolsItemGroup(int index, String label) {
             super(index, label);
         }
 
         @Override
-        public ItemStack createIcon() {
+        public ItemStack makeIcon() {
             return SpectrobesItems.prizmod_item.getDefaultInstance();
         }
     }

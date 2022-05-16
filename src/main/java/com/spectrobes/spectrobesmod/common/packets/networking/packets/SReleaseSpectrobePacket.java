@@ -28,12 +28,12 @@ public class SReleaseSpectrobePacket {
 
     public void toBytes(PacketBuffer buf) {
         if(spectrobe != null) {
-            buf.writeCompoundTag(spectrobe.write());
+            buf.writeNbt(spectrobe.write());
         }
     }
 
     public static SReleaseSpectrobePacket fromBytes(PacketBuffer buf) {
-        Spectrobe spectrobe = Spectrobe.read(buf.readCompoundTag());
+        Spectrobe spectrobe = Spectrobe.read(buf.readNbt());
 
         return new SReleaseSpectrobePacket(spectrobe);
     }
@@ -49,11 +49,11 @@ public class SReleaseSpectrobePacket {
             EntitySpectrobe spectrobe1 = null;
             try {
                 spectrobe1 = SpectrobesEntities.getByName(spectrobe.name).spawn(
-                        (ServerWorld) player.world,
+                        (ServerWorld) player.level,
                         spectrobe.write(),
                         new StringTextComponent(spectrobe.name),
                         player,
-                        player.getPosition(),
+                        player.blockPosition(),
                         SpawnReason.MOB_SUMMONED,
                         true,true);
                 spectrobe1.setSpectrobeData(spectrobe);

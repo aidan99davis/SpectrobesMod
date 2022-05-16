@@ -25,7 +25,7 @@ public class NaguRenderer extends GeoEntityRenderer<EntityNagu> {
 
     @Nullable
     @Override
-    public ResourceLocation getEntityTexture(EntityNagu entity)
+    public ResourceLocation getTextureLocation(EntityNagu entity)
     {
         switch (entity.getSpectrobeData().Variant) {
             case 0:

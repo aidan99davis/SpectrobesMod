@@ -24,7 +24,7 @@ public class GrildaRenderer extends GeoEntityRenderer<EntityGrilda> {
 
     @Nullable
     @Override
-    public ResourceLocation getEntityTexture(EntityGrilda entity)
+    public ResourceLocation getTextureLocation(EntityGrilda entity)
     {
         switch (entity.getSpectrobeData().Variant) {
             case 0:

@@ -63,7 +63,7 @@ public class EntityZoza extends EntityMammalSpectrobe {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.zoza.walk", true));
             return PlayState.CONTINUE;
         }
-        else if(event.getAnimatable().isSitting()) {
+        else if(event.getAnimatable().isOrderedToSit()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.zoza.idle", true));
             return PlayState.CONTINUE;
         }

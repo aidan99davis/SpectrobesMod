@@ -1,8 +1,7 @@
-package com.spectrobes.spectrobesmod.client.prizmod.Components;
+package com.spectrobes.spectrobesmod.client.gui.prizmod.Components;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.spectrobes.spectrobesmod.client.gui.prizmod.components.SpectrobePiece;
-import com.spectrobes.spectrobesmod.client.prizmod.PrizmodScreen;
+import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.text.StringTextComponent;
 
@@ -20,14 +19,16 @@ public class SpectrobeButton extends Button {
     @Override
     public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         super.render(stack, mouseX, mouseY, partialTicks);
-        this.renderButton(stack, mouseX, mouseY, partialTicks);
+//        this.renderButton(stack, mouseX, mouseY, partialTicks);
     }
 
     @Override
     public void renderButton(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
-        piece.draw();
         if(selected) {
+            piece.drawAdditionalAtCursor(mouseX, mouseY);
             renderInfo();
+        } else {
+            piece.draw();
         }
     }
 

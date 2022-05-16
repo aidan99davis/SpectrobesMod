@@ -24,7 +24,7 @@ public class SubarRenderer extends GeoEntityRenderer<EntitySubar> {
 
     @Nullable
     @Override
-    public ResourceLocation getEntityTexture(EntitySubar entity)
+    public ResourceLocation getTextureLocation(EntitySubar entity)
     {
         return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/krawl/subar.png");
     }

@@ -16,10 +16,12 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class SamukabuFossilBlock extends DirectionalBlock {
-    private static Properties props = Properties.create(Material.WOOD).notSolid()
+    private static Properties props = Properties.of(Material.WOOD).noOcclusion()
             .harvestTool(ToolType.PICKAXE)
-            .hardnessAndResistance(0f)
+            .strength(0f)
             .sound(SoundType.STONE)
             .harvestLevel(0);
 
@@ -50,12 +52,12 @@ public class SamukabuFossilBlock extends DirectionalBlock {
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state)
+    public BlockRenderType getRenderShape(BlockState state)
     {
         return BlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder)
     {
         builder.add(FACING);
     }
@@ -64,6 +66,6 @@ public class SamukabuFossilBlock extends DirectionalBlock {
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context)
     {
-        return this.getDefaultState().with(FACING, context.getNearestLookingDirection().getOpposite());
+        return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
     }
 }

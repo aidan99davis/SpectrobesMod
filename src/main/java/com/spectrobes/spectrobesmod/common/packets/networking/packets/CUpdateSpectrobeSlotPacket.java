@@ -24,13 +24,13 @@ public class CUpdateSpectrobeSlotPacket {
     }
 
     public void toBytes(PacketBuffer buf) {
-        buf.writeUniqueId(spectrobeUUID);
+        buf.writeUUID(spectrobeUUID);
         buf.writeInt(slot);
     }
 
     public static CUpdateSpectrobeSlotPacket fromBytes(PacketBuffer buf) {
         int slot = buf.readInt();
-        UUID spectrobeUUID = buf.readUniqueId();
+        UUID spectrobeUUID = buf.readUUID();
 
         return new CUpdateSpectrobeSlotPacket(slot, spectrobeUUID);
     }

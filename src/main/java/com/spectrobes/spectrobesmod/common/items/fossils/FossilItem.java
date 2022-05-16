@@ -18,6 +18,8 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 
+import net.minecraft.item.Item.Properties;
+
 public abstract class FossilItem extends Item {
 
     public FossilItem(Properties properties, String registryName) {
@@ -26,10 +28,10 @@ public abstract class FossilItem extends Item {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        ItemStack itemStack = playerIn.getHeldItem(handIn);
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        ItemStack itemStack = playerIn.getItemInHand(handIn);
         itemStack.shrink(1);
-        if(!worldIn.isRemote) {
+        if(!worldIn.isClientSide) {
             Spectrobe spectrobe = getSpectrobeInstance();
             playerIn.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(playerCap -> {
                 playerCap.addSpectrobe(spectrobe);
@@ -37,7 +39,7 @@ public abstract class FossilItem extends Item {
                         (ServerPlayerEntity) playerIn);
             });
         } else {
-            Minecraft.getInstance().player.sendMessage(new StringTextComponent("A new spectrobe has been sent to your prizmod."), Minecraft.getInstance().player.getUniqueID());
+            Minecraft.getInstance().player.sendMessage(new StringTextComponent("A new spectrobe has been sent to your prizmod."), Minecraft.getInstance().player.getUUID());
         }
         return new ActionResult<>(ActionResultType.SUCCESS, itemStack);
     }

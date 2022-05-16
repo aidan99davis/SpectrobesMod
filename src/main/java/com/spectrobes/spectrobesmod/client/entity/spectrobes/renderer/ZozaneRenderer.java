@@ -22,7 +22,7 @@ public class ZozaneRenderer extends GeoEntityRenderer<EntityZozane> {
 
     @Nullable
     @Override
-    public ResourceLocation getEntityTexture(EntityZozane entity)
+    public ResourceLocation getTextureLocation(EntityZozane entity)
     {
         switch (entity.getSpectrobeData().Variant) {
             case 0:

@@ -22,7 +22,7 @@ public class KomanotoRenderer extends GeoEntityRenderer<EntityKomanoto> {
 
     @Nullable
     @Override
-    public ResourceLocation getEntityTexture(EntityKomanoto entity)
+    public ResourceLocation getTextureLocation(EntityKomanoto entity)
     {
         switch (entity.getSpectrobeData().Variant) {
             case 0:

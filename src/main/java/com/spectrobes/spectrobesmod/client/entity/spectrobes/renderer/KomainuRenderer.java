@@ -28,7 +28,7 @@ public class KomainuRenderer extends GeoEntityRenderer<EntityKomainu> {
 
     @Nullable
     @Override
-    public ResourceLocation getEntityTexture(EntityKomainu entity)
+    public ResourceLocation getTextureLocation(EntityKomainu entity)
     {
         switch (entity.getSpectrobeData().Variant) {
             case 0:

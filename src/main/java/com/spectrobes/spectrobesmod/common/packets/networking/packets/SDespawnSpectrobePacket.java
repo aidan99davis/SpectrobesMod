@@ -38,16 +38,16 @@ public class SDespawnSpectrobePacket {
 
     public boolean handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            World world = ctx.get().getSender().world;
+            World world = ctx.get().getSender().level;
 
             MutableBoundingBox boundingBox = MutableBoundingBox.createProper(playerPos.getX(), playerPos.getY(), playerPos.getZ(), playerPos.getX(), playerPos.getY(), playerPos.getZ());
-            AxisAlignedBB axisAlignedBB = AxisAlignedBB.toImmutable(boundingBox);
+            AxisAlignedBB axisAlignedBB = AxisAlignedBB.of(boundingBox);
 
             List<EntitySpectrobe> spectrobes = world
-                    .getEntitiesWithinAABB(EntitySpectrobe.class, axisAlignedBB.grow(30, 30, 30));
+                    .getEntitiesOfClass(EntitySpectrobe.class, axisAlignedBB.inflate(30, 30, 30));
             for(EntitySpectrobe spectrobe : spectrobes) {
-                if(spectrobe.getOwner() != null && spectrobe.getOwnerId()
-                        .equals(ctx.get().getSender().getUniqueID())) {
+                if(spectrobe.getOwner() != null && spectrobe.getOwnerUUID()
+                        .equals(ctx.get().getSender().getUUID())) {
                     spectrobe.despawn();
                 }
             }

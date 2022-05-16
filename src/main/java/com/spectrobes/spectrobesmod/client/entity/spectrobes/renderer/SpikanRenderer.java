@@ -21,7 +21,7 @@ public class SpikanRenderer extends GeoEntityRenderer<EntitySpikan> {
 
     @Nullable
     @Override
-    public ResourceLocation getEntityTexture(EntitySpikan entity)
+    public ResourceLocation getTextureLocation(EntitySpikan entity)
     {
         return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/spikan.png");
     }

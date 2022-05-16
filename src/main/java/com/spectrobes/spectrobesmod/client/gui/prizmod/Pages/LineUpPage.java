@@ -1,12 +1,9 @@
-package com.spectrobes.spectrobesmod.client.prizmod.Pages;
+package com.spectrobes.spectrobesmod.client.gui.prizmod.Pages;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.spectrobes.spectrobesmod.client.prizmod.Components.AllSpectrobesList;
-import com.spectrobes.spectrobesmod.client.gui.prizmod.components.SpectrobePiece;
-import com.spectrobes.spectrobesmod.client.prizmod.Components.MenuButton;
-import com.spectrobes.spectrobesmod.client.prizmod.Components.SpectrobeButton;
-import com.spectrobes.spectrobesmod.client.prizmod.Components.TeamSpectrobesList;
-import com.spectrobes.spectrobesmod.client.prizmod.PrizmodScreen;
+import com.spectrobes.spectrobesmod.SpectrobesInfo;
+import com.spectrobes.spectrobesmod.client.gui.prizmod.Components.*;
+import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSpawnSpectrobePacket;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
@@ -52,21 +49,23 @@ public class LineUpPage extends PrizmodPage {
     @Override
     public void init() {
         buttons.clear();
-        this.addButton(new MenuButton(parent.width / 2 - 30, 25, 60, 20, "Menu", button -> {
-            parent.setMenuPage(new MenuPage(parent));
+//        this.addButton(new MenuButton(parent.width / 2 - 30, 25, 60, 20, "Menu", button -> {
+//            parent.setMenuPage(new MenuPage(parent));
+//        }));
+
+        this.addButton(new Button(parent.width / 2 - 60, 45, 60, 20, new StringTextComponent("Prev"), button -> {
+            this.AllSpectrobesGrid.previousPage();
+            this.parent.removeButtons(getButtons());
+            this.init();
+            this.changeFocus(true);
         }));
 
-//        this.addButton(new Button(parent.width / 2 - 60, 45, 60, 20, new StringTextComponent("Prev"), button -> {
-//            this.AllSpectrobesGrid.previousPage();
-//            this.init();
-//            this.parent.changeFocus(true);
-//        }));
-//
-//        this.addButton(new Button(parent.width / 2, 45, 60, 20, new StringTextComponent("Next"), button -> {
-//            this.AllSpectrobesGrid.nextPage();
-//            this.init();
-//            this.parent.changeFocus(true);
-//        }));
+        this.addButton(new Button(parent.width / 2, 45, 60, 20, new StringTextComponent("Next"), button -> {
+            this.AllSpectrobesGrid.nextPage();
+            this.parent.removeButtons(getButtons());
+            this.init();
+            this.changeFocus(true);
+        }));
 
         populateGrid();
 
@@ -76,12 +75,12 @@ public class LineUpPage extends PrizmodPage {
     private void populateGrid() {
         this.TeamSpectrobesGrid.clear();
         this.AllSpectrobesGrid.clear();
-        Map<Integer, UUID> teamUuids =  parent.getContainer().getCurrentTeamUUIDs();
-        for(Spectrobe s : parent.getContainer().getOwnedSpectrobes()) {
+        Map<Integer, UUID> teamUuids =  parent.getMenu().getCurrentTeamUUIDs();
+        for(Spectrobe s : parent.getMenu().getOwnedSpectrobes()) {
             boolean dontAdd = false;
             for (int i = 0; i < 7; i++) {
                 if(teamUuids.get(i) != null && teamUuids.get(i).equals(s.SpectrobeUUID)) {
-                    if(teamUuids.get(i).equals(parent.getContainer().getCurrentSelectedUUID())) {
+                    if(teamUuids.get(i).equals(parent.getMenu().getCurrentSelectedUUID())) {
                         TeamSpectrobesGrid.setSlotCurrent(i);
                     }
                     TeamSpectrobesGrid.populateSlot(i, s);
@@ -98,6 +97,7 @@ public class LineUpPage extends PrizmodPage {
         }
 
         for(SpectrobePiece sp : AllSpectrobesGrid.getAll()) {
+            SpectrobesInfo.LOGGER.debug("CREATING BUTTON FOR ALL SPECTROBES GRID");
             addButton(addSpectrobeButton(sp, false));
         }
     }
@@ -107,17 +107,17 @@ public class LineUpPage extends PrizmodPage {
                 onClick -> {
                     if(Screen.hasShiftDown() && teamSpectrobe) {
                         if(sp.spectrobe != null && sp.spectrobe.active == false) {
-                            if(parent.player.world.isRemote()) {
+                            if(parent.player.level.isClientSide()) {
                                 Spectrobe spectrobe = sp.spectrobe;
                                 SpectrobesNetwork.sendToServer(new SSpawnSpectrobePacket(spectrobe));
-                                parent.getContainer().spawnSpectrobe(spectrobe);
+                                parent.getMenu().spawnSpectrobe(spectrobe);
                             }
                         }
                     } else if (Screen.hasAltDown()) {
                         if(sp.spectrobe != null) {
-                            if(parent.player.world.isRemote()) {
+                            if(parent.player.level.isClientSide()) {
                                 Spectrobe spectrobe = sp.spectrobe;
-                                parent.getContainer().releaseSpectrobe(spectrobe);
+                                parent.getMenu().releaseSpectrobe(spectrobe);
                                 populateGrid();
                             }
                         }

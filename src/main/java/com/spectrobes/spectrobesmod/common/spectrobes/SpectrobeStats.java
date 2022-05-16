@@ -63,7 +63,7 @@ public class SpectrobeStats {
             hpLevel += properties.getHpOffset();
             mineralsEaten++;
         } else {
-            Minecraft.getInstance().player.sendChatMessage("Your spectrobe cannot eat this mineral");
+            Minecraft.getInstance().player.chat("Your spectrobe cannot eat this mineral");
         }
 
     }

@@ -23,7 +23,7 @@ public class KubakuRenderer extends GeoEntityRenderer<EntityKubaku> {
 
     @Nullable
     @Override
-    public ResourceLocation getEntityTexture(EntityKubaku entity)
+    public ResourceLocation getTextureLocation(EntityKubaku entity)
     {
         return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/kubaku.png");
     }

@@ -39,7 +39,7 @@ public class PlayerEvents {
     @SubscribeEvent
     public void onPlayerCloned(PlayerEvent.Clone event) {
         if (event.isWasDeath()) {
-            if(!event.getPlayer().world.isRemote()) {
+            if(!event.getPlayer().level.isClientSide()) {
                 event.getOriginal().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(oldStore -> {
                     event.getPlayer().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(newStore -> {
                         newStore.copyFrom(oldStore);
@@ -51,18 +51,18 @@ public class PlayerEvents {
     }
 
     private void despawnSpectrobes(PlayerEvent.Clone event, PlayerSpectrobeMaster newStore) {
-        World world = event.getOriginal().world;
-        BlockPos playerPos = event.getOriginal().getPosition().toImmutable();
+        World world = event.getOriginal().level;
+        BlockPos playerPos = event.getOriginal().blockPosition().immutable();
 
         MutableBoundingBox boundingBox = MutableBoundingBox.createProper(playerPos.getX(), playerPos.getY(), playerPos.getZ(), playerPos.getX(), playerPos.getY(), playerPos.getZ());
-        AxisAlignedBB axisAlignedBB = AxisAlignedBB.toImmutable(boundingBox);
+        AxisAlignedBB axisAlignedBB = AxisAlignedBB.of(boundingBox);
 
         List<EntitySpectrobe> spectrobes = world
-                .getEntitiesWithinAABB(EntitySpectrobe.class, axisAlignedBB.grow(30, 30, 30));
+                .getEntitiesOfClass(EntitySpectrobe.class, axisAlignedBB.inflate(30, 30, 30));
         for(EntitySpectrobe spectrobe : spectrobes) {
-            boolean hasOwner = spectrobe.getOwnerId() != null;
-            UUID ownerUUID = spectrobe.getOwnerId();
-            UUID playerUUID = event.getOriginal().getUniqueID();
+            boolean hasOwner = spectrobe.getOwnerUUID() != null;
+            UUID ownerUUID = spectrobe.getOwnerUUID();
+            UUID playerUUID = event.getOriginal().getUUID();
 
             boolean shouldDespawn = hasOwner
                     && ownerUUID

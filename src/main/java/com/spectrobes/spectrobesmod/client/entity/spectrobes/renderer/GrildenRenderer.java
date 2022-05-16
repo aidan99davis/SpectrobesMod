@@ -22,7 +22,7 @@ public class GrildenRenderer extends GeoEntityRenderer<EntityGrilden> {
 
     @Nullable
     @Override
-    public ResourceLocation getEntityTexture(EntityGrilden entity)
+    public ResourceLocation getTextureLocation(EntityGrilden entity)
     {
         switch (entity.getSpectrobeData().Variant) {
             case 0:

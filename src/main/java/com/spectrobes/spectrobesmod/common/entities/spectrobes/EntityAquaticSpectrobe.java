@@ -21,32 +21,35 @@ import java.util.List;
 import java.util.Random;
 
 
+import net.minecraft.entity.ai.controller.MovementController.Action;
+import net.minecraft.entity.ai.goal.Goal.Flag;
+
 public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
-    private static final EntityPredicate field_213810_bA = (new EntityPredicate()).setDistance(10.0D).allowFriendlyFire().allowInvulnerable().setLineOfSiteRequired();
+    private static final EntityPredicate SWIM_WITH_PLAYER_TARGETING = (new EntityPredicate()).range(10.0D).allowSameTeam().allowInvulnerable().allowUnseeable();
     public EntityAquaticSpectrobe(EntityType<? extends EntitySpectrobe> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
-        this.setPathPriority(PathNodeType.WATER, 1.0F);
-        this.setPathPriority(PathNodeType.WALKABLE, 1.0F);
-        this.moveController = new MoveHelperController(this);
-        this.lookController = new SpectrobeLookController(this, 10);
+        this.setPathfindingMalus(PathNodeType.WATER, 1.0F);
+        this.setPathfindingMalus(PathNodeType.WALKABLE, 1.0F);
+        this.moveControl = new MoveHelperController(this);
+        this.lookControl = new SpectrobeLookController(this, 10);
     }
 
     @Override
-    public boolean isPushedByWater() {
+    public boolean isPushedByFluid() {
         return false;
     }
 
     @Override
-    public CreatureAttribute getCreatureAttribute() {
+    public CreatureAttribute getMobType() {
         return CreatureAttribute.WATER;
     }
 
     @Override
-    public void livingTick() {
-        super.livingTick();
+    public void aiStep() {
+        super.aiStep();
     }
 
-    protected PathNavigator createNavigator(World world) {
+    protected PathNavigator createNavigation(World world) {
         return new EntityAquaticSpectrobe.Navigator(this, world);
     }
 
@@ -69,9 +72,9 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
     @Override
     public void mate() {
         List<? extends EntityAquaticSpectrobe> mates
-                    = world.getEntitiesWithinAABB(getSpectrobeClass(),
+                    = level.getEntitiesOfClass(getSpectrobeClass(),
                         this.getBoundingBox()
-                        .grow(10, 10, 10));
+                        .inflate(10, 10, 10));
         if(mates.isEmpty()) {
             this.setTicksTillMate(16000);
             return;
@@ -92,7 +95,7 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
             return;
         }
 
-        this.dataManager.set(HAS_MATED, true);
+        this.entityData.set(HAS_MATED, true);
 
         mate.setTicksTillMate(16000);
         Random random = new Random();
@@ -100,9 +103,9 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
 
         for(int i = 0; i < litterSize; i++) {
             EntitySpectrobe spectrobe = getChildForLineage()
-                    .create(world);
-            this.world.addEntity(spectrobe);
-            spectrobe.setPositionAndUpdate(getPosX(), getPosY(), getPosZ());
+                    .create(level);
+            this.level.addFreshEntity(spectrobe);
+            spectrobe.teleportTo(getX(), getY(), getZ());
         }
         //todo: aquatic breeding. eggs? livebirth? - livebirth for now, with a litter size.
     }
@@ -117,38 +120,38 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
         SwimWithPlayerGoal(EntityAquaticSpectrobe spectrobeIn, double speedIn) {
             this.spectrobe = spectrobeIn;
             this.speed = speedIn;
-            this.setMutexFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
+            this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
         }
 
-        public boolean shouldExecute() {
-            this.targetPlayer = this.spectrobe.world.getClosestPlayer(EntityAquaticSpectrobe.field_213810_bA, this.spectrobe);
+        public boolean canUse() {
+            this.targetPlayer = this.spectrobe.level.getNearestPlayer(EntityAquaticSpectrobe.SWIM_WITH_PLAYER_TARGETING, this.spectrobe);
             return this.targetPlayer == null ? false : this.targetPlayer.isSwimming();
         }
 
-        public boolean shouldContinueExecuting() {
-            return this.targetPlayer != null && this.targetPlayer.isSwimming() && this.spectrobe.getDistanceSq(this.targetPlayer) < 256.0D;
+        public boolean canContinueToUse() {
+            return this.targetPlayer != null && this.targetPlayer.isSwimming() && this.spectrobe.distanceToSqr(this.targetPlayer) < 256.0D;
         }
 
-        public void startExecuting() {
-            this.targetPlayer.addPotionEffect(new EffectInstance(Effects.DOLPHINS_GRACE, 100));
+        public void start() {
+            this.targetPlayer.addEffect(new EffectInstance(Effects.DOLPHINS_GRACE, 100));
         }
 
-        public void resetTask() {
+        public void stop() {
             this.targetPlayer = null;
-            this.spectrobe.getNavigator().clearPath();
+            this.spectrobe.getNavigation().stop();
         }
 
 
         public void tick() {
-            this.spectrobe.getLookController().setLookPositionWithEntity(this.targetPlayer, (float)(this.spectrobe.getHorizontalFaceSpeed() + 20), (float)this.spectrobe.getVerticalFaceSpeed());
-            if (this.spectrobe.getDistanceSq(this.targetPlayer) < 6.25D) {
-                this.spectrobe.getNavigator().clearPath();
+            this.spectrobe.getLookControl().setLookAt(this.targetPlayer, (float)(this.spectrobe.getMaxHeadYRot() + 20), (float)this.spectrobe.getMaxHeadXRot());
+            if (this.spectrobe.distanceToSqr(this.targetPlayer) < 6.25D) {
+                this.spectrobe.getNavigation().stop();
             } else {
-                this.spectrobe.getNavigator().tryMoveToEntityLiving(this.targetPlayer, this.speed);
+                this.spectrobe.getNavigation().moveTo(this.targetPlayer, this.speed);
             }
 
-            if (this.targetPlayer.isSwimming() && this.targetPlayer.world.rand.nextInt(6) == 0) {
-                this.targetPlayer.addPotionEffect(new EffectInstance(Effects.DOLPHINS_GRACE, 100));
+            if (this.targetPlayer.isSwimming() && this.targetPlayer.level.random.nextInt(6) == 0) {
+                this.targetPlayer.addEffect(new EffectInstance(Effects.DOLPHINS_GRACE, 100));
             }
 
         }
@@ -163,40 +166,40 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
 
         public void tick() {
             if (this.dolphin.isInWater()) {
-                this.dolphin.setMotion(this.dolphin.getMotion().add(0.0D, 0.005D, 0.0D));
+                this.dolphin.setDeltaMovement(this.dolphin.getDeltaMovement().add(0.0D, 0.005D, 0.0D));
             }
 
-            if (this.action == Action.MOVE_TO && !this.dolphin.getNavigator().noPath()) {
-                double d0 = this.posX - this.dolphin.getPosX();
-                double d1 = this.posY - this.dolphin.getPosY();
-                double d2 = this.posZ - this.dolphin.getPosZ();
+            if (this.operation == Action.MOVE_TO && !this.dolphin.getNavigation().isDone()) {
+                double d0 = this.wantedX - this.dolphin.getX();
+                double d1 = this.wantedY - this.dolphin.getY();
+                double d2 = this.wantedZ - this.dolphin.getZ();
                 double d3 = d0 * d0 + d1 * d1 + d2 * d2;
                 if (d3 < 2.500000277905201E-7D) {
-                    this.mob.setMoveForward(0.0F);
+                    this.mob.setZza(0.0F);
                 } else {
                     float f = (float)(MathHelper.atan2(d2, d0) * 57.2957763671875D) - 90.0F;
-                    this.dolphin.rotationYaw = this.limitAngle(this.dolphin.rotationYaw, f, 10.0F);
-                    this.dolphin.renderYawOffset = this.dolphin.rotationYaw;
-                    this.dolphin.rotationYawHead = this.dolphin.rotationYaw;
-                    float f1 = (float)(this.speed * this.dolphin.getAttributeValue(Attributes.MOVEMENT_SPEED));
+                    this.dolphin.yRot = this.rotlerp(this.dolphin.yRot, f, 10.0F);
+                    this.dolphin.yBodyRot = this.dolphin.yRot;
+                    this.dolphin.yHeadRot = this.dolphin.yRot;
+                    float f1 = (float)(this.speedModifier * this.dolphin.getAttributeValue(Attributes.MOVEMENT_SPEED));
                     if (this.dolphin.isInWater()) {
-                        this.dolphin.setAIMoveSpeed(f1 * 0.02F);
+                        this.dolphin.setSpeed(f1 * 0.02F);
                         float f2 = -((float)(MathHelper.atan2(d1, (double)MathHelper.sqrt(d0 * d0 + d2 * d2)) * 57.2957763671875D));
                         f2 = MathHelper.clamp(MathHelper.wrapDegrees(f2), -85.0F, 85.0F);
-                        this.dolphin.rotationPitch = this.limitAngle(this.dolphin.rotationPitch, f2, 5.0F);
-                        float f3 = MathHelper.cos(this.dolphin.rotationPitch * 0.017453292F);
-                        float f4 = MathHelper.sin(this.dolphin.rotationPitch * 0.017453292F);
-                        this.dolphin.moveForward = f3 * f1;
-                        this.dolphin.moveVertical = -f4 * f1;
+                        this.dolphin.xRot = this.rotlerp(this.dolphin.xRot, f2, 5.0F);
+                        float f3 = MathHelper.cos(this.dolphin.xRot * 0.017453292F);
+                        float f4 = MathHelper.sin(this.dolphin.xRot * 0.017453292F);
+                        this.dolphin.zza = f3 * f1;
+                        this.dolphin.yya = -f4 * f1;
                     } else {
-                        this.dolphin.setAIMoveSpeed(f1 * 0.1F);
+                        this.dolphin.setSpeed(f1 * 0.1F);
                     }
                 }
             } else {
-                this.dolphin.setAIMoveSpeed(0.0F);
-                this.dolphin.setMoveStrafing(0.0F);
-                this.dolphin.setMoveVertical(0.0F);
-                this.dolphin.setMoveForward(0.0F);
+                this.dolphin.setSpeed(0.0F);
+                this.dolphin.setXxa(0.0F);
+                this.dolphin.setYya(0.0F);
+                this.dolphin.setZza(0.0F);
             }
 
         }
@@ -207,23 +210,23 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
             super(p_i48815_1_, p_i48815_2_);
         }
 
-        protected boolean canNavigate() {
+        protected boolean canUpdatePath() {
             return true;
         }
 
-        protected PathFinder getPathFinder(int p_179679_1_) {
-            this.nodeProcessor = new WalkAndSwimNodeProcessor();
-            return new PathFinder(this.nodeProcessor, p_179679_1_);
+        protected PathFinder createPathFinder(int p_179679_1_) {
+            this.nodeEvaluator = new WalkAndSwimNodeProcessor();
+            return new PathFinder(this.nodeEvaluator, p_179679_1_);
         }
 
-        public boolean canEntityStandOnPos(BlockPos p_188555_1_) {
-            if (this.entity instanceof EntityAquaticSpectrobe) {
+        public boolean isStableDestination(BlockPos p_188555_1_) {
+            if (this.mob instanceof EntityAquaticSpectrobe) {
 
-                return this.world.getBlockState(p_188555_1_).getBlock() == Blocks.WATER
-                        || !this.world.getBlockState(p_188555_1_.down()).isAir();
+                return this.level.getBlockState(p_188555_1_).getBlock() == Blocks.WATER
+                        || !this.level.getBlockState(p_188555_1_.below()).isAir();
             }
 
-            return !this.world.getBlockState(p_188555_1_.down()).isAir();
+            return !this.level.getBlockState(p_188555_1_.below()).isAir();
         }
     }
 
@@ -237,67 +240,67 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
 
         public void tick() {
             if (this.dolphin.isInWater()) {
-                this.dolphin.setMotion(this.dolphin.getMotion().add(0.0D, 0.005D, 0.0D));
+                this.dolphin.setDeltaMovement(this.dolphin.getDeltaMovement().add(0.0D, 0.005D, 0.0D));
             }
 
 //            if (this.action == Action.MOVE_TO && !this.dolphin.getNavigator().noPath()) {
-                double d0 = this.posX - this.dolphin.getPosX();
-                double d1 = this.posY - this.dolphin.getPosY();
-                double d2 = this.posZ - this.dolphin.getPosZ();
+                double d0 = this.wantedX - this.dolphin.getX();
+                double d1 = this.wantedY - this.dolphin.getY();
+                double d2 = this.wantedZ - this.dolphin.getZ();
                 double d3 = d0 * d0 + d1 * d1 + d2 * d2;
                 if (d3 < 2.500000277905201E-7D) {
-                    this.mob.setMoveForward(0.0F);
+                    this.mob.setZza(0.0F);
                 } else {
                     float f = (float)(MathHelper.atan2(d2, d0) * 57.2957763671875D) - 90.0F;
-                    this.dolphin.rotationYaw = this.limitAngle(this.dolphin.rotationYaw, f, 10.0F);
-                    this.dolphin.renderYawOffset = this.dolphin.rotationYaw;
-                    this.dolphin.rotationYawHead = this.dolphin.rotationYaw;
-                    float f1 = (float)(this.speed * this.dolphin.getAttribute(Attributes.MOVEMENT_SPEED).getValue());
+                    this.dolphin.yRot = this.rotlerp(this.dolphin.yRot, f, 10.0F);
+                    this.dolphin.yBodyRot = this.dolphin.yRot;
+                    this.dolphin.yHeadRot = this.dolphin.yRot;
+                    float f1 = (float)(this.speedModifier * this.dolphin.getAttribute(Attributes.MOVEMENT_SPEED).getValue());
                     if (this.dolphin.isInWater()) {
-                        this.dolphin.setAIMoveSpeed(f1 * 0.5F);
+                        this.dolphin.setSpeed(f1 * 0.5F);
                         float f2 = -((float)(MathHelper.atan2(d1, (double)MathHelper.sqrt(d0 * d0 + d2 * d2)) * 57.2957763671875D));
                         f2 = MathHelper.clamp(MathHelper.wrapDegrees(f2), -85.0F, 85.0F);
-                        this.dolphin.rotationPitch = this.limitAngle(this.dolphin.rotationPitch, f2, 5.0F);
-                        float f3 = MathHelper.cos(this.dolphin.rotationPitch * 0.017453292F);
-                        float f4 = MathHelper.sin(this.dolphin.rotationPitch * 0.017453292F);
-                        this.dolphin.moveForward = f3 * f1;
-                        this.dolphin.moveVertical = -f4 * f1;
+                        this.dolphin.xRot = this.rotlerp(this.dolphin.xRot, f2, 5.0F);
+                        float f3 = MathHelper.cos(this.dolphin.xRot * 0.017453292F);
+                        float f4 = MathHelper.sin(this.dolphin.xRot * 0.017453292F);
+                        this.dolphin.zza = f3 * f1;
+                        this.dolphin.yya = -f4 * f1;
                     } else {
-                        this.dolphin.setAIMoveSpeed(f1);
+                        this.dolphin.setSpeed(f1);
                     }
                 }
         }
     }
 
     public class SpectrobeLookController extends LookController {
-        private final int field_205139_h;
+        private final int maxYRotFromCenter;
 
         public SpectrobeLookController(MobEntity p_i48942_1_, int p_i48942_2_) {
             super(p_i48942_1_);
-            this.field_205139_h = p_i48942_2_;
+            this.maxYRotFromCenter = p_i48942_2_;
         }
 
         /**
          * Updates look
          */
         public void tick() {
-            if (this.isLooking) {
-                this.isLooking = false;
-                this.mob.rotationYawHead = this.clampedRotate(this.mob.rotationYawHead, this.getTargetYaw() + 20.0F, this.deltaLookYaw);
-                this.mob.rotationPitch = this.clampedRotate(this.mob.rotationPitch, this.getTargetPitch() + 10.0F, this.deltaLookPitch);
+            if (this.hasWanted) {
+                this.hasWanted = false;
+                this.mob.yHeadRot = this.rotateTowards(this.mob.yHeadRot, this.getYRotD() + 20.0F, this.yMaxRotSpeed);
+                this.mob.xRot = this.rotateTowards(this.mob.xRot, this.getXRotD() + 10.0F, this.xMaxRotAngle);
             } else {
-                if (this.mob.getNavigator().noPath()) {
-                    this.mob.rotationPitch = this.clampedRotate(this.mob.rotationPitch, 0.0F, 5.0F);
+                if (this.mob.getNavigation().isDone()) {
+                    this.mob.xRot = this.rotateTowards(this.mob.xRot, 0.0F, 5.0F);
                 }
 
-                this.mob.rotationYawHead = this.clampedRotate(this.mob.rotationYawHead, this.mob.renderYawOffset, this.deltaLookYaw);
+                this.mob.yHeadRot = this.rotateTowards(this.mob.yHeadRot, this.mob.yBodyRot, this.yMaxRotSpeed);
             }
 
-            float f = MathHelper.wrapDegrees(this.mob.rotationYawHead - this.mob.renderYawOffset);
-            if (f < (float)(-this.field_205139_h)) {
-                this.mob.renderYawOffset -= 4.0F;
-            } else if (f > (float)this.field_205139_h) {
-                this.mob.renderYawOffset += 4.0F;
+            float f = MathHelper.wrapDegrees(this.mob.yHeadRot - this.mob.yBodyRot);
+            if (f < (float)(-this.maxYRotFromCenter)) {
+                this.mob.yBodyRot -= 4.0F;
+            } else if (f > (float)this.maxYRotFromCenter) {
+                this.mob.yBodyRot += 4.0F;
             }
 
         }

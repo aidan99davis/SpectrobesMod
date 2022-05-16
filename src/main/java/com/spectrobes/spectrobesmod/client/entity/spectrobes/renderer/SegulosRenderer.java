@@ -25,7 +25,7 @@ public class SegulosRenderer extends GeoEntityRenderer<EntitySegulos> {
 
     @Nullable
     @Override
-    public ResourceLocation getEntityTexture(EntitySegulos entity)
+    public ResourceLocation getTextureLocation(EntitySegulos entity)
     {
         switch (entity.getSpectrobeData().Variant) {
             case 0:

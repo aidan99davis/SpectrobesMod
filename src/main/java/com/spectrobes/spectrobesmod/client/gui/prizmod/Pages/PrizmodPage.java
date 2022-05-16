@@ -1,13 +1,9 @@
-package com.spectrobes.spectrobesmod.client.prizmod.Pages;
+package com.spectrobes.spectrobesmod.client.gui.prizmod.Pages;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.client.prizmod.PrizmodScreen;
+import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
-import net.minecraft.client.gui.FocusableGui;
-import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.text.StringTextComponent;
 
 import java.util.ArrayList;

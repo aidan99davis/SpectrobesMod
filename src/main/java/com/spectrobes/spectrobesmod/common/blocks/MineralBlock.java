@@ -13,10 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import net.minecraft.block.AbstractBlock;
+
 public class MineralBlock extends SpectrobesBlock {
-    private static Block.Properties props = Block.Properties.create(Material.ROCK)
+    private static AbstractBlock.Properties props = AbstractBlock.Properties.of(Material.STONE)
             .harvestTool(ToolType.PICKAXE)
-            .hardnessAndResistance(1.5f)
+            .strength(1.5f)
             .sound(SoundType.STONE)
             .harvestLevel(2);
 

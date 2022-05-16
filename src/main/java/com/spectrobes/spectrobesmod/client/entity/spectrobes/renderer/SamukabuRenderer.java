@@ -21,7 +21,7 @@ public class SamukabuRenderer extends GeoEntityRenderer<EntitySamukabu> {
 
     @Nullable
     @Override
-    public ResourceLocation getEntityTexture(EntitySamukabu entity)
+    public ResourceLocation getTextureLocation(EntitySamukabu entity)
     {
         return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/samukabu.png");
     }

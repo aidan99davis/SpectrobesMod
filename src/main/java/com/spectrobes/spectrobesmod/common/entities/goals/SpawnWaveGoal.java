@@ -22,40 +22,40 @@ public class SpawnWaveGoal extends TargetGoal {
      * Returns whether the EntityAIBase should begin execution.
      */
     @Override
-    public boolean shouldExecute() {
-        if(!(goalOwner instanceof EntityKrawl)) {
+    public boolean canUse() {
+        if(!(mob instanceof EntityKrawl)) {
             return false;
         }
 
-        if(((EntityVortex)goalOwner).getWaves() > 0 && (goalOwner).getAttackTarget() != null) {
+        if(((EntityVortex)mob).getWaves() > 0 && (mob).getTarget() != null) {
             return true;
         }
         return false;
     }
 
     @Override
-    public boolean shouldContinueExecuting() {
-        EntityVortex owner = ((EntityVortex)goalOwner);
+    public boolean canContinueToUse() {
+        EntityVortex owner = ((EntityVortex)mob);
         boolean shouldContinue = owner.getWaves() > 0;
         if(!shouldContinue) {
-            goalOwner.onKillCommand();
+            mob.kill();
         }
 
         return shouldContinue;
     }
 
     @Override
-    public void startExecuting() {
-        vortexNature = ((EntityKrawl)goalOwner).getNature();
-        goalOwner.setInvulnerable(true);
-        goalOwner.setAIMoveSpeed(0);
+    public void start() {
+        vortexNature = ((EntityKrawl)mob).getNature();
+        mob.setInvulnerable(true);
+        mob.setSpeed(0);
     }
 
     @Override
     public void tick() {
-        ((EntityVortex)goalOwner).validateWave();
+        ((EntityVortex)mob).validateWave();
 
-        if (((EntityVortex)goalOwner).getKrawlWave().isEmpty()) {
+        if (((EntityVortex)mob).getKrawlWave().isEmpty()) {
             spawnWave();
         }
     }
@@ -65,7 +65,7 @@ public class SpawnWaveGoal extends TargetGoal {
         int krawlInWave = random.nextInt(2) + 1;
         for (int i = 0; i < krawlInWave; i++) {
             EntityType<? extends EntityKrawl> krawl = KrawlEntities.getByNature(vortexNature);
-            ((EntityVortex)goalOwner).addKrawl(krawl.create(goalOwner.world));
+            ((EntityVortex)mob).addKrawl(krawl.create(mob.level));
         }
     }
 }

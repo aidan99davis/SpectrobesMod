@@ -24,7 +24,7 @@ public class VizbarRenderer extends GeoEntityRenderer<EntityVizbar> {
 
     @Nullable
     @Override
-    public ResourceLocation getEntityTexture(EntityVizbar entity)
+    public ResourceLocation getTextureLocation(EntityVizbar entity)
     {
         return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/krawl/vizbar.png");
     }

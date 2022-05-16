@@ -7,7 +7,7 @@ import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlRendererManager;
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobeRendererManager;
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.client.keybindings.SpectrobesKeybindings;
-import com.spectrobes.spectrobesmod.client.prizmod.PrizmodScreen;
+import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.registry.*;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobesTileRegistry;
 import com.spectrobes.spectrobesmod.common.capability.PlayerEvents;
@@ -91,7 +91,7 @@ public class SpectrobesMod
     @SubscribeEvent
     public void doClientStuff(final FMLClientSetupEvent event)
     {
-        ScreenManager.registerFactory(PrizmodContainer.PRIZMOD.get(), PrizmodScreen::new);
+        ScreenManager.register(PrizmodContainer.PRIZMOD.get(), PrizmodScreen::new);
         SpectrobeRendererManager.init();
         //force load the serializer to prevent clients crashing
         IDataSerializer serializer = Spectrobe.SpectrobeSerializer;

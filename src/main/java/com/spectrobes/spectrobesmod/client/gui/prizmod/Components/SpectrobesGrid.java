@@ -2,8 +2,8 @@
 //
 //import com.mojang.blaze3d.systems.RenderSystem;
 //import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodMenu;
-//import com.spectrobes.spectrobesmod.client.gui.prizmod.components.SpectrobePiece;
-//import com.spectrobes.spectrobesmod.client.prizmod.Pages.PrizmodPage;
+//import com.spectrobes.spectrobesmod.client.prizmod.Components.SpectrobePiece;
+//import com.spectrobes.spectrobesmod.client.gui.prizmod.Pages.PrizmodPage;
 //import com.spectrobes.spectrobesmod.container.capability.PlayerSpectrobeMaster;
 //import com.spectrobes.spectrobesmod.container.spectrobes.Spectrobe;
 //import net.minecraft.client.Minecraft;

@@ -78,9 +78,9 @@ public class Spectrobe {
     public CompoundNBT write() {
         CompoundNBT compoundnbt = new CompoundNBT();
         compoundnbt.putString("name", name);
-        compoundnbt.putUniqueId("SpectrobeUUID", SpectrobeUUID);
+        compoundnbt.putUUID("SpectrobeUUID", SpectrobeUUID);
         if(MasterUUID != null) {
-            compoundnbt.putUniqueId("MasterUUID", MasterUUID);
+            compoundnbt.putUUID("MasterUUID", MasterUUID);
         }
         compoundnbt.putBoolean("active", active);
         compoundnbt.putInt("variant", Variant);
@@ -93,12 +93,12 @@ public class Spectrobe {
     public static Spectrobe read(CompoundNBT nbtData) {
         Spectrobe s = new Spectrobe();
         try {
-            s.SpectrobeUUID = nbtData.getUniqueId("SpectrobeUUID");
+            s.SpectrobeUUID = nbtData.getUUID("SpectrobeUUID");
         } catch(NullPointerException ex) {
             s.SpectrobeUUID = UuidUtil.getTimeBasedUuid();
         }
         try {
-            s.MasterUUID = nbtData.getUniqueId("MasterUUID");
+            s.MasterUUID = nbtData.getUUID("MasterUUID");
         } catch(NullPointerException ex) {
             s.MasterUUID = null;
         }
@@ -107,7 +107,7 @@ public class Spectrobe {
         } catch(NullPointerException ex) {
             s.Variant = 0;
         }
-        s.name = nbtData.get("name").getString();
+        s.name = nbtData.get("name").getAsString();
         s.active = nbtData.getBoolean("active");
         s.properties = SpectrobeProperties.read(((CompoundNBT) nbtData.get("SpectrobeProperties")));
 
@@ -181,21 +181,21 @@ public class Spectrobe {
 
         @Override
         public void write(PacketBuffer buf, Spectrobe value) {
-            buf.writeCompoundTag(value.write());
+            buf.writeNbt(value.write());
         }
 
         @Override
         public Spectrobe read(PacketBuffer buf) {
-            return Spectrobe.read(buf.readCompoundTag());
+            return Spectrobe.read(buf.readNbt());
         }
 
         @Override
-        public Spectrobe copyValue(Spectrobe value) {
+        public Spectrobe copy(Spectrobe value) {
             return value.copy(true);
         }
 
         public IDataSerializer<Spectrobe> init() {
-            if(DataSerializers.getSerializer(DataSerializers.getSerializerId(this)) == null) {
+            if(DataSerializers.getSerializer(DataSerializers.getSerializedId(this)) == null) {
                 SpectrobesInfo.LOGGER.info("Registering serializer");
                 DataSerializers.registerSerializer(this);
             }

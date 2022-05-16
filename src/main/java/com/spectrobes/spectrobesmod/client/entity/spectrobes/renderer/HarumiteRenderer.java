@@ -24,7 +24,7 @@ public class HarumiteRenderer extends GeoEntityRenderer<EntityHarumite> {
 
     @Nullable
     @Override
-    public ResourceLocation getEntityTexture(EntityHarumite entity)
+    public ResourceLocation getTextureLocation(EntityHarumite entity)
     {
         switch (entity.getSpectrobeData().Variant) {
             case 0:

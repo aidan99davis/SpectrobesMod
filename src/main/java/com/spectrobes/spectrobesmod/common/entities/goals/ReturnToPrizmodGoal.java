@@ -19,11 +19,11 @@ public class ReturnToPrizmodGoal extends Goal {
      * Returns whether the EntityAIBase should begin execution.
      */
     @Override
-    public boolean shouldExecute() {
+    public boolean canUse() {
         List<EntityKrawl> nearbyKrawl =
-                goalOwner.world.getEntitiesWithinAABB(EntityKrawl.class,
+                goalOwner.level.getEntitiesOfClass(EntityKrawl.class,
                         goalOwner.getBoundingBox()
-                                .grow(10, 10, 5));
+                                .inflate(10, 10, 5));
         if((goalOwner).getStage() == SpectrobeProperties.Stage.CHILD ) {
             if(!nearbyKrawl.isEmpty()) {
                 return true;
@@ -37,7 +37,7 @@ public class ReturnToPrizmodGoal extends Goal {
     }
 
     @Override
-    public void startExecuting() {
+    public void start() {
         goalOwner.despawn();
     }
 }

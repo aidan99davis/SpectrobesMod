@@ -1,12 +1,12 @@
-package com.spectrobes.spectrobesmod.client.prizmod.Components;
+package com.spectrobes.spectrobesmod.client.gui.prizmod.Components;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.spectrobes.spectrobesmod.client.gui.prizmod.components.SpectrobePiece;
-import com.spectrobes.spectrobesmod.client.prizmod.Pages.PrizmodPage;
-import com.spectrobes.spectrobesmod.client.prizmod.PrizmodScreen;
+import com.spectrobes.spectrobesmod.client.gui.prizmod.Pages.PrizmodPage;
+import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.Widget;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -33,7 +33,7 @@ public class AllSpectrobesList extends Widget {
         super(parent.x, parent.y, 0, 0, new StringTextComponent(""));
         this.parent = parent;
         gridData_paged = new HashMap<>();
-        int specCount = this.parent.parent.getContainer().getOwnedSpectrobesCount();
+        int specCount = this.parent.parent.getMenu().getOwnedSpectrobesCount();
         int remainder = specCount % 25;
         this.pages = specCount / 25;
         if(remainder > 0) {
@@ -58,21 +58,16 @@ public class AllSpectrobesList extends Widget {
     public void draw() {
         for (int i = 0; i < GRID_SIZE; i++) {
             for (int j = 0; j < GRID_SIZE; j++) {
-                SpectrobePiece p = gridData[i][j];
-
-                RenderSystem.pushMatrix();
-                Minecraft.getInstance().textureManager.bindTexture(PrizmodScreen.SPECTROBE_SLOT_TEXTURE);
-                RenderSystem.enableAlphaTest();
-                RenderSystem.translatef(i * 32, j * 32, 2);
-                //p.draw();
-                RenderSystem.popMatrix();
-
+//                SpectrobePiece p = gridData[i][j];
+//
+//                RenderSystem.pushMatrix();
+//                Minecraft.getInstance().textureManager.bind(PrizmodScreen.SPECTROBE_SLOT_TEXTURE);
+//                RenderSystem.enableAlphaTest();
+//                RenderSystem.translatef(i * 32, j * 32, 0);
+//                //p.draw();
+//                RenderSystem.popMatrix();
             }
         }
-    }
-
-    public static boolean exists(int x, int y) {
-        return x >= 0 && y >= 0 && x < GRID_SIZE && y < GRID_SIZE;
     }
 
     public void addSpectrobe(Spectrobe piece) {

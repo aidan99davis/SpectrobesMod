@@ -19,7 +19,7 @@ public class ServerEvents {
 
     @SubscribeEvent
     public static void OnPlayerJoin(PlayerEvent.PlayerLoggedInEvent evt) {
-        if(!evt.getPlayer().world.isRemote()) {
+        if(!evt.getPlayer().level.isClientSide()) {
             evt.getPlayer().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
                 SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(sm),
                         (ServerPlayerEntity) evt.getPlayer());
@@ -30,8 +30,8 @@ public class ServerEvents {
     @SubscribeEvent
     public static void OnLivingEntityDeath(LivingDeathEvent event) {
         if(event.getEntityLiving() instanceof EntityKrawl) {
-            if(event.getEntityLiving().getAttackingEntity() instanceof EntitySpectrobe) {
-                EntitySpectrobe spectrobe = (EntitySpectrobe) event.getEntityLiving().getAttackingEntity();
+            if(event.getEntityLiving().getKillCredit() instanceof EntitySpectrobe) {
+                EntitySpectrobe spectrobe = (EntitySpectrobe) event.getEntityLiving().getKillCredit();
                 spectrobe.awardKillStats(((EntityKrawl)event.getEntityLiving()).krawlProperties);
                 spectrobe.updateEntityAttributes();
 

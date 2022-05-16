@@ -60,7 +60,7 @@ public class EntityVilamasta extends EntityMammalSpectrobe {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.vilamasta.walk", true));
             return PlayState.CONTINUE;
         }
-        else if(this.isSitting()) {
+        else if(this.isOrderedToSit()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.vilamasta.idle", true));
             return PlayState.CONTINUE;
         } else {

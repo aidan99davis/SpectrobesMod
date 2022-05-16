@@ -22,12 +22,12 @@ public class CSyncSpectrobeMasterPacket {
     }
 
     public void toBytes(PacketBuffer buf) {
-        buf.writeCompoundTag(capability.serializeNBT());
+        buf.writeNbt(capability.serializeNBT());
     }
 
     public static CSyncSpectrobeMasterPacket fromBytes(PacketBuffer buf) {
         PlayerSpectrobeMaster cap = new PlayerSpectrobeMaster();
-        cap.deserializeNBT(buf.readCompoundTag());
+        cap.deserializeNBT(buf.readNbt());
 
         return new CSyncSpectrobeMasterPacket(cap);
     }

@@ -40,8 +40,8 @@ public class EntityVortex extends EntityKrawl {
 
 
     private static final DataParameter<Integer> WAVES_REMAINING =
-            EntityDataManager.createKey(EntityKrawl.class,
-                    DataSerializers.VARINT);
+            EntityDataManager.defineId(EntityKrawl.class,
+                    DataSerializers.INT);
 
     private List<EntityKrawl> children;
 
@@ -59,9 +59,9 @@ public class EntityVortex extends EntityKrawl {
     }
 
     @Override
-    protected void registerData() {
-        super.registerData();
-        dataManager.register(WAVES_REMAINING, calculateKrawlWaves());
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        entityData.define(WAVES_REMAINING, calculateKrawlWaves());
     }
 
     @Override
@@ -88,16 +88,16 @@ public class EntityVortex extends EntityKrawl {
 
     @Nullable
     @Override
-    public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+    public ILivingEntityData finalizeSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
         calculateKrawlWaves();
         setNatureByBiome();
-        return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+        return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
 
     private void setNatureByBiome() {
         SpectrobeProperties.Nature nature = SpectrobeProperties.Nature.OTHER;
 
-        Biome.Category cat = world.getBiome(getPosition()).getCategory();
+        Biome.Category cat = level.getBiome(blockPosition()).getBiomeCategory();
 
         switch (cat) {
             //FLASH
@@ -157,7 +157,7 @@ public class EntityVortex extends EntityKrawl {
     }
 
     @Override
-    public void onDeath(DamageSource source) {
+    public void die(DamageSource source) {
         Random random = new Random();
 
         int mineralCount = random.nextInt(3);
@@ -165,30 +165,30 @@ public class EntityVortex extends EntityKrawl {
         ItemStack mineralStack = SpectrobesItems.getRandomMineral();
         mineralStack.grow(mineralCount);
 
-        ItemEntity lvt_10_1_ = new ItemEntity(world,
-                this.getPosX() + 0.5D,
-                (this.getPosY() + 1),
-                this.getPosZ() + 0.5D, mineralStack);
-        lvt_10_1_.setDefaultPickupDelay();
-        world.addEntity(lvt_10_1_);
-        super.onDeath(source);
+        ItemEntity lvt_10_1_ = new ItemEntity(level,
+                this.getX() + 0.5D,
+                (this.getY() + 1),
+                this.getZ() + 0.5D, mineralStack);
+        lvt_10_1_.setDefaultPickUpDelay();
+        level.addFreshEntity(lvt_10_1_);
+        super.die(source);
     }
 
     public int getWaves() {
-        return dataManager.get(WAVES_REMAINING);
+        return entityData.get(WAVES_REMAINING);
     }
 
     public void validateWave() {
         children.removeIf(entityKrawl -> entityKrawl.getHealth() <= 0);
 
         if(children.isEmpty()) {
-            dataManager.set(WAVES_REMAINING, getWaves() - 1);
+            entityData.set(WAVES_REMAINING, getWaves() - 1);
         }
     }
 
     public void addKrawl(EntityKrawl entityKrawl) {
-        this.world.addEntity(entityKrawl);
-        entityKrawl.setPositionAndUpdate(getPosX(), getPosY(), getPosZ());
+        this.level.addFreshEntity(entityKrawl);
+        entityKrawl.teleportTo(getX(), getY(), getZ());
         children.add(entityKrawl);
     }
 }
