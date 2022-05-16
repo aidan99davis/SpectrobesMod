@@ -39,14 +39,14 @@ public class TeamSpectrobesList extends Widget {
     @OnlyIn(Dist.CLIENT)
     public void draw() {
         for (int i = 0; i < GRID_SIZE; i++) {
-            SpectrobePiece p = gridData[i];
-
-            RenderSystem.pushMatrix();
-            Minecraft.getInstance().textureManager.bind(PrizmodScreen.SPECTROBE_SLOT_TEXTURE);
-            RenderSystem.enableAlphaTest();
-            RenderSystem.translatef(i * 32, p.posY, 2);
-            //p.draw();
-            RenderSystem.popMatrix();
+//            SpectrobePiece p = gridData[i];
+//
+//            RenderSystem.pushMatrix();
+//            Minecraft.getInstance().textureManager.bind(PrizmodScreen.SPECTROBE_SLOT_TEXTURE);
+//            RenderSystem.enableAlphaTest();
+//            RenderSystem.translatef(i * 32, p.posY, 0);
+//            //p.draw();
+//            RenderSystem.popMatrix();
 
         }
     }

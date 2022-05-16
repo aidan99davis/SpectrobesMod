@@ -3,6 +3,7 @@ package com.spectrobes.spectrobesmod.client.gui.prizmod;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.spectrobes.spectrobesmod.client.container.PrizmodContainer;
+import com.spectrobes.spectrobesmod.client.gui.prizmod.Pages.LineUpPage;
 import com.spectrobes.spectrobesmod.client.gui.utils.GuiUtils;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.Pages.MenuPage;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.Pages.PrizmodPage;
@@ -54,7 +55,7 @@ public class PrizmodScreen extends ContainerScreen<PrizmodContainer> {
     @Override
     public void init() {
         this.changeFocus(true);
-        this.prizmodPage = new MenuPage(this);
+        this.prizmodPage = new LineUpPage(this);
         this.prizmodPage.init();
         this.prizmodPage.changeFocus(true);
         this.addButton(this.prizmodPage);
@@ -112,9 +113,9 @@ public class PrizmodScreen extends ContainerScreen<PrizmodContainer> {
     public void setMenuPage(PrizmodPage prizmodPage) {
         this.buttons.clear();
         this.prizmodPage = prizmodPage;
-        this.addButton(this.prizmodPage);
         this.prizmodPage.init();
         this.prizmodPage.changeFocus(true);
+        this.addButton(this.prizmodPage);
     }
 
     @Override public void tick() {
@@ -136,7 +137,6 @@ public class PrizmodScreen extends ContainerScreen<PrizmodContainer> {
             b.active = false;
             this.buttons.remove(b);
             this.children.remove(b);
-
         });
     }
 }

@@ -59,6 +59,8 @@ public class SpectrobePiece extends AbstractGui {
      */
     @OnlyIn(Dist.CLIENT)
     public void drawBackground() {
+        RenderSystem.pushMatrix();
+
         ResourceLocation bg;
         if(!current) {
             bg = selected? PrizmodScreen.SPECTROBE_SLOT_SELECTED_TEXTURE : PrizmodScreen.SPECTROBE_SLOT_TEXTURE;
@@ -66,7 +68,8 @@ public class SpectrobePiece extends AbstractGui {
             bg = PrizmodScreen.SPECTROBE_SLOT_CURRENT_TEXTURE;
         }
 
-        GuiUtils.drawTexture(bg, posX, posY, 32, 32,75);
+        GuiUtils.drawTexture(bg, posX, posY, 32, 32,20);
+        RenderSystem.popMatrix();
     }
 
     /**
@@ -74,6 +77,7 @@ public class SpectrobePiece extends AbstractGui {
      */
     @OnlyIn(Dist.CLIENT)
     public void drawAdditional() {
+        RenderSystem.pushMatrix();
         if(spectrobe != null) {
             SpectrobeIconInfo iconInfo = spectrobe.getIcon();
 
@@ -88,28 +92,35 @@ public class SpectrobePiece extends AbstractGui {
                     : 0;
 
             RenderSystem.enableAlphaTest();
-            GuiUtils.drawTexture(iconInfo.icon(), posX + marginleft, posY + margintop, iconInfo.getWidth() * scalex, iconInfo.getHeight() * scaley, 100);
+            GuiUtils.drawTexture(iconInfo.icon(), posX + marginleft, posY + margintop, iconInfo.getWidth() * scalex, iconInfo.getHeight() * scaley, 26);
+            //draw red health bar.
+            GuiUtils.drawColour(245, 66, 66, 100, posX + 1, posY + 30, 30, 2, 27);
+            //draw green for health bar, only fill a % of 30 pixels based on the % of health remaining.
+            GuiUtils.drawColour(55, 179, 41, 100, posX + 1, posY + 30, 30, 2, 27);
 
             if(Screen.hasAltDown()) {
-                GuiUtils.drawTexture(CROSS, posX, posY, 32, 32, 101);
+                GuiUtils.drawTexture(CROSS, posX, posY, 32, 32, 28);
             }
+
+            RenderSystem.popMatrix();
         }
     }
 
-    /**
-     * Draws this piece's tooltip.
-     */
     @OnlyIn(Dist.CLIENT)
-    public void drawTooltip(int tooltipX, int tooltipY, List<ITextComponent> tooltip, Screen screen) {
-        //PsiAPI.internalHandler.renderTooltip(tooltipX, tooltipY, tooltip, 0x505000ff, 0xf0100010, screen.width, screen.height);
-    }
+    public void drawAdditionalAtCursor(int mouseX, int mouseY) {
+        drawBackground();
+        RenderSystem.pushMatrix();
+        if(spectrobe != null) {
+            SpectrobeIconInfo iconInfo = spectrobe.getIcon();
 
-    @OnlyIn(Dist.CLIENT)
-    public void getTooltip(List<ITextComponent> tooltip) {
-        if(spectrobe != null)
-            tooltip.add(new TranslationTextComponent(getUnlocalizedName()));
-        //tooltip.add(new TranslationTextComponent(getUnlocalizedDesc()).setStyle(Style.EMPTY.withColor(TextFormatting.GRAY)));
-//        TooltipHelper.tooltipIfShift(tooltip, () -> addToTooltipAfterShift(tooltip));
+            float scalex = 32 / iconInfo.getWidth();
+            float scaley = 32 / iconInfo.getHeight();
+
+            RenderSystem.enableAlphaTest();
+            GuiUtils.drawTexture(iconInfo.icon(), mouseX, mouseY, iconInfo.getWidth() * scalex, iconInfo.getHeight() * scaley, 100);
+        }
+        RenderSystem.popMatrix();
+
     }
 
     public void setSelected(boolean selected) {

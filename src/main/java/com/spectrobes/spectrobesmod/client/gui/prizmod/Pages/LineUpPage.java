@@ -49,9 +49,9 @@ public class LineUpPage extends PrizmodPage {
     @Override
     public void init() {
         buttons.clear();
-        this.addButton(new MenuButton(parent.width / 2 - 30, 25, 60, 20, "Menu", button -> {
-            parent.setMenuPage(new MenuPage(parent));
-        }));
+//        this.addButton(new MenuButton(parent.width / 2 - 30, 25, 60, 20, "Menu", button -> {
+//            parent.setMenuPage(new MenuPage(parent));
+//        }));
 
         this.addButton(new Button(parent.width / 2 - 60, 45, 60, 20, new StringTextComponent("Prev"), button -> {
             this.AllSpectrobesGrid.previousPage();
