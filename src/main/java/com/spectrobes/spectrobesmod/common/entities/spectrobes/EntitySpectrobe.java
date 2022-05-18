@@ -261,6 +261,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     }
     public void setSpectrobeData(Spectrobe spectrobe) {
         entityData.set(SPECTROBE_DATA, spectrobe);
+        updateEntityAttributes();
     }
 
     public boolean IsAttacking() {
@@ -401,6 +402,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
             spectrobeInstance.evolve(spectrobe.getSpectrobeData());
             spectrobe.setSpectrobeData(spectrobeInstance);
             spectrobe.setCustomName(new StringTextComponent(spectrobeInstance.name));
+            updateEntityAttributes();
             if(getOwner() != null) {
                 getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
                     sm.updateSpectrobe(spectrobe.getSpectrobeData());
@@ -430,12 +432,12 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         if(getOwner() != null) {
             despawn();
         } else {
-            ItemEntity lvt_10_1_ = new ItemEntity(level,
+            ItemEntity fossilItem = new ItemEntity(level,
                     this.getX() + 0.5D,
                     (this.getY() + 1),
                     this.getZ() + 0.5D, getFossil().getDefaultInstance());
-            lvt_10_1_.setDefaultPickUpDelay();
-            level.addFreshEntity(lvt_10_1_);
+            fossilItem.setDefaultPickUpDelay();
+            level.addFreshEntity(fossilItem);
             super.die(cause);
         }
     }
@@ -458,9 +460,17 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
                     scaledAmount = damageAmount;
                     break;
             }
+            this.getSpectrobeData().damage((int)damageAmount);
             super.actuallyHurt(damageSrc, scaledAmount);
         } else {
+            this.getSpectrobeData().damage((int)damageAmount);
             super.actuallyHurt(damageSrc, damageAmount);
+        }
+        if(getOwner() != null) {
+            getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
+                sm.updateSpectrobe(this.getSpectrobeData());
+                SpectrobesNetwork.sendToServer(new SSyncSpectrobeMasterPacket(sm));
+            });
         }
     }
 
@@ -481,6 +491,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     private void addStats(Spectrobe spectrobeData) {
         Spectrobe spectrobeInstance = getSpectrobeData();
         spectrobeInstance.stats.addStats(spectrobeData.stats);
+        updateEntityAttributes();
     }
 
     public void awardKillStats(KrawlProperties krawlProperties) {
@@ -530,10 +541,17 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         StringBuilder builder2 = new StringBuilder();
         StringBuilder builder3 = new StringBuilder();
         builder3.append("Name: " + spectrobeInstance.name + ", ");
+
+        builder3.append("Health: " + spectrobeInstance.currentHealth + "/" + spectrobeInstance.stats.getHpLevel() + ", ");
         builder3.append("Level: " + getLevel() + ", ");
+
+        builder1.append("Properties");
+        builder1.append("==========");
         builder1.append("Nature: " + getNature() + ", ");
         builder1.append("Stage: " + getStage());
 
+        builder2.append("Stats");
+        builder2.append("=====");
         builder2.append("Hp: " + spectrobeInstance.stats.getHpLevel() + ", ");
         builder2.append("Atk: " + spectrobeInstance.stats.getAtkLevel() + ", ");
         builder2.append("Def: " + spectrobeInstance.stats.getDefLevel() + ", ");
@@ -563,6 +581,8 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         Spectrobe updatedData = mineralItem.applyEffect(this.getSpectrobeData());
 
         this.setSpectrobeData(updatedData);
+
+        updateEntityAttributes();
 
         if(getOwner() != null) {
             getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
@@ -597,7 +617,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(
                 spectrobeInstance.stats.getHpLevel());
 
-        this.setHealth(this.getMaxHealth());
+        this.setHealth(spectrobeInstance.currentHealth);
 
         this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(
                 spectrobeInstance.stats.getAtkLevel());

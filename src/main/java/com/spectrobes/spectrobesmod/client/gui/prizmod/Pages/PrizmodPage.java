@@ -23,9 +23,6 @@ public abstract class PrizmodPage extends Widget {
 
     @Override
     public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
-        for(int i = 0; i < this.buttons.size(); ++i) {
-            this.buttons.get(i).render(stack, mouseX, mouseY, partialTicks);
-        }
     }
 
     public List<Widget> getButtons() {

@@ -30,6 +30,8 @@ public class Spectrobe {
     @Required
     public SpectrobeStats stats;
 
+    public int currentHealth;
+
     public boolean active;
 
     public int Variant;
@@ -41,6 +43,8 @@ public class Spectrobe {
     public void setName(String name) {
         this.name = name;
     }
+
+    public void setCurrentHealth(int currentHealth) { this.currentHealth = currentHealth; }
 
     public void setMasterUUID(UUID masterUUID) {
         this.MasterUUID = masterUUID;
@@ -69,15 +73,18 @@ public class Spectrobe {
         this.name = evolution.name;
         this.properties = evolution.properties;
         this.stats.addStats(evolution.stats);
+        this.currentHealth = this.stats.getHpLevel();
     }
 
     public void applyMineral(MineralProperties properties) {
         this.stats.applyMineral(properties);
+        this.setCurrentHealth(currentHealth + properties.getHpOffset());
     }
 
     public CompoundNBT write() {
         CompoundNBT compoundnbt = new CompoundNBT();
         compoundnbt.putString("name", name);
+        compoundnbt.putInt("currentHealth", currentHealth);
         compoundnbt.putUUID("SpectrobeUUID", SpectrobeUUID);
         if(MasterUUID != null) {
             compoundnbt.putUUID("MasterUUID", MasterUUID);
@@ -107,11 +114,17 @@ public class Spectrobe {
         } catch(NullPointerException ex) {
             s.Variant = 0;
         }
+
         s.name = nbtData.get("name").getAsString();
         s.active = nbtData.getBoolean("active");
         s.properties = SpectrobeProperties.read(((CompoundNBT) nbtData.get("SpectrobeProperties")));
 
         s.stats = SpectrobeStats.read((CompoundNBT) nbtData.get("SpectrobeStats"));
+        try {
+            s.currentHealth = nbtData.getInt("currentHealth");
+        } catch(NullPointerException ex) {
+            s.currentHealth = s.stats.getHpLevel();
+        }
 
         return s;
     }
@@ -138,6 +151,7 @@ public class Spectrobe {
         setVariant(spectrobeInstance.Variant);
         setStats(spectrobeInstance.stats);
         setMasterUUID(spectrobeInstance.MasterUUID);
+        setCurrentHealth(spectrobeInstance.currentHealth);
     }
 
     //Checks if the attacker should have the attack multiplier bonus applied.
@@ -175,6 +189,14 @@ public class Spectrobe {
         }
 
         return toReturn;
+    }
+
+    public void damage(int damageAmount) {
+        if(currentHealth - damageAmount >= 0) {
+            setCurrentHealth(currentHealth - damageAmount);
+        } else {
+            setCurrentHealth(0);
+        }
     }
 
     public static class SpectrobeSerializer implements IDataSerializer<Spectrobe> {

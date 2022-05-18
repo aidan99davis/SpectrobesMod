@@ -33,16 +33,17 @@ public class LineUpPage extends PrizmodPage {
     @Override
     public void tick() {
         //this.populateGrid();
+
         this.changeFocus(true);
     }
 
     @Override
     public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         super.render(stack, mouseX, mouseY, partialTicks);
-        AllSpectrobesGrid.draw();
-        TeamSpectrobesGrid.draw();
+//        AllSpectrobesGrid.draw();
+//        TeamSpectrobesGrid.draw();
         if(selectedButton != null) {
-            selectedButton.renderInfo();
+            selectedButton.piece.drawAdditionalAtCursor(mouseX, mouseY);
         }
     }
 

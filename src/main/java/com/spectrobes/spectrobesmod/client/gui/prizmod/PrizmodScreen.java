@@ -5,7 +5,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.spectrobes.spectrobesmod.client.container.PrizmodContainer;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.Pages.LineUpPage;
 import com.spectrobes.spectrobesmod.client.gui.utils.GuiUtils;
-import com.spectrobes.spectrobesmod.client.gui.prizmod.Pages.MenuPage;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.Pages.PrizmodPage;
 
 import net.minecraft.client.Minecraft;
@@ -61,32 +60,18 @@ public class PrizmodScreen extends ContainerScreen<PrizmodContainer> {
         this.addButton(this.prizmodPage);
     }
 
-    @Override
-    public void renderBackground(MatrixStack stack) {
-        RenderSystem.pushMatrix();
-        RenderSystem.translatef(0, 0, 10);
-        getMinecraft().getTextureManager().bind(texture);
-
-        GuiUtils.blit(0, 0,0,0,0,
-                (width),
-                (height),
-                height, width);
-
-        RenderSystem.popMatrix();
-    }
-
 
     @Override
     public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         super.render(stack, mouseX, mouseY,partialTicks);
-        RenderSystem.pushMatrix();
-        RenderSystem.translatef(0,0,-16);
-        renderBackground(stack);
-
-        RenderSystem.popMatrix();
-        RenderSystem.translatef(0,0,32);
         this.prizmodPage.render(stack, mouseX,mouseY,partialTicks);
+    }
 
+    @Override
+    protected void renderLabels(MatrixStack p_230451_1_, int p_230451_2_, int p_230451_3_) {
+//
+//        this.font.draw(pMatrixStack, this.title, (float)this.titleLabelX, (float)this.titleLabelY, 4210752);
+//        this.font.draw(pMatrixStack, this.inventory.getDisplayName(), (float)this.inventoryLabelX, (float)this.inventoryLabelY, 4210752);
     }
 
     /**
@@ -98,16 +83,12 @@ public class PrizmodScreen extends ContainerScreen<PrizmodContainer> {
      */
     @Override
     protected void renderBg(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
-        RenderSystem.pushMatrix();
-//        RenderSystem.color3f(1F, 1F, 1F);
         getMinecraft().getTextureManager().bind(texture);
 
         GuiUtils.blit(0, 0,0,0,0,
                 (width),
                 (height),
                 height, width);
-
-        RenderSystem.popMatrix();
     }
 
     public void setMenuPage(PrizmodPage prizmodPage) {

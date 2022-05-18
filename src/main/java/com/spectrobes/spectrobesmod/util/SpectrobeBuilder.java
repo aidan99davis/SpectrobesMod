@@ -14,6 +14,7 @@ public class SpectrobeBuilder {
     private SpectrobeProperties properties;
     private SpectrobeStats stats;
     private int variant = 0;
+    private int currentHealth = 0;
 
     public SpectrobeBuilder withMasterUUID(UUID masterUUID) {
         this.masterUUID = masterUUID;
@@ -22,6 +23,11 @@ public class SpectrobeBuilder {
 
     public SpectrobeBuilder withName(String name) {
         this.name = name;
+        return this;
+    }
+
+    public SpectrobeBuilder withCurrentHealth(int currentHealth) {
+        this.currentHealth = currentHealth;
         return this;
     }
 
@@ -42,6 +48,7 @@ public class SpectrobeBuilder {
 
     public SpectrobeBuilder withStats(int hpStat, int atkStat, int defStat) {
         this.stats = new SpectrobeStats(hpStat,atkStat,defStat);
+        this.currentHealth = hpStat;
         return this;
     }
 
@@ -55,6 +62,7 @@ public class SpectrobeBuilder {
         } else {
             newSpectrobe.setVariant(new Random().nextInt(3));
         }
+        newSpectrobe.setCurrentHealth(spectrobe.currentHealth);
         newSpectrobe.setName(spectrobe.name);
         newSpectrobe.setProperties(spectrobe.properties.copy());
         newSpectrobe.setStats(spectrobe.stats.copy());
@@ -68,6 +76,7 @@ public class SpectrobeBuilder {
         newSpectrobe.setVariant(variant);
         newSpectrobe.setProperties(properties);
         newSpectrobe.setStats(stats);
+        newSpectrobe.setCurrentHealth(currentHealth);
         return newSpectrobe;
     }
 }
