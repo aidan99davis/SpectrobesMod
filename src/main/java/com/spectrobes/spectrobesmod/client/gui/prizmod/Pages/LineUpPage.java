@@ -12,8 +12,6 @@ import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.text.StringTextComponent;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -21,7 +19,6 @@ public class LineUpPage extends PrizmodPage {
 
     private AllSpectrobesList AllSpectrobesGrid;
     private TeamSpectrobesList TeamSpectrobesGrid;
-    private List<Widget> actionButtons = new ArrayList<>();
     private SpectrobeButton selectedButton;
 
     public LineUpPage(PrizmodScreen parent) {
@@ -32,16 +29,12 @@ public class LineUpPage extends PrizmodPage {
 
     @Override
     public void tick() {
-        //this.populateGrid();
-
         this.changeFocus(true);
     }
 
     @Override
     public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         super.render(stack, mouseX, mouseY, partialTicks);
-//        AllSpectrobesGrid.draw();
-//        TeamSpectrobesGrid.draw();
         if(selectedButton != null) {
             selectedButton.piece.drawAdditionalAtCursor(mouseX, mouseY);
         }

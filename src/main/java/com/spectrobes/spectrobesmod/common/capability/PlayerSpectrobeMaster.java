@@ -8,6 +8,7 @@ import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class PlayerSpectrobeMaster {
 
@@ -198,4 +199,16 @@ public class PlayerSpectrobeMaster {
     }
 
 
+    public Spectrobe getSpectrobeByUuid(UUID uuid) {
+        for (Spectrobe s : getOwnedSpectrobes()) {
+            if(s.SpectrobeUUID.equals(uuid)) {
+                return s;
+            }
+        }
+        return null;
+    }
+
+    public int getCurrentTeamMemberSlot() {
+        return currentSelected;
+    }
 }
