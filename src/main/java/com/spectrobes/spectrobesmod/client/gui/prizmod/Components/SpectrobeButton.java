@@ -24,33 +24,14 @@ public class SpectrobeButton extends Button {
 
     @Override
     public void renderButton(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
-        if(selected) {
-            piece.drawAdditionalAtCursor(mouseX, mouseY);
-            renderInfo();
-        } else {
-            piece.draw();
+        piece.draw(!selected);
+        if(this.isHovered()) {
+//            piece.drawInfo(); Name/Custom name? or a stat sheet?
         }
     }
 
     public void setSelected(boolean selected) {
         this.selected = selected;
         piece.setSelected(selected);
-    }
-
-    //render actions i.e. assign to slot 1, 2, 3, 4, 5, 6 or child slot
-    public void renderInfo() {
-//        piece.drawInfo();
-    }
-
-    public SpectrobePiece getPiece() {
-        return piece;
-    }
-
-    public String getPieceSortingName() {
-        return piece.getSortingName();
-    }
-
-    public void setPiece(SpectrobePiece piece) {
-        this.piece = piece;
     }
 }

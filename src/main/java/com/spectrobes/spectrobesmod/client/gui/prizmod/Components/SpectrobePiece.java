@@ -9,18 +9,16 @@ import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeIconInfo;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import java.util.List;
 
 public class SpectrobePiece extends AbstractGui {
 
     private static ResourceLocation CROSS = new ResourceLocation("spectrobesmod:textures/gui/cross.png");
 
     public Spectrobe spectrobe;
-    private int x, y;
+    private final int x, y;
     public int posX;
     public int posY;
     public boolean selected;
@@ -49,9 +47,10 @@ public class SpectrobePiece extends AbstractGui {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public void draw() {
+    public void draw(boolean withAdditional) {
         drawBackground();
-        drawAdditional();
+        if(withAdditional)
+            drawAdditional();
     }
 
     /**
@@ -59,8 +58,6 @@ public class SpectrobePiece extends AbstractGui {
      */
     @OnlyIn(Dist.CLIENT)
     public void drawBackground() {
-        RenderSystem.pushMatrix();
-
         ResourceLocation bg;
         if(!current) {
             bg = selected? PrizmodScreen.SPECTROBE_SLOT_SELECTED_TEXTURE : PrizmodScreen.SPECTROBE_SLOT_TEXTURE;
@@ -68,8 +65,7 @@ public class SpectrobePiece extends AbstractGui {
             bg = PrizmodScreen.SPECTROBE_SLOT_CURRENT_TEXTURE;
         }
 
-        GuiUtils.drawTexture(bg, posX, posY, 32, 32,20);
-        RenderSystem.popMatrix();
+        GuiUtils.drawTexture(bg, posX, posY, 32, 32,0);
     }
 
     /**
@@ -77,7 +73,6 @@ public class SpectrobePiece extends AbstractGui {
      */
     @OnlyIn(Dist.CLIENT)
     public void drawAdditional() {
-        RenderSystem.pushMatrix();
         if(spectrobe != null) {
             SpectrobeIconInfo iconInfo = spectrobe.getIcon();
 
@@ -93,23 +88,24 @@ public class SpectrobePiece extends AbstractGui {
 
             RenderSystem.enableAlphaTest();
             GuiUtils.drawTexture(iconInfo.icon(), posX + marginleft, posY + margintop, iconInfo.getWidth() * scalex, iconInfo.getHeight() * scaley, 26);
+
             //draw red health bar.
             GuiUtils.drawColour(245, 66, 66, 100, posX + 1, posY + 30, 30, 2, 27);
-            //draw green for health bar, only fill a % of 30 pixels based on the % of health remaining.
-            GuiUtils.drawColour(55, 179, 41, 100, posX + 1, posY + 30, 30, 2, 27);
 
+            //draw green for health bar, only fill a % of 30 pixels based on the % of health remaining.
+            float widthScaled = ((float)spectrobe.currentHealth / (float)spectrobe.stats.getHpLevel()) * 30f;
+            GuiUtils.drawColour(55, 179, 41, 100, posX + 1, posY + 30, Math.round(widthScaled), 2, 28);
+
+            //draw indicator that you're deleting a spectrobe.
             if(Screen.hasAltDown()) {
                 GuiUtils.drawTexture(CROSS, posX, posY, 32, 32, 28);
             }
 
-            RenderSystem.popMatrix();
         }
     }
 
     @OnlyIn(Dist.CLIENT)
     public void drawAdditionalAtCursor(int mouseX, int mouseY) {
-        drawBackground();
-        RenderSystem.pushMatrix();
         if(spectrobe != null) {
             SpectrobeIconInfo iconInfo = spectrobe.getIcon();
 
@@ -119,8 +115,6 @@ public class SpectrobePiece extends AbstractGui {
             RenderSystem.enableAlphaTest();
             GuiUtils.drawTexture(iconInfo.icon(), mouseX, mouseY, iconInfo.getWidth() * scalex, iconInfo.getHeight() * scaley, 100);
         }
-        RenderSystem.popMatrix();
-
     }
 
     public void setSelected(boolean selected) {
