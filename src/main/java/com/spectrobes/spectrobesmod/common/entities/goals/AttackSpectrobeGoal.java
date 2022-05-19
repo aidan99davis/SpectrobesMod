@@ -18,7 +18,6 @@ public class AttackSpectrobeGoal extends TargetGoal {
         tryKill = toKill;
     }
 
-
     /**
      * Returns whether the EntityAIBase should begin execution.
      */
@@ -27,7 +26,7 @@ public class AttackSpectrobeGoal extends TargetGoal {
         if(mob instanceof EntitySpectrobe && ((EntitySpectrobe)mob).getStage() == SpectrobeProperties.Stage.CHILD)
             return false;
 
-        List<EntitySpectrobe> nearbyMobs = mob.level.getEntitiesOfClass(EntitySpectrobe.class, mob.getBoundingBox().inflate(20, 20, 20));
+        List<EntitySpectrobe> nearbyMobs = mob.level.getEntitiesOfClass(EntitySpectrobe.class, mob.getBoundingBox().inflate(10, 10, 10));
         if (!nearbyMobs.isEmpty()) {
             this.target = nearbyMobs.get(0);
             return true;
@@ -42,7 +41,7 @@ public class AttackSpectrobeGoal extends TargetGoal {
         } else {
             //spectrobe v spectrobe fights should culminate when one reaches 20% health,
             // as its more a territory fight than a death brawl.
-            return target.getHealth() / target.getMaxHealth() > 0.2f && super.canContinueToUse();
+            return target.getHealth() / target.getMaxHealth() >= 0.2f && super.canContinueToUse();
         }
     }
 
@@ -50,7 +49,7 @@ public class AttackSpectrobeGoal extends TargetGoal {
     public void start() {
         this.mob.setTarget(this.target);
         ((EntityKrawl)this.mob).setIsAttacking(true);
-        this.mob.getNavigation().moveTo(this.mob.getNavigation().createPath(this.target, 1), 3);
+        this.mob.getNavigation().moveTo(this.mob.getNavigation().createPath(this.target, 1), 1.2);
         this.mob.setAggressive(true);
         super.start();
     }

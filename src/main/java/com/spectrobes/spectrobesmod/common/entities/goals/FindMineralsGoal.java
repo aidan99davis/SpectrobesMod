@@ -66,7 +66,7 @@ public class FindMineralsGoal extends Goal {
     }
 
     public void tick() {
-        List<ItemEntity> lvt_1_1_ = this.entity.level.getEntitiesOfClass(ItemEntity.class, this.entity.getBoundingBox().inflate(2.0D, 2.0D, 2.0D), EntitySpectrobe.MINERAL_SELECTOR);
+        List<ItemEntity> lvt_1_1_ = this.entity.level.getEntitiesOfClass(ItemEntity.class, this.entity.getBoundingBox().inflate(4.0D, 4.0D, 4.0D), EntitySpectrobe.MINERAL_SELECTOR);
         if (!lvt_1_1_.isEmpty()) {
             this.entity.getNavigation().moveTo((Entity)lvt_1_1_.get(0), 0.8000000476837158D);
             if(this.entity.distanceTo(lvt_1_1_.get(0)) < 5) {
