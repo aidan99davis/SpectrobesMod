@@ -18,7 +18,7 @@ public abstract class EntityMammalSpectrobe extends EntitySpectrobe {
         super.registerGoals();
         this.goalSelector.addGoal(2, new RandomWalkingGoal(this, 0.2d));
         this.goalSelector.addGoal(2, new SwimGoal(this));
-        this.goalSelector.addGoal(6, new WaterAvoidingRandomWalkingGoal(this, 2));
+        this.goalSelector.addGoal(6, new WaterAvoidingRandomWalkingGoal(this, 0.2d));
     }
 
     public abstract int getLitterSize();

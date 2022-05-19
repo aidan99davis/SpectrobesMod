@@ -113,9 +113,9 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
 
-        this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
-        this.targetSelector.addGoal(1, new OwnerHurtTargetGoal(this));
-        this.targetSelector.addGoal(2, (new HurtByTargetGoal(this)));
+        this.targetSelector.addGoal(2, new OwnerHurtByTargetGoal(this));
+        this.targetSelector.addGoal(2, new OwnerHurtTargetGoal(this));
+        this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)));
         this.targetSelector.addGoal(3, new TargetKrawlGoal(this, EntityKrawl.class, false, TARGET_KRAWL));
     }
 
@@ -469,10 +469,15 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
                     scaledAmount = damageAmount;
                     break;
             }
-            this.getSpectrobeData().damage((int)damageAmount);
+
+            if(level.isClientSide()) {
+                this.getSpectrobeData().damage((int)damageAmount);
+            }
             super.actuallyHurt(damageSrc, scaledAmount);
         } else {
-            this.getSpectrobeData().damage((int)damageAmount);
+            if(level.isClientSide()) {
+                this.getSpectrobeData().damage((int)damageAmount);
+            }
             super.actuallyHurt(damageSrc, damageAmount);
         }
         if(getOwner() != null) {
