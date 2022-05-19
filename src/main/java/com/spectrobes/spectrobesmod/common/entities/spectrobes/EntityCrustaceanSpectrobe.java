@@ -53,10 +53,10 @@ public abstract class EntityCrustaceanSpectrobe extends EntitySpectrobe {
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(0, new BreatheAirGoal(this));
         this.goalSelector.addGoal(2, new FindWaterGoal(this));
-        this.goalSelector.addGoal(4, new LookRandomlyGoal(this));
-        this.goalSelector.addGoal(4, new RandomWalkingGoal(this, 1));
+        this.goalSelector.addGoal(9, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(7, new RandomWalkingGoal(this, 1));
+        this.goalSelector.addGoal(7, new RandomSwimmingGoal(this, 1, 10));
         this.goalSelector.addGoal(8, new FollowBoatGoal(this));
     }
 
@@ -116,9 +116,13 @@ public abstract class EntityCrustaceanSpectrobe extends EntitySpectrobe {
             this.fish = p_i48857_1_;
         }
 
-
         public void tick() {
-            if (this.fish.isEyeInFluid(FluidTags.WATER)) {
+            if (this.fish.isInWater()) {
+                if(this.fish.getTarget() != null && this.fish.getTarget().getY() > this.fish.getY()) {
+                    this.fish.getNavigation().setCanFloat(true);
+                } else {
+                    this.fish.getNavigation().setCanFloat(false);
+                }
                 this.fish.setDeltaMovement(this.fish.getDeltaMovement().add(0.0D, 0.005D, 0.0D));
             }
 
@@ -134,80 +138,6 @@ public abstract class EntityCrustaceanSpectrobe extends EntitySpectrobe {
                 float lvt_10_1_ = (float)(this.speedModifier * this.fish.getAttribute(Attributes.MOVEMENT_SPEED).getValue());
                 this.fish.setSpeed(MathHelper.lerp(0.125F, this.fish.getSpeed(), lvt_10_1_));
                 this.fish.setDeltaMovement(this.fish.getDeltaMovement().add(0.0D, (double)this.fish.getSpeed() * lvt_3_1_ * 0.1D, 0.0D));
-        }
-    }
-
-    static class Navigator extends SwimmerPathNavigator {
-        Navigator(EntityCrustaceanSpectrobe p_i48815_1_, World p_i48815_2_) {
-            super(p_i48815_1_, p_i48815_2_);
-        }
-
-        protected boolean canUpdatePath() {
-            return true;
-        }
-
-        protected PathFinder createPathFinder(int p_179679_1_) {
-            this.nodeEvaluator = new WalkAndSwimNodeProcessor();
-            return new PathFinder(this.nodeEvaluator, p_179679_1_);
-        }
-
-        public boolean isStableDestination(BlockPos p_188555_1_) {
-            if (this.mob instanceof EntityCrustaceanSpectrobe) {
-
-                return this.level.getBlockState(p_188555_1_).getBlock() == Blocks.WATER
-                        || !this.level.getBlockState(p_188555_1_.below()).isAir();
-            }
-
-            return !this.level.getBlockState(p_188555_1_.below()).isAir();
-        }
-    }
-
-    static class MoveHelperController_ONE extends MovementController {
-        private final EntityCrustaceanSpectrobe dolphin;
-
-        public MoveHelperController_ONE(EntityCrustaceanSpectrobe dolphinIn) {
-            super(dolphinIn);
-            this.dolphin = dolphinIn;
-        }
-
-        public void tick() {
-            if (this.dolphin.isInWater()) {
-                this.dolphin.setDeltaMovement(this.dolphin.getDeltaMovement().add(0.0D, 0.005D, 0.0D));
-            }
-
-//            if (this.action == Action.MOVE_TO && !this.dolphin.getNavigator().noPath()) {
-                double d0 = this.wantedX - this.dolphin.getX();
-                double d1 = this.wantedY - this.dolphin.getY();
-                double d2 = this.wantedZ - this.dolphin.getZ();
-                double d3 = d0 * d0 + d1 * d1 + d2 * d2;
-                if (d3 < 2.500000277905201E-7D) {
-                    this.mob.setZza(0.0F);
-                } else {
-                    float f = (float)(MathHelper.atan2(d2, d0) * 57.2957763671875D) - 90.0F;
-                    this.dolphin.yRot = this.rotlerp(this.dolphin.yRot, f, 10.0F);
-                    this.dolphin.yBodyRot = this.dolphin.yRot;
-                    this.dolphin.yHeadRot = this.dolphin.yRot;
-                    float f1 = (float)(this.speedModifier * this.dolphin.getAttribute(Attributes.MOVEMENT_SPEED).getValue());
-                    if (this.dolphin.isInWater()) {
-                        this.dolphin.setSpeed(f1 * 0.2F);
-                        float f2 = -((float)(MathHelper.atan2(d1, (double)MathHelper.sqrt(d0 * d0 + d2 * d2)) * 57.2957763671875D));
-                        f2 = MathHelper.clamp(MathHelper.wrapDegrees(f2), -85.0F, 85.0F);
-                        this.dolphin.xRot = this.rotlerp(this.dolphin.xRot, f2, 5.0F);
-                        float f3 = MathHelper.cos(this.dolphin.xRot * 0.017453292F);
-                        float f4 = MathHelper.sin(this.dolphin.xRot * 0.017453292F);
-                        this.dolphin.zza = f3 * f1;
-                        this.dolphin.yya = -f4 * f1;
-                    } else {
-                        this.dolphin.setSpeed(f1);
-                    }
-                }
-//            } else {
-//                this.dolphin.setAIMoveSpeed(0.0F);
-//                this.dolphin.setMoveStrafing(0.0F);
-//                this.dolphin.setMoveVertical(0.0F);
-//                this.dolphin.setMoveForward(0.0F);
-//            }
-
         }
     }
 

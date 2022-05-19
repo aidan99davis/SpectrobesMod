@@ -5,6 +5,7 @@ import net.minecraft.entity.ai.controller.FlyingMovementController;
 import net.minecraft.entity.ai.goal.WaterAvoidingRandomFlyingGoal;
 import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
 import net.minecraft.entity.passive.IFlyingAnimal;
+import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
@@ -19,6 +20,7 @@ public abstract class EntityAvianSpectrobe extends EntitySpectrobe implements IF
     public EntityAvianSpectrobe(EntityType<? extends EntitySpectrobe> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
         this.moveControl = new FlyingMovementController(this, 10, false);
+        this.setPathfindingMalus(PathNodeType.OPEN, 0.0F);
     }
 
     @Override
@@ -55,5 +57,10 @@ public abstract class EntityAvianSpectrobe extends EntitySpectrobe implements IF
         }
 
         this.flap += this.flapping * 2.0F;
+    }
+
+    @Override
+    public boolean canFly() {
+        return true;
     }
 }

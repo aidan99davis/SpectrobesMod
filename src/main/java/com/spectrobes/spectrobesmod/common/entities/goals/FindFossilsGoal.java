@@ -12,28 +12,27 @@ import java.util.List;
 
 public class FindFossilsGoal extends Goal {
 
-    private IWorldReader world;
     private EntitySpectrobe entity;
     private BlockPos target;
 
     public FindFossilsGoal(EntitySpectrobe spectrobe) {
         this.entity = spectrobe;
-        this.world = spectrobe.level;
     }
 
+    @Override
     public boolean canUse() {
         if(entity.getStage() == SpectrobeProperties.Stage.CHILD && entity.isSearching()) {
-            List<BlockPos> lvt_1_1_ = getFossilBlocksInArea();
-            return !lvt_1_1_.isEmpty();
+            List<BlockPos> blocks = getFossilBlocksInArea();
+            return !blocks.isEmpty();
         }
         return false;
     }
 
     public void start() {
-        List<BlockPos> lvt_1_1_ = getFossilBlocksInArea();
-        if (!lvt_1_1_.isEmpty()) {
-            target = getClosestFossil(lvt_1_1_);
-            this.entity.getNavigation().moveTo(this.entity.getNavigation().createPath(target, 2), 2);
+        List<BlockPos> blocks = getFossilBlocksInArea();
+        if (!blocks.isEmpty()) {
+            target = getClosestFossil(blocks);
+            this.entity.getMoveControl().setWantedPosition(target.getX(), target.getY(), target.getZ(), 0.5);
         }
     }
 
@@ -50,10 +49,10 @@ public class FindFossilsGoal extends Goal {
         return fossilBlocks;
     }
 
-    private BlockPos getClosestFossil(List<BlockPos> lvt_1_1_) {
-        BlockPos closest = lvt_1_1_.get(0).immutable();
+    private BlockPos getClosestFossil(List<BlockPos> blocks) {
+        BlockPos closest = blocks.get(0).immutable();
 
-        for (BlockPos pos : lvt_1_1_) {
+        for (BlockPos pos : blocks) {
             if(entity.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) < entity.distanceToSqr(closest.getX(), closest.getY(), closest.getZ())) {
                 closest = pos.immutable();
             }
@@ -65,7 +64,7 @@ public class FindFossilsGoal extends Goal {
     @Override
     public boolean canContinueToUse() {
         if(target != null) {
-            if(this.entity.distanceToSqr((double)target.getX(), (double)target.getY(), (double)target.getZ()) < 2) {
+            if(this.entity.distanceToSqr(target.getX(), target.getY(), target.getZ()) < 2) {
                 target = null;
                 entity.setState(1);
                 return false;
@@ -79,7 +78,7 @@ public class FindFossilsGoal extends Goal {
 
     public void tick() {
         if(target != null) {
-            this.entity.getNavigation().moveTo(this.entity.getNavigation().createPath(target, 1), 1);
+            this.entity.getMoveControl().setWantedPosition(target.getX(), target.getY(), target.getZ(), 0.5);
         }
     }
 }

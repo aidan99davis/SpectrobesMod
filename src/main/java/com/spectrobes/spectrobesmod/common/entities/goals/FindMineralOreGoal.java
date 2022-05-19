@@ -12,28 +12,26 @@ import java.util.List;
 
 public class FindMineralOreGoal extends Goal {
 
-    private IWorldReader world;
     private EntitySpectrobe entity;
     private BlockPos target;
 
     public FindMineralOreGoal(EntitySpectrobe spectrobe) {
         this.entity = spectrobe;
-        this.world = spectrobe.level;
     }
 
     public boolean canUse() {
         if(entity.getStage() == SpectrobeProperties.Stage.CHILD && entity.isSearching()) {
-            List<BlockPos> lvt_1_1_ = getMineralBlocksInArea();
-            return !lvt_1_1_.isEmpty();
+            List<BlockPos> blocks = getMineralBlocksInArea();
+            return !blocks.isEmpty();
         }
         return false;
     }
 
     public void start() {
-        List<BlockPos> lvt_1_1_ = getMineralBlocksInArea();
-        if (!lvt_1_1_.isEmpty()) {
-            target = getClosestMineral(lvt_1_1_);
-            this.entity.getNavigation().moveTo(this.entity.getNavigation().createPath(target, 2), 2);
+        List<BlockPos> blocks = getMineralBlocksInArea();
+        if (!blocks.isEmpty()) {
+            target = getClosestMineral(blocks);
+            this.entity.getMoveControl().setWantedPosition(target.getX(), target.getY(), target.getZ(), 1.0D);
         }
     }
 
@@ -79,7 +77,7 @@ public class FindMineralOreGoal extends Goal {
 
     public void tick() {
         if(target != null) {
-            this.entity.getNavigation().moveTo(this.entity.getNavigation().createPath(target, 1), 1);
+            this.entity.getMoveControl().setWantedPosition(target.getX(), target.getY(), target.getZ(), 1.0D);
         }
     }
 }

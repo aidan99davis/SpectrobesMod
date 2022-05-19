@@ -2,6 +2,7 @@ package com.spectrobes.spectrobesmod.common.entities.goals;
 
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
+import com.spectrobes.spectrobesmod.common.registry.SpectrobesBlocks;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.goal.Goal;
@@ -9,12 +10,15 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.passive.DolphinEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IWorldReader;
 
 import java.util.List;
 
 public class FindMineralsGoal extends Goal {
-    private IWorldReader world;
+    private final IWorldReader world;
     private EntitySpectrobe entity;
 
     public FindMineralsGoal(EntitySpectrobe spectrobe) {
@@ -24,8 +28,8 @@ public class FindMineralsGoal extends Goal {
 
     public boolean canUse() {
         if(entity.getStage() == SpectrobeProperties.Stage.CHILD && (entity.isSearching() || entity.getOwner() == null)) {
-            List<ItemEntity> lvt_1_1_ = entity.level.getEntitiesOfClass(ItemEntity.class, this.entity.getBoundingBox().inflate(8.0D, 8.0D, 8.0D), EntitySpectrobe.MINERAL_SELECTOR);
-            return !lvt_1_1_.isEmpty();
+            List<ItemEntity> minerals = entity.level.getEntitiesOfClass(ItemEntity.class, this.entity.getBoundingBox().inflate(8.0D, 8.0D, 8.0D), EntitySpectrobe.MINERAL_SELECTOR);
+            return !minerals.isEmpty();
         }
         return false;
     }
@@ -37,9 +41,17 @@ public class FindMineralsGoal extends Goal {
     }
 
     public void start() {
-        List<ItemEntity> lvt_1_1_ = this.entity.level.getEntitiesOfClass(ItemEntity.class, this.entity.getBoundingBox().inflate(8.0D, 8.0D, 8.0D), EntitySpectrobe.MINERAL_SELECTOR);
-        if (!lvt_1_1_.isEmpty()) {
-            this.entity.getNavigation().moveTo(lvt_1_1_.get(0), 0.8000000476837158D);
+        BlockPos blockpos = null;
+
+        List<ItemEntity> minerals = this.entity.level.getEntitiesOfClass(ItemEntity.class, this.entity.getBoundingBox().inflate(2.0D, 2.0D, 2.0D), EntitySpectrobe.MINERAL_SELECTOR);
+
+        for (ItemEntity mineral :
+                minerals) {
+            blockpos = mineral.blockPosition();
+        }
+
+        if (blockpos != null) {
+            this.entity.getMoveControl().setWantedPosition(blockpos.getX(), blockpos.getY(), blockpos.getZ(), 1.0D);
         }
     }
 
