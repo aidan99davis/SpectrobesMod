@@ -1,12 +1,15 @@
 package com.spectrobes.spectrobesmod.common.entities.goals;
 
+import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
+import com.spectrobes.spectrobesmod.common.entities.krawl.EntityVortex;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.TargetGoal;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AttackKrawlGoal extends TargetGoal {
     EntityKrawl target;
@@ -27,9 +30,10 @@ public class AttackKrawlGoal extends TargetGoal {
         if(mob instanceof EntitySpectrobe && ((EntitySpectrobe)mob).getStage() == SpectrobeProperties.Stage.CHILD)
             return false;
 
-        List<EntityKrawl> nearbyMobs = mob.level.getEntitiesOfClass(EntityKrawl.class, mob.getBoundingBox().inflate(20, 20, 20));
-        if (!nearbyMobs.isEmpty()) {
-            this.target = nearbyMobs.get(0);
+        List<EntityKrawl> nearbyMobs = mob.level.getEntitiesOfClass(EntityKrawl.class, mob.getBoundingBox().inflate(5, 5, 5));
+        List<EntityKrawl> nonVortexKrawl = nearbyMobs.stream().filter(entityKrawl -> !entityKrawl.isVortex()).collect(Collectors.toList());
+        if (!nonVortexKrawl.isEmpty()) {
+            this.target = nonVortexKrawl.get(0);
             return true;
         }
         return false;
@@ -47,10 +51,19 @@ public class AttackKrawlGoal extends TargetGoal {
     }
 
     @Override
+    public void tick() {
+        super.tick();
+        this.mob.setTarget(this.target);
+        ((EntitySpectrobe)this.mob).setIsAttacking(true);
+        this.mob.getMoveControl().setWantedPosition(this.target.getX(), this.target.getY(), this.target.getZ(), 5);
+        this.mob.setAggressive(true);
+    }
+
+    @Override
     public void start() {
         this.mob.setTarget(this.target);
         ((EntitySpectrobe)this.mob).setIsAttacking(true);
-        this.mob.getNavigation().moveTo(this.mob.getNavigation().createPath(this.target, 5), 5);
+        this.mob.getMoveControl().setWantedPosition(this.target.getX(), this.target.getY(), this.target.getZ(), 5);
         this.mob.setAggressive(true);
         super.start();
     }

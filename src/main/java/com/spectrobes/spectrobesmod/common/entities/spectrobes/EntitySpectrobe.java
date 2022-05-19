@@ -21,7 +21,10 @@ import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.TameableEntity;
+import net.minecraft.entity.passive.WolfEntity;
+import net.minecraft.entity.passive.horse.LlamaEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -55,10 +58,9 @@ import java.util.function.Predicate;
 
 public abstract class EntitySpectrobe extends TameableEntity implements IEntityAdditionalSpawnData, IAnimatable, IHasNature {
     public static final Predicate<ItemEntity> MINERAL_SELECTOR = (itemEntity) -> !itemEntity.hasPickUpDelay() && itemEntity.isAlive() && itemEntity.getItem().getItem() instanceof MineralItem;
-    private static final Predicate<LivingEntity> TARGET_KRAWL = (entity) -> {
+    private static final Predicate<EntityKrawl> TARGET_KRAWL = (entity) -> {
         EntityType<?> entitytype = entity.getType();
-        return entitytype.getClass().isAssignableFrom(EntityKrawl.class)
-                && !((EntityKrawl)entity).isVortex();
+        return !(entity).isVortex();
     };
     private boolean recentInteract = false;
     private int ticksTillInteract = 0;
@@ -100,27 +102,29 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     protected void registerGoals()
     {
         super.registerGoals();
-        this.goalSelector.addGoal(0, new AttackKrawlGoal(this, true, true));
+        this.goalSelector.addGoal(3, new FollowMasterGoal(this, 1, 2, 10, canFly()));
+        this.goalSelector.addGoal(1, new AttackKrawlGoal(this, false, true));
         this.goalSelector.addGoal(1, new FindMineralsGoal(this));
         this.goalSelector.addGoal(1, new FindFossilsGoal(this));
         this.goalSelector.addGoal(1, new FindMineralOreGoal(this));
-        this.goalSelector.addGoal(2, new FollowMasterGoal(this,0.3f , 1, 15, true));
-        this.goalSelector.addGoal(5, new LookAtGoal(this, PlayerEntity.class, 6.0F));
-        this.goalSelector.addGoal(3, new MeleeAttackGoal(this,1f , true));
+        this.goalSelector.addGoal(3, new AvoidKrawlGoal(this, EntityKrawl.class, 24.0F, 1.5D, 1.5D));
+        this.goalSelector.addGoal(4, new LeapAtTargetGoal(this, 0.4f));
+        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.2f, true));
+        this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
+        this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
+
         this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(1, new OwnerHurtTargetGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal(this, EntityKrawl.class, 10, true, false, (entity) -> true));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal(this, EntityKrawl.class, true));
-        this.targetSelector.addGoal(3, (new HurtByTargetGoal(this, new Class[0])).setAlertOthers(new Class[0]));
-        this.targetSelector.addGoal(5, new NonTamedTargetGoal(this, EntityKrawl.class, false, TARGET_KRAWL));
+        this.targetSelector.addGoal(2, (new HurtByTargetGoal(this)));
+        this.targetSelector.addGoal(3, new TargetKrawlGoal(this, EntityKrawl.class, false, TARGET_KRAWL));
     }
 
     public static AttributeModifierMap.MutableAttribute setCustomAttributes() {
         return MonsterEntity.createMobAttributes()
-                .add(Attributes.MOVEMENT_SPEED, (double)0.5F)
+                .add(Attributes.MOVEMENT_SPEED, (double)1.0D)
                 .add(Attributes.MAX_HEALTH, 20.0D)
                 .add(Attributes.ATTACK_DAMAGE, 5.0D)
-                .add(Attributes.ATTACK_SPEED, 0.25f)
+                .add(Attributes.ATTACK_SPEED, 1f)
                 .add(Attributes.FOLLOW_RANGE, 10.0D)
                 .add(Attributes.ATTACK_KNOCKBACK, 5.0D);
     }
@@ -131,6 +135,11 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     }
 
     public void setState(int state) { entityData.set(STATE, state); }
+    public int getState() { return entityData.get(STATE); }
+
+    public boolean canFly() {
+        return false;
+    }
 
     @Override
     //processInteract

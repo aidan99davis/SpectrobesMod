@@ -1,15 +1,9 @@
 package com.spectrobes.spectrobesmod.client.gui.prizmod.Components;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.Pages.PrizmodPage;
-import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,13 +21,10 @@ public class AllSpectrobesList extends Widget {
 
     public int currentPage = 0;
 
-    private PrizmodPage parent;
-
     public AllSpectrobesList(PrizmodPage parent) {
         super(parent.x, parent.y, 0, 0, new StringTextComponent(""));
-        this.parent = parent;
         gridData_paged = new HashMap<>();
-        int specCount = this.parent.parent.getMenu().getOwnedSpectrobesCount();
+        int specCount = parent.parent.getMenu().getOwnedSpectrobesCount();
         int remainder = specCount % 25;
         this.pages = specCount / 25;
         if(remainder > 0) {
@@ -54,25 +45,9 @@ public class AllSpectrobesList extends Widget {
         gridData = gridData_paged.get(currentPage);
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public void draw() {
-        for (int i = 0; i < GRID_SIZE; i++) {
-            for (int j = 0; j < GRID_SIZE; j++) {
-//                SpectrobePiece p = gridData[i][j];
-//
-//                RenderSystem.pushMatrix();
-//                Minecraft.getInstance().textureManager.bind(PrizmodScreen.SPECTROBE_SLOT_TEXTURE);
-//                RenderSystem.enableAlphaTest();
-//                RenderSystem.translatef(i * 32, j * 32, 0);
-//                //p.draw();
-//                RenderSystem.popMatrix();
-            }
-        }
-    }
-
     public void addSpectrobe(Spectrobe piece) {
-        int i = 0;
-        int j = 0;
+        int i;
+        int j;
         boolean added = false;
 
         for(int a = 0; a < this.pages && !added; a++) {
