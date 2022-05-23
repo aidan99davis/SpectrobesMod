@@ -7,6 +7,7 @@ import com.spectrobes.spectrobesmod.client.gui.utils.GuiUtils;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
+import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeIconInfo;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
@@ -93,7 +94,8 @@ public class HUDHandler {
 
             //draw spectrobes into the slots.
             if(uuid != null) {
-                SpectrobeIconInfo iconInfo = sm.getSpectrobeByUuid(uuid).getIcon();
+                Spectrobe spectrobe = sm.getSpectrobeByUuid(uuid);
+                SpectrobeIconInfo iconInfo = spectrobe.getIcon();
                 float scalex = 32 / iconInfo.getWidth();
                 float scaley = 32 / iconInfo.getHeight();
 
@@ -105,10 +107,24 @@ public class HUDHandler {
                         : 0;
                 if(integer.intValue() == 6) {
                     GuiUtils.drawTexture(iconInfo.icon(), finalX + marginleft + 16, y + margintop + 96, iconInfo.getWidth() * scalex, iconInfo.getHeight() * scaley, 26);
+                    //draw red health bar.
+                    GuiUtils.drawColour(245, 66, 66, 100, finalX + 17, y + 126, 30, 2, 27);
+
+                    //draw green for health bar, only fill a % of 30 pixels based on the % of health remaining.
+                    float widthScaled = ((float)spectrobe.currentHealth / (float)spectrobe.stats.getHpLevel()) * 30f;
+                    GuiUtils.drawColour(55, 179, 41, 100, finalX + 17, y + 126, Math.round(widthScaled), 2, 28);
+
                 } else {
                     GuiUtils.drawTexture(iconInfo.icon(),
                             finalX + marginleft + (leftHandColumn? 0 : 32),
                             y + margintop + (row * 32), iconInfo.getWidth() * scalex, iconInfo.getHeight() * scaley, 26);
+                    //draw red health bar.
+                    GuiUtils.drawColour(245, 66, 66, 100, finalX + (leftHandColumn? 0 : 32), y + (row * 32) + 30, 30, 2, 27);
+
+                    //draw green for health bar, only fill a % of 30 pixels based on the % of health remaining.
+                    float widthScaled = ((float)spectrobe.currentHealth / (float)spectrobe.stats.getHpLevel()) * 30f;
+                    GuiUtils.drawColour(55, 179, 41, 100, finalX + (leftHandColumn? 0 : 32), y + (row * 32) + 30, Math.round(widthScaled), 2, 28);
+
                 }
             }
         });

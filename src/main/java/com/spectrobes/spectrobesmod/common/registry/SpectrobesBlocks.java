@@ -2,6 +2,8 @@ package com.spectrobes.spectrobesmod.common.registry;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.blocks.FossilBlock;
+import com.spectrobes.spectrobesmod.common.blocks.HealerBlock;
+import com.spectrobes.spectrobesmod.common.blocks.SpectrobesBlock;
 import com.spectrobes.spectrobesmod.common.blocks.fossils.*;
 import com.spectrobes.spectrobesmod.common.blocks.MineralBlock;
 import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
@@ -30,6 +32,7 @@ public class SpectrobesBlocks {
     public static final RegistryObject<VilarFossilBlock> vilar_fossil = BLOCKS.register("vilar_fossil", VilarFossilBlock::new);
     public static final RegistryObject<ZozaFossilBlock> zoza_fossil = BLOCKS.register("zoza_fossil", ZozaFossilBlock::new);
     public static final RegistryObject<MossariFossilBlock> mossari_fossil = BLOCKS.register("mossari_fossil", MossariFossilBlock::new);
+    public static final RegistryObject<HealerBlock> healer_block = BLOCKS.register("healer_block", HealerBlock::new);
 
     public static final RegistryObject<Block> mineral_block = BLOCKS.register("mineral_block", MineralBlock::new);
     public static final RegistryObject<Block> fossil_block = BLOCKS.register("fossil_block", FossilBlock::new);

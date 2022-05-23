@@ -1,8 +1,6 @@
 package com.spectrobes.spectrobesmod.common.krawl;
 
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
-import com.spectrobes.spectrobesmod.util.KrawlPropertiesBuilder;
-import net.minecraft.nbt.CompoundNBT;
 
 public class KrawlProperties {
 
@@ -15,6 +13,7 @@ public class KrawlProperties {
     private int defOffset;
     private int hpOffset;
     private int xp_worth;
+    private int gura_worth;
 
     public KrawlProperties() {
         this.nature = SpectrobeProperties.Nature.OTHER;
@@ -43,8 +42,13 @@ public class KrawlProperties {
         properties.setHpLevel(this.hpLevel);
         properties.setHpOffset(this.hpOffset);
         properties.setXpWorth(this.xp_worth);
+        properties.setGuraWorth(this.gura_worth);
 
         return properties;
+    }
+
+    public void setGuraWorth(int gura_worth) {
+        this.gura_worth = gura_worth;
     }
 
     public void setAtkLevel(int atkLevel) {
@@ -89,5 +93,9 @@ public class KrawlProperties {
 
     public int getXpWorth() {
         return xp_worth;
+    }
+
+    public int getGuraWorth() {
+        return gura_worth;
     }
 }

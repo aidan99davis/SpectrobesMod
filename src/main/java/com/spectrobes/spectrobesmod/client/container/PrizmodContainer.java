@@ -3,6 +3,7 @@ package com.spectrobes.spectrobesmod.client.container;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
+import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
 import com.spectrobes.spectrobesmod.common.items.tools.PrizmodItem;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.*;
@@ -62,7 +63,8 @@ public class PrizmodContainer extends Container {
      */
     @Override
     public boolean stillValid(PlayerEntity playerIn) {
-        return playerIn.getItemInHand(playerIn.getUsedItemHand()).getItem() instanceof PrizmodItem;
+        return playerIn.inventory.contains(SpectrobesItems.prizmod_item.getDefaultInstance());
+//        return playerIn.getItemInHand(playerIn.getUsedItemHand()).getItem() instanceof PrizmodItem;
     }
 
     public void markDirty() {

@@ -516,6 +516,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
             if(getOwner() != null) {
                 getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
                     sm.updateSpectrobe(spectrobeInstance);
+                    sm.addGura(krawlProperties.getGuraWorth());
                     SpectrobesNetwork.sendToServer(new SSyncSpectrobeMasterPacket(sm));
                 });
             }

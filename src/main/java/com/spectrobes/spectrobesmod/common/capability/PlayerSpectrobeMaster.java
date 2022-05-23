@@ -18,6 +18,7 @@ public class PlayerSpectrobeMaster {
     private Map<Integer,UUID> currentTeam = new HashMap<>(7);
 
     private int currentSelected;
+    private int guraBalance;
 
     private List<Spectrobe>
         ownedSpectrobes;
@@ -97,6 +98,7 @@ public class PlayerSpectrobeMaster {
                 currentTeamNbt.putString(String.valueOf(i), currentTeam.get(i).toString());
         }
         myData.putInt("currentSelected", currentSelected);
+        myData.putInt("guraBalance", guraBalance);
         myData.put("spectrobesOwned", spectrobes);
         myData.put("currentTeam", currentTeamNbt);
         return myData;
@@ -117,8 +119,15 @@ public class PlayerSpectrobeMaster {
         } catch(NullPointerException ex) {
             selected = 0;
         }
-
         currentSelected = selected;
+
+        int gura;
+        try {
+            gura = nbt.getInt("guraBalance");
+        } catch(NullPointerException ex) {
+            gura = 0;
+        }
+        guraBalance = gura;
 
         List<Spectrobe> spectrobes = new ArrayList<>();
         for(INBT spectrobeNbt : ownedSpectrobesNbt) {
@@ -130,12 +139,9 @@ public class PlayerSpectrobeMaster {
             try {
                 currentTeam.replace(i, UUID.fromString(
                         currentTeamNbt.getString(String.valueOf(i))));
-
             } catch(Exception ex){
             }
         }
-//        }
-
     }
 
     public void copyFrom(PlayerSpectrobeMaster oldStore) {
@@ -210,5 +216,23 @@ public class PlayerSpectrobeMaster {
 
     public int getCurrentTeamMemberSlot() {
         return currentSelected;
+    }
+
+    public int getCurrentGuraBalance() {
+        return guraBalance;
+    }
+
+    public void addGura(int gura) {
+        SpectrobesInfo.LOGGER.debug("ADDING GURA");
+        this.guraBalance = this.guraBalance + gura;
+    }
+
+    public boolean spendGura(int gura) {
+        if(this.guraBalance - gura >= 0) {
+            this.guraBalance = this.guraBalance - gura;
+            return true;
+        } else {
+            return false;
+        }
     }
 }

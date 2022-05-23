@@ -33,7 +33,6 @@ public class ServerEvents {
             if(event.getEntityLiving().getKillCredit() instanceof EntitySpectrobe) {
                 EntitySpectrobe spectrobe = (EntitySpectrobe) event.getEntityLiving().getKillCredit();
                 spectrobe.awardKillStats(((EntityKrawl)event.getEntityLiving()).krawlProperties);
-                spectrobe.updateEntityAttributes();
 
             }
         }

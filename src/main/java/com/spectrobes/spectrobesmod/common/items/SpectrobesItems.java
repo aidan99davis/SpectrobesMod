@@ -116,6 +116,10 @@ public class SpectrobesItems {
                 new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
                 .setRegistryName("fossil_block"));
 
+        event.getRegistry().register(new BlockItem(SpectrobesBlocks.healer_block.get(),
+                new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
+                .setRegistryName("healer_block"));
+
         event.getRegistry().register(
                 new PrizmodItem(
                         new Item.Properties()

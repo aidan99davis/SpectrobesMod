@@ -1,11 +1,13 @@
 package com.spectrobes.spectrobesmod;
 
 import com.spectrobes.spectrobesmod.client.blocks.BlockRendererManager;
+import com.spectrobes.spectrobesmod.client.container.HealerContainer;
 import com.spectrobes.spectrobesmod.client.container.PrizmodContainer;
 import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
 import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlRendererManager;
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobeRendererManager;
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
+import com.spectrobes.spectrobesmod.client.gui.healer.HealerScreen;
 import com.spectrobes.spectrobesmod.client.keybindings.SpectrobesKeybindings;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.registry.*;
@@ -92,6 +94,7 @@ public class SpectrobesMod
     public void doClientStuff(final FMLClientSetupEvent event)
     {
         ScreenManager.register(PrizmodContainer.PRIZMOD.get(), PrizmodScreen::new);
+        ScreenManager.register(HealerContainer.HEALER.get(), HealerScreen::new);
         SpectrobeRendererManager.init();
         //force load the serializer to prevent clients crashing
         IDataSerializer serializer = Spectrobe.SpectrobeSerializer;
