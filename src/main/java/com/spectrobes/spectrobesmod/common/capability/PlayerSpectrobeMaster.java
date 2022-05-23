@@ -223,7 +223,6 @@ public class PlayerSpectrobeMaster {
     }
 
     public void addGura(int gura) {
-        SpectrobesInfo.LOGGER.debug("ADDING GURA");
         this.guraBalance = this.guraBalance + gura;
     }
 

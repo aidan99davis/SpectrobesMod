@@ -11,10 +11,12 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkEvent;
 
+import java.util.UUID;
 import java.util.function.Supplier;
 
 public class CSyncSpectrobeMasterPacket {
 
+    private UUID playerUuid;
     private PlayerSpectrobeMaster capability;
 
     public CSyncSpectrobeMasterPacket(PlayerSpectrobeMaster capability) {
@@ -36,10 +38,9 @@ public class CSyncSpectrobeMasterPacket {
         ctx.get().enqueueWork(() -> {
             ServerPlayerEntity player = ctx.get().getSender();
 
-            PlayerSpectrobeMaster serverCap = player
-                    .getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
-                    .orElseThrow(IllegalStateException::new);
-            serverCap.deserializeNBT(capability.serializeNBT());
+            player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
+                    .ifPresent(playerSpectrobeMaster ->
+                            playerSpectrobeMaster.deserializeNBT(capability.serializeNBT()));
 
         });
         ctx.get().setPacketHandled(true);

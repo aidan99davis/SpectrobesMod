@@ -24,4 +24,5 @@ public class SpectrobesTileRegistry {
         public static final RegistryObject<TileEntityType<VilarFossilBlockTileEntity>> VILAR_FOSSIL_TILE = TILES.register("vilarfossiltile", () -> TileEntityType.Builder.of(VilarFossilBlockTileEntity::new, SpectrobesBlocks.vilar_fossil.get()).build(null));
         public static final RegistryObject<TileEntityType<ZozaFossilBlockTileEntity>> ZOZA_FOSSIL_TILE = TILES.register("zozafossiltile", () -> TileEntityType.Builder.of(ZozaFossilBlockTileEntity::new, SpectrobesBlocks.zoza_fossil.get()).build(null));
         public static final RegistryObject<TileEntityType<MossariFossilBlockTileEntity>> MOSSARI_FOSSIL_TILE = TILES.register("mossarifossiltile", () -> TileEntityType.Builder.of(MossariFossilBlockTileEntity::new, SpectrobesBlocks.mossari_fossil.get()).build(null));
+        public static final RegistryObject<TileEntityType<AoiFossilBlockTileEntity>> AOI_FOSSIL_TILE = TILES.register("aoifossiltile", () -> TileEntityType.Builder.of(AoiFossilBlockTileEntity::new, SpectrobesBlocks.aoi_fossil.get()).build(null));
 }

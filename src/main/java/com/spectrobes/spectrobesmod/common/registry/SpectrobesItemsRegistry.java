@@ -27,6 +27,14 @@ public class SpectrobesItemsRegistry {
                                     .setISTER(() -> GrildaFossilItemRenderer::new)
                                     .tab(SpectrobesItems.SpectrobesFossilsItemGroup.Instance)));
 
+    public static final RegistryObject<BlockItem> aoi_fossil_item =
+            ITEMS.register("aoi_fossil_item",
+                    () -> new AoiFossilItem(SpectrobesBlocks.aoi_fossil.get(),
+                            new Item.Properties()
+                                    .setISTER(() -> AoiFossilItemRenderer::new)
+                                    .tab(SpectrobesItems.SpectrobesFossilsItemGroup.Instance)));
+
+
     public static final RegistryObject<BlockItem> harumi_fossil_item =
             ITEMS.register("harumi_fossil_item",
                     () -> new HarumiFossilItem(SpectrobesBlocks.harumi_fossil.get(),
@@ -116,6 +124,8 @@ public class SpectrobesItemsRegistry {
         all_fossils.add(vilar_fossil_item.get());
         all_fossils.add(zoza_fossil_item.get());
         all_fossils.add(mossari_fossil_item.get());
+        all_fossils.add(aoi_fossil_item.get());
+        all_fossils.add(spiko_fossil_item.get());
     }
 
     public static ItemStack getRandomFossil() {

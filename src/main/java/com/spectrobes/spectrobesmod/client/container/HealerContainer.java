@@ -38,8 +38,10 @@ public class HealerContainer extends Container {
 
     public void healTeam() {
         capability.getCurrentTeamUuids().forEach((integer, uuid) -> {
-            Spectrobe spectrobe = capability.getSpectrobeByUuid(uuid);
-            spectrobe.setCurrentHealth(spectrobe.stats.getHpLevel());
+            if(uuid != null) {
+                Spectrobe spectrobe = capability.getSpectrobeByUuid(uuid);
+                spectrobe.setCurrentHealth(spectrobe.stats.getHpLevel());
+            }
         });
     }
 

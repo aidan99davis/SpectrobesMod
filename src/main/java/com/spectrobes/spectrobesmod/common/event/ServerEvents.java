@@ -6,7 +6,6 @@ import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.CSyncSpectrobeMasterPacket;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSyncSpectrobeMasterPacket;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -33,7 +32,6 @@ public class ServerEvents {
             if(event.getEntityLiving().getKillCredit() instanceof EntitySpectrobe) {
                 EntitySpectrobe spectrobe = (EntitySpectrobe) event.getEntityLiving().getKillCredit();
                 spectrobe.awardKillStats(((EntityKrawl)event.getEntityLiving()).krawlProperties);
-
             }
         }
     }
