@@ -12,12 +12,7 @@
 			},
 			"bones": [
 				{
-					"name": "pod",
-					"pivot": [0, 0, 0]
-				},
-				{
 					"name": "Top",
-					"parent": "pod",
 					"pivot": [0, 0, 0],
 					"cubes": [
 						{"origin": [-4, 34, -2], "size": [6, 2, 6], "uv": [56, 12]},
@@ -28,7 +23,6 @@
 				},
 				{
 					"name": "PodCore",
-					"parent": "pod",
 					"pivot": [0, 0, 0],
 					"cubes": [
 						{"origin": [-8, 28, -6], "size": [14, 2, 14], "uv": [54, 38]},
@@ -38,7 +32,6 @@
 				},
 				{
 					"name": "Base",
-					"parent": "pod",
 					"pivot": [0, 0, 0],
 					"cubes": [
 						{"origin": [-8, 2, -6], "size": [14, 2, 14], "uv": [0, 56]},
@@ -47,7 +40,6 @@
 				},
 				{
 					"name": "PodSidewall",
-					"parent": "pod",
 					"pivot": [0, 0, 0],
 					"cubes": [
 						{"origin": [-7, 7, 7.5], "size": [12, 22, 1], "uv": [56, 68]},
@@ -58,7 +50,6 @@
 				},
 				{
 					"name": "SideWall2",
-					"parent": "pod",
 					"pivot": [0, 0, 0],
 					"cubes": [
 						{"origin": [6, 8, -3], "size": [1, 20, 8], "uv": [24, 72]},

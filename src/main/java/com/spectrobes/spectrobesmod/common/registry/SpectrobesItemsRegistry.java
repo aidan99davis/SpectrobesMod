@@ -4,6 +4,7 @@ import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.items.renderer.*;
 import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
 import com.spectrobes.spectrobesmod.common.items.fossils.*;
+import com.spectrobes.spectrobesmod.common.items.machines.HealerBlockItem;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -19,6 +20,13 @@ public class SpectrobesItemsRegistry {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, SpectrobesInfo.MOD_ID);
 
     private static List<Item> all_fossils = new ArrayList<>();
+
+    public static final RegistryObject<BlockItem> healer_block_item =
+            ITEMS.register("healer_block_item",
+                    () -> new HealerBlockItem(SpectrobesBlocks.healer_block.get(),
+                            new Item.Properties()
+                                    .setISTER(() -> HealerBlockItemRenderer::new)
+                                    .tab(SpectrobesItems.SpectrobesFossilsItemGroup.Instance)));
 
     public static final RegistryObject<BlockItem> grilda_fossil_item =
             ITEMS.register("grilda_fossil_item",
