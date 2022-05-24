@@ -7,6 +7,7 @@ import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.CSyncSpectrobeMasterPacket;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SDespawnSpectrobePacket;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSpawnSpectrobePacket;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
@@ -91,6 +92,7 @@ public class SpectrobesKeybindings {
                                     sm.spawnCurrent();
                                     SpectrobesNetwork.sendToServer(new SSpawnSpectrobePacket(sm.getCurrentTeamMember()));
                                 }
+                                SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket(sm));
                             });
                 }
             }
@@ -116,6 +118,8 @@ public class SpectrobesKeybindings {
                                 if(sm.getCurrentTeamMember() != null) {
                                     SpectrobesNetwork.sendToServer(new SSpawnSpectrobePacket(sm.getCurrentTeamMember()));
                                 }
+                                SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket(sm));
+
                             });
                 }
             }

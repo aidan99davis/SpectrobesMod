@@ -17,7 +17,7 @@ apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '1.4.8'
+version = '1.4.8.1'
 group = 'com.aidan99davis.spectrobesmod' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'spectrobesmod'
 
@@ -96,11 +96,11 @@ jar {
     manifest {
         attributes([
             "Specification-Title": "spectrobesmod",
-            "Specification-Vendor": "examplemodsareus",
+            "Specification-Vendor": "spectrobes-mod-team",
             "Specification-Version": "1", // We are version 1 of ourselves
             "Implementation-Title": project.name,
             "Implementation-Version": "${version}",
-            "Implementation-Vendor" :"examplemodsareus",
+            "Implementation-Vendor" :"spectrobes-mod-team",
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }

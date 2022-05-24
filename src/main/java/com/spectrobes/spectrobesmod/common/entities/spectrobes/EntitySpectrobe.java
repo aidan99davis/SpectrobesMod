@@ -1,5 +1,6 @@
 package com.spectrobes.spectrobesmod.common.entities.spectrobes;
 
+import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.entities.IHasNature;
@@ -11,6 +12,7 @@ import com.spectrobes.spectrobesmod.common.items.minerals.SpecialMineralItem;
 import com.spectrobes.spectrobesmod.common.items.tools.PrizmodItem;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.CSyncSpectrobeMasterPacket;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSyncSpectrobeMasterPacket;
 import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
@@ -26,6 +28,7 @@ import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.passive.horse.LlamaEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
@@ -107,15 +110,15 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         this.goalSelector.addGoal(1, new FindMineralsGoal(this));
         this.goalSelector.addGoal(1, new FindFossilsGoal(this));
         this.goalSelector.addGoal(1, new FindMineralOreGoal(this));
-        this.goalSelector.addGoal(3, new AvoidKrawlGoal(this, EntityKrawl.class, 24.0F, 1.5D, 1.5D));
+        this.goalSelector.addGoal(3, new AvoidKrawlGoal(this, EntityKrawl.class, 24.0F, 1D, 1.25D));
         this.goalSelector.addGoal(4, new LeapAtTargetGoal(this, 0.4f));
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.2f, true));
         this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
 
-        this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
-        this.targetSelector.addGoal(1, new OwnerHurtTargetGoal(this));
-        this.targetSelector.addGoal(2, (new HurtByTargetGoal(this)));
+        this.targetSelector.addGoal(2, new MasterHurtByTargetGoal(this));
+        this.targetSelector.addGoal(2, new MasterHurtTargetGoal(this));
+        this.targetSelector.addGoal(1, (new SpectrobeHurtByTargetGoal(this)));
         this.targetSelector.addGoal(3, new TargetKrawlGoal(this, EntityKrawl.class, false, TARGET_KRAWL));
     }
 
@@ -469,10 +472,15 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
                     scaledAmount = damageAmount;
                     break;
             }
-            this.getSpectrobeData().damage((int)damageAmount);
+
+            if(level.isClientSide()) {
+                this.getSpectrobeData().damage((int)damageAmount);
+            }
             super.actuallyHurt(damageSrc, scaledAmount);
         } else {
-            this.getSpectrobeData().damage((int)damageAmount);
+            if(level.isClientSide()) {
+                this.getSpectrobeData().damage((int)damageAmount);
+            }
             super.actuallyHurt(damageSrc, damageAmount);
         }
         if(getOwner() != null) {
@@ -504,14 +512,15 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     }
 
     public void awardKillStats(KrawlProperties krawlProperties) {
-        if(level.isClientSide()) {
+        if(!level.isClientSide()) {
             Spectrobe spectrobeInstance = getSpectrobeData();
             spectrobeInstance.stats.addStats(krawlProperties);
             updateEntityAttributes();
             if(getOwner() != null) {
                 getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
                     sm.updateSpectrobe(spectrobeInstance);
-                    SpectrobesNetwork.sendToServer(new SSyncSpectrobeMasterPacket(sm));
+                    sm.addGura(krawlProperties.getGuraWorth());
+                    SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(sm), (ServerPlayerEntity) getOwner());
                 });
             }
         }

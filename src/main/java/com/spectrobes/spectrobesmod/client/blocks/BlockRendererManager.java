@@ -21,5 +21,7 @@ public class BlockRendererManager {
         ClientRegistry.bindTileEntityRenderer(SpectrobesTileRegistry.VILAR_FOSSIL_TILE.get(), VilarFossilRenderer::new);
         ClientRegistry.bindTileEntityRenderer(SpectrobesTileRegistry.ZOZA_FOSSIL_TILE.get(), ZozaFossilRenderer::new);
         ClientRegistry.bindTileEntityRenderer(SpectrobesTileRegistry.MOSSARI_FOSSIL_TILE.get(), MossariFossilRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(SpectrobesTileRegistry.AOI_FOSSIL_TILE.get(), AoiFossilRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(SpectrobesTileRegistry.HEALER_TILE.get(), HealerBlockRenderer::new);
     }
 }

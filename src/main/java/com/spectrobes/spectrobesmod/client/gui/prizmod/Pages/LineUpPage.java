@@ -91,7 +91,6 @@ public class LineUpPage extends PrizmodPage {
         }
 
         for(SpectrobePiece sp : AllSpectrobesGrid.getAll()) {
-            SpectrobesInfo.LOGGER.debug("CREATING BUTTON FOR ALL SPECTROBES GRID");
             addButton(addSpectrobeButton(sp, false));
         }
     }

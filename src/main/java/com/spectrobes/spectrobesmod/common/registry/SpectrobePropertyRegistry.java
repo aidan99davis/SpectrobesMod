@@ -53,4 +53,7 @@ public class SpectrobePropertyRegistry {
 
     //MOSSARI
     public static SpectrobeProperties MOSSARI = new SpectrobeProperties(SpectrobeProperties.Nature.FLASH, SpectrobeProperties.Stage.CHILD);
+
+    //AOI
+    public static SpectrobeProperties AOI = new SpectrobeProperties(SpectrobeProperties.Nature.FLASH, SpectrobeProperties.Stage.CHILD);
 }

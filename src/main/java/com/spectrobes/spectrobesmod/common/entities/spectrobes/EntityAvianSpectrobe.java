@@ -1,9 +1,13 @@
 package com.spectrobes.spectrobesmod.common.entities.spectrobes;
 
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.FlyingMovementController;
+import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.ai.goal.WaterAvoidingRandomFlyingGoal;
 import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.IFlyingAnimal;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.util.math.MathHelper;
@@ -19,8 +23,12 @@ public abstract class EntityAvianSpectrobe extends EntitySpectrobe implements IF
 
     public EntityAvianSpectrobe(EntityType<? extends EntitySpectrobe> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
-        this.moveControl = new FlyingMovementController(this, 10, false);
+        this.moveControl = new FlyingMovementController(this, 10, true);
         this.setPathfindingMalus(PathNodeType.OPEN, 0.0F);
+    }
+
+    public static AttributeModifierMap.MutableAttribute setCustomAttributes() {
+        return EntitySpectrobe.setCustomAttributes().add(Attributes.FLYING_SPEED, 1);
     }
 
     @Override
@@ -32,8 +40,9 @@ public abstract class EntityAvianSpectrobe extends EntitySpectrobe implements IF
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(6, new WaterAvoidingRandomFlyingGoal(this, 2));
-        this.goalSelector.addGoal(6, new WaterAvoidingRandomWalkingGoal(this, 2));
+        this.goalSelector.addGoal(0, new SwimGoal(this));
+        this.goalSelector.addGoal(6, new WaterAvoidingRandomFlyingGoal(this, 1.2));
+        this.goalSelector.addGoal(7, new WaterAvoidingRandomWalkingGoal(this, 1.2));
     }
 
     @Override

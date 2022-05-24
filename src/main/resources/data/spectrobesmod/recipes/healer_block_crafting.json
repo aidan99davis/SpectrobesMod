@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    "zyz",
+    "zxz",
+    "zyz"
+  ],
+  "key":
+  {
+    "x":
+    {
+      "item": "minecraft:water_bucket"
+    },
+    "y":
+    {
+      "tag": "forge:gems/emerald"
+    },
+    "z":
+    {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result":
+  {
+    "item": "spectrobesmod:healer_block_item",
+    "count": 1
+  }
+}

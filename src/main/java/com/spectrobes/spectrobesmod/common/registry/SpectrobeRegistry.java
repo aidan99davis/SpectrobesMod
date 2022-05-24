@@ -106,6 +106,13 @@ public class SpectrobeRegistry {
             .build();
 
     //Flash Spectrobes
+    public static final Spectrobe Aoi
+            = new SpectrobeBuilder()
+            .withName("aoi")
+            .withProperties(SpectrobePropertyRegistry.AOI)
+            .withStats(25,5,5)
+            .build();
+
     public static final Spectrobe Samukabu
             = new SpectrobeBuilder()
             .withName("Samukabu")

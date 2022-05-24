@@ -23,6 +23,6 @@ public class SpectrobesEntitySpawns {
         List<MobSpawnInfo.Spawners> spawns =
                 event.getSpawns().getSpawner(EntityClassification.MONSTER);
 
-        spawns.add(new MobSpawnInfo.Spawners(KrawlEntities.ENTITY_VORTEX.get(), 100, 1, 2));
+        spawns.add(new MobSpawnInfo.Spawners(KrawlEntities.ENTITY_VORTEX.get(), 75, 1, 1));
     }
 }

@@ -4,6 +4,7 @@ import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.items.renderer.*;
 import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
 import com.spectrobes.spectrobesmod.common.items.fossils.*;
+import com.spectrobes.spectrobesmod.common.items.machines.HealerBlockItem;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,12 +21,27 @@ public class SpectrobesItemsRegistry {
 
     private static List<Item> all_fossils = new ArrayList<>();
 
+    public static final RegistryObject<BlockItem> healer_block_item =
+            ITEMS.register("healer_block_item",
+                    () -> new HealerBlockItem(SpectrobesBlocks.healer_block.get(),
+                            new Item.Properties()
+                                    .setISTER(() -> HealerBlockItemRenderer::new)
+                                    .tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance)));
+
     public static final RegistryObject<BlockItem> grilda_fossil_item =
             ITEMS.register("grilda_fossil_item",
                     () -> new GrildaFossilItem(SpectrobesBlocks.grilda_fossil.get(),
                             new Item.Properties()
                                     .setISTER(() -> GrildaFossilItemRenderer::new)
                                     .tab(SpectrobesItems.SpectrobesFossilsItemGroup.Instance)));
+
+    public static final RegistryObject<BlockItem> aoi_fossil_item =
+            ITEMS.register("aoi_fossil_item",
+                    () -> new AoiFossilItem(SpectrobesBlocks.aoi_fossil.get(),
+                            new Item.Properties()
+                                    .setISTER(() -> AoiFossilItemRenderer::new)
+                                    .tab(SpectrobesItems.SpectrobesFossilsItemGroup.Instance)));
+
 
     public static final RegistryObject<BlockItem> harumi_fossil_item =
             ITEMS.register("harumi_fossil_item",
@@ -116,6 +132,8 @@ public class SpectrobesItemsRegistry {
         all_fossils.add(vilar_fossil_item.get());
         all_fossils.add(zoza_fossil_item.get());
         all_fossils.add(mossari_fossil_item.get());
+        all_fossils.add(aoi_fossil_item.get());
+        all_fossils.add(spiko_fossil_item.get());
     }
 
     public static ItemStack getRandomFossil() {

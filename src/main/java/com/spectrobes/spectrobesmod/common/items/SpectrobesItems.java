@@ -1,6 +1,7 @@
 package com.spectrobes.spectrobesmod.common.items;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
+import com.spectrobes.spectrobesmod.common.items.machines.HealerBlockItem;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobesBlocks;
 import com.spectrobes.spectrobesmod.common.items.fossils.*;
 import com.spectrobes.spectrobesmod.common.items.minerals.Mineral;
@@ -115,6 +116,10 @@ public class SpectrobesItems {
         event.getRegistry().register(new BlockItem(SpectrobesBlocks.fossil_block.get(),
                 new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
                 .setRegistryName("fossil_block"));
+
+//        event.getRegistry().register(new HealerBlockItem(SpectrobesBlocks.healer_block.get(),
+//                new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
+//                .setRegistryName("healer_block_item"));
 
         event.getRegistry().register(
                 new PrizmodItem(

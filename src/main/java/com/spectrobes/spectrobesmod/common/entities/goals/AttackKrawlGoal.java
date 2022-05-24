@@ -67,4 +67,11 @@ public class AttackKrawlGoal extends TargetGoal {
         this.mob.setAggressive(true);
         super.start();
     }
+
+    @Override
+    public void stop() {
+        super.stop();
+        ((EntitySpectrobe)this.mob).setIsAttacking(false);
+        this.mob.setAggressive(false);
+    }
 }
