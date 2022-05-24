@@ -18,7 +18,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.inventory.container.SimpleNamedContainerProvider;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -49,15 +51,12 @@ public class HealerBlock extends SpectrobesTileEntityBlock {
 
     @Override
     public void entityInside(BlockState pState, World pLevel, BlockPos pPos, Entity pEntity) {
-        SpectrobesInfo.LOGGER.debug("DOOT 1");
         if(!pLevel.isClientSide && pEntity instanceof PlayerEntity) {
             PlayerSpectrobeMaster capability = pEntity.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
                     .orElseThrow(IllegalStateException::new);
             capability.getCurrentTeamUuids().forEach((integer, uuid) -> {
-                SpectrobesInfo.LOGGER.debug("DOOT 2");
 
                 if(uuid != null) {
-                    SpectrobesInfo.LOGGER.debug("DOOT 3");
                     Spectrobe spectrobe = capability.getSpectrobeByUuid(uuid);
                     spectrobe.setCurrentHealth(spectrobe.stats.getHpLevel());
                 }
@@ -88,4 +87,10 @@ public class HealerBlock extends SpectrobesTileEntityBlock {
             return new HealerContainer(containerId, playerEntity);
         }, new StringTextComponent("Healer"));
     }
+
+//    @Nullable
+//    @Override
+//    public BlockState getStateForPlacement(BlockItemUseContext context) {
+//        return this.defaultBlockState().setValue(FACING, Direction.UP);
+//    }
 }

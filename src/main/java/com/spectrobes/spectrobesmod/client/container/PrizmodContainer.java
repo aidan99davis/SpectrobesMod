@@ -64,7 +64,6 @@ public class PrizmodContainer extends Container {
     @Override
     public boolean stillValid(PlayerEntity playerIn) {
         return playerIn.inventory.contains(SpectrobesItems.prizmod_item.getDefaultInstance());
-//        return playerIn.getItemInHand(playerIn.getUsedItemHand()).getItem() instanceof PrizmodItem;
     }
 
     public void markDirty() {
@@ -72,11 +71,6 @@ public class PrizmodContainer extends Container {
     }
 
     public Map<Integer, UUID> getCurrentTeamUUIDs() {
-        Collection<UUID> uuidSet = capability.getCurrentTeamUuids().values();
-        for (UUID id : uuidSet) {
-            SpectrobesInfo.LOGGER.info(id);
-
-        }
         return capability.getCurrentTeamUuids();
     }
 

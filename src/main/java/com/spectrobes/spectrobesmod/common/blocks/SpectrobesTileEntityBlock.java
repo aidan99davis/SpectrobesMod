@@ -8,12 +8,13 @@ import net.minecraft.block.DirectionalBlock;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.world.IBlockReader;
 import software.bernie.example.registry.TileRegistry;
 
 import javax.annotation.Nullable;
 
-public class SpectrobesTileEntityBlock extends DirectionalBlock {
+public class SpectrobesTileEntityBlock extends Block {
 
     protected SpectrobesTileEntityBlock(Properties p_i48415_1_) {
         super(p_i48415_1_);
@@ -35,13 +36,13 @@ public class SpectrobesTileEntityBlock extends DirectionalBlock {
         return BlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
-    }
-
-    @Nullable
-    @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
-    }
+//    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+//        builder.add(FACING);
+//    }
+//
+//    @Nullable
+//    @Override
+//    public BlockState getStateForPlacement(BlockItemUseContext context) {
+//        return this.defaultBlockState().setValue(FACING, Direction.UP);
+//    }
 }

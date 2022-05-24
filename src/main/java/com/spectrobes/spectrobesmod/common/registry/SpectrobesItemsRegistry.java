@@ -26,7 +26,7 @@ public class SpectrobesItemsRegistry {
                     () -> new HealerBlockItem(SpectrobesBlocks.healer_block.get(),
                             new Item.Properties()
                                     .setISTER(() -> HealerBlockItemRenderer::new)
-                                    .tab(SpectrobesItems.SpectrobesFossilsItemGroup.Instance)));
+                                    .tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance)));
 
     public static final RegistryObject<BlockItem> grilda_fossil_item =
             ITEMS.register("grilda_fossil_item",
