@@ -33,5 +33,6 @@ public class SpectrobeRendererManager {
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_NAGU.get(), manager -> new NaguRenderer(manager));
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_MOSSARI.get(), manager -> new MossariRenderer(manager));
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_AOI.get(), manager -> new AoiRenderer(manager));
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_BARTOR.get(), manager -> new BartorRenderer(manager));
     }
 }

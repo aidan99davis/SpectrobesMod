@@ -31,9 +31,12 @@ public class SpectrobePropertyRegistry {
     public static SpectrobeProperties SEGU = new SpectrobeProperties(SpectrobeProperties.Nature.AURORA, SpectrobeProperties.Stage.CHILD);
     public static SpectrobeProperties SEGULOS = new SpectrobeProperties(SpectrobeProperties.Nature.AURORA, SpectrobeProperties.Stage.ADULT);
 
-
+    //GRILDA LINE
     public static SpectrobeProperties GRILDA = new SpectrobeProperties(SpectrobeProperties.Nature.AURORA, SpectrobeProperties.Stage.CHILD);
     public static SpectrobeProperties GRILDEN = new SpectrobeProperties(SpectrobeProperties.Nature.AURORA, SpectrobeProperties.Stage.ADULT);
+
+    //BARTOR LINE
+    public static SpectrobeProperties BARTOR = new SpectrobeProperties(SpectrobeProperties.Nature.AURORA, SpectrobeProperties.Stage.CHILD);
 
     //FLASH
 

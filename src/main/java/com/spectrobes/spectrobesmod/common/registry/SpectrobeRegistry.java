@@ -105,6 +105,13 @@ public class SpectrobeRegistry {
             .withStats(158,150,112)
             .build();
 
+    public static final Spectrobe Bartor
+            = new SpectrobeBuilder()
+            .withName("Bartor")
+            .withProperties(SpectrobePropertyRegistry.BARTOR)
+            .withStats(48,100,50)
+            .build();
+
     //Flash Spectrobes
     public static final Spectrobe Aoi
             = new SpectrobeBuilder()

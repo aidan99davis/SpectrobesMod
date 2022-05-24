@@ -1,7 +1,6 @@
-package com.spectrobes.spectrobesmod.common.entities.spectrobes.aoi;
+package com.spectrobes.spectrobesmod.common.entities.spectrobes.bartor;
 
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
-import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityAvianSpectrobe;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityMammalSpectrobe;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.items.fossils.FossilBlockItem;
@@ -13,41 +12,58 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.world.World;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class EntityAoi extends EntityAvianSpectrobe {
+public class EntityBartor extends EntityMammalSpectrobe {
 
-    public EntityAoi(EntityType<EntityAoi> entityTypeIn, World worldIn) {
+    public EntityBartor(EntityType<EntityBartor> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
     }
 
     public Spectrobe GetNewSpectrobeInstance() {
-        return SpectrobeRegistry.Aoi.copy(false);
+        return SpectrobeRegistry.Bartor.copy(false);
     }
 
     @Override
     public EntityType<? extends EntitySpectrobe> getEvolutionRegistry() {
-//        return SpectrobesEntities.ENTITY_AOBA.get();
+//        return SpectrobesEntities.ENTITY_BARTOLOR.get();
         return null;
     }
 
     @Override
     public String getRegistryName() {
-        return "entity_aoi";
+        return "entity_bartor";
     }
 
     @Override
     public Class getSpectrobeClass() {
-        return EntityAoi.class;
+        return EntityBartor.class;
     }
 
     @Override
     protected EntityType<? extends EntitySpectrobe> getChildForLineage() {
-        return SpectrobesEntities.ENTITY_AOI.get();
+        return SpectrobesEntities.ENTITY_BARTOR.get();
     }
+
+    @Override
+    public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event) {
+        if(event.isMoving())
+        {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.bartor.walk", true));
+            return PlayState.CONTINUE;
+        }
+        else if(event.getAnimatable().isOrderedToSit()) {
+            event.getController().setAnimation(new AnimationBuilder()
+                    .addAnimation("animation.bartor.sitting", false)
+                    .addAnimation("animation.bartor.sit", true));
+            return PlayState.CONTINUE;
+        } else {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.bartor.idle", true));
+            return PlayState.CONTINUE;
+        }
+    }
+
 
     @Override
     public AnimationFactory getFactory() {
@@ -55,28 +71,17 @@ public class EntityAoi extends EntityAvianSpectrobe {
     }
 
     @Override
-    public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event) {
-        if(event.getAnimatable().isOrderedToSit())
-        {
-            event.getController().setAnimationSpeed(event.getController().getAnimationSpeed() * 2);
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.aoi.sit", true));
-            return PlayState.CONTINUE;
-        } else {
-            event.getController().setAnimationSpeed(event.getController().getAnimationSpeed() * 5);
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.aoi.idle", true));
-            return PlayState.CONTINUE;
-        }
-
-    }
-
-    @Override
     protected EvolutionRequirements getEvolutionRequirements() {
-        return new EvolutionRequirements(1, 6, 0);
+        return new EvolutionRequirements(1, 3, 0);
     }
 
     @Override
     protected FossilBlockItem getFossil() {
-        return (FossilBlockItem) SpectrobesItemsRegistry.aoi_fossil_item.get();
+        return (FossilBlockItem) SpectrobesItemsRegistry.bartor_fossil_item.get().getItem();
     }
 
+    @Override
+    public int getLitterSize() {
+        return 0;
+    }
 }

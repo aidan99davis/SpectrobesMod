@@ -1,9 +1,7 @@
 package com.spectrobes.spectrobesmod.common.items;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.common.items.machines.HealerBlockItem;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobesBlocks;
-import com.spectrobes.spectrobesmod.common.items.fossils.*;
 import com.spectrobes.spectrobesmod.common.items.minerals.Mineral;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
 import com.spectrobes.spectrobesmod.common.items.minerals.SpecialMineralItem;
@@ -14,11 +12,8 @@ import com.spectrobes.spectrobesmod.common.registry.SpectrobesItemsRegistry;
 import net.minecraft.item.*;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
@@ -116,10 +111,6 @@ public class SpectrobesItems {
         event.getRegistry().register(new BlockItem(SpectrobesBlocks.fossil_block.get(),
                 new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
                 .setRegistryName("fossil_block"));
-
-//        event.getRegistry().register(new HealerBlockItem(SpectrobesBlocks.healer_block.get(),
-//                new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
-//                .setRegistryName("healer_block_item"));
 
         event.getRegistry().register(
                 new PrizmodItem(
