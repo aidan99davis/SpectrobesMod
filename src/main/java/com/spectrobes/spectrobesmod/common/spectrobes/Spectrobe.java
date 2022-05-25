@@ -73,7 +73,6 @@ public class Spectrobe {
         this.name = evolution.name;
         this.properties = evolution.properties;
         this.stats.setStatsOrBase(evolution.stats);
-//        this.stats.addStats(evolution.stats);
         this.currentHealth = this.stats.getHpLevel();
     }
 
