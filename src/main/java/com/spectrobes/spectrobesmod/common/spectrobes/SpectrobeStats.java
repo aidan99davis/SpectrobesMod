@@ -7,9 +7,9 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 
 public class SpectrobeStats {
-    private int atkLevel;
-    private int defLevel;
-    private int hpLevel;
+    private Stat health;
+    private Stat attack;
+    private Stat defence;
     private int mineralsEaten;
     private int battlesWon;
 
@@ -19,10 +19,10 @@ public class SpectrobeStats {
 
     public SpectrobeStats() {}
 
-    public SpectrobeStats(int hpStat, int atkStat, int defStat) {
-        this.hpLevel = hpStat;
-        this.atkLevel = atkStat;
-        this.defLevel = defStat;
+    public SpectrobeStats(Stat hpStat, Stat atkStat, Stat defStat) {
+        this.health = hpStat;
+        this.attack = atkStat;
+        this.defence = defStat;
         this.mineralsEaten = 0;
         this.battlesWon = 0;
         this.xp_required = 100;
@@ -30,17 +30,16 @@ public class SpectrobeStats {
         this.level = 1;
     }
 
-    public SpectrobeStats(int hpStat, int atkStat, int defStat, int mineralsEaten, int battlesWon, int xp_required, int xp, int level) {
-        this.hpLevel = hpStat;
-        this.atkLevel = atkStat;
-        this.defLevel = defStat;
+    public SpectrobeStats(Stat hpStat, Stat atkStat, Stat defStat, int mineralsEaten, int battlesWon, int xp_required, int xp, int level) {
+        this.health = hpStat;
+        this.attack = atkStat;
+        this.defence = defStat;
         this.mineralsEaten = mineralsEaten;
         this.battlesWon = battlesWon;
         this.xp_required = xp_required;
         this.xp = xp;
         this.level = level;
     }
-
     //returns true if levelled up.
     boolean addXp(int xp_to_add) {
         xp += xp_to_add;
@@ -48,6 +47,9 @@ public class SpectrobeStats {
             xp -= xp_required;
             xp_required *= 1.2;
             level++;
+            health.levelUp();
+            attack.levelUp();
+            defence.levelUp();
             return true;
         }
         return false;
@@ -55,28 +57,29 @@ public class SpectrobeStats {
 
     public void applyMineral(MineralProperties properties) {
         addXp(properties.getXpWorth());
-        if(atkLevel + properties.getAtkOffset() > 0
-                && defLevel + properties.getDefOffset() > 0
-                && hpLevel + properties.getHpOffset() > 0) {
-            atkLevel += properties.getAtkOffset();
-            defLevel += properties.getDefOffset();
-            hpLevel += properties.getHpOffset();
+        if(attack.value() + properties.getAtkOffset() > 0
+                && defence.value() + properties.getDefOffset() > 0
+                && health.value() + properties.getHpOffset() > 0) {
+            attack.add(properties.getAtkOffset());
+            defence.add(properties.getDefOffset());
+            health.add(properties.getHpOffset());
             mineralsEaten++;
         } else {
             Minecraft.getInstance().player.chat("Your spectrobe cannot eat this mineral");
         }
 
     }
+
     public int getAtkLevel() {
-        return atkLevel;
+        return attack.value();
     }
 
     public int getDefLevel() {
-        return defLevel;
+        return defence.value();
     }
 
     public int getHpLevel() {
-        return hpLevel;
+        return health.value();
     }
 
     public int getMineralsEaten() {
@@ -102,9 +105,9 @@ public class SpectrobeStats {
     public CompoundNBT write() {
         CompoundNBT statsNbt = new CompoundNBT();
 
-        statsNbt.putInt("atk", getAtkLevel());
-        statsNbt.putInt("def", getDefLevel());
-        statsNbt.putInt("hp", getHpLevel());
+        statsNbt.put("attack", attack.write());
+        statsNbt.put("defence", defence.write());
+        statsNbt.put("health", health.write());
         statsNbt.putInt("mineralsEaten", getMineralsEaten());
         statsNbt.putInt("battlesWon", getBattlesWon());
         statsNbt.putInt("xp", getXp());
@@ -116,9 +119,9 @@ public class SpectrobeStats {
 
     public static SpectrobeStats read(CompoundNBT statsNbt) {
         SpectrobeStats stats = new SpectrobeStats();
-        stats.atkLevel = statsNbt.getInt("atk");
-        stats.defLevel = statsNbt.getInt("def");
-        stats.hpLevel = statsNbt.getInt("hp");
+        stats.attack = Stat.read(statsNbt.getCompound("attack"));
+        stats.defence = Stat.read(statsNbt.getCompound("defence"));
+        stats.health = Stat.read(statsNbt.getCompound("health"));
         stats.mineralsEaten = statsNbt.getInt("mineralsEaten");
         stats.battlesWon = statsNbt.getInt("battlesWon");
         stats.xp = statsNbt.getInt("xp");
@@ -129,20 +132,27 @@ public class SpectrobeStats {
     }
 
     public SpectrobeStats copy() {
-        return new SpectrobeStats(hpLevel, atkLevel, defLevel, mineralsEaten, battlesWon, xp_required, xp, level);
+        return new SpectrobeStats(health, attack, defence, mineralsEaten, battlesWon, xp_required, xp, level);
     }
 
+    //adds 1% of the defeated spectrobes stats to itself.
     public void addStats(SpectrobeStats stats) {
-        this.hpLevel += stats.getHpLevel();
-        this.atkLevel += stats.getAtkLevel();
-        this.defLevel += stats.getDefLevel();
+        this.health.add(stats.getHpLevel() / 100);
+        this.attack.add(stats.getAtkLevel() / 100);
+        this.defence.add(stats.getDefLevel() / 100);
     }
 
     public void addStats(KrawlProperties stats) {
-        this.hpLevel += stats.getHpOffset();
-        this.atkLevel += stats.getAtkOffset();
-        this.defLevel += stats.getDefOffset();
+        this.health.add(stats.getHpOffset());
+        this.attack.add(stats.getAtkOffset());
+        this.defence.add(stats.getDefOffset());
         this.addXp(stats.getXpWorth());
         battlesWon++;
+    }
+
+    public void setStatsOrBase(SpectrobeStats stats) {
+        this.health.set(stats.health);
+        this.attack.set(stats.attack);
+        this.defence.set(stats.defence);
     }
 }
