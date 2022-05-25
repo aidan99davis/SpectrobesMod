@@ -7,8 +7,10 @@ import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSyncSpectrobeMasterPacket;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -36,4 +38,13 @@ public class ServerEvents {
         }
     }
 
+
+    @SubscribeEvent
+    public static void OnLivingEntityUpdate(LivingEvent.LivingUpdateEvent event) {
+        if(event.getEntityLiving() instanceof PlayerEntity) {
+            if(event.getEntityLiving().getY() > 150) {
+                //give aurora damage effect.
+            }
+        }
+    }
 }
