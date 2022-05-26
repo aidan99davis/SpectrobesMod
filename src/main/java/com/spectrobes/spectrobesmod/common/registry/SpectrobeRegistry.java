@@ -173,6 +173,17 @@ public class SpectrobeRegistry {
                     .build())
             .build();
 
+    public static final Spectrobe Bartolor
+            = new SpectrobeBuilder()
+            .withName("Bartolor")
+            .withProperties(SpectrobePropertyRegistry.BARTOLOR)
+            .withStats(new SpectrobeStatsBuilder()
+                    .withHealthStat(82, 14, 345)
+                    .withAttackStat(125, 9, 288)
+                    .withDefenceStat(115, 12, 360)
+                    .build())
+            .build();
+
     //Flash Spectrobes
     public static final Spectrobe Aoi
             = new SpectrobeBuilder()
@@ -272,6 +283,17 @@ public class SpectrobeRegistry {
                     .withHealthStat(40, 8, 80)
                     .withAttackStat(50, 8, 115)
                     .withDefenceStat(35, 8, 52)
+                    .build())
+            .build();
+
+    public static final Spectrobe Mossarito
+            = new SpectrobeBuilder()
+            .withName("Mossarito")
+            .withProperties(SpectrobePropertyRegistry.MOSSARITO)
+            .withStats(new SpectrobeStatsBuilder()
+                    .withHealthStat(72, 12, 320)
+                    .withAttackStat(103, 8, 294)
+                    .withDefenceStat(73, 9, 280)
                     .build())
             .build();
 }

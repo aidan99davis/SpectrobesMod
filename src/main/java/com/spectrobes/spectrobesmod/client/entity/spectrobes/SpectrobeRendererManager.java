@@ -1,7 +1,5 @@
 package com.spectrobes.spectrobesmod.client.entity.spectrobes;
 
-import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
-import com.spectrobes.spectrobesmod.client.entity.krawl.renderer.SwarRenderer;
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.renderer.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -10,29 +8,31 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 @OnlyIn(Dist.CLIENT)
 public class SpectrobeRendererManager {
     public static void init() {
-        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_KOMAINU.get(), manager -> new KomainuRenderer(manager));
-        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_KOMANOTO.get(), manager -> new KomanotoRenderer(manager));
-        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_VILAR.get(), manager -> new VilarRenderer(manager));
-        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_VILAMASTA.get(), manager -> new VilamastaRenderer(manager));
-        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SPIKO.get(), manager -> new SpikoRenderer(manager));
-        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SPIKAN.get(), manager -> new SpikanRenderer(manager));
-        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SAMUKABU.get(), manager -> new SamukabuRenderer(manager));
-        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SAMURITE.get(), manager -> new SamuriteRenderer(manager));
-        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_KUBAKU.get(), manager -> new KubakuRenderer(manager));
-        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_KUGANON.get(), manager -> new KuganonRenderer(manager));
-        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SHAKIN.get(), manager -> new ShakinRenderer(manager));
-        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SHAKOR.get(), manager -> new ShakorRenderer(manager));
-        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SEGU.get(), manager -> new SeguRenderer(manager));
-        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SEGULOS.get(), manager -> new SegulosRenderer(manager));
-        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_HARUMI.get(), manager -> new HarumiRenderer(manager));
-        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_HARUMITE.get(), manager -> new HarumiteRenderer(manager));
-        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_GRILDA.get(), manager -> new GrildaRenderer(manager));
-        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_GRILDEN.get(), manager -> new GrildenRenderer(manager));
-        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_ZOZA.get(), manager -> new ZozaRenderer(manager));
-        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_ZOZANE.get(), manager -> new ZozaneRenderer(manager));
-        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_NAGU.get(), manager -> new NaguRenderer(manager));
-        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_MOSSARI.get(), manager -> new MossariRenderer(manager));
-        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_AOI.get(), manager -> new AoiRenderer(manager));
-        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_BARTOR.get(), manager -> new BartorRenderer(manager));
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_KOMAINU.get(), KomainuRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_KOMANOTO.get(), KomanotoRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_VILAR.get(), VilarRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_VILAMASTA.get(), VilamastaRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SPIKO.get(), SpikoRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SPIKAN.get(), SpikanRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SAMUKABU.get(), SamukabuRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SAMURITE.get(), SamuriteRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_KUBAKU.get(), KubakuRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_KUGANON.get(), KuganonRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SHAKIN.get(), ShakinRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SHAKOR.get(), ShakorRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SEGU.get(), SeguRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_SEGULOS.get(), SegulosRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_HARUMI.get(), HarumiRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_HARUMITE.get(), HarumiteRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_GRILDA.get(), GrildaRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_GRILDEN.get(), GrildenRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_ZOZA.get(), ZozaRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_ZOZANE.get(), ZozaneRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_NAGU.get(), NaguRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_MOSSARI.get(), MossariRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_MOSSARITO.get(), MossaritoRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_AOI.get(), AoiRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_BARTOR.get(), BartorRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_BARTOLOR.get(), BartolorRenderer::new);
     }
 }

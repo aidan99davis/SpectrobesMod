@@ -32,8 +32,8 @@ import net.minecraftforge.common.ToolType;
 import javax.annotation.Nullable;
 
 public class HealerBlock extends SpectrobesTileEntityBlock {
-
-    protected static final VoxelShape AABB = Block.box(1.0D, 0.0D, 1.0D, 15.0D, 1.0D, 15.0D);
+    protected static final VoxelShape SHAPE = Block.box(0D, 0.0D, 0D, 16.0D, 32.0D, 16.0D);
+    protected static final VoxelShape AABB = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D);
 
     private static final Properties props = Properties.of(Material.WOOD).noOcclusion()
             .harvestTool(ToolType.PICKAXE)
@@ -46,6 +46,11 @@ public class HealerBlock extends SpectrobesTileEntityBlock {
 
     @Override
     public VoxelShape getShape(BlockState pState, IBlockReader pLevel, BlockPos pPos, ISelectionContext pContext) {
+        return SHAPE;
+    }
+
+    @Override
+    public VoxelShape getCollisionShape(BlockState pState, IBlockReader pLevel, BlockPos pPos, ISelectionContext pContext) {
         return AABB;
     }
 

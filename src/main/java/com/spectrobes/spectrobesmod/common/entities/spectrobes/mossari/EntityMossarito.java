@@ -1,4 +1,4 @@
-package com.spectrobes.spectrobesmod.common.entities.spectrobes.bartor;
+package com.spectrobes.spectrobesmod.common.entities.spectrobes.mossari;
 
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityMammalSpectrobe;
@@ -15,50 +15,54 @@ import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class EntityBartor extends EntityMammalSpectrobe {
+public class EntityMossarito extends EntityMammalSpectrobe {
 
-    public EntityBartor(EntityType<EntityBartor> entityTypeIn, World worldIn) {
+    public EntityMossarito(EntityType<EntityMossarito> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
     }
 
     public Spectrobe GetNewSpectrobeInstance() {
-        return SpectrobeRegistry.Bartor.copy(false);
+        return SpectrobeRegistry.Mossarito.copy(false);
     }
 
     @Override
     public EntityType<? extends EntitySpectrobe> getEvolutionRegistry() {
-        return SpectrobesEntities.ENTITY_BARTOLOR.get();
+        return null;
     }
 
     @Override
     public String getRegistryName() {
-        return "entity_bartor";
+        return "entity_mossarito";
     }
 
     @Override
     public Class getSpectrobeClass() {
-        return EntityBartor.class;
+        return EntityMossarito.class;
     }
 
     @Override
     protected EntityType<? extends EntitySpectrobe> getChildForLineage() {
-        return SpectrobesEntities.ENTITY_BARTOR.get();
+        return SpectrobesEntities.ENTITY_MOSSARI.get();
     }
 
     @Override
     public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event) {
         if(event.isMoving())
         {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.bartor.walk", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.mossarito.walk", true));
             return PlayState.CONTINUE;
         }
         else if(event.getAnimatable().isOrderedToSit()) {
             event.getController().setAnimation(new AnimationBuilder()
-                    .addAnimation("animation.bartor.sitting", false)
-                    .addAnimation("animation.bartor.sit", true));
+                    .addAnimation("animation.mossarito.sitting", false)
+                    .addAnimation("animation.mossarito.sit", true));
+            return PlayState.CONTINUE;
+        } else if(event.getAnimatable().isAttacking()) {
+            event.getController().setAnimation(new AnimationBuilder()
+                    .addAnimation("animation.mossarito.attack", true));
             return PlayState.CONTINUE;
         } else {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.bartor.idle", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.mossarito.idle", true));
             return PlayState.CONTINUE;
         }
     }
@@ -71,12 +75,12 @@ public class EntityBartor extends EntityMammalSpectrobe {
 
     @Override
     protected EvolutionRequirements getEvolutionRequirements() {
-        return new EvolutionRequirements(1, 3, 0);
+        return new EvolutionRequirements(25, 6, 9);
     }
 
     @Override
     protected FossilBlockItem getFossil() {
-        return (FossilBlockItem) SpectrobesItemsRegistry.bartor_fossil_item.get().getItem();
+        return (FossilBlockItem) SpectrobesItemsRegistry.mossari_fossil_item.get().getItem();
     }
 
     @Override

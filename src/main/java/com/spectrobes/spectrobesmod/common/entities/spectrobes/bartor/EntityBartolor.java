@@ -15,29 +15,30 @@ import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class EntityBartor extends EntityMammalSpectrobe {
+public class EntityBartolor extends EntityMammalSpectrobe {
 
-    public EntityBartor(EntityType<EntityBartor> entityTypeIn, World worldIn) {
+    public EntityBartolor(EntityType<EntityBartolor> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
     }
 
     public Spectrobe GetNewSpectrobeInstance() {
-        return SpectrobeRegistry.Bartor.copy(false);
+        return SpectrobeRegistry.Bartolor.copy(false);
     }
 
     @Override
     public EntityType<? extends EntitySpectrobe> getEvolutionRegistry() {
-        return SpectrobesEntities.ENTITY_BARTOLOR.get();
+//        return SpectrobesEntities.ENTITY_BARTOLOR.get();
+        return null;
     }
 
     @Override
     public String getRegistryName() {
-        return "entity_bartor";
+        return "entity_bartolor";
     }
 
     @Override
     public Class getSpectrobeClass() {
-        return EntityBartor.class;
+        return EntityBartolor.class;
     }
 
     @Override
@@ -49,16 +50,20 @@ public class EntityBartor extends EntityMammalSpectrobe {
     public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event) {
         if(event.isMoving())
         {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.bartor.walk", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.bartolor.walk", true));
             return PlayState.CONTINUE;
         }
         else if(event.getAnimatable().isOrderedToSit()) {
             event.getController().setAnimation(new AnimationBuilder()
-                    .addAnimation("animation.bartor.sitting", false)
-                    .addAnimation("animation.bartor.sit", true));
+                    .addAnimation("animation.bartolor.sitting", false)
+                    .addAnimation("animation.bartolor.sit", true));
+            return PlayState.CONTINUE;
+        } else if(event.getAnimatable().isAttacking()) {
+            event.getController().setAnimation(new AnimationBuilder()
+                    .addAnimation("animation.bartolor.attack", true));
             return PlayState.CONTINUE;
         } else {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.bartor.idle", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.bartolor.idle", true));
             return PlayState.CONTINUE;
         }
     }
@@ -71,7 +76,7 @@ public class EntityBartor extends EntityMammalSpectrobe {
 
     @Override
     protected EvolutionRequirements getEvolutionRequirements() {
-        return new EvolutionRequirements(1, 3, 0);
+        return new EvolutionRequirements(27, 8, 12);
     }
 
     @Override
@@ -81,6 +86,6 @@ public class EntityBartor extends EntityMammalSpectrobe {
 
     @Override
     public int getLitterSize() {
-        return 0;
+        return 3;
     }
 }

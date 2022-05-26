@@ -37,6 +37,7 @@ public class SpectrobePropertyRegistry {
 
     //BARTOR LINE
     public static SpectrobeProperties BARTOR = new SpectrobeProperties(SpectrobeProperties.Nature.AURORA, SpectrobeProperties.Stage.CHILD);
+    public static SpectrobeProperties BARTOLOR = new SpectrobeProperties(SpectrobeProperties.Nature.AURORA, SpectrobeProperties.Stage.ADULT);
 
     //FLASH
 
@@ -54,9 +55,10 @@ public class SpectrobePropertyRegistry {
     //NAGU LINE
     public static SpectrobeProperties NAGU = new SpectrobeProperties(SpectrobeProperties.Nature.FLASH, SpectrobeProperties.Stage.CHILD);
 
-    //MOSSARI
+    //MOSSARI LINE
     public static SpectrobeProperties MOSSARI = new SpectrobeProperties(SpectrobeProperties.Nature.FLASH, SpectrobeProperties.Stage.CHILD);
+    public static SpectrobeProperties MOSSARITO = new SpectrobeProperties(SpectrobeProperties.Nature.FLASH, SpectrobeProperties.Stage.ADULT);
 
-    //AOI
+    //AOI LINE
     public static SpectrobeProperties AOI = new SpectrobeProperties(SpectrobeProperties.Nature.FLASH, SpectrobeProperties.Stage.CHILD);
 }
