@@ -3,6 +3,7 @@ package com.spectrobes.spectrobesmod.util;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeStats;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
+import com.spectrobes.spectrobesmod.common.spectrobes.Stat;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.Random;
@@ -46,9 +47,16 @@ public class SpectrobeBuilder {
         return this;
     }
 
-    public SpectrobeBuilder withStats(int hpStat, int atkStat, int defStat) {
+    public SpectrobeBuilder withStats(Stat hpStat, Stat atkStat, Stat defStat) {
         this.stats = new SpectrobeStats(hpStat,atkStat,defStat);
-        this.currentHealth = hpStat;
+        this.currentHealth = hpStat.value();
+        return this;
+    }
+
+
+    public SpectrobeBuilder withStats(SpectrobeStats stats) {
+        this.stats = stats;
+        this.currentHealth = stats.getHpLevel();
         return this;
     }
 

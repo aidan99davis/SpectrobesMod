@@ -58,11 +58,11 @@ public class EntityAoi extends EntityAvianSpectrobe {
     public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event) {
         if(event.getAnimatable().isOrderedToSit())
         {
-            event.getController().setAnimationSpeed(event.getController().getAnimationSpeed() * 2);
+            event.getController().setAnimationSpeed(2);
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.aoi.sit", true));
             return PlayState.CONTINUE;
         } else {
-            event.getController().setAnimationSpeed(event.getController().getAnimationSpeed() * 5);
+            event.getController().setAnimationSpeed(5);
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.aoi.idle", true));
             return PlayState.CONTINUE;
         }

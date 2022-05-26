@@ -21,7 +21,6 @@ public class AoiRenderer extends GeoEntityRenderer<EntityAoi> {
 
     public AoiRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new AoiModel());
-        GeckoLibCache.getInstance().parser.setValue("anim_speed", 0.5);
     }
 
     @Nullable
