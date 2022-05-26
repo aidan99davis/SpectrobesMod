@@ -19,7 +19,7 @@ import java.util.Random;
 public class SpectrobesItemsRegistry {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, SpectrobesInfo.MOD_ID);
 
-    private static List<Item> all_fossils = new ArrayList<>();
+    private static final List<Item> all_fossils = new ArrayList<>();
 
     public static final RegistryObject<BlockItem> healer_block_item =
             ITEMS.register("healer_block_item",

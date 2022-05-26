@@ -5,6 +5,7 @@ import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
 import com.spectrobes.spectrobesmod.common.entities.krawl.*;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.*;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.aoi.EntityAoi;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.bartor.EntityBartolor;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.bartor.EntityBartor;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.grilda.EntityGrilda;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.grilda.EntityGrilden;
@@ -15,6 +16,7 @@ import com.spectrobes.spectrobesmod.common.entities.spectrobes.komainu.EntityKom
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.kubaku.EntityKubaku;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.kubaku.EntityKuganon;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.mossari.EntityMossari;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.mossari.EntityMossarito;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.nagu.EntityNagu;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.samubaku.EntitySamukabu;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.samubaku.EntitySamurite;
@@ -202,6 +204,13 @@ public class SpectrobesEntities {
                     .sized(1f, 1f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "mossari").toString()));
 
+    public static final RegistryObject<EntityType<EntityMossarito>> ENTITY_MOSSARITO
+            = ENTITY_TYPES.register("entity_mossarito",
+            () -> EntityType.Builder.of(EntityMossarito::new,
+                    EntityClassification.MONSTER)
+                    .sized(1f, 1.6f)
+                    .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "mossarito").toString()));
+
     public static final RegistryObject<EntityType<EntityAoi>> ENTITY_AOI
             = ENTITY_TYPES.register("entity_aoi",
             () -> EntityType.Builder.of(EntityAoi::new,
@@ -215,6 +224,13 @@ public class SpectrobesEntities {
                     EntityClassification.MONSTER)
                     .sized(1f, 1f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "bartor").toString()));
+
+    public static final RegistryObject<EntityType<EntityBartolor>> ENTITY_BARTOLOR
+            = ENTITY_TYPES.register("entity_bartolor",
+            () -> EntityType.Builder.of(EntityBartolor::new,
+                    EntityClassification.MONSTER)
+                    .sized(1.6f, 1.6f)
+                    .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "bartolor").toString()));
 
     public static <T extends Entity> RegistryObject<EntityType<T>> BuildEntity(EntityType.IFactory<T> entity, Class<T> entityClass, float width, float height)
     {
@@ -235,6 +251,7 @@ public class SpectrobesEntities {
             GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_KUBAKU.get(), EntityKubaku.setCustomAttributes().build());
             GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_KUGANON.get(), EntityKuganon.setCustomAttributes().build());
             GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_MOSSARI.get(), EntityMossari.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_MOSSARITO.get(), EntityMossarito.setCustomAttributes().build());
             GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_NAGU.get(), EntityNagu.setCustomAttributes().build());
             GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_SAMUKABU.get(), EntitySamukabu.setCustomAttributes().build());
             GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_SAMURITE.get(), EntitySamurite.setCustomAttributes().build());
@@ -250,6 +267,7 @@ public class SpectrobesEntities {
             GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_ZOZANE.get(), EntityZozane.setCustomAttributes().build());
             GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_AOI.get(), EntityAoi.setCustomAttributes().build());
             GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_BARTOR.get(), EntityBartor.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_BARTOLOR.get(), EntityBartolor.setCustomAttributes().build());
         });
 
         populateMap();
@@ -278,8 +296,10 @@ public class SpectrobesEntities {
         SPECTROBES.put("zozane", ENTITY_ZOZANE.get());
         SPECTROBES.put("nagu", ENTITY_NAGU.get());
         SPECTROBES.put("mossari", ENTITY_MOSSARI.get());
+        SPECTROBES.put("mossarito", ENTITY_MOSSARITO.get());
         SPECTROBES.put("aoi", ENTITY_AOI.get());
         SPECTROBES.put("bartor", ENTITY_BARTOR.get());
+        SPECTROBES.put("bartolor", ENTITY_BARTOLOR.get());
     }
 
     public static EntityType<? extends EntitySpectrobe> getByName(String name) throws ClassNotFoundException {

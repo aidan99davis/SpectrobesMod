@@ -27,7 +27,7 @@ public class EntityMossari extends EntityMammalSpectrobe {
 
     @Override
     public EntityType<? extends EntitySpectrobe> getEvolutionRegistry() {
-        return null;
+        return SpectrobesEntities.ENTITY_MOSSARITO.get();
     }
 
     @Override

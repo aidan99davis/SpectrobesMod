@@ -80,8 +80,10 @@
     "entity.spectrobesmod.entity_shakor": "Shakor",
     "entity.spectrobesmod.entity_nagu": "Nagu",
     "entity.spectrobesmod.entity_mossari": "Mossari",
+    "entity.spectrobesmod.entity_mossarito": "Mossarito",
     "entity.spectrobesmod.entity_aoi": "Aoi",
     "entity.spectrobesmod.entity_bartor": "Bartor",
+    "entity.spectrobesmod.entity_bartolor": "Bartolor",
     "key.prizmod.category": "Prizmod Controls",
     "key.prizmod.cycle.left": "Cycle team left",
     "key.prizmod.cycle.right": "Cycle team right"
