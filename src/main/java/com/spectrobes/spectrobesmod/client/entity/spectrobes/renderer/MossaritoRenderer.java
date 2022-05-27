@@ -2,9 +2,7 @@ package com.spectrobes.spectrobesmod.client.entity.spectrobes.renderer;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.client.entity.spectrobes.model.MossariModel;
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.model.MossaritoModel;
-import com.spectrobes.spectrobesmod.common.entities.spectrobes.mossari.EntityMossari;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.mossari.EntityMossarito;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;

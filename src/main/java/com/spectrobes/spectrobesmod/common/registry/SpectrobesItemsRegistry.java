@@ -5,6 +5,7 @@ import com.spectrobes.spectrobesmod.client.items.renderer.*;
 import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
 import com.spectrobes.spectrobesmod.common.items.fossils.*;
 import com.spectrobes.spectrobesmod.common.items.machines.HealerBlockItem;
+import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,7 +21,11 @@ public class SpectrobesItemsRegistry {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, SpectrobesInfo.MOD_ID);
 
     private static final List<Item> all_fossils = new ArrayList<>();
+    private static final List<Item> flash_fossils = new ArrayList<>();
+    private static final List<Item> aurora_fossils = new ArrayList<>();
+    private static final List<Item> corona_fossils = new ArrayList<>();
 
+    @SuppressWarnings("unused")
     public static final RegistryObject<BlockItem> healer_block_item =
             ITEMS.register("healer_block_item",
                     () -> new HealerBlockItem(SpectrobesBlocks.healer_block.get(),
@@ -128,20 +133,26 @@ public class SpectrobesItemsRegistry {
                                     .tab(SpectrobesItems.SpectrobesFossilsItemGroup.Instance)));
 
     private static void init() {
-        all_fossils.add(grilda_fossil_item.get());
-        all_fossils.add(harumi_fossil_item.get());
-        all_fossils.add(komainu_fossil_item.get());
-        all_fossils.add(kubaku_fossil_item.get());
-        all_fossils.add(nagu_fossil_item.get());
-        all_fossils.add(samukabu_fossil_item.get());
-        all_fossils.add(segu_fossil_item.get());
-        all_fossils.add(shakin_fossil_item.get());
-        all_fossils.add(vilar_fossil_item.get());
-        all_fossils.add(zoza_fossil_item.get());
-        all_fossils.add(mossari_fossil_item.get());
-        all_fossils.add(aoi_fossil_item.get());
-        all_fossils.add(spiko_fossil_item.get());
-        all_fossils.add(bartor_fossil_item.get());
+        flash_fossils.add(harumi_fossil_item.get());
+        flash_fossils.add(nagu_fossil_item.get());
+        flash_fossils.add(aoi_fossil_item.get());
+        flash_fossils.add(shakin_fossil_item.get());
+        flash_fossils.add(samukabu_fossil_item.get());
+        flash_fossils.add(mossari_fossil_item.get());
+
+        aurora_fossils.add(segu_fossil_item.get());
+        aurora_fossils.add(spiko_fossil_item.get());
+        aurora_fossils.add(bartor_fossil_item.get());
+        aurora_fossils.add(grilda_fossil_item.get());
+        aurora_fossils.add(kubaku_fossil_item.get());
+
+        corona_fossils.add(komainu_fossil_item.get());
+        corona_fossils.add(vilar_fossil_item.get());
+        corona_fossils.add(zoza_fossil_item.get());
+
+        all_fossils.addAll(corona_fossils);
+        all_fossils.addAll(flash_fossils);
+        all_fossils.addAll(aurora_fossils);
     }
 
     public static ItemStack getRandomFossil() {
@@ -152,5 +163,35 @@ public class SpectrobesItemsRegistry {
         Random random = new Random();
         int index = random.nextInt(all_fossils.size());
         return new ItemStack(all_fossils.get(index));
+    }
+
+
+    public static ItemStack getRandomFossil(SpectrobeProperties.Nature bias) {
+        if(all_fossils.isEmpty()) {
+            init();
+        }
+
+        int randInt = new Random().nextInt(10);
+        if(randInt < 2) { // so that you still get slight variation on nature despite being in a specific biome.
+            Random random = new Random();
+            int index = random.nextInt(all_fossils.size());
+            return new ItemStack(all_fossils.get(index));
+        } else {
+            int index;
+            switch (bias) {
+                case FLASH:
+                    index = new Random().nextInt(flash_fossils.size());
+                    return new ItemStack(flash_fossils.get(index));
+                case AURORA:
+                    index = new Random().nextInt(aurora_fossils.size());
+                    return new ItemStack(aurora_fossils.get(index));
+                case CORONA:
+                    index = new Random().nextInt(corona_fossils.size());
+                    return new ItemStack(corona_fossils.get(index));
+                default:
+                    index = new Random().nextInt(all_fossils.size());
+                    return new ItemStack(all_fossils.get(index));
+            }
+        }
     }
 }
