@@ -17,9 +17,11 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+@SuppressWarnings("unused")
 @Mod.EventBusSubscriber(modid = SpectrobesInfo.MOD_ID, bus = Bus.MOD)
 @ObjectHolder(SpectrobesInfo.MOD_ID)
 public class SpectrobesItems {
@@ -68,11 +70,15 @@ public class SpectrobesItems {
     //Tools
     public static final Item prizmod_item = null;
 
-    private static List<Item> all_minerals = new ArrayList<>();
+    private static final HashMap<Mineral.MineralRarity, List<Item>> all_minerals = new HashMap<>();
 
     @SubscribeEvent
     public static void registerItems(final RegistryEvent.Register<Item> event) {
         MineralRegistry.init();
+
+        all_minerals.put(Mineral.MineralRarity.Common, new ArrayList<>());
+        all_minerals.put(Mineral.MineralRarity.Uncommon, new ArrayList<>());
+        all_minerals.put(Mineral.MineralRarity.Rare, new ArrayList<>());
 
         for(Mineral m : MineralRegistry.ALL_MINERALS) {
             registerMineral(event, m);
@@ -125,13 +131,15 @@ public class SpectrobesItems {
                 mineral.name,
                 mineral.properties.copy());
         event.getRegistry().register(newItem);
-        all_minerals.add(newItem);
+        List<Item> list = all_minerals.get(mineral.rarity);
+        list.add(newItem);
+        all_minerals.put(mineral.rarity, list);
     }
 
-    public static ItemStack getRandomMineral() {
+    public static ItemStack getRandomMineral(Mineral.MineralRarity rarity) {
         Random random = new Random();
-        int index = random.nextInt(all_minerals.size());
-        return new ItemStack(all_minerals.get(index));
+        int index = random.nextInt(all_minerals.get(rarity).size());
+        return new ItemStack(all_minerals.get(rarity).get(index));
     }
 
     //Creative Tabs

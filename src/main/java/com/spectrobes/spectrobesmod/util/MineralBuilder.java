@@ -5,9 +5,15 @@ import com.spectrobes.spectrobesmod.common.items.minerals.Mineral;
 public class MineralBuilder {
     private MineralPropertiesBuilder mineralPropertiesBuilder = null;
     private String name;
+    private Mineral.MineralRarity rarity = Mineral.MineralRarity.Common;
 
     public MineralBuilder withName(String name) {
         this.name = name;
+        return this;
+    }
+
+    public MineralBuilder withRarity(Mineral.MineralRarity rarity) {
+        this.rarity = rarity;
         return this;
     }
 
@@ -20,6 +26,7 @@ public class MineralBuilder {
         Mineral mineral = new Mineral();
 
         mineral.name = this.name;
+        mineral.rarity = this.rarity;
         mineral.properties = this.mineralPropertiesBuilder.build();
 
         return mineral;

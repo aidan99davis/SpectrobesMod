@@ -25,6 +25,7 @@ public class SpectrobesItemsRegistry {
     private static final List<Item> aurora_fossils = new ArrayList<>();
     private static final List<Item> corona_fossils = new ArrayList<>();
 
+    @SuppressWarnings("unused")
     public static final RegistryObject<BlockItem> healer_block_item =
             ITEMS.register("healer_block_item",
                     () -> new HealerBlockItem(SpectrobesBlocks.healer_block.get(),

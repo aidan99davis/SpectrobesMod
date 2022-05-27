@@ -1,7 +1,7 @@
 package com.spectrobes.spectrobesmod.common.blocks;
 
 import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
-import net.minecraft.block.Block;
+import com.spectrobes.spectrobesmod.common.items.minerals.Mineral;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -16,7 +16,7 @@ import java.util.Random;
 import net.minecraft.block.AbstractBlock;
 
 public class MineralBlock extends SpectrobesBlock {
-    private static AbstractBlock.Properties props = AbstractBlock.Properties.of(Material.STONE)
+    private static final AbstractBlock.Properties props = AbstractBlock.Properties.of(Material.STONE)
             .harvestTool(ToolType.PICKAXE)
             .strength(1.5f)
             .sound(SoundType.STONE)
@@ -27,14 +27,28 @@ public class MineralBlock extends SpectrobesBlock {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"NullableProblems", "deprecation"})
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         Random random = new Random();
-        int minerals_dropped = random.nextInt(3);
-        ItemStack mineralItem = SpectrobesItems.getRandomMineral();
-        mineralItem.grow(minerals_dropped + 1);
 
-        ArrayList minerals = new ArrayList();
+        int rarityInt = random.nextInt(10);
+        Mineral.MineralRarity rarity;
+
+        switch(rarityInt) {
+            case 9:
+                rarity = Mineral.MineralRarity.Rare;
+                break;
+            case 8:
+            case 7:
+            case 6:
+                rarity = Mineral.MineralRarity.Uncommon;
+                break;
+            default:
+                rarity = Mineral.MineralRarity.Common;
+                break;
+        }
+        ItemStack mineralItem = SpectrobesItems.getRandomMineral(rarity);
+        ArrayList<ItemStack> minerals = new ArrayList<>();
         minerals.add(mineralItem);
 
         return  minerals;
