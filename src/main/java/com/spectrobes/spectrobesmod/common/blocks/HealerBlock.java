@@ -1,7 +1,5 @@
 package com.spectrobes.spectrobesmod.common.blocks;
 
-import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.client.container.HealerContainer;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
@@ -16,15 +14,10 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.inventory.container.SimpleNamedContainerProvider;
-import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
@@ -87,15 +80,4 @@ public class HealerBlock extends SpectrobesTileEntityBlock {
         return BlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 
-    public INamedContainerProvider getMenuProvider(BlockState pState, World pLevel, BlockPos pPos) {
-        return new SimpleNamedContainerProvider((containerId, playerInventory, playerEntity) -> {
-            return new HealerContainer(containerId, playerEntity);
-        }, new StringTextComponent("Healer"));
-    }
-
-//    @Nullable
-//    @Override
-//    public BlockState getStateForPlacement(BlockItemUseContext context) {
-//        return this.defaultBlockState().setValue(FACING, Direction.UP);
-//    }
 }
