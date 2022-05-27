@@ -5,6 +5,7 @@ import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
+import software.bernie.shadowed.eliotlash.mclib.math.functions.limit.Min;
 
 public class SpectrobeStats {
     private Stat health;
@@ -65,7 +66,9 @@ public class SpectrobeStats {
             health.add(properties.getHpOffset());
             mineralsEaten++;
         } else {
-            Minecraft.getInstance().player.chat("Your spectrobe cannot eat this mineral");
+            if(Minecraft.getInstance().level.isClientSide()) {
+                Minecraft.getInstance().player.chat("Your spectrobe cannot eat this mineral");
+            }
         }
 
     }
