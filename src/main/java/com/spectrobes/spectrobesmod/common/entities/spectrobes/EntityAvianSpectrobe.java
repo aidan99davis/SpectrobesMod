@@ -14,6 +14,9 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
+import java.util.List;
+import java.util.Random;
+
 public abstract class EntityAvianSpectrobe extends EntitySpectrobe implements IFlyingAnimal {
     public float flap;
     public float flapSpeed;
@@ -47,8 +50,46 @@ public abstract class EntityAvianSpectrobe extends EntitySpectrobe implements IF
 
     @Override
     public void mate() {
+        List<? extends EntityAvianSpectrobe> mates
+                = level.getEntitiesOfClass(getSpectrobeClass(),
+                this.getBoundingBox()
+                        .inflate(10, 10, 10));
+        if(mates.isEmpty()) {
+            this.setTicksTillMate(16000);
+            return;
+        }
+
+        EntityAvianSpectrobe mate = null;
+
+        for (EntityAvianSpectrobe spec : mates) {
+            if(mate == null) {
+                if(spec.getTicksTillMate() <= 0) {
+                    mate = spec;
+                }
+            }
+        }
+
+        if(mate == null) {
+            this.setTicksTillMate(16000);
+            return;
+        }
+
+        this.entityData.set(HAS_MATED, true);
+
+        mate.setTicksTillMate(16000);
+        Random random = new Random();
+        int litterSize = random.nextInt(getMaxLitterSize());
+
+        for(int i = 0; i < litterSize; i++) {
+            EntitySpectrobe spectrobe = getChildForLineage()
+                    .create(level);
+            this.level.addFreshEntity(spectrobe);
+            spectrobe.teleportTo(getX(), getY(), getZ());
+        }
         //todo avian mating: eggs, clutch size, gestation time, requirements
     }
+
+    protected abstract int getMaxLitterSize();
 
     private void calculateFlapping() {
         this.oFlap = this.flap;

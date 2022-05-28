@@ -110,9 +110,9 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         this.goalSelector.addGoal(1, new FindMineralsGoal(this));
         this.goalSelector.addGoal(1, new FindFossilsGoal(this));
         this.goalSelector.addGoal(1, new FindMineralOreGoal(this));
-        this.goalSelector.addGoal(3, new AvoidKrawlGoal(this, EntityKrawl.class, 24.0F, 1D, 1.25D));
+        this.goalSelector.addGoal(3, new AvoidKrawlGoal(this, EntityKrawl.class, 10.0F, 1D, 1.1D));
         this.goalSelector.addGoal(4, new LeapAtTargetGoal(this, 0.4f));
-        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.2f, true));
+        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1f, true));
         this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
 
@@ -473,20 +473,21 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
                     break;
             }
 
-            if(level.isClientSide()) {
-                this.getSpectrobeData().damage((int)damageAmount);
-            }
+            Spectrobe updatedSpectrobe = this.getSpectrobeData().copy(true);
+            updatedSpectrobe.damage((int)scaledAmount);
+            setSpectrobeData(updatedSpectrobe);
             super.actuallyHurt(damageSrc, scaledAmount);
         } else {
-            if(level.isClientSide()) {
-                this.getSpectrobeData().damage((int)damageAmount);
-            }
+            Spectrobe updatedSpectrobe = this.getSpectrobeData().copy(true);
+            updatedSpectrobe.damage((int)damageAmount);
+            setSpectrobeData(updatedSpectrobe);
             super.actuallyHurt(damageSrc, damageAmount);
         }
+        updateEntityAttributes();
         if(getOwner() != null) {
             getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
                 sm.updateSpectrobe(this.getSpectrobeData());
-                SpectrobesNetwork.sendToServer(new SSyncSpectrobeMasterPacket(sm));
+                SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket(sm));
             });
         }
     }

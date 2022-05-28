@@ -88,7 +88,7 @@ public class SpectrobesKeybindings {
                                 List<EntitySpectrobe> spectrobes = mc.player.level
                                         .getEntitiesOfClass(EntitySpectrobe.class, mc.player.getBoundingBox().inflate(30, 30, 30));
                                 SummonPlayerSpectrobe(mc, currentMember, oldUUID, spectrobes);
-                                if(sm.getCurrentTeamMember() != null) {
+                                if(sm.getCurrentTeamMember() != null && sm.getCurrentTeamMember().currentHealth > 0) {
                                     sm.spawnCurrent();
                                     SpectrobesNetwork.sendToServer(new SSpawnSpectrobePacket(sm.getCurrentTeamMember()));
                                 }
@@ -115,7 +115,8 @@ public class SpectrobesKeybindings {
 
                                 SummonPlayerSpectrobe(mc, currentMember, oldUUID, spectrobes);
 
-                                if(sm.getCurrentTeamMember() != null) {
+                                if(sm.getCurrentTeamMember() != null && sm.getCurrentTeamMember().currentHealth > 0) {
+                                    sm.spawnCurrent();
                                     SpectrobesNetwork.sendToServer(new SSpawnSpectrobePacket(sm.getCurrentTeamMember()));
                                 }
                                 SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket(sm));
