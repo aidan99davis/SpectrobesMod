@@ -35,5 +35,6 @@ public class SpectrobeRendererManager {
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_BARTOR.get(), BartorRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_BARTOLOR.get(), BartolorRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_GEJIO.get(), GejioRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_MESA.get(), MesaRenderer::new);
     }
 }

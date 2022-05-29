@@ -73,6 +73,17 @@ public class SpectrobeRegistry {
                     .build())
             .build();
 
+    public static final Spectrobe Mesa
+            = new SpectrobeBuilder()
+            .withName("Mesa")
+            .withProperties(SpectrobePropertyRegistry.MESA)
+            .withStats(new SpectrobeStatsBuilder()
+                    .withHealthStat(80, 9, 150)
+                    .withAttackStat(75, 8, 150)
+                    .withDefenceStat(70, 8, 118)
+                    .build())
+            .build();
+
     //Aurora Spectrobes
     public static final Spectrobe Gejio
             = new SpectrobeBuilder()

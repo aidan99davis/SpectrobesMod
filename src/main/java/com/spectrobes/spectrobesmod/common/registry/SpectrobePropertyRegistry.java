@@ -17,6 +17,9 @@ public class SpectrobePropertyRegistry {
     public static SpectrobeProperties ZOZA = new SpectrobeProperties(SpectrobeProperties.Nature.CORONA, SpectrobeProperties.Stage.CHILD);
     public static SpectrobeProperties ZOZANE = new SpectrobeProperties(SpectrobeProperties.Nature.CORONA, SpectrobeProperties.Stage.ADULT);
 
+    //MESA LINE
+    public static SpectrobeProperties MESA = new SpectrobeProperties(SpectrobeProperties.Nature.CORONA, SpectrobeProperties.Stage.CHILD);
+
     //AURORA
 
     //GEJIO LINE

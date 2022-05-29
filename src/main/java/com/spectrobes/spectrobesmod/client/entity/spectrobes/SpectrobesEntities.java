@@ -16,6 +16,7 @@ import com.spectrobes.spectrobesmod.common.entities.spectrobes.komainu.EntityKom
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.komainu.EntityKomanoto;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.kubaku.EntityKubaku;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.kubaku.EntityKuganon;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.mesa.EntityMesa;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.mossari.EntityMossari;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.mossari.EntityMossarito;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.nagu.EntityNagu;
@@ -226,6 +227,13 @@ public class SpectrobesEntities {
                     .sized(1f, 1f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "aoi").toString()));
 
+    public static final RegistryObject<EntityType<EntityMesa>> ENTITY_MESA
+            = ENTITY_TYPES.register("entity_mesa",
+            () -> EntityType.Builder.of(EntityMesa::new,
+                    EntityClassification.MONSTER)
+                    .sized(0.5f, 0.6f)
+                    .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "mesa").toString()));
+
     public static final RegistryObject<EntityType<EntityBartor>> ENTITY_BARTOR
             = ENTITY_TYPES.register("entity_bartor",
             () -> EntityType.Builder.of(EntityBartor::new,
@@ -277,6 +285,7 @@ public class SpectrobesEntities {
             GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_BARTOR.get(), EntityBartor.setCustomAttributes().build());
             GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_BARTOLOR.get(), EntityBartolor.setCustomAttributes().build());
             GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_GEJIO.get(), EntityGejio.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_MESA.get(), EntityMesa.setCustomAttributes().build());
         });
 
         populateMap();
@@ -310,6 +319,7 @@ public class SpectrobesEntities {
         SPECTROBES.put("bartor", ENTITY_BARTOR.get());
         SPECTROBES.put("bartolor", ENTITY_BARTOLOR.get());
         SPECTROBES.put("gejio", ENTITY_GEJIO.get());
+        SPECTROBES.put("mesa", ENTITY_MESA.get());
     }
 
     public static EntityType<? extends EntitySpectrobe> getByName(String name) throws ClassNotFoundException {
