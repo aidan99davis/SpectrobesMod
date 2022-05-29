@@ -2,18 +2,24 @@ package com.spectrobes.spectrobesmod.client.entity.krawl;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.entities.krawl.*;
+import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class KrawlEntities {
 
@@ -141,5 +147,48 @@ public class KrawlEntities {
         int randomInt = new Random().nextInt(range);
 
         return FLASH_KRAWL.get(randomInt);
+    }
+//
+//    public static EntityType<? extends EntityKrawl> getByNatureAndLevel(SpectrobeProperties.Nature vortexNature, int level) {
+//        List<EntityType<? extends EntityKrawl>> options = new ArrayList<>();
+//        switch (vortexNature) {
+//            case CORONA:
+//                options = CORONA_KRAWL.stream().filter(filterKrawlByLevel(level)).collect(Collectors.toList());
+//                break;
+//            case AURORA:
+//                options = AURORA_KRAWL.stream().filter(filterKrawlByLevel(level)).collect(Collectors.toList());
+//                break;
+//            case FLASH:
+//                options = FLASH_KRAWL.stream().filter(filterKrawlByLevel(level)).collect(Collectors.toList());
+//                break;
+//            case OTHER:
+//                options = OTHER_KRAWL.stream().filter(filterKrawlByLevel(level)).collect(Collectors.toList());
+//                break;
+//        }
+//        return options.get(new Random().nextInt(options.size()) - 1);
+//
+//    }
+
+    public static EntityType<? extends EntityKrawl> getByLevel(int level, World world) {
+        List<EntityType<? extends EntityKrawl>> options = new ArrayList<>();
+        options.addAll(CORONA_KRAWL.stream().filter(filterKrawlByLevel(level, world)).collect(Collectors.toList()));
+        options.addAll(AURORA_KRAWL.stream().filter(filterKrawlByLevel(level, world)).collect(Collectors.toList()));
+        options.addAll(FLASH_KRAWL.stream().filter(filterKrawlByLevel(level, world)).collect(Collectors.toList()));
+        int rand = new Random().nextInt(options.size());
+        return options.get(rand);
+    }
+
+
+    private static Predicate<EntityType<? extends EntityKrawl>> filterKrawlByLevel(int level, World world) {
+        return entityType ->
+        {
+            try {
+                return (entityType.create(world)).GetKrawlProperties().getLevel() <= level;
+            } catch (Exception e) {
+                SpectrobesInfo.LOGGER.error("COULDNT CALL GetKrawlProperties");
+                SpectrobesInfo.LOGGER.error(e);
+                return false;
+            }
+        };
     }
 }

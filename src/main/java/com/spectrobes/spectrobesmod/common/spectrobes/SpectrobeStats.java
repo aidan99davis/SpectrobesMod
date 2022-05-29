@@ -26,7 +26,7 @@ public class SpectrobeStats {
         this.defence = defStat;
         this.mineralsEaten = 0;
         this.battlesWon = 0;
-        this.xp_required = 100;
+        this.xp_required = 50;
         this.xp = 0;
         this.level = 1;
     }

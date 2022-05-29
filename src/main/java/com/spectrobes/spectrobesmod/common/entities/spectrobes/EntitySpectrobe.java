@@ -23,10 +23,7 @@ import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.entity.passive.WolfEntity;
-import net.minecraft.entity.passive.horse.LlamaEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -442,8 +439,20 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     @Override
     public void die(DamageSource cause) {
         if(getOwner() != null) {
+            Spectrobe spectrobeData = getSpectrobeData().copy(true);
+            spectrobeData.setCurrentHealth(0);
+            setSpectrobeData(spectrobeData);
+            getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
+                sm.updateSpectrobe(this.getSpectrobeData());
+                SpectrobesInfo.LOGGER.debug("DOOT 1");
+                if(!level.isClientSide()) {
+                    SpectrobesInfo.LOGGER.debug("DOOT 2");
+                    SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(sm), (ServerPlayerEntity) getOwner());
+                }
+            });
             despawn();
         } else {
+            SpectrobesInfo.LOGGER.debug("DOOT 2");
             ItemEntity fossilItem = new ItemEntity(level,
                     this.getX() + 0.5D,
                     (this.getY() + 1),
@@ -456,30 +465,34 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
 
     @Override
     protected void actuallyHurt(DamageSource damageSrc, float damageAmount) {
-        if(damageSrc.getDirectEntity() instanceof IHasNature) {
+        if(damageSrc.getDirectEntity() instanceof EntityKrawl) {
             IHasNature attacker = (IHasNature)damageSrc.getDirectEntity();
             int advantage = Spectrobe.hasTypeAdvantage(attacker, this);
-            float scaledAmount;
+            float atkPower = ((EntityKrawl)damageSrc.getDirectEntity()).krawlProperties.getAtkLevel();
+            float typeBonus;
 
             switch (advantage) {
                 case -1:
-                    scaledAmount = damageAmount * 0.75f;
+                    typeBonus = atkPower * 0.75f;
                     break;
                 case 1:
-                    scaledAmount = damageAmount * 1.25f;
+                    typeBonus = atkPower * 1.5f;
                     break;
                 default:
-                    scaledAmount = damageAmount;
+                    typeBonus = atkPower;
                     break;
             }
+            float defPower = getSpectrobeData().stats.getDefLevel();
+            int powerScale = 1;
+            float scaledAmount = typeBonus + (atkPower * powerScale) - (defPower/4);
 
             Spectrobe updatedSpectrobe = this.getSpectrobeData().copy(true);
-            updatedSpectrobe.damage((int)scaledAmount);
+            updatedSpectrobe.damage(Math.round(scaledAmount));
             setSpectrobeData(updatedSpectrobe);
             super.actuallyHurt(damageSrc, scaledAmount);
         } else {
             Spectrobe updatedSpectrobe = this.getSpectrobeData().copy(true);
-            updatedSpectrobe.damage((int)damageAmount);
+            updatedSpectrobe.damage(Math.round(damageAmount));
             setSpectrobeData(updatedSpectrobe);
             super.actuallyHurt(damageSrc, damageAmount);
         }
@@ -506,12 +519,6 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         super.setAggressive(hasAggro);
     }
 
-    private void addStats(Spectrobe spectrobeData) {
-        Spectrobe spectrobeInstance = getSpectrobeData();
-        spectrobeInstance.stats.addStats(spectrobeData.stats);
-        updateEntityAttributes();
-    }
-
     public void awardKillStats(KrawlProperties krawlProperties) {
         if(!level.isClientSide()) {
             Spectrobe spectrobeInstance = getSpectrobeData();
@@ -524,75 +531,6 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
                     SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(sm), (ServerPlayerEntity) getOwner());
                 });
             }
-        }
-    }
-
-    public Nature getNature() {
-        return getSpectrobeData().properties.getNature();
-    }
-    public Stage getStage() {
-        return getSpectrobeData().properties.getStage();
-    }
-
-    public int getLevel() { return getSpectrobeData().stats.getLevel(); }
-
-    //ageable entity stuff
-
-    @Override
-    public boolean isInLove()
-    {
-        //gonna handle it myself
-        return false;
-    }
-
-    @Nullable
-    @Override
-    //createChild
-    public AgeableEntity getBreedOffspring(ServerWorld world, AgeableEntity ageable)
-    {
-        //gonna handle this myself
-        return null;
-    }
-
-    private void printSpectrobeToChat(PlayerEntity player) {
-        Spectrobe spectrobeInstance = getSpectrobeData();
-        StringBuilder builder1 = new StringBuilder();
-        StringBuilder builder2 = new StringBuilder();
-        StringBuilder builder3 = new StringBuilder();
-        builder3.append("Name: " + spectrobeInstance.name + ", ");
-
-        builder3.append("Health: " + spectrobeInstance.currentHealth + "/" + spectrobeInstance.stats.getHpLevel() + ", ");
-        builder3.append("Level: " + getLevel() + ", ");
-
-        builder1.append("Properties");
-        builder1.append("==========");
-        builder1.append("Nature: " + getNature() + ", ");
-        builder1.append("Stage: " + getStage());
-
-        builder2.append("Stats");
-        builder2.append("=====");
-        builder2.append("Hp: " + spectrobeInstance.stats.getHpLevel() + ", ");
-        builder2.append("Atk: " + spectrobeInstance.stats.getAtkLevel() + ", ");
-        builder2.append("Def: " + spectrobeInstance.stats.getDefLevel() + ", ");
-        String status;
-        switch (entityData.get(STATE)) {
-            case 0:
-                status = "Following";
-                break;
-            case 1:
-                status = "Sitting";
-                break;
-            case 2:
-                status = "Searching";
-                break;
-            default:
-                status = "Unknown.";
-        }
-        builder2.append("Status: " + status);
-        if(level.isClientSide()) {
-            player.sendMessage(new StringTextComponent(builder3.toString()), player.getUUID());
-            player.sendMessage(new StringTextComponent(builder1.toString()), player.getUUID());
-            player.sendMessage(new StringTextComponent(builder2.toString()), player.getUUID());
         }
     }
 
@@ -637,11 +575,65 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
                 spectrobeInstance.stats.getHpLevel());
 
         this.setHealth(spectrobeInstance.currentHealth);
+    }
 
-        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(
-                spectrobeInstance.stats.getAtkLevel());
+    public Nature getNature() {
+        return getSpectrobeData().properties.getNature();
+    }
+    public Stage getStage() {
+        return getSpectrobeData().properties.getStage();
+    }
 
-        this.getAttribute(Attributes.ARMOR).setBaseValue(spectrobeInstance.stats.getDefLevel());
+    public int getLevel() { return getSpectrobeData().stats.getLevel(); }
+
+    //ageable entity stuff
+
+    @Override
+    public boolean isInLove()
+    {
+        //gonna handle it myself
+        return false;
+    }
+
+    @Nullable
+    @Override
+    //createChild
+    public AgeableEntity getBreedOffspring(ServerWorld world, AgeableEntity ageable)
+    {
+        //gonna handle this myself
+        return null;
+    }
+
+    private void printSpectrobeToChat(PlayerEntity player) {
+        if(level.isClientSide()) {
+            Spectrobe spectrobeInstance = getSpectrobeData();
+            player.sendMessage(new StringTextComponent("Name: " + spectrobeInstance.name), player.getUUID());
+            player.sendMessage(new StringTextComponent("Health: " + spectrobeInstance.currentHealth + "/" + spectrobeInstance.stats.getHpLevel()), player.getUUID());
+            player.sendMessage(new StringTextComponent("Level: " + getLevel()), player.getUUID());
+            player.sendMessage(new StringTextComponent(""), player.getUUID());
+            player.sendMessage(new StringTextComponent("Nature: " + getNature()), player.getUUID());
+            player.sendMessage(new StringTextComponent("Stage: " + getStage()), player.getUUID());
+            player.sendMessage(new StringTextComponent(""), player.getUUID());
+            player.sendMessage(new StringTextComponent("Stats"), player.getUUID());
+            player.sendMessage(new StringTextComponent("Hp: " + spectrobeInstance.stats.getHpLevel()), player.getUUID());
+            player.sendMessage(new StringTextComponent("Atk: " + spectrobeInstance.stats.getAtkLevel()), player.getUUID());
+            player.sendMessage(new StringTextComponent("Def: " + spectrobeInstance.stats.getDefLevel()), player.getUUID());
+            String status;
+            switch (entityData.get(STATE)) {
+                case 0:
+                    status = "Following";
+                    break;
+                case 1:
+                    status = "Sitting";
+                    break;
+                case 2:
+                    status = "Searching";
+                    break;
+                default:
+                    status = "Unknown.";
+            }
+            player.sendMessage(new StringTextComponent("Status: " + status), player.getUUID());
+        }
     }
 
     protected abstract FossilBlockItem getFossil();

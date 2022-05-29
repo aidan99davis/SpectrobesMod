@@ -27,7 +27,7 @@ public class EntityVizbar extends EntityKrawl {
     }
 
     @Override
-    protected KrawlProperties GetKrawlProperties() {
+    public KrawlProperties GetKrawlProperties() {
         return KrawlRegistry.Vizbar_Properties.copy();
     }
 

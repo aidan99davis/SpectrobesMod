@@ -27,7 +27,7 @@ public class EntityGris extends EntityKrawl {
     }
 
     @Override
-    protected KrawlProperties GetKrawlProperties() {
+    public KrawlProperties GetKrawlProperties() {
         return KrawlRegistry.Gris_Properties.copy();
     }
 

@@ -12,6 +12,7 @@ public class KrawlProperties {
     private int atkOffset;
     private int defOffset;
     private int hpOffset;
+    private int level;
     private int xp_worth;
     private int gura_worth;
 
@@ -35,6 +36,7 @@ public class KrawlProperties {
         KrawlProperties properties = new KrawlProperties();
 
         properties.setNature(this.nature);
+        properties.setLevel(this.level);
         properties.setAtkLevel(this.atkLevel);
         properties.setAtkOffset(this.atkOffset);
         properties.setDefLevel(this.defLevel);
@@ -79,6 +81,22 @@ public class KrawlProperties {
         this.xp_worth = xp_worth;
     }
 
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public int getHplevel() {
+        return hpLevel;
+    }
+
+    public int getDefLevel() {
+        return defLevel;
+    }
+
+    public int getAtkLevel() {
+        return atkLevel;
+    }
+
     public int getHpOffset() {
         return hpOffset;
     }
@@ -93,6 +111,10 @@ public class KrawlProperties {
 
     public int getXpWorth() {
         return xp_worth;
+    }
+
+    public int getLevel() {
+        return level;
     }
 
     public int getGuraWorth() {
