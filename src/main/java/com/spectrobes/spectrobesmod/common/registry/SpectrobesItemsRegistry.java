@@ -56,6 +56,13 @@ public class SpectrobesItemsRegistry {
                                     .setISTER(() -> GejioFossilItemRenderer::new)
                                     .tab(SpectrobesItems.SpectrobesFossilsItemGroup.Instance)));
 
+    public static final RegistryObject<BlockItem> mesa_fossil_item =
+            ITEMS.register("mesa_fossil_item",
+                    () -> new MesaFossilItem(SpectrobesBlocks.mesa_fossil.get(),
+                            new Item.Properties()
+                                    .setISTER(() -> MesaFossilItemRenderer::new)
+                                    .tab(SpectrobesItems.SpectrobesFossilsItemGroup.Instance)));
+
     public static final RegistryObject<BlockItem> aoi_fossil_item =
             ITEMS.register("aoi_fossil_item",
                     () -> new AoiFossilItem(SpectrobesBlocks.aoi_fossil.get(),
@@ -166,6 +173,7 @@ public class SpectrobesItemsRegistry {
         corona_fossils.add(komainu_fossil_item.get());
         corona_fossils.add(vilar_fossil_item.get());
         corona_fossils.add(zoza_fossil_item.get());
+        corona_fossils.add(mesa_fossil_item.get());
 
         all_fossils.addAll(corona_fossils);
         all_fossils.addAll(flash_fossils);
