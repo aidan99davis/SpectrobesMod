@@ -444,9 +444,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
             setSpectrobeData(spectrobeData);
             getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
                 sm.updateSpectrobe(this.getSpectrobeData());
-                SpectrobesInfo.LOGGER.debug("DOOT 1");
                 if(!level.isClientSide()) {
-                    SpectrobesInfo.LOGGER.debug("DOOT 2");
                     SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(sm), (ServerPlayerEntity) getOwner());
                 }
             });

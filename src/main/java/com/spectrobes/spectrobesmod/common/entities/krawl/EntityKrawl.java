@@ -4,6 +4,7 @@ import com.spectrobes.spectrobesmod.common.entities.IHasNature;
 import com.spectrobes.spectrobesmod.common.entities.goals.AttackSpectrobeGoal;
 import com.spectrobes.spectrobesmod.common.entities.goals.AttackSpectrobeMasterGoal;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
+import com.spectrobes.spectrobesmod.common.items.weapons.SpectrobesWeapon;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
@@ -27,6 +28,8 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+
+import static com.spectrobes.spectrobesmod.util.DamageUtils.getTypeBonus;
 
 public abstract class EntityKrawl extends MonsterEntity implements IAnimatable, IHasNature {
     public KrawlProperties krawlProperties;
@@ -73,32 +76,50 @@ public abstract class EntityKrawl extends MonsterEntity implements IAnimatable, 
 
     @Override
     protected void actuallyHurt(DamageSource damageSrc, float damageAmount) {
-        if(damageSrc.getDirectEntity() instanceof IHasNature) {
-            IHasNature attacker = (IHasNature)damageSrc.getDirectEntity();
+        if (damageSrc.getDirectEntity() instanceof IHasNature) {
+            IHasNature attacker = (IHasNature) damageSrc.getDirectEntity();
             int advantage = Spectrobe.hasTypeAdvantage(attacker, this);
-            float atkPower = ((EntitySpectrobe)damageSrc.getDirectEntity()).getSpectrobeData().stats.getAtkLevel();
-            float typeBonus;
-
-            switch (advantage) {
-                case -1:
-                    typeBonus = atkPower * 0.75f;
-                    break;
-                case 1:
-                    typeBonus = atkPower * 1.5f;
-                    break;
-                default:
-                    typeBonus = atkPower;
-                    break;
-            }
+            float atkPower = ((EntitySpectrobe) damageSrc.getDirectEntity()).getSpectrobeData().stats.getAtkLevel();
+            float typeBonus = getTypeBonus(advantage, Math.round(atkPower));
             float defPower = GetKrawlProperties().getDefLevel();
             int powerScale = 1;
-            float scaledAmount = typeBonus + (atkPower * powerScale) - (defPower/4);
+            float scaledAmount = typeBonus + (atkPower * powerScale) - (defPower / 4);
 
             super.actuallyHurt(damageSrc, scaledAmount);
-        } else {
+        } else if(damageSrc.getDirectEntity() instanceof PlayerEntity) {
+            PlayerEntity playerEntity = (PlayerEntity) damageSrc.getDirectEntity();
+            if(playerEntity.getMainHandItem().getItem() != null
+                    && playerEntity.getMainHandItem().getItem() instanceof SpectrobesWeapon) {
+                SpectrobesWeapon weapon = (SpectrobesWeapon) playerEntity.getMainHandItem().getItem();
+                int advantage = Spectrobe.hasTypeAdvantage(weapon, this);
+                int atkPower = weapon.GetWeaponStats().AtkDamage;
+                float typeBonus = getTypeBonus(advantage, atkPower);
+                float defPower = GetKrawlProperties().getDefLevel();
+                int powerScale = 1; //todo this can be used to create secondary attacks for weapons which deal extra damage.
+                float scaledAmount = typeBonus + (atkPower * powerScale) - (defPower / 4);
+
+                super.actuallyHurt(damageSrc, scaledAmount);
+            }
+            else if(playerEntity.getOffhandItem().getItem() != null
+                    && playerEntity.getOffhandItem().getItem() instanceof SpectrobesWeapon) {
+                SpectrobesWeapon weapon = (SpectrobesWeapon) playerEntity.getOffhandItem().getItem();
+                int advantage = Spectrobe.hasTypeAdvantage(weapon, this);
+                int atkPower = weapon.GetWeaponStats().AtkDamage;
+                float typeBonus = getTypeBonus(advantage, atkPower);
+                float defPower = GetKrawlProperties().getDefLevel();
+                int powerScale = 1; //todo this can be used to create secondary attacks for weapons which deal extra damage.
+                float scaledAmount = typeBonus + (atkPower * powerScale) - (defPower / 4);
+
+                super.actuallyHurt(damageSrc, scaledAmount);
+            }
+            else {
+                super.actuallyHurt(damageSrc, 0);
+            }
+        }else {
             super.actuallyHurt(damageSrc, damageAmount);
         }
     }
+
 
     @Override
     public void aiStep() {
