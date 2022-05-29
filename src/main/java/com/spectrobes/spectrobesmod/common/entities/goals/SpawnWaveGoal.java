@@ -1,12 +1,19 @@
 package com.spectrobes.spectrobesmod.common.entities.goals;
 
 import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
+import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityVortex;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
+import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSyncSpectrobeMasterPacket;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.TargetGoal;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraftforge.event.world.NoteBlockEvent;
 
 import java.util.Random;
 
@@ -62,10 +69,30 @@ public class SpawnWaveGoal extends TargetGoal {
 
     private void spawnWave() {
         Random random = new Random();
+
+        final int[] levelToSpawnAt = {1};
+        if(mob.getTarget() instanceof PlayerEntity) {
+            PlayerEntity player = (PlayerEntity) mob.getTarget();
+            player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(playerCap -> {
+                levelToSpawnAt[0] = Math.toIntExact(Math.round(playerCap.averageBattleTeamLevel()));
+            });
+        } else if(mob.getTarget() instanceof EntitySpectrobe) {
+            EntitySpectrobe spectrobe = (EntitySpectrobe) mob.getTarget();
+            if(spectrobe.getOwner() != null) {
+                PlayerEntity player = (PlayerEntity) spectrobe.getOwner();
+                player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(playerCap -> {
+                    levelToSpawnAt[0] = Math.toIntExact(Math.round(playerCap.averageBattleTeamLevel()));
+                });
+            } else {
+                levelToSpawnAt[0] = spectrobe.getLevel();
+            }
+        }
+
         int krawlInWave = random.nextInt(2) + 1;
         for (int i = 0; i < krawlInWave; i++) {
-            EntityType<? extends EntityKrawl> krawl = KrawlEntities.getByNature(vortexNature);
-            ((EntityVortex)mob).addKrawl(krawl.create(mob.level));
+            EntityType<? extends EntityKrawl> krawl = KrawlEntities.getByLevel(levelToSpawnAt[0], mob.level);
+            EntityKrawl krawl1 = krawl.create(mob.level);
+            ((EntityVortex)mob).addKrawl(krawl1);
         }
     }
 }

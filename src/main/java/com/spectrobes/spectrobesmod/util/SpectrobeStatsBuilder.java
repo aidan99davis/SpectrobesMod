@@ -7,8 +7,6 @@ public class SpectrobeStatsBuilder {
     private Stat health;
     private Stat attack;
     private Stat defence;
-    private int increment;
-    private int maxValue;
 
     public SpectrobeStatsBuilder withHealthStat(int base, int increment, int max) {
         this.health = new Stat(base, increment, max);
@@ -22,7 +20,6 @@ public class SpectrobeStatsBuilder {
         this.defence = new Stat(base, increment, max);
         return this;
     }
-
 
     public SpectrobeStats build() {
         return new SpectrobeStats(health, attack, defence);

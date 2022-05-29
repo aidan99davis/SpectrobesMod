@@ -26,7 +26,7 @@ public class EntityGrisen extends EntityKrawl {
     }
 
     @Override
-    protected KrawlProperties GetKrawlProperties() {
+    public KrawlProperties GetKrawlProperties() {
         return KrawlRegistry.Grisen_Properties.copy();
     }
 

@@ -74,6 +74,17 @@ public class SpectrobeRegistry {
             .build();
 
     //Aurora Spectrobes
+    public static final Spectrobe Gejio
+            = new SpectrobeBuilder()
+            .withName("Gejio")
+            .withProperties(SpectrobePropertyRegistry.GEJIO)
+            .withStats(new SpectrobeStatsBuilder()
+                    .withHealthStat(122, 10, 199)
+                    .withAttackStat(49, 9, 99)
+                    .withDefenceStat(69, 8, 119)
+                    .build())
+            .build();
+
     public static final Spectrobe Spiko
             = new SpectrobeBuilder()
             .withName("Spiko")

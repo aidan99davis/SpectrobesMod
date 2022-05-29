@@ -5,7 +5,6 @@ import com.spectrobes.spectrobesmod.common.entities.IHasNature;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralProperties;
 import com.spectrobes.spectrobesmod.common.registry.IconRegistry;
 import com.spectrobes.spectrobesmod.util.SpectrobeBuilder;
-import net.minecraft.crash.ReportedException;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataSerializers;
@@ -44,7 +43,12 @@ public class Spectrobe {
         this.name = name;
     }
 
-    public void setCurrentHealth(int currentHealth) { this.currentHealth = currentHealth; }
+    public void setCurrentHealth(int currentHealth) {
+        this.currentHealth = currentHealth;
+        if(stats != null && this.currentHealth > stats.getHpLevel()) {
+            this.currentHealth = stats.getHpLevel();
+        }
+    }
 
     public void setMasterUUID(UUID masterUUID) {
         this.MasterUUID = masterUUID;

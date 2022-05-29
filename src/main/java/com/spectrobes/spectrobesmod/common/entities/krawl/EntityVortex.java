@@ -148,7 +148,7 @@ public class EntityVortex extends EntityKrawl {
     }
 
     @Override
-    protected KrawlProperties GetKrawlProperties() {
+    public KrawlProperties GetKrawlProperties() {
         return KrawlRegistry.Vortex_Properties.copy();
     }
 

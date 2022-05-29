@@ -47,7 +47,6 @@ public class HUDHandler {
     @OnlyIn(Dist.CLIENT)
     private static void drawSpectrobeTeamBar(MatrixStack ms, MainWindow res, float partialTicks) {
         Minecraft mc = Minecraft.getInstance();
-
         if (!mc.player.inventory
                 .contains(SpectrobesItems.prizmod_item.getDefaultInstance())) {
             return;
@@ -72,6 +71,7 @@ public class HUDHandler {
 
         PlayerSpectrobeMaster sm = mc.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
                 .orElseThrow(IllegalStateException::new);
+
         Map<Integer, UUID> currentTeamUuids = sm.getCurrentTeamUuids();
         int currentSelected = sm.getCurrentTeamMemberSlot();
         currentTeamUuids.forEach((integer, uuid) -> {

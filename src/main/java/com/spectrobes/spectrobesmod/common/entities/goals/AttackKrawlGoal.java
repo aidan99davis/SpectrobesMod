@@ -1,8 +1,6 @@
 package com.spectrobes.spectrobesmod.common.entities.goals;
 
-import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
-import com.spectrobes.spectrobesmod.common.entities.krawl.EntityVortex;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.entity.MobEntity;
@@ -55,7 +53,7 @@ public class AttackKrawlGoal extends TargetGoal {
         super.tick();
         this.mob.setTarget(this.target);
         ((EntitySpectrobe)this.mob).setIsAttacking(true);
-        this.mob.getMoveControl().setWantedPosition(this.target.getX(), this.target.getY(), this.target.getZ(), 5);
+        this.mob.getMoveControl().setWantedPosition(this.target.getX(), this.target.getY(), this.target.getZ(), 1);
         this.mob.setAggressive(true);
     }
 
@@ -63,7 +61,7 @@ public class AttackKrawlGoal extends TargetGoal {
     public void start() {
         this.mob.setTarget(this.target);
         ((EntitySpectrobe)this.mob).setIsAttacking(true);
-        this.mob.getMoveControl().setWantedPosition(this.target.getX(), this.target.getY(), this.target.getZ(), 5);
+        this.mob.getMoveControl().setWantedPosition(this.target.getX(), this.target.getY(), this.target.getZ(), 1);
         this.mob.setAggressive(true);
         super.start();
     }

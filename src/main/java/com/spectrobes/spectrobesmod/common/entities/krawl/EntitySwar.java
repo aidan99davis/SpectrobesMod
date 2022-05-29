@@ -34,7 +34,7 @@ public class EntitySwar extends EntityKrawl {
     }
 
     @Override
-    protected KrawlProperties GetKrawlProperties() {
+    public KrawlProperties GetKrawlProperties() {
         return KrawlRegistry.Swar_Properties.copy();
     }
 

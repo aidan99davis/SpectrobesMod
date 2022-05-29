@@ -1,14 +1,16 @@
 package com.spectrobes.spectrobesmod.common.entities.krawl;
 
+import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.entities.IHasNature;
 import com.spectrobes.spectrobesmod.common.entities.goals.AttackSpectrobeGoal;
 import com.spectrobes.spectrobesmod.common.entities.goals.AttackSpectrobeMasterGoal;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
+import com.spectrobes.spectrobesmod.common.items.weapons.SpectrobesWeapon;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
@@ -28,11 +30,9 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-import javax.annotation.PostConstruct;
-import java.util.Random;
+import static com.spectrobes.spectrobesmod.util.DamageUtils.getTypeBonus;
 
 public abstract class EntityKrawl extends MonsterEntity implements IAnimatable, IHasNature {
-
     public KrawlProperties krawlProperties;
     public AnimationFactory animationControllers = new AnimationFactory(this);
     protected AnimationController moveController = new AnimationController(this, "moveAnimationController", 10F, this::moveController);
@@ -44,6 +44,7 @@ public abstract class EntityKrawl extends MonsterEntity implements IAnimatable, 
     protected EntityKrawl(EntityType<? extends MonsterEntity> type, World worldIn) {
         super(type, worldIn);
         krawlProperties = GetKrawlProperties();
+        updateEntityAttributes();
     }
 
     @Override
@@ -51,7 +52,7 @@ public abstract class EntityKrawl extends MonsterEntity implements IAnimatable, 
         return true;
     }
 
-    protected abstract KrawlProperties GetKrawlProperties();
+    public abstract KrawlProperties GetKrawlProperties();
 
     public boolean IsAttacking() {
         return entityData.get(IS_ATTACKING);
@@ -76,27 +77,50 @@ public abstract class EntityKrawl extends MonsterEntity implements IAnimatable, 
 
     @Override
     protected void actuallyHurt(DamageSource damageSrc, float damageAmount) {
-        if(damageSrc.getDirectEntity() instanceof IHasNature) {
-            IHasNature attacker = (IHasNature)damageSrc.getDirectEntity();
+        if (damageSrc.getDirectEntity() instanceof IHasNature) {
+            IHasNature attacker = (IHasNature) damageSrc.getDirectEntity();
             int advantage = Spectrobe.hasTypeAdvantage(attacker, this);
-            float scaledAmount;
+            float atkPower = ((EntitySpectrobe) damageSrc.getDirectEntity()).getSpectrobeData().stats.getAtkLevel();
+            float typeBonus = getTypeBonus(advantage, Math.round(atkPower));
+            float defPower = GetKrawlProperties().getDefLevel();
+            int powerScale = 1;
+            float scaledAmount = typeBonus + (atkPower * powerScale) - (defPower / 4);
 
-            switch (advantage) {
-                case -1:
-                    scaledAmount = damageAmount * 0.75f;
-                    break;
-                case 1:
-                    scaledAmount = damageAmount * 1.25f;
-                    break;
-                default:
-                    scaledAmount = damageAmount;
-                    break;
-            }
             super.actuallyHurt(damageSrc, scaledAmount);
-        } else {
+        } else if(damageSrc.getDirectEntity() instanceof PlayerEntity) {
+            PlayerEntity playerEntity = (PlayerEntity) damageSrc.getDirectEntity();
+            if(playerEntity.getMainHandItem().getItem() != null
+                    && playerEntity.getMainHandItem().getItem() instanceof SpectrobesWeapon) {
+                SpectrobesWeapon weapon = (SpectrobesWeapon) playerEntity.getMainHandItem().getItem();
+                int advantage = Spectrobe.hasTypeAdvantage(weapon, this);
+                int atkPower = weapon.GetWeaponStats().AtkDamage;
+                float typeBonus = getTypeBonus(advantage, atkPower);
+                float defPower = GetKrawlProperties().getDefLevel();
+                int powerScale = 1; //todo this can be used to create secondary attacks for weapons which deal extra damage.
+                float scaledAmount = typeBonus + (atkPower * powerScale) - (defPower / 4);
+                SpectrobesInfo.LOGGER.debug("DAMAGING KRAWL BY: " + scaledAmount);
+                super.actuallyHurt(damageSrc, scaledAmount);
+            }
+            else if(playerEntity.getOffhandItem().getItem() != null
+                    && playerEntity.getOffhandItem().getItem() instanceof SpectrobesWeapon) {
+                SpectrobesWeapon weapon = (SpectrobesWeapon) playerEntity.getOffhandItem().getItem();
+                int advantage = Spectrobe.hasTypeAdvantage(weapon, this);
+                int atkPower = weapon.GetWeaponStats().AtkDamage;
+                float typeBonus = getTypeBonus(advantage, atkPower);
+                float defPower = GetKrawlProperties().getDefLevel();
+                int powerScale = 1; //todo this can be used to create secondary attacks for weapons which deal extra damage.
+                float scaledAmount = typeBonus + (atkPower * powerScale) - (defPower / 4);
+                SpectrobesInfo.LOGGER.debug("DAMAGING KRAWL BY: " + scaledAmount);
+                super.actuallyHurt(damageSrc, scaledAmount);
+            }
+            else {
+                super.actuallyHurt(damageSrc, 0);
+            }
+        }else {
             super.actuallyHurt(damageSrc, damageAmount);
         }
     }
+
 
     @Override
     public void aiStep() {
@@ -141,6 +165,17 @@ public abstract class EntityKrawl extends MonsterEntity implements IAnimatable, 
                 .add(Attributes.ATTACK_DAMAGE, 5.0D);
     }
 
+    public void updateEntityAttributes() {
+        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(
+                krawlProperties.getHplevel());
+
+        this.setHealth(krawlProperties.getHplevel());
+
+        this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(
+                krawlProperties.getAtkLevel());
+
+    }
+
     //Networking
     @Override
     public IPacket<?> getAddEntityPacket() {
@@ -165,4 +200,5 @@ public abstract class EntityKrawl extends MonsterEntity implements IAnimatable, 
     public SpectrobeProperties.Nature getNature() {
         return krawlProperties.getNature();
     }
+
 }

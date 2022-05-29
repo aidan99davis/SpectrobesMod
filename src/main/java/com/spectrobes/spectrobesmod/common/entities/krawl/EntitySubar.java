@@ -27,7 +27,7 @@ public class EntitySubar extends EntityKrawl {
     }
 
     @Override
-    protected KrawlProperties GetKrawlProperties() {
+    public KrawlProperties GetKrawlProperties() {
         return KrawlRegistry.Subar_Properties.copy();
     }
 

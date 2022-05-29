@@ -8,7 +8,7 @@ import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class PlayerSpectrobeMaster {
 
@@ -19,6 +19,11 @@ public class PlayerSpectrobeMaster {
 
     private int currentSelected;
     private int guraBalance;
+
+    private int currentHealth = 200;
+    private int level = 0;
+    private int currentXp = 0;
+    private int xp_required = 100;
 
     private List<Spectrobe>
         ownedSpectrobes;
@@ -51,6 +56,25 @@ public class PlayerSpectrobeMaster {
         if(currentSelected == -1) {
             currentSelected = 6;
         }
+    }
+
+    public int usedTeamSlots() {
+        AtomicInteger teamMembers = new AtomicInteger();
+        this.getCurrentTeamUuids().forEach((integer, uuid) -> {
+            if(uuid != null && integer != 6) teamMembers.getAndIncrement();
+        });
+        return teamMembers.get();
+    }
+
+    public double averageBattleTeamLevel() {
+        final double[] total = {0};
+        this.getCurrentTeamUuids().forEach((integer, uuid) -> {
+            if(uuid != null && integer != 6) {
+                total[0] = total[0] + this.getSpectrobeByUuid(uuid).stats.getLevel();
+            }
+        });
+
+        return total[0] / usedTeamSlots();
     }
 
     public PlayerSpectrobeMaster() {

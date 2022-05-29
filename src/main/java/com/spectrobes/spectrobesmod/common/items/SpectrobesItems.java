@@ -1,6 +1,10 @@
 package com.spectrobes.spectrobesmod.common.items;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
+import com.spectrobes.spectrobesmod.client.items.renderer.HealerBlockItemRenderer;
+import com.spectrobes.spectrobesmod.client.items.weapons.renderer.BasicSwordItemRenderer;
+import com.spectrobes.spectrobesmod.common.items.machines.HealerBlockItem;
+import com.spectrobes.spectrobesmod.common.items.weapons.BasicSwordItem;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobesBlocks;
 import com.spectrobes.spectrobesmod.common.items.minerals.Mineral;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
@@ -20,6 +24,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+
+import static com.spectrobes.spectrobesmod.common.registry.SpectrobesItemsRegistry.ITEMS;
 
 @SuppressWarnings("unused")
 @Mod.EventBusSubscriber(modid = SpectrobesInfo.MOD_ID, bus = Bus.MOD)
@@ -70,10 +76,41 @@ public class SpectrobesItems {
     //Tools
     public static final Item prizmod_item = null;
 
+    //Weapons
+    public static final Item basic_sword = null;
+
     private static final HashMap<Mineral.MineralRarity, List<Item>> all_minerals = new HashMap<>();
 
     @SubscribeEvent
     public static void registerItems(final RegistryEvent.Register<Item> event) {
+        registerMinerals(event);
+
+        registerBlockItems(event);
+
+        registerTools(event);
+    }
+
+    private static void registerWeapons(RegistryEvent.Register<Item> event) {
+    }
+
+    private static void registerTools(RegistryEvent.Register<Item> event) {
+        event.getRegistry().register(
+                new PrizmodItem(
+                        new Item.Properties()
+                                .tab(SpectrobesToolsItemGroup.Instance)));
+    }
+
+    private static void registerBlockItems(RegistryEvent.Register<Item> event) {
+        event.getRegistry().register(new BlockItem(SpectrobesBlocks.mineral_block.get(),
+                new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
+                .setRegistryName("mineral_block"));
+
+        event.getRegistry().register(new BlockItem(SpectrobesBlocks.fossil_block.get(),
+                new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
+                .setRegistryName("fossil_block"));
+    }
+
+    private static void registerMinerals(RegistryEvent.Register<Item> event) {
         MineralRegistry.init();
 
         all_minerals.put(Mineral.MineralRarity.Common, new ArrayList<>());
@@ -109,19 +146,6 @@ public class SpectrobesItems {
                 2);
 
         event.getRegistry().register(specialMineralItem);
-
-        event.getRegistry().register(new BlockItem(SpectrobesBlocks.mineral_block.get(),
-                new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
-                .setRegistryName("mineral_block"));
-
-        event.getRegistry().register(new BlockItem(SpectrobesBlocks.fossil_block.get(),
-                new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
-                .setRegistryName("fossil_block"));
-
-        event.getRegistry().register(
-                new PrizmodItem(
-                        new Item.Properties()
-                                .tab(SpectrobesToolsItemGroup.Instance)));
     }
 
     static void registerMineral(final RegistryEvent.Register<Item> event, Mineral mineral) {
@@ -169,6 +193,20 @@ public class SpectrobesItems {
         @Override
         public ItemStack makeIcon() {
             return SpectrobesItemsRegistry.komainu_fossil_item.get().getDefaultInstance();
+        }
+    }
+
+    public static class SpectrobesWeaponsItemGroup extends ItemGroup {
+
+        public static final SpectrobesWeaponsItemGroup Instance = new SpectrobesWeaponsItemGroup(ItemGroup.TABS.length, "spectrobestab.weapons");
+
+        public SpectrobesWeaponsItemGroup(int index, String label) {
+            super(index, label);
+        }
+
+        @Override
+        public ItemStack makeIcon() {
+            return SpectrobesItemsRegistry.basic_sword_item.get().getDefaultInstance();
         }
     }
 

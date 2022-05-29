@@ -79,4 +79,8 @@ public class EntityAoi extends EntityAvianSpectrobe {
         return (FossilBlockItem) SpectrobesItemsRegistry.aoi_fossil_item.get();
     }
 
+    @Override
+    protected int getMaxLitterSize() {
+        return 0;
+    }
 }

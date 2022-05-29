@@ -2,9 +2,12 @@ package com.spectrobes.spectrobesmod.common.registry;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.items.renderer.*;
+import com.spectrobes.spectrobesmod.client.items.weapons.renderer.BasicSwordItemRenderer;
 import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
 import com.spectrobes.spectrobesmod.common.items.fossils.*;
 import com.spectrobes.spectrobesmod.common.items.machines.HealerBlockItem;
+import com.spectrobes.spectrobesmod.common.items.weapons.BasicSwordItem;
+import com.spectrobes.spectrobesmod.common.items.weapons.SpectrobesWeapon;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -25,6 +28,12 @@ public class SpectrobesItemsRegistry {
     private static final List<Item> aurora_fossils = new ArrayList<>();
     private static final List<Item> corona_fossils = new ArrayList<>();
 
+    public static final RegistryObject<SpectrobesWeapon> basic_sword_item =
+            ITEMS.register("basic_sword_item",
+                    () -> new BasicSwordItem(new Item.Properties()
+                            .setISTER(() -> BasicSwordItemRenderer::new)
+                            .tab(SpectrobesItems.SpectrobesWeaponsItemGroup.Instance)));
+
     @SuppressWarnings("unused")
     public static final RegistryObject<BlockItem> healer_block_item =
             ITEMS.register("healer_block_item",
@@ -38,6 +47,13 @@ public class SpectrobesItemsRegistry {
                     () -> new GrildaFossilItem(SpectrobesBlocks.grilda_fossil.get(),
                             new Item.Properties()
                                     .setISTER(() -> GrildaFossilItemRenderer::new)
+                                    .tab(SpectrobesItems.SpectrobesFossilsItemGroup.Instance)));
+
+    public static final RegistryObject<BlockItem> gejio_fossil_item =
+            ITEMS.register("gejio_fossil_item",
+                    () -> new GejioFossilItem(SpectrobesBlocks.gejio_fossil.get(),
+                            new Item.Properties()
+                                    .setISTER(() -> GejioFossilItemRenderer::new)
                                     .tab(SpectrobesItems.SpectrobesFossilsItemGroup.Instance)));
 
     public static final RegistryObject<BlockItem> aoi_fossil_item =
@@ -145,6 +161,7 @@ public class SpectrobesItemsRegistry {
         aurora_fossils.add(bartor_fossil_item.get());
         aurora_fossils.add(grilda_fossil_item.get());
         aurora_fossils.add(kubaku_fossil_item.get());
+        aurora_fossils.add(gejio_fossil_item.get());
 
         corona_fossils.add(komainu_fossil_item.get());
         corona_fossils.add(vilar_fossil_item.get());
@@ -164,7 +181,6 @@ public class SpectrobesItemsRegistry {
         int index = random.nextInt(all_fossils.size());
         return new ItemStack(all_fossils.get(index));
     }
-
 
     public static ItemStack getRandomFossil(SpectrobeProperties.Nature bias) {
         if(all_fossils.isEmpty()) {
