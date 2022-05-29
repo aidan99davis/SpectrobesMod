@@ -16,20 +16,20 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AoiFossilBlock extends DirectionalBlock {
+public class DongorFossilBlock extends DirectionalBlock {
     private static final Properties props = Properties.of(Material.WOOD).noOcclusion()
             .harvestTool(ToolType.PICKAXE)
             .strength(0f)
             .sound(SoundType.STONE)
             .harvestLevel(0);
 
-    public AoiFossilBlock() {
+    public DongorFossilBlock() {
         super(props);
     }
 
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-        ItemStack stack = new ItemStack(SpectrobesItemsRegistry.aoi_fossil_item.get());
+        ItemStack stack = new ItemStack(SpectrobesItemsRegistry.dongor_fossil_item.get());
         List<ItemStack> stackList = new ArrayList<>();
         stackList.add(stack);
 
@@ -46,7 +46,7 @@ public class AoiFossilBlock extends DirectionalBlock {
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world)
     {
-        return SpectrobesTileRegistry.AOI_FOSSIL_TILE.get().create();
+        return SpectrobesTileRegistry.DONGOR_FOSSIL_TILE.get().create();
     }
 
     @Override

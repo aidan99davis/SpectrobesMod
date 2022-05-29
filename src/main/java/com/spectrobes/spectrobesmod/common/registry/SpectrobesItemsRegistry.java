@@ -92,6 +92,13 @@ public class SpectrobesItemsRegistry {
                                     .setISTER(() -> KomainuFossilItemRenderer::new)
                                     .tab(SpectrobesItems.SpectrobesFossilsItemGroup.Instance)));
 
+    public static final RegistryObject<BlockItem> dongor_fossil_item =
+            ITEMS.register("dongor_fossil_item",
+                    () -> new DongorFossilItem(SpectrobesBlocks.dongor_fossil.get(),
+                            new Item.Properties()
+                                    .setISTER(() -> DongorFossilItemRenderer::new)
+                                    .tab(SpectrobesItems.SpectrobesFossilsItemGroup.Instance)));
+
     public static final RegistryObject<BlockItem> kubaku_fossil_item =
             ITEMS.register("kubaku_fossil_item",
                     () -> new KubakuFossilItem(SpectrobesBlocks.kubaku_fossil.get(),
@@ -174,6 +181,7 @@ public class SpectrobesItemsRegistry {
         corona_fossils.add(vilar_fossil_item.get());
         corona_fossils.add(zoza_fossil_item.get());
         corona_fossils.add(mesa_fossil_item.get());
+        corona_fossils.add(dongor_fossil_item.get());
 
         all_fossils.addAll(corona_fossils);
         all_fossils.addAll(flash_fossils);
