@@ -19,6 +19,9 @@ public class SpectrobePropertyRegistry {
 
     //AURORA
 
+    //GEJIO LINE
+    public static SpectrobeProperties GEJIO = new SpectrobeProperties(SpectrobeProperties.Nature.AURORA, SpectrobeProperties.Stage.CHILD);
+
     //SPIKO LINE
     public static SpectrobeProperties SPIKO = new SpectrobeProperties(SpectrobeProperties.Nature.AURORA, SpectrobeProperties.Stage.CHILD);
     public static SpectrobeProperties SPIKAN = new SpectrobeProperties(SpectrobeProperties.Nature.AURORA, SpectrobeProperties.Stage.ADULT);

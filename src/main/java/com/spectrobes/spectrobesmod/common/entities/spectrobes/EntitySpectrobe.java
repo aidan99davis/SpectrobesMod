@@ -461,6 +461,10 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
 
     @Override
     protected void actuallyHurt(DamageSource damageSrc, float damageAmount) {
+        if(getOwner() != null && getSpectrobeData().properties.getStage() == Stage.CHILD) {
+            super.actuallyHurt(damageSrc, 0);
+            return;
+        }
         if(damageSrc.getDirectEntity() instanceof EntityKrawl) {
             IHasNature attacker = (IHasNature)damageSrc.getDirectEntity();
             int advantage = Spectrobe.hasTypeAdvantage(attacker, this);
