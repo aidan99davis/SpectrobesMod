@@ -450,7 +450,6 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
             });
             despawn();
         } else {
-            SpectrobesInfo.LOGGER.debug("DOOT 2");
             ItemEntity fossilItem = new ItemEntity(level,
                     this.getX() + 0.5D,
                     (this.getY() + 1),
