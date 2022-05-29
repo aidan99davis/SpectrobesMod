@@ -26,7 +26,7 @@ public class SpectrobeStats {
         this.defence = defStat;
         this.mineralsEaten = 0;
         this.battlesWon = 0;
-        this.xp_required = 50;
+        this.xp_required = 60;
         this.xp = 0;
         this.level = 1;
     }
@@ -44,16 +44,17 @@ public class SpectrobeStats {
     //returns true if levelled up.
     boolean addXp(int xp_to_add) {
         xp += xp_to_add;
-        if(xp > xp_required) {
+        boolean levelledUp = false;
+        while(xp > xp_required) {
             xp -= xp_required;
-            xp_required *= 1.2;
+            xp_required = (level + (level + 1)) * 30;
             level++;
             health.levelUp();
             attack.levelUp();
             defence.levelUp();
-            return true;
+            levelledUp = true;
         }
-        return false;
+        return levelledUp;
     }
 
     public void applyMineral(MineralProperties properties) {

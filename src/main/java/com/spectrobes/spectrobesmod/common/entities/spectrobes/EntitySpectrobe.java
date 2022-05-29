@@ -1,6 +1,5 @@
 package com.spectrobes.spectrobesmod.common.entities.spectrobes;
 
-import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.entities.IHasNature;
@@ -103,11 +102,11 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     {
         super.registerGoals();
         this.goalSelector.addGoal(3, new FollowMasterGoal(this, 1, 2, 10, canFly()));
-        this.goalSelector.addGoal(1, new AttackKrawlGoal(this, false, true));
+        this.goalSelector.addGoal(1, new AttackKrawlGoal(this, true, true));
         this.goalSelector.addGoal(1, new FindMineralsGoal(this));
         this.goalSelector.addGoal(1, new FindFossilsGoal(this));
         this.goalSelector.addGoal(1, new FindMineralOreGoal(this));
-        this.goalSelector.addGoal(3, new AvoidKrawlGoal(this, EntityKrawl.class, 10.0F, 1D, 1.1D));
+        this.goalSelector.addGoal(3, new AvoidKrawlGoal(this, EntityKrawl.class, 10.0F, 1f, 1.1D));
         this.goalSelector.addGoal(4, new LeapAtTargetGoal(this, 0.4f));
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1f, true));
         this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
@@ -116,12 +115,12 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         this.targetSelector.addGoal(2, new MasterHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new MasterHurtTargetGoal(this));
         this.targetSelector.addGoal(1, (new SpectrobeHurtByTargetGoal(this)));
-        this.targetSelector.addGoal(3, new TargetKrawlGoal(this, EntityKrawl.class, false, TARGET_KRAWL));
+        this.targetSelector.addGoal(3, new TargetKrawlGoal(this, EntityKrawl.class, true, TARGET_KRAWL));
     }
 
     public static AttributeModifierMap.MutableAttribute setCustomAttributes() {
         return MonsterEntity.createMobAttributes()
-                .add(Attributes.MOVEMENT_SPEED, (double)1.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.5)
                 .add(Attributes.MAX_HEALTH, 20.0D)
                 .add(Attributes.ATTACK_DAMAGE, 5.0D)
                 .add(Attributes.ATTACK_SPEED, 1f)

@@ -2,9 +2,12 @@ package com.spectrobes.spectrobesmod.common.registry;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.items.renderer.*;
+import com.spectrobes.spectrobesmod.client.items.weapons.renderer.BasicSwordItemRenderer;
 import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
 import com.spectrobes.spectrobesmod.common.items.fossils.*;
 import com.spectrobes.spectrobesmod.common.items.machines.HealerBlockItem;
+import com.spectrobes.spectrobesmod.common.items.weapons.BasicSwordItem;
+import com.spectrobes.spectrobesmod.common.items.weapons.SpectrobesWeapon;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -24,6 +27,12 @@ public class SpectrobesItemsRegistry {
     private static final List<Item> flash_fossils = new ArrayList<>();
     private static final List<Item> aurora_fossils = new ArrayList<>();
     private static final List<Item> corona_fossils = new ArrayList<>();
+
+    public static final RegistryObject<SpectrobesWeapon> basic_sword_item =
+            ITEMS.register("basic_sword_item",
+                    () -> new BasicSwordItem(new Item.Properties()
+                            .setISTER(() -> BasicSwordItemRenderer::new)
+                            .tab(SpectrobesItems.SpectrobesWeaponsItemGroup.Instance)));
 
     @SuppressWarnings("unused")
     public static final RegistryObject<BlockItem> healer_block_item =
@@ -164,7 +173,6 @@ public class SpectrobesItemsRegistry {
         int index = random.nextInt(all_fossils.size());
         return new ItemStack(all_fossils.get(index));
     }
-
 
     public static ItemStack getRandomFossil(SpectrobeProperties.Nature bias) {
         if(all_fossils.isEmpty()) {
