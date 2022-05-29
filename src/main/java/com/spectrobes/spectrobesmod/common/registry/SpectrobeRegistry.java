@@ -7,6 +7,17 @@ import com.spectrobes.spectrobesmod.util.SpectrobeStatsBuilder;
 public class SpectrobeRegistry {
 
     //Corona Spectrobes
+    public static final Spectrobe Dongor
+            = new SpectrobeBuilder()
+            .withName("Dongor")
+            .withProperties(SpectrobePropertyRegistry.DONGOR)
+            .withStats(new SpectrobeStatsBuilder()
+                    .withHealthStat(150, 10, 220)
+                    .withAttackStat(67, 10, 130)
+                    .withDefenceStat(70, 8, 118)
+                    .build())
+            .build();
+
     public static final Spectrobe Komainu
             = new SpectrobeBuilder()
             .withName("Komainu")

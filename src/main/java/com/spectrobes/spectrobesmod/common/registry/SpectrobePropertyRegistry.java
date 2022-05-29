@@ -20,6 +20,9 @@ public class SpectrobePropertyRegistry {
     //MESA LINE
     public static SpectrobeProperties MESA = new SpectrobeProperties(SpectrobeProperties.Nature.CORONA, SpectrobeProperties.Stage.CHILD);
 
+    //DONGOR LINE
+    public static SpectrobeProperties DONGOR = new SpectrobeProperties(SpectrobeProperties.Nature.CORONA, SpectrobeProperties.Stage.CHILD);
+
     //AURORA
 
     //GEJIO LINE
