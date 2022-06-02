@@ -1,4 +1,4 @@
-package com.spectrobes.spectrobesmod.common.worldgen;
+package com.spectrobes.spectrobesmod.common.world;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
@@ -10,8 +10,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.List;
-
-import static net.minecraftforge.fml.common.Mod.EventBusSubscriber.*;
 
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 
