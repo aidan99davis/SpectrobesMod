@@ -323,7 +323,6 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         if(!this.isOrderedToSit())  {
             //check if the spectrobe has an evolution, and meets the requirements to evolve.
             tryMate();
-
         }
         if(ticksTillInteract > 0)
             ticksTillInteract--;

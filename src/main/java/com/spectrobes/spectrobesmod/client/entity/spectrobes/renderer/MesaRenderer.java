@@ -28,9 +28,9 @@ public class MesaRenderer extends GeoEntityRenderer<EntityMesa> {
             case 0:
                 return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/mesa_0.png");
             case 1:
-                return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/mesa_0.png");
+                return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/mesa_1.png");
             case 2:
-                return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/mesa_0.png");
+                return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/mesa_2.png");
             default:
                 return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/mesa_0.png");
 

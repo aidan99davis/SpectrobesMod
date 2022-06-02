@@ -28,9 +28,9 @@ public class GejioRenderer extends GeoEntityRenderer<EntityGejio> {
             case 0:
                 return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/gejio_0.png");
             case 1:
-                return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/gejio_0.png");
+                return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/gejio_1.png");
             case 2:
-                return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/gejio_0.png");
+                return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/gejio_2.png");
             default:
                 return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/gejio_0.png");
 
