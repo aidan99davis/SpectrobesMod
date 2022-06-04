@@ -33,6 +33,18 @@ public class SpectrobesItemsRegistry {
                     () -> new BasicSwordItem(new Item.Properties()
                             .setISTER(() -> BasicSwordItemRenderer::new)
                             .tab(SpectrobesItems.SpectrobesWeaponsItemGroup.Instance)));
+    
+    public static final RegistryObject<Item> metalium = 
+    		ITEMS.register("metalium",
+    				() -> new Item(new Item.Properties().tab(SpectrobesItems.SpectrobesMineralItemGroup.Instance)));
+    
+    public static final RegistryObject<Item> titanium = 
+    		ITEMS.register("titanium",
+    				() -> new Item(new Item.Properties().tab(SpectrobesItems.SpectrobesMineralItemGroup.Instance)));
+    
+    public static final RegistryObject<Item> marble = 
+    		ITEMS.register("marble",
+    				() -> new Item(new Item.Properties().tab(SpectrobesItems.SpectrobesMineralItemGroup.Instance)));
 
     @SuppressWarnings("unused")
     public static final RegistryObject<BlockItem> healer_block_item =
