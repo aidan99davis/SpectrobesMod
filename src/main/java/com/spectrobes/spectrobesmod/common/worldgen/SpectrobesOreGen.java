@@ -13,6 +13,7 @@ import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.IFeatureConfig;
 import net.minecraft.world.gen.feature.OreFeatureConfig;
+import net.minecraft.world.gen.placement.Placement;
 import net.minecraftforge.common.world.BiomeGenerationSettingsBuilder;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -40,6 +41,21 @@ public class SpectrobesOreGen {
                 OreFeatureConfig.FillerBlockType.NATURAL_STONE, SpectrobesBlocks.fossil_block.get().defaultBlockState(), 3)) //Vein Size
                 .range(180).squared()
                 .count(128)));
+        
+        overworldOres.add(register("metalium_ore", Feature.ORE.configured(new OreFeatureConfig(
+        		OreFeatureConfig.FillerBlockType.NATURAL_STONE, SpectrobesBlocks.metalium_ore.get().defaultBlockState(), 8))
+        		.range(120).squared()
+                .count(70)));
+        
+        overworldOres.add(register("titanium_ore", Feature.ORE.configured(new OreFeatureConfig(
+        		OreFeatureConfig.FillerBlockType.NATURAL_STONE, SpectrobesBlocks.titanium_ore.get().defaultBlockState(), 6))
+        		.range(60).squared()
+                .count(70)));
+        
+        overworldOres.add(register("marble_ore", Feature.ORE.configured(new OreFeatureConfig(
+        		OreFeatureConfig.FillerBlockType.NATURAL_STONE, SpectrobesBlocks.marble_ore.get().defaultBlockState(), 4))
+        		.range(180).squared()
+                .count(70)));
 
     }
 

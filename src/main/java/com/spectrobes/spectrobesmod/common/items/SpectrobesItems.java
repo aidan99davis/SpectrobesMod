@@ -108,6 +108,18 @@ public class SpectrobesItems {
         event.getRegistry().register(new BlockItem(SpectrobesBlocks.fossil_block.get(),
                 new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
                 .setRegistryName("fossil_block"));
+        
+        event.getRegistry().register(new BlockItem(SpectrobesBlocks.metalium_ore.get(),
+                new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
+                .setRegistryName("metalium_ore"));
+        
+        event.getRegistry().register(new BlockItem(SpectrobesBlocks.titanium_ore.get(),
+                new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
+                .setRegistryName("titanium_ore"));
+        
+        event.getRegistry().register(new BlockItem(SpectrobesBlocks.marble_ore.get(),
+                new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
+                .setRegistryName("marble_ore"));
     }
 
     private static void registerMinerals(RegistryEvent.Register<Item> event) {
