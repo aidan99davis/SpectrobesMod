@@ -1,14 +1,23 @@
 package com.spectrobes.spectrobesmod.common.entities.krawl;
 
+import com.spectrobes.spectrobesmod.common.items.tools.PrizmodItem;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import com.spectrobes.spectrobesmod.common.registry.KrawlRegistry;
+import com.spectrobes.spectrobesmod.common.worldgen.structures.krawl_nest.WorldGenKrawlNest;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.feature.NoFeatureConfig;
+import net.minecraft.world.server.ServerWorld;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+
+import java.util.Random;
 
 public class EntitySwar extends EntityKrawl {
     public EntitySwar(EntityType<? extends EntityKrawl> type, World worldIn) {
@@ -18,6 +27,18 @@ public class EntitySwar extends EntityKrawl {
     @Override
     public AnimationFactory getFactory() {
         return animationControllers;
+    }
+
+    @Override
+    protected ActionResultType mobInteract(PlayerEntity pPlayer, Hand pHand) {
+        if(pPlayer.getItemInHand(pHand).getItem() instanceof PrizmodItem) {
+            WorldGenKrawlNest nestGen = new WorldGenKrawlNest(NoFeatureConfig.CODEC);
+            if (!level.isClientSide() && level instanceof ServerWorld) {
+                nestGen.placeSmallGen((ServerWorld) level, new Random(), getOnPos());
+            }
+        }
+
+        return super.mobInteract(pPlayer, pHand);
     }
 
     @Override
