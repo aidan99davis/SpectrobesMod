@@ -5,7 +5,13 @@ import com.spectrobes.spectrobesmod.common.blocks.FossilBlock;
 import com.spectrobes.spectrobesmod.common.blocks.HealerBlock;
 import com.spectrobes.spectrobesmod.common.blocks.fossils.*;
 import com.spectrobes.spectrobesmod.common.blocks.MineralBlock;
+
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.material.MaterialColor;
+import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -34,4 +40,13 @@ public class SpectrobesBlocks {
 
     public static final RegistryObject<Block> mineral_block = BLOCKS.register("mineral_block", MineralBlock::new);
     public static final RegistryObject<Block> fossil_block = BLOCKS.register("fossil_block", FossilBlock::new);
+    
+    public static final RegistryObject<Block> metalium_ore = BLOCKS.register("metalium_ore", 
+    		() -> new Block(AbstractBlock.Properties.of(Material.STONE).harvestTool(ToolType.PICKAXE).strength(1.5f).sound(SoundType.STONE).harvestLevel(2)));
+    
+    public static final RegistryObject<Block> titanium_ore = BLOCKS.register("titanium_ore", 
+    		() -> new Block(AbstractBlock.Properties.of(Material.STONE).harvestTool(ToolType.PICKAXE).strength(1.5f).sound(SoundType.STONE).harvestLevel(2)));
+    
+    public static final RegistryObject<Block> marble_ore = BLOCKS.register("marble_ore", 
+    		() -> new Block(AbstractBlock.Properties.of(Material.STONE).harvestTool(ToolType.PICKAXE).strength(1.5f).sound(SoundType.STONE).harvestLevel(1).requiresCorrectToolForDrops()));
 }

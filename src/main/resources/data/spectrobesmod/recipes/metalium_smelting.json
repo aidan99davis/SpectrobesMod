@@ -1,0 +1,9 @@
+{
+	"type":"minecraft:smelting",
+	"ingredient":{ 
+		"item":"spectrobesmod:metalium_ore"
+	},
+	"result":"spectrobesmod:metalium",
+	"experience":0.2,
+	"cookingtime":200
+}
