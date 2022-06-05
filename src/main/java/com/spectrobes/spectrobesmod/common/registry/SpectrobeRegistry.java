@@ -7,6 +7,17 @@ import com.spectrobes.spectrobesmod.util.SpectrobeStatsBuilder;
 public class SpectrobeRegistry {
 
     //Corona Spectrobes
+    public static final Spectrobe Inkana
+            = new SpectrobeBuilder()
+            .withName("Inkana")
+            .withProperties(SpectrobePropertyRegistry.INKANA)
+            .withStats(new SpectrobeStatsBuilder()
+                    .withHealthStat(40, 5, 75)
+                    .withAttackStat(70, 7, 125)
+                    .withDefenceStat(95, 10, 175)
+                    .build())
+            .build();
+
     public static final Spectrobe Dongor
             = new SpectrobeBuilder()
             .withName("Dongor")
