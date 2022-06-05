@@ -30,18 +30,6 @@ public class EntitySwar extends EntityKrawl {
     }
 
     @Override
-    protected ActionResultType mobInteract(PlayerEntity pPlayer, Hand pHand) {
-        if(pPlayer.getItemInHand(pHand).getItem() instanceof PrizmodItem) {
-            WorldGenKrawlNest nestGen = new WorldGenKrawlNest(NoFeatureConfig.CODEC);
-            if (!level.isClientSide() && level instanceof ServerWorld) {
-                nestGen.placeSmallGen((ServerWorld) level, new Random(), getOnPos());
-            }
-        }
-
-        return super.mobInteract(pPlayer, pHand);
-    }
-
-    @Override
     public <ENTITY extends EntityKrawl> PlayState moveController(AnimationEvent<ENTITY> event) {
         event.getController().transitionLengthTicks = 2;
         if(event.isMoving()) {

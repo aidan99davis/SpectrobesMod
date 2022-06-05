@@ -2,6 +2,7 @@ package com.spectrobes.spectrobesmod.common.entities.krawl;
 
 import com.spectrobes.spectrobesmod.common.entities.goals.AttackSpectrobeGoal;
 import com.spectrobes.spectrobesmod.common.entities.goals.AttackSpectrobeMasterGoal;
+import com.spectrobes.spectrobesmod.common.entities.goals.KrawlVortexFormXellesGoal;
 import com.spectrobes.spectrobesmod.common.entities.goals.SpawnWaveGoal;
 import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
 import com.spectrobes.spectrobesmod.common.items.minerals.Mineral;
@@ -38,6 +39,10 @@ public class EntityVortex extends EntityKrawl {
             EntityDataManager.defineId(EntityKrawl.class,
                     DataSerializers.INT);
 
+    private static final DataParameter<Integer> AGE_IN_TICKS =
+            EntityDataManager.defineId(EntityKrawl.class,
+                    DataSerializers.INT);
+
     private final List<EntityKrawl> children;
 
     public EntityVortex(EntityType<? extends MonsterEntity> type, World worldIn) {
@@ -45,18 +50,31 @@ public class EntityVortex extends EntityKrawl {
         children = new ArrayList<>();
     }
 
-
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new AttackSpectrobeMasterGoal(this, true, true));
         this.goalSelector.addGoal(0, new AttackSpectrobeGoal(this, true, true));
         this.goalSelector.addGoal(1, new SpawnWaveGoal(this));
+        this.goalSelector.addGoal(1, new KrawlVortexFormXellesGoal(this));
     }
 
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
         entityData.define(WAVES_REMAINING, calculateKrawlWaves());
+        entityData.define(AGE_IN_TICKS, 0);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        entityData.set(AGE_IN_TICKS, entityData.get(AGE_IN_TICKS) + 1);
+    }
+
+    //returns the vortex's age in days.
+    public int getAge() {
+        return entityData.get(AGE_IN_TICKS) / 24000;
     }
 
     @Override
@@ -155,6 +173,9 @@ public class EntityVortex extends EntityKrawl {
     @SuppressWarnings("NullableProblems")
     @Override
     public void die(DamageSource source) {
+        if(source == DamageSource.MAGIC) {
+            super.die(source);
+        }
         Random random = new Random();
         int rarityInt = random.nextInt(10);
         Mineral.MineralRarity rarity;
