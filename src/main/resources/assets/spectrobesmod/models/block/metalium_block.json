@@ -1,0 +1,11 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "north": "spectrobesmod:blocks/metalium_block_side",
+    "east": "spectrobesmod:blocks/metalium_block_side",
+    "south": "spectrobesmod:blocks/metalium_block_side",
+    "west": "spectrobesmod:blocks/metalium_block_side",
+    "up": "spectrobesmod:blocks/metalium_block_top",
+    "down": "spectrobesmod:blocks/metalium_block_top"
+  }
+}

@@ -8,9 +8,16 @@ import com.spectrobes.spectrobesmod.common.blocks.MineralBlock;
 
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.HugeMushroomBlock;
+import net.minecraft.block.LadderBlock;
+import net.minecraft.block.RotatedPillarBlock;
 import net.minecraft.block.SoundType;
+import net.minecraft.block.VineBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
@@ -49,4 +56,33 @@ public class SpectrobesBlocks {
     
     public static final RegistryObject<Block> marble_ore = BLOCKS.register("marble_ore", 
     		() -> new Block(AbstractBlock.Properties.of(Material.STONE).harvestTool(ToolType.PICKAXE).strength(1.5f).sound(SoundType.STONE).harvestLevel(1).requiresCorrectToolForDrops()));
+    
+    public static final RegistryObject<Block> metalium_block = BLOCKS.register("metalium_block", 
+    		() -> new Block(AbstractBlock.Properties.of(Material.METAL).harvestTool(ToolType.PICKAXE).strength(3f).sound(SoundType.METAL)));
+    public static final RegistryObject<Block> titanium_block = BLOCKS.register("titanium_block", 
+    		() -> new Block(AbstractBlock.Properties.of(Material.METAL).harvestTool(ToolType.PICKAXE).strength(3f).sound(SoundType.METAL)));
+    public static final RegistryObject<Block> marble_block = BLOCKS.register("marble_block", 
+    		() -> new Block(AbstractBlock.Properties.of(Material.GLASS).harvestTool(ToolType.PICKAXE).strength(3f).sound(SoundType.GLASS)));
+    
+    public static final RegistryObject<Block> krawl_nest = BLOCKS.register("krawl_nest", 
+    		() -> new Block(AbstractBlock.Properties.of(Material.STONE).harvestTool(ToolType.PICKAXE).strength(10f).sound(SoundType.STONE)));
+    public static final RegistryObject<Block> krawl_stone = BLOCKS.register("krawl_stone", 
+    		() -> new HugeMushroomBlock(AbstractBlock.Properties.of(Material.STONE).harvestTool(ToolType.PICKAXE).strength(10f).sound(SoundType.STONE)));
+    public static final RegistryObject<Block> krawl_vine = BLOCKS.register("krawl_vine", 
+    		() -> new VineBlock(AbstractBlock.Properties.of(Material.REPLACEABLE_PLANT).noOcclusion().strength(0.2F).sound(SoundType.VINE)));
+    public static final RegistryObject<Block> krawl_mycelium = BLOCKS.register("krawl_mycelium", 
+    		() -> new HugeMushroomBlock(AbstractBlock.Properties.of(Material.DIRT).strength(1F).sound(SoundType.WET_GRASS)));
+    public static final RegistryObject<Block> krawl_mud = BLOCKS.register("krawl_mud", 
+    		() -> new Block(AbstractBlock.Properties.of(Material.SNOW).strength(1F).sound(SoundType.SOUL_SAND)));
+    public static final RegistryObject<Block> snag_log = BLOCKS.register("snag_log", 
+    		() -> new RotatedPillarBlock(AbstractBlock.Properties.of(Material.WOOD, (p_235431_2_) -> {
+    	         return p_235431_2_.getValue(RotatedPillarBlock.AXIS) == Direction.Axis.Y ? MaterialColor.WOOD : MaterialColor.COLOR_PURPLE;
+    	      }).strength(2.0F).sound(SoundType.WOOD)));
+    public static final RegistryObject<Block> snag_planks = BLOCKS.register("snag_planks", 
+    		() ->  new Block(AbstractBlock.Properties.of(Material.WOOD, MaterialColor.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD)));
+    
+    public static final RegistryObject<Block> krawlshroom = BLOCKS.register("krawlshroom", 
+    		() -> new HugeMushroomBlock(AbstractBlock.Properties.of(Material.WOOD, MaterialColor.COLOR_GREEN).strength(0.2F).sound(SoundType.WOOD)));
+    
+    
 }
