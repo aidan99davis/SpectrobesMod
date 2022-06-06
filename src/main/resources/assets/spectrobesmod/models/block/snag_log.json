@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "spectrobesmod:blocks/snag_log_top",
+    "side": "spectrobesmod:blocks/snag_log"
+  }
+}

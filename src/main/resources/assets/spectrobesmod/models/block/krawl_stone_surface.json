@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube_all",
+	"textures": {
+		"up": "spectrobesmod:blocks/krawl_stone_top",
+		"down": "spectrobesmod:blocks/krawl_stone_bottom",
+		"north":"spectrobesmod:blocks/krawl_stone_side",
+		"east":"spectrobesmod:blocks/krawl_stone_side",
+		"south":"spectrobesmod:blocks/krawl_stone_side",
+		"west":"spectrobesmod:blocks/krawl_stone_side",
+		"particle": "spectrobesmod:blocks/krawl_stone_bottom"
+	}
+}
