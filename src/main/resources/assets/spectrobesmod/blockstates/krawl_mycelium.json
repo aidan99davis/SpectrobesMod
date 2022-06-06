@@ -1,0 +1,17 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "spectrobesmod:block/krawl_mycelium"
+      }
+    },
+    {
+      "when": {
+        "down": "true"
+      },
+      "apply": {
+        "model": "spectrobesmod:block/krawl_mycelium_floor"
+      }
+    }
+  ]
+}
