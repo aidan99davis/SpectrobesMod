@@ -11,19 +11,12 @@ import net.minecraft.world.storage.WorldSavedData;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
 
 public class SpectrobesWorldSaveData extends WorldSavedData {
 
     public static final String name = SpectrobesInfo.MOD_ID + "_data";
 
     private final List<KrawlNest> nests = new ArrayList<>();
-
-    public SpectrobesWorldSaveData(String p_i2141_1_) {
-        super(p_i2141_1_);
-        setDirty();
-    }
 
     //remember to call data.setDirty() so it knows to update.
     public static SpectrobesWorldSaveData getWorldData(ServerWorld world) {
@@ -36,17 +29,21 @@ public class SpectrobesWorldSaveData extends WorldSavedData {
     }
 
     public boolean canSpawnNest(BlockPos position) {
-        AtomicBoolean tooClose = new AtomicBoolean(false);
-        nests.forEach(krawlNest -> {
-            SpectrobesInfo.LOGGER.debug("DOOT");
-            if(position.closerThan(krawlNest.position, 1000)) {
-                SpectrobesInfo.LOGGER.debug("EXISTING XELLE AT: " + krawlNest.position.getX() + ", " + krawlNest.position.getY() + ", " + krawlNest.position.getZ());
-                tooClose.set(true);
-                return;
+        for (KrawlNest krawlNest : nests) {
+            if (position.closerThan(krawlNest.position, 1000)) {
+                return true;
             }
-        });
+        }
+        return false;
+    }
 
-        return !tooClose.get();
+    public KrawlNest getNest(BlockPos position) {
+        for (KrawlNest krawlNest : nests) {
+            if (position.closerThan(krawlNest.position, 1000)) {
+                return krawlNest;
+            }
+        }
+        return null;
     }
 
     public List<KrawlNest> getNests() { return nests; }
