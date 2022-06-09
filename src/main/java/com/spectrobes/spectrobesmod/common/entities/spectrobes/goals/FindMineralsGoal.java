@@ -1,18 +1,14 @@
-package com.spectrobes.spectrobesmod.common.entities.goals;
+package com.spectrobes.spectrobesmod.common.entities.spectrobes.goals;
 
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
-import com.spectrobes.spectrobesmod.common.registry.SpectrobesBlocks;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.passive.DolphinEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IWorldReader;
 
 import java.util.List;

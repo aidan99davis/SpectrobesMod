@@ -32,6 +32,20 @@ public class KrawlEntities {
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES
             = DeferredRegister.create(ForgeRegistries.ENTITIES, SpectrobesInfo.MOD_ID);
 
+    public static final RegistryObject<EntityType<EntityXelles>> ENTITY_XELLES
+            = ENTITY_TYPES.register("entity_xelles",
+            () -> EntityType.Builder.of(EntityXelles::new,
+                    EntityClassification.MONSTER)
+                    .sized(3f, 5f)
+                    .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "xelles").toString()));
+
+    public static final RegistryObject<EntityType<EntityHealingSpore>> ENTITY_HEALING_SPORES
+            = ENTITY_TYPES.register("entity_healing_spores",
+            () -> EntityType.Builder.of(EntityHealingSpore::new,
+                    EntityClassification.MONSTER)
+                    .sized(1f, 1f)
+                    .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "healing_spores").toString()));
+
     public static final RegistryObject<EntityType<EntitySwar>> ENTITY_SWAR
             = ENTITY_TYPES.register("entity_swar",
             () -> EntityType.Builder.of(EntitySwar::new,
@@ -82,6 +96,8 @@ public class KrawlEntities {
             GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_GRISEN.get(), EntityGrisen.setCustomAttributes().build());
             GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_SUBAR.get(), EntitySubar.setCustomAttributes().build());
             GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_VIZBAR.get(), EntityVizbar.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_XELLES.get(), EntityXelles.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_HEALING_SPORES.get(), EntityHealingSpore.setCustomAttributes().build());
         });
 
         populateMaps();
@@ -183,7 +199,7 @@ public class KrawlEntities {
         return entityType ->
         {
             try {
-                return (entityType.create(world)).GetKrawlProperties().getLevel() <= level;
+                return (entityType.create(world)).GetKrawlProperties().getLevel() <= (level == 0? 1 : level);
             } catch (Exception e) {
                 SpectrobesInfo.LOGGER.error("COULDNT CALL GetKrawlProperties");
                 SpectrobesInfo.LOGGER.error(e);

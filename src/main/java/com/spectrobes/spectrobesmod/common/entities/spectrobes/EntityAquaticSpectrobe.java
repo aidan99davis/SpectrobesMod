@@ -1,31 +1,18 @@
 package com.spectrobes.spectrobesmod.common.entities.spectrobes;
 
-import com.spectrobes.spectrobesmod.common.entities.goals.AquaticJumpGoal;
-import net.minecraft.block.Blocks;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.AquaticJumpGoal;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.LookController;
 import net.minecraft.entity.ai.controller.MovementController;
 import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.passive.DolphinEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.pathfinding.*;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.FluidTags;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Random;
-
-
-import net.minecraft.entity.ai.controller.MovementController.Action;
-import net.minecraft.entity.ai.goal.Goal.Flag;
 
 public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
     private static final EntityPredicate SWIM_WITH_PLAYER_TARGETING = (new EntityPredicate()).range(10.0D).allowSameTeam().allowInvulnerable().allowUnseeable();

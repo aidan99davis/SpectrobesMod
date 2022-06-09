@@ -1,4 +1,4 @@
-package com.spectrobes.spectrobesmod.common.entities.goals;
+package com.spectrobes.spectrobesmod.common.entities.krawl.goals;
 
 import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;

@@ -14,5 +14,7 @@ public class KrawlRendererManager {
         RenderingRegistry.registerEntityRenderingHandler(KrawlEntities.ENTITY_GRIS.get(), manager -> new GrisRenderer(manager));
         RenderingRegistry.registerEntityRenderingHandler(KrawlEntities.ENTITY_GRISEN.get(), manager -> new GrisenRenderer(manager));
         RenderingRegistry.registerEntityRenderingHandler(KrawlEntities.ENTITY_VORTEX.get(), manager -> new VortexRenderer((manager)));
+        RenderingRegistry.registerEntityRenderingHandler(KrawlEntities.ENTITY_XELLES.get(), manager -> new XellesRenderer((manager)));
+        RenderingRegistry.registerEntityRenderingHandler(KrawlEntities.ENTITY_HEALING_SPORES.get(), manager -> new XellesSporeHealRenderer((manager)));
     }
 }

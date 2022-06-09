@@ -2,8 +2,8 @@ package com.spectrobes.spectrobesmod.common.entities.krawl;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.entities.IHasNature;
-import com.spectrobes.spectrobesmod.common.entities.goals.AttackSpectrobeGoal;
-import com.spectrobes.spectrobesmod.common.entities.goals.AttackSpectrobeMasterGoal;
+import com.spectrobes.spectrobesmod.common.entities.krawl.goals.AttackSpectrobeGoal;
+import com.spectrobes.spectrobesmod.common.entities.krawl.goals.AttackSpectrobeMasterGoal;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.items.weapons.SpectrobesWeapon;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
@@ -98,7 +98,6 @@ public abstract class EntityKrawl extends MonsterEntity implements IAnimatable, 
                 float defPower = GetKrawlProperties().getDefLevel();
                 int powerScale = 1; //todo this can be used to create secondary attacks for weapons which deal extra damage.
                 float scaledAmount = typeBonus + (atkPower * powerScale) - (defPower / 4);
-                SpectrobesInfo.LOGGER.debug("DAMAGING KRAWL BY: " + scaledAmount);
                 super.actuallyHurt(damageSrc, scaledAmount);
             }
             else if(playerEntity.getOffhandItem().getItem() != null
@@ -110,7 +109,6 @@ public abstract class EntityKrawl extends MonsterEntity implements IAnimatable, 
                 float defPower = GetKrawlProperties().getDefLevel();
                 int powerScale = 1; //todo this can be used to create secondary attacks for weapons which deal extra damage.
                 float scaledAmount = typeBonus + (atkPower * powerScale) - (defPower / 4);
-                SpectrobesInfo.LOGGER.debug("DAMAGING KRAWL BY: " + scaledAmount);
                 super.actuallyHurt(damageSrc, scaledAmount);
             }
             else {

@@ -2,6 +2,7 @@ package com.spectrobes.spectrobesmod.common.entities.krawl;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.BossInfo;
@@ -15,7 +16,7 @@ public abstract class EntityBossKrawl extends EntityKrawl {
 
     public EntityBossKrawl(EntityType<? extends MonsterEntity> type, World worldIn) {
         super(type, worldIn);
-        this.bossEvent = (ServerBossInfo)(new ServerBossInfo(this.getDisplayName(), BossInfo.Color.PURPLE, BossInfo.Overlay.PROGRESS)).setDarkenScreen(true);
+        this.bossEvent = (ServerBossInfo)(new ServerBossInfo(this.getDisplayName(), BossInfo.Color.PURPLE, BossInfo.Overlay.PROGRESS)).setDarkenScreen(false);
     }
 
     @Override
@@ -31,6 +32,18 @@ public abstract class EntityBossKrawl extends EntityKrawl {
     public void setCustomName(@Nullable ITextComponent pName) {
         super.setCustomName(pName);
         this.bossEvent.setName(this.getDisplayName());
+    }
+
+    @Override
+    public void startSeenByPlayer(ServerPlayerEntity pServerPlayer) {
+        super.startSeenByPlayer(pServerPlayer);
+        this.bossEvent.addPlayer(pServerPlayer);
+    }
+
+    @Override
+    public void stopSeenByPlayer(ServerPlayerEntity pServerPlayer) {
+        super.stopSeenByPlayer(pServerPlayer);
+        this.bossEvent.removePlayer(pServerPlayer);
     }
 
     @Override

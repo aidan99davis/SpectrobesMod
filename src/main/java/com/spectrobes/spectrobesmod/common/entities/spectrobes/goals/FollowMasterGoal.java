@@ -3,13 +3,12 @@
 // (powered by Fernflower decompiler)
 //
 
-package com.spectrobes.spectrobesmod.common.entities.goals;
+package com.spectrobes.spectrobesmod.common.entities.spectrobes.goals;
 
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.FollowOwnerGoal;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.pathfinding.*;

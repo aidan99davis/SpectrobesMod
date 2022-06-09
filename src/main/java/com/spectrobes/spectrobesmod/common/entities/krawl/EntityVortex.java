@@ -1,9 +1,9 @@
 package com.spectrobes.spectrobesmod.common.entities.krawl;
 
-import com.spectrobes.spectrobesmod.common.entities.goals.AttackSpectrobeGoal;
-import com.spectrobes.spectrobesmod.common.entities.goals.AttackSpectrobeMasterGoal;
-import com.spectrobes.spectrobesmod.common.entities.goals.KrawlVortexFormXellesGoal;
-import com.spectrobes.spectrobesmod.common.entities.goals.SpawnWaveGoal;
+import com.spectrobes.spectrobesmod.common.entities.krawl.goals.AttackSpectrobeGoal;
+import com.spectrobes.spectrobesmod.common.entities.krawl.goals.AttackSpectrobeMasterGoal;
+import com.spectrobes.spectrobesmod.common.entities.krawl.goals.KrawlVortexFormXellesGoal;
+import com.spectrobes.spectrobesmod.common.entities.krawl.goals.SpawnWaveGoal;
 import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
 import com.spectrobes.spectrobesmod.common.items.minerals.Mineral;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
@@ -48,6 +48,7 @@ public class EntityVortex extends EntityKrawl {
     public EntityVortex(EntityType<? extends MonsterEntity> type, World worldIn) {
         super(type, worldIn);
         children = new ArrayList<>();
+        setPersistenceRequired();
     }
 
     @Override
@@ -63,6 +64,16 @@ public class EntityVortex extends EntityKrawl {
         super.defineSynchedData();
         entityData.define(WAVES_REMAINING, calculateKrawlWaves());
         entityData.define(AGE_IN_TICKS, 0);
+    }
+
+    @Override
+    public boolean isPersistenceRequired() {
+        return super.isPersistenceRequired();
+    }
+
+    @Override
+    public void checkDespawn() {
+        super.checkDespawn();
     }
 
     @Override

@@ -3,7 +3,7 @@ package com.spectrobes.spectrobesmod.common.entities.spectrobes;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.entities.IHasNature;
-import com.spectrobes.spectrobesmod.common.entities.goals.*;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.*;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
 import com.spectrobes.spectrobesmod.common.items.fossils.FossilBlockItem;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;

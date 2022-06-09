@@ -1,4 +1,4 @@
-package com.spectrobes.spectrobesmod.common.entities.goals;
+package com.spectrobes.spectrobesmod.common.entities.spectrobes.goals;
 
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;

@@ -31,10 +31,10 @@ public class SpectrobesWorldSaveData extends WorldSavedData {
     public boolean canSpawnNest(BlockPos position) {
         for (KrawlNest krawlNest : nests) {
             if (position.closerThan(krawlNest.position, 1000)) {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     public KrawlNest getNest(BlockPos position) {

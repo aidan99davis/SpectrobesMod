@@ -10,6 +10,7 @@ import java.util.UUID;
 public class KrawlNest implements INBTSerializable {
     public BlockPos position;
     public String dimension;
+    public int vortex_absorbed;
     public int stage;
 
     public KrawlNest() {}
@@ -18,6 +19,16 @@ public class KrawlNest implements INBTSerializable {
         this.position = position;
         this.dimension = dimension;
         this.stage = 1;
+        this.vortex_absorbed = 0;
+    }
+
+    public void absorbVortexes(int vortexes) {
+        this.vortex_absorbed = this.vortex_absorbed +  vortexes;
+
+    }
+
+    public int getAbsorbedVortexes() {
+        return this.vortex_absorbed;
     }
 
     public void setStage(int stage) {
@@ -32,6 +43,7 @@ public class KrawlNest implements INBTSerializable {
         nbtObj.putInt("position_x", position.getX());
         nbtObj.putInt("position_y", position.getY());
         nbtObj.putInt("position_z", position.getZ());
+        nbtObj.putInt("vortex_absorbed", vortex_absorbed);
         return nbtObj;
     }
 
@@ -39,6 +51,7 @@ public class KrawlNest implements INBTSerializable {
     public void deserializeNBT(INBT nbt) {
         dimension = ((CompoundNBT)nbt).getString("dimension");
         stage = ((CompoundNBT)nbt).getInt("stage");
+        vortex_absorbed = ((CompoundNBT)nbt).getInt("vortex_absorbed");
         int position_x = ((CompoundNBT)nbt).getInt("position_x");
         int position_y = ((CompoundNBT)nbt).getInt("position_y");
         int position_z = ((CompoundNBT)nbt).getInt("position_z");

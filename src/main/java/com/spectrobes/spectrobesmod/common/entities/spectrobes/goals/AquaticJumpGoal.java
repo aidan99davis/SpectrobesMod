@@ -1,9 +1,8 @@
-package com.spectrobes.spectrobesmod.common.entities.goals;
+package com.spectrobes.spectrobesmod.common.entities.spectrobes.goals;
 
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityAquaticSpectrobe;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.goal.JumpGoal;
-import net.minecraft.entity.passive.DolphinEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Direction;
