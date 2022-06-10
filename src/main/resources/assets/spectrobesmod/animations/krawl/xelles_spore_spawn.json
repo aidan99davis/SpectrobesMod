@@ -1,0 +1,48 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.xelles_spore_spawn.idle": {
+			"loop": true,
+			"animation_length": 1.04,
+			"bones": {
+				"XellesSpores": {
+					"position": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.24": {
+							"vector": [0, 1, 0]
+						},
+						"0.52": {
+							"vector": [0, 0, 0]
+						},
+						"0.8": {
+							"vector": [0, -1, 0]
+						},
+						"1.04": {
+							"vector": [0, 0, 0]
+						}
+					},
+					"scale": {
+						"0.0": {
+							"vector": [1, 1, 1]
+						},
+						"0.24": {
+							"vector": [1.1, 1.1, 1.1]
+						},
+						"0.52": {
+							"vector": [1, 1, 1]
+						},
+						"0.8": {
+							"vector": [0.9, 0.9, 0.9]
+						},
+						"1.04": {
+							"vector": [1, 1, 1]
+						}
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

@@ -16,5 +16,6 @@ public class KrawlRendererManager {
         RenderingRegistry.registerEntityRenderingHandler(KrawlEntities.ENTITY_VORTEX.get(), manager -> new VortexRenderer((manager)));
         RenderingRegistry.registerEntityRenderingHandler(KrawlEntities.ENTITY_XELLES.get(), manager -> new XellesRenderer((manager)));
         RenderingRegistry.registerEntityRenderingHandler(KrawlEntities.ENTITY_HEALING_SPORES.get(), manager -> new XellesSporeHealRenderer((manager)));
+        RenderingRegistry.registerEntityRenderingHandler(KrawlEntities.ENTITY_SPAWNING_SPORE.get(), manager -> new XellesSpawningSporeRenderer((manager)));
     }
 }

@@ -46,6 +46,13 @@ public class KrawlEntities {
                     .sized(1f, 1f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "healing_spores").toString()));
 
+    public static final RegistryObject<EntityType<EntitySpawningSpore>> ENTITY_SPAWNING_SPORE
+            = ENTITY_TYPES.register("entity_spawning_spores",
+            () -> EntityType.Builder.of(EntitySpawningSpore::new,
+                    EntityClassification.MONSTER)
+                    .sized(1f, 1f)
+                    .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "spawning_spores").toString()));
+
     public static final RegistryObject<EntityType<EntitySwar>> ENTITY_SWAR
             = ENTITY_TYPES.register("entity_swar",
             () -> EntityType.Builder.of(EntitySwar::new,
@@ -98,6 +105,7 @@ public class KrawlEntities {
             GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_VIZBAR.get(), EntityVizbar.setCustomAttributes().build());
             GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_XELLES.get(), EntityXelles.setCustomAttributes().build());
             GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_HEALING_SPORES.get(), EntityHealingSpore.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_SPAWNING_SPORE.get(), EntitySpawningSpore.setCustomAttributes().build());
         });
 
         populateMaps();

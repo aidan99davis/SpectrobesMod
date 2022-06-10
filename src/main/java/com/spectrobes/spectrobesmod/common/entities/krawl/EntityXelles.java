@@ -11,6 +11,7 @@ import com.spectrobes.spectrobesmod.common.save_data.SpectrobesWorldSaveData;
 import com.spectrobes.spectrobesmod.util.KrawlPropertiesBuilder;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
@@ -49,6 +50,10 @@ public class EntityXelles extends EntityBossKrawl {
             EntityDataManager.defineId(EntityXelles.class,
                     DataSerializers.INT);
 
+    private static final DataParameter<Integer> LAST_SPAWNED_BOSS_SUMMONING_SPORE_TICKS =
+            EntityDataManager.defineId(EntityXelles.class,
+                    DataSerializers.INT);
+
     private static final DataParameter<Boolean> IS_SPAWNING_SPORES =
             EntityDataManager.defineId(EntityXelles.class,
                     DataSerializers.BOOLEAN);
@@ -63,8 +68,8 @@ public class EntityXelles extends EntityBossKrawl {
         this.goalSelector.addGoal(0, new AttackSpectrobeMasterGoal(this, true, true));
         this.goalSelector.addGoal(0, new AttackSpectrobeGoal(this, true, true));
         this.goalSelector.addGoal(1, new HealKrawlGoal(this));
-//        this.goalSelector.addGoal(1, new SpawnKrawlGroupGoal(this, cooldown=30 sec));
-//        this.goalSelector.addGoal(1, new SpawnKrawlGoal(this, minibossKrawl));
+        this.goalSelector.addGoal(1, new XellesSpawnKrawlGroupGoal(this));
+//        this.goalSelector.addGoal(1, new XellesSpawnKrawlBossGoal(this));
         this.goalSelector.addGoal(1, new AbsorbKrawlGoal(this));
     }
 
@@ -159,6 +164,20 @@ public class EntityXelles extends EntityBossKrawl {
         return entityData.get(LAST_SPAWNED_HEALING_SPORES_TICKS) >= 600;
     }
 
+    private boolean canSummonWave() {
+        return entityData.get(LAST_SPAWNED_SUMMONING_SPORES_TICKS) >= 1200;
+    }
+
+    private int waveSize() {
+        switch (getStage()) {
+            case 2:
+                return 2;
+            case 3:
+                return 4;
+            default: return 0;
+        }
+    }
+
     public void spawnHealingSpores(List<EntityKrawl> targets) {
         entityData.set(LAST_SPAWNED_HEALING_SPORES_TICKS, 0);
         setIsSpawningSpores(true);
@@ -217,6 +236,49 @@ public class EntityXelles extends EntityBossKrawl {
         }
         event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.xelles.idle", true));
         return PlayState.CONTINUE;
+    }
+
+    private class XellesSpawnKrawlGroupGoal extends Goal {
+
+        EntityXelles mob;
+
+        public XellesSpawnKrawlGroupGoal(EntityXelles xelles) {
+            mob = xelles;
+        }
+
+        @Override
+        public boolean canUse() {
+            return mob.getTarget() != null && mob.canSummonWave();
+        }
+
+        @Override
+        public void start() {
+            super.start();
+
+            int numToSpawn = mob.waveSize();
+            SpectrobesInfo.LOGGER.debug("DOOT:" + numToSpawn);
+
+            mob.setIsSpawningSpores(true);
+
+            for (int i = 0; i < numToSpawn; i++) {
+                if(!mob.level.isClientSide()) {
+                    SpectrobesInfo.LOGGER.debug("DOOT");
+                    EntitySpawningSpore spore = (EntitySpawningSpore) KrawlEntities.ENTITY_SPAWNING_SPORE.get()
+                            .spawn((ServerWorld) mob.level,
+                                    null,
+                                    null,
+                                    mob.blockPosition(),
+                                    SpawnReason.MOB_SUMMONED,
+                                    false,
+                                    false);
+                    spore.setDeltaMovement(0, 0.5, 0);
+                    mob.entityData.set(LAST_SPAWNED_SUMMONING_SPORES_TICKS, 0);
+                    //TODO Replace this with spawning spores.
+                }
+            }
+            mob.setIsSpawningSpores(false);
+
+        }
     }
 
 }
