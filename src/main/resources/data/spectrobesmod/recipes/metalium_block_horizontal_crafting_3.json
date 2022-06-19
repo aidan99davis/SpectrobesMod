@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "spectrobesmod:metalium"
+    },
+    {
+      "item": "spectrobesmod:titanium_block"
+    },
+    {
+      "item": "spectrobesmod:titanium_block"
+    }
+  ],
+  "result":
+  {
+    "item": "spectrobesmod:metalium_block_horizontal",
+    "count": 1
+  }
+}

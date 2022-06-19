@@ -5,7 +5,8 @@
     "east": "spectrobesmod:blocks/metalium_block_side",
     "south": "spectrobesmod:blocks/metalium_block_side",
     "west": "spectrobesmod:blocks/metalium_block_side",
-    "up": "spectrobesmod:blocks/metalium_block_top",
-    "down": "spectrobesmod:blocks/metalium_block_top"
+    "up": "spectrobesmod:blocks/titanium_block",
+    "down": "spectrobesmod:blocks/titanium_block",
+    "particle": "spectrobesmod:blocks/metalium_block_side"
   }
 }

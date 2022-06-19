@@ -7,7 +7,7 @@
     },
     {
       "when": {
-        "down": "true"
+        "down": "false"
       },
       "apply": {
         "model": "spectrobesmod:block/krawl_mycelium_floor"

@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "spectrobesmod:block/metalium_block_vertical",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "spectrobesmod:block/metalium_block_vertical"
+    },
+    "facing=south": {
+      "model": "spectrobesmod:block/metalium_block_vertical",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "spectrobesmod:block/metalium_block_vertical",
+      "y": 270
+    }
+  }
+}

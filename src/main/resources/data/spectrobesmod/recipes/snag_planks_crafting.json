@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "spectrobesmod:snag_log"
+    }
+  ],
+  "result":
+  {
+    "item": "spectrobesmod:snag_planks",
+    "count": 4
+  }
+}
