@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    "xyx",
+    "xyx",
+    "xyx"
+  ],
+  "key":
+  {
+    "x":
+    {
+      "item": "spectrobesmod:titanium_block"
+    },
+    "y":
+    {
+      "item": "spectrobesmod:metalium"
+    }
+  },
+  "result":
+  {
+    "item": "spectrobesmod:metalium_block_vertical",
+    "count": 6
+  }
+}
