@@ -58,7 +58,8 @@ public class MineralRegistry {
                     new MineralPropertiesBuilder()
                     .setAtkOffset(8)
                     .setNature(SpectrobeProperties.Nature.OTHER)
-                    .setXpWorth(10)).build());
+                    .setXpWorth(10)
+                    .setGuraWorth(5)).build());
         ALL_MINERALS.add(MINERAL_POWER_C);
         MINERAL_POWER_B = (new MineralBuilder()
                 .withName("mineral_item_power_b")
@@ -66,7 +67,8 @@ public class MineralRegistry {
                     new MineralPropertiesBuilder()
                             .setAtkOffset(16)
                             .setNature(SpectrobeProperties.Nature.OTHER)
-                            .setXpWorth(15)).build());
+                            .setXpWorth(15)
+                            .setGuraWorth(15)).build());
         ALL_MINERALS.add(MINERAL_POWER_B);
         MINERAL_POWER_A = (new MineralBuilder()
                 .withName("mineral_item_power_a")
@@ -75,7 +77,8 @@ public class MineralRegistry {
                     new MineralPropertiesBuilder()
                             .setAtkOffset(24)
                             .setNature(SpectrobeProperties.Nature.OTHER)
-                            .setXpWorth(20)).build());
+                            .setXpWorth(20)
+                            .setGuraWorth(40)).build());
         ALL_MINERALS.add(MINERAL_POWER_A);
         MINERAL_POWER_A_PLUS = (new MineralBuilder()
                 .withName("mineral_item_power_a_plus")
@@ -84,7 +87,8 @@ public class MineralRegistry {
                     new MineralPropertiesBuilder()
                             .setAtkOffset(32)
                             .setNature(SpectrobeProperties.Nature.OTHER)
-                            .setXpWorth(30)).build());
+                            .setXpWorth(30)
+                            .setGuraWorth(80)).build());
         ALL_MINERALS.add(MINERAL_POWER_A_PLUS);
 
         // Defence Minerals
@@ -95,7 +99,8 @@ public class MineralRegistry {
                     new MineralPropertiesBuilder()
                             .setDefOffset(8)
                             .setNature(SpectrobeProperties.Nature.OTHER)
-                            .setXpWorth(10)).build());
+                            .setXpWorth(10)
+                            .setGuraWorth(5)).build());
         ALL_MINERALS.add(MINERAL_DEFENCE_C);
         MINERAL_DEFENCE_B = (new MineralBuilder()
                 .withName("mineral_item_defence_b")
@@ -103,7 +108,9 @@ public class MineralRegistry {
                     new MineralPropertiesBuilder()
                             .setDefOffset(16)
                             .setNature(SpectrobeProperties.Nature.OTHER)
-                            .setXpWorth(15)).build());
+                            .setXpWorth(15)
+                            .setGuraWorth(12))
+                            .build());
         ALL_MINERALS.add(MINERAL_DEFENCE_B);
         MINERAL_DEFENCE_A = (new MineralBuilder()
                 .withName("mineral_item_defence_a")
@@ -112,7 +119,8 @@ public class MineralRegistry {
                     new MineralPropertiesBuilder()
                             .setDefOffset(24)
                             .setNature(SpectrobeProperties.Nature.OTHER)
-                            .setXpWorth(20)).build());
+                            .setXpWorth(20)
+                            .setGuraWorth(30)).build());
         ALL_MINERALS.add(MINERAL_DEFENCE_A);
         MINERAL_DEFENCE_A_PLUS = (new MineralBuilder()
                 .withName("mineral_item_defence_a_plus")
@@ -121,7 +129,8 @@ public class MineralRegistry {
                     new MineralPropertiesBuilder()
                             .setDefOffset(32)
                             .setNature(SpectrobeProperties.Nature.OTHER)
-                            .setXpWorth(30)).build());
+                            .setXpWorth(30)
+                            .setGuraWorth(60)).build());
         ALL_MINERALS.add(MINERAL_DEFENCE_A_PLUS);
 
         //Health Minerals
@@ -132,7 +141,8 @@ public class MineralRegistry {
                     new MineralPropertiesBuilder()
                             .setHpOffset(8)
                             .setNature(SpectrobeProperties.Nature.OTHER)
-                            .setXpWorth(10)).build());
+                            .setXpWorth(10)
+                            .setGuraWorth(10)).build());
         ALL_MINERALS.add(MINERAL_HEALTH_C);
         MINERAL_HEALTH_B = (new MineralBuilder()
                 .withName("mineral_item_health_b")
@@ -140,7 +150,8 @@ public class MineralRegistry {
                     new MineralPropertiesBuilder()
                             .setHpOffset(16)
                             .setNature(SpectrobeProperties.Nature.OTHER)
-                            .setXpWorth(15)).build());
+                            .setXpWorth(15)
+                            .setGuraWorth(20)).build());
         ALL_MINERALS.add(MINERAL_HEALTH_B);
         MINERAL_HEALTH_A = (new MineralBuilder()
                 .withName("mineral_item_health_a")
@@ -149,7 +160,8 @@ public class MineralRegistry {
                     new MineralPropertiesBuilder()
                             .setHpOffset(24)
                             .setNature(SpectrobeProperties.Nature.OTHER)
-                            .setXpWorth(20)).build());
+                            .setXpWorth(20)
+                            .setGuraWorth(50)).build());
         ALL_MINERALS.add(MINERAL_HEALTH_A);
         MINERAL_HEALTH_A_PLUS = (new MineralBuilder()
                 .withName("mineral_item_health_a_plus")
@@ -158,7 +170,8 @@ public class MineralRegistry {
                     new MineralPropertiesBuilder()
                             .setHpOffset(32)
                             .setNature(SpectrobeProperties.Nature.OTHER)
-                            .setXpWorth(30)).build());
+                            .setXpWorth(30)
+                            .setGuraWorth(100)).build());
         ALL_MINERALS.add(MINERAL_HEALTH_A_PLUS);
 
         //Misc
@@ -171,7 +184,8 @@ public class MineralRegistry {
                             .setAtkOffset(8)
                             .setDefOffset(8)
                             .setNature(SpectrobeProperties.Nature.OTHER)
-                            .setXpWorth(15)).build());
+                            .setXpWorth(15)
+                            .setGuraWorth(400)).build());
         ALL_MINERALS.add(MINERAL_AGATE);
 
         MINERAL_AMBER = (new MineralBuilder()
@@ -182,7 +196,8 @@ public class MineralRegistry {
                             .setAtkOffset(16)
                             .setHpOffset(16)
                             .setNature(SpectrobeProperties.Nature.OTHER)
-                            .setXpWorth(15)).build());
+                            .setXpWorth(15)
+                            .setGuraWorth(500)).build());
         ALL_MINERALS.add(MINERAL_AMBER);
 
         MINERAL_AZURITE = (new MineralBuilder()
@@ -193,7 +208,8 @@ public class MineralRegistry {
                             .setDefOffset(40)
                             .setHpOffset(-16)
                             .setNature(SpectrobeProperties.Nature.OTHER)
-                            .setXpWorth(20)).build());
+                            .setXpWorth(20)
+                            .setGuraWorth(120)).build());
         ALL_MINERALS.add(MINERAL_AZURITE);
 
         MINERAL_CITRINE = (new MineralBuilder()
@@ -204,7 +220,8 @@ public class MineralRegistry {
                             .setHpOffset(40)
                             .setAtkOffset(-16)
                             .setNature(SpectrobeProperties.Nature.OTHER)
-                            .setXpWorth(20)).build());
+                            .setXpWorth(20)
+                            .setGuraWorth(135)).build());
         ALL_MINERALS.add(MINERAL_CITRINE);
 
         MINERAL_COBALT = (new MineralBuilder()
@@ -215,7 +232,8 @@ public class MineralRegistry {
                             .setHpOffset(-16)
                             .setAtkOffset(40)
                             .setNature(SpectrobeProperties.Nature.OTHER)
-                            .setXpWorth(20)).build());
+                            .setXpWorth(20)
+                            .setGuraWorth(110)).build());
         ALL_MINERALS.add(MINERAL_COBALT);
 
         MINERAL_CORAL = (new MineralBuilder()
@@ -226,7 +244,8 @@ public class MineralRegistry {
                             .setHpOffset(16)
                             .setDefOffset(16)
                             .setNature(SpectrobeProperties.Nature.OTHER)
-                            .setXpWorth(20)).build());
+                            .setXpWorth(20)
+                            .setGuraWorth(500)).build());
         ALL_MINERALS.add(MINERAL_CORAL);
 
         MINERAL_DIAMOND = (new MineralBuilder()
@@ -235,7 +254,8 @@ public class MineralRegistry {
                 .withMineralProperties(
                     new MineralPropertiesBuilder()
                             .setNature(SpectrobeProperties.Nature.OTHER)
-                            .setXpWorth(30)).build());
+                            .setXpWorth(30)
+                            .setGuraWorth(75000)).build());
         ALL_MINERALS.add(MINERAL_DIAMOND);
 
         MINERAL_EMERALD = (new MineralBuilder()
@@ -247,7 +267,8 @@ public class MineralRegistry {
                             .setAtkOffset(36)
                             .setDefOffset(36)
                             .setNature(SpectrobeProperties.Nature.OTHER)
-                            .setXpWorth(40)).build());
+                            .setXpWorth(40)
+                            .setGuraWorth(20000)).build());
         ALL_MINERALS.add(MINERAL_EMERALD);
 
         MINERAL_FLUORITE = (new MineralBuilder()
@@ -258,7 +279,8 @@ public class MineralRegistry {
                             .setHpOffset(8)
                             .setDefOffset(8)
                             .setNature(SpectrobeProperties.Nature.OTHER)
-                            .setXpWorth(20)).build());
+                            .setXpWorth(20)
+                            .setGuraWorth(300)).build());
         ALL_MINERALS.add(MINERAL_FLUORITE);
 
         MINERAL_GARNET = (new MineralBuilder()
@@ -269,7 +291,8 @@ public class MineralRegistry {
                             .setAtkOffset(-8)
                             .setDefOffset(30)
                             .setNature(SpectrobeProperties.Nature.OTHER)
-                            .setXpWorth(25)).build());
+                            .setXpWorth(25)
+                            .setGuraWorth(40)).build());
         ALL_MINERALS.add(MINERAL_GARNET);
 
         MINERAL_GOLD = (new MineralBuilder()
@@ -280,7 +303,8 @@ public class MineralRegistry {
                             .setAtkOffset(-15)
                             .setDefOffset(-15)
                             .setNature(SpectrobeProperties.Nature.OTHER)
-                            .setXpWorth(20)).build());
+                            .setXpWorth(20)
+                            .setGuraWorth(100000)).build());
         ALL_MINERALS.add(MINERAL_GOLD);
 
         MINERAL_GRAPHITE = (new MineralBuilder()
@@ -291,7 +315,8 @@ public class MineralRegistry {
                             .setAtkOffset(30)
                             .setDefOffset(-8)
                             .setNature(SpectrobeProperties.Nature.OTHER)
-                            .setXpWorth(20)).build());
+                            .setXpWorth(20)
+                            .setGuraWorth(50)).build());
         ALL_MINERALS.add(MINERAL_GRAPHITE);
 
         MINERAL_JADE = (new MineralBuilder()
@@ -302,7 +327,8 @@ public class MineralRegistry {
                             .setHpOffset(8)
                             .setAtkOffset(8)
                             .setNature(SpectrobeProperties.Nature.OTHER)
-                            .setXpWorth(20)).build());
+                            .setXpWorth(20)
+                            .setGuraWorth(300)).build());
         ALL_MINERALS.add(MINERAL_JADE);
 
         MINERAL_LAZULI = (new MineralBuilder()
@@ -313,7 +339,8 @@ public class MineralRegistry {
                             .setDefOffset(16)
                             .setAtkOffset(16)
                             .setNature(SpectrobeProperties.Nature.OTHER)
-                            .setXpWorth(20)).build());
+                            .setXpWorth(20)
+                            .setGuraWorth(600)).build());
         ALL_MINERALS.add(MINERAL_LAZULI);
 
         MINERAL_ONYX = (new MineralBuilder()
@@ -324,7 +351,8 @@ public class MineralRegistry {
                             .setDefOffset(-16)
                             .setAtkOffset(40)
                             .setNature(SpectrobeProperties.Nature.OTHER)
-                            .setXpWorth(20)).build());
+                            .setXpWorth(20)
+                            .setGuraWorth(100)).build());
         ALL_MINERALS.add(MINERAL_ONYX);
 
         MINERAL_OPAL = (new MineralBuilder()
@@ -335,7 +363,8 @@ public class MineralRegistry {
                             .setAtkOffset(-8)
                             .setHpOffset(30)
                             .setNature(SpectrobeProperties.Nature.OTHER)
-                            .setXpWorth(20)).build());
+                            .setXpWorth(20)
+                            .setGuraWorth(90)).build());
         ALL_MINERALS.add(MINERAL_OPAL);
 
         MINERAL_PEARL = (new MineralBuilder()
@@ -347,7 +376,8 @@ public class MineralRegistry {
                             .setHpOffset(12)
                             .setDefOffset(12)
                             .setNature(SpectrobeProperties.Nature.OTHER)
-                            .setXpWorth(20)).build());
+                            .setXpWorth(20)
+                            .setGuraWorth(10000)).build());
         ALL_MINERALS.add(MINERAL_PEARL);
 
         MINERAL_PLATINUM = (new MineralBuilder()
@@ -359,7 +389,8 @@ public class MineralRegistry {
                             .setHpOffset(5)
                             .setDefOffset(5)
                             .setNature(SpectrobeProperties.Nature.OTHER)
-                            .setXpWorth(25)).build());
+                            .setXpWorth(25)
+                            .setGuraWorth(3500)).build());
         ALL_MINERALS.add(MINERAL_PLATINUM);
 
         MINERAL_QUARTZ = (new MineralBuilder()
@@ -370,7 +401,8 @@ public class MineralRegistry {
                             .setHpOffset(40)
                             .setDefOffset(-16)
                             .setNature(SpectrobeProperties.Nature.OTHER)
-                            .setXpWorth(25)).build());
+                            .setXpWorth(25)
+                            .setGuraWorth(150)).build());
         ALL_MINERALS.add(MINERAL_QUARTZ);
 
         MINERAL_RUBY = (new MineralBuilder()
@@ -382,7 +414,8 @@ public class MineralRegistry {
                             .setAtkOffset(50)
                             .setDefOffset(50)
                             .setNature(SpectrobeProperties.Nature.OTHER)
-                            .setXpWorth(40)).build());
+                            .setXpWorth(40)
+                            .setGuraWorth(25000)).build());
         ALL_MINERALS.add(MINERAL_RUBY);
 
         MINERAL_SAPPHIRE = (new MineralBuilder()
@@ -394,7 +427,8 @@ public class MineralRegistry {
                             .setAtkOffset(24)
                             .setDefOffset(24)
                             .setNature(SpectrobeProperties.Nature.OTHER)
-                            .setXpWorth(20)).build());
+                            .setXpWorth(20)
+                            .setGuraWorth(15000)).build());
         ALL_MINERALS.add(MINERAL_SAPPHIRE);
 
         MINERAL_SPINAL = (new MineralBuilder()
@@ -406,7 +440,8 @@ public class MineralRegistry {
                             .setAtkOffset(0)
                             .setDefOffset(-8)
                             .setNature(SpectrobeProperties.Nature.OTHER)
-                            .setXpWorth(40)).build());
+                            .setXpWorth(40)
+                            .setGuraWorth(85)).build());
         ALL_MINERALS.add(MINERAL_SPINAL);
 
         MINERAL_SYLVITE = (new MineralBuilder()
@@ -418,7 +453,8 @@ public class MineralRegistry {
                             .setAtkOffset(0)
                             .setDefOffset(30)
                             .setNature(SpectrobeProperties.Nature.OTHER)
-                            .setXpWorth(40)).build());
+                            .setXpWorth(40)
+                            .setGuraWorth(70)).build());
         ALL_MINERALS.add(MINERAL_SYLVITE);
 
         MINERAL_TOPAZ = (new MineralBuilder()
@@ -430,7 +466,8 @@ public class MineralRegistry {
                             .setAtkOffset(-16)
                             .setDefOffset(40)
                             .setNature(SpectrobeProperties.Nature.OTHER)
-                            .setXpWorth(40)).build());
+                            .setXpWorth(40)
+                            .setGuraWorth(120)).build());
         ALL_MINERALS.add(MINERAL_TOPAZ);
 
         MINERAL_ZIRCON = (new MineralBuilder()
@@ -442,7 +479,8 @@ public class MineralRegistry {
                             .setAtkOffset(30)
                             .setDefOffset(0)
                             .setNature(SpectrobeProperties.Nature.OTHER)
-                            .setXpWorth(40)).build());
+                            .setXpWorth(40)
+                            .setGuraWorth(75)).build());
         ALL_MINERALS.add(MINERAL_ZIRCON);
     }
 }
