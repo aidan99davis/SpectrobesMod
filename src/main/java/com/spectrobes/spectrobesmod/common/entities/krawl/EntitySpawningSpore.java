@@ -3,10 +3,8 @@ package com.spectrobes.spectrobesmod.common.entities.krawl;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
 import com.spectrobes.spectrobesmod.common.entities.krawl.goals.MoveToTargetGoal;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SpawnReason;
+import com.spectrobes.spectrobesmod.common.save_data.SpectrobesWorldSaveData;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.FlyingMovementController;
@@ -20,6 +18,8 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.util.DamageSource;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -119,12 +119,6 @@ public class EntitySpawningSpore extends MonsterEntity implements IAnimatable, I
     @Override
     protected void actuallyHurt(DamageSource damageSrc, float damageAmount) {
         super.actuallyHurt(damageSrc, 0);
-    }
-
-    @Override
-    protected void registerGoals()
-    {
-//        this.goalSelector.addGoal(0, new SpawnKrawlGoal(this));
     }
 
     public static AttributeModifierMap.MutableAttribute setCustomAttributes() {

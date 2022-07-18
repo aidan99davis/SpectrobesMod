@@ -3,6 +3,7 @@ package com.spectrobes.spectrobesmod.common.registry;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.blocks.FossilBlock;
 import com.spectrobes.spectrobesmod.common.blocks.HealerBlock;
+import com.spectrobes.spectrobesmod.common.blocks.XellesTrophyBlock;
 import com.spectrobes.spectrobesmod.common.blocks.fossils.*;
 import com.spectrobes.spectrobesmod.common.blocks.MineralBlock;
 
@@ -45,6 +46,7 @@ public class SpectrobesBlocks {
     public static final RegistryObject<DongorFossilBlock> dongor_fossil = BLOCKS.register("dongor_fossil", DongorFossilBlock::new);
     public static final RegistryObject<InkanaFossilBlock> inkana_fossil = BLOCKS.register("inkana_fossil", InkanaFossilBlock::new);
     public static final RegistryObject<HealerBlock> healer_block = BLOCKS.register("healer_block", HealerBlock::new);
+    public static final RegistryObject<XellesTrophyBlock> xelles_trophy = BLOCKS.register("xelles_trophy", XellesTrophyBlock::new);
 
     public static final RegistryObject<Block> mineral_block = BLOCKS.register("mineral_block", MineralBlock::new);
     public static final RegistryObject<Block> fossil_block = BLOCKS.register("fossil_block", FossilBlock::new);

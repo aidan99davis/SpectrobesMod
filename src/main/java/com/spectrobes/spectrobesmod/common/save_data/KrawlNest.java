@@ -12,6 +12,7 @@ public class KrawlNest implements INBTSerializable {
     public String dimension;
     public int vortex_absorbed;
     public int stage;
+    public boolean alive;
 
     public KrawlNest() {}
 
@@ -20,11 +21,11 @@ public class KrawlNest implements INBTSerializable {
         this.dimension = dimension;
         this.stage = 1;
         this.vortex_absorbed = 0;
+        this.alive = true;
     }
 
     public void absorbVortexes(int vortexes) {
         this.vortex_absorbed = this.vortex_absorbed +  vortexes;
-
     }
 
     public int getAbsorbedVortexes() {
@@ -44,6 +45,7 @@ public class KrawlNest implements INBTSerializable {
         nbtObj.putInt("position_y", position.getY());
         nbtObj.putInt("position_z", position.getZ());
         nbtObj.putInt("vortex_absorbed", vortex_absorbed);
+        nbtObj.putBoolean("alive", alive);
         return nbtObj;
     }
 
@@ -52,9 +54,17 @@ public class KrawlNest implements INBTSerializable {
         dimension = ((CompoundNBT)nbt).getString("dimension");
         stage = ((CompoundNBT)nbt).getInt("stage");
         vortex_absorbed = ((CompoundNBT)nbt).getInt("vortex_absorbed");
+        alive = ((CompoundNBT)nbt).getBoolean("alive");
         int position_x = ((CompoundNBT)nbt).getInt("position_x");
         int position_y = ((CompoundNBT)nbt).getInt("position_y");
         int position_z = ((CompoundNBT)nbt).getInt("position_z");
         position = new BlockPos(position_x, position_y, position_z);
     }
+
+    public void setDead() {
+        this.alive = false;
+        this.stage = 1;
+    }
+
+    public boolean isAlive() { return alive; }
 }

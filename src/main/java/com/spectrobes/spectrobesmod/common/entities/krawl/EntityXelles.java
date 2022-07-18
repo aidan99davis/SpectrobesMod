@@ -6,13 +6,18 @@ import com.spectrobes.spectrobesmod.common.entities.krawl.goals.AbsorbKrawlGoal;
 import com.spectrobes.spectrobesmod.common.entities.krawl.goals.AttackSpectrobeGoal;
 import com.spectrobes.spectrobesmod.common.entities.krawl.goals.AttackSpectrobeMasterGoal;
 import com.spectrobes.spectrobesmod.common.entities.krawl.goals.HealKrawlGoal;
+import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
+import com.spectrobes.spectrobesmod.common.items.minerals.Mineral;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
+import com.spectrobes.spectrobesmod.common.registry.SpectrobesBlocks;
 import com.spectrobes.spectrobesmod.common.save_data.SpectrobesWorldSaveData;
 import com.spectrobes.spectrobesmod.util.KrawlPropertiesBuilder;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -141,6 +146,37 @@ public class EntityXelles extends EntityBossKrawl {
         }
     }
 
+
+    @Override
+    public void die(DamageSource pCause) {
+        super.die(pCause);
+        if(!level.isClientSide()) {
+            SpectrobesWorldSaveData saveData = SpectrobesWorldSaveData.getWorldData((ServerWorld) level);
+            saveData.getNest(blockPosition()).setDead();
+            saveData.setDirty();
+        }
+
+        if(getStage() == 3) {
+            int mineralCount = random.nextInt(3) + 3;
+            for (int i = 0; i < mineralCount; i++) {
+                ItemStack mineralStack = SpectrobesItems.getRandomMineral(Mineral.MineralRarity.Rare);
+                ItemEntity minerals = new ItemEntity(level,
+                        this.getX() + 0.5D,
+                        (this.getY() + 1),
+                        this.getZ() + 0.5D, mineralStack);
+                minerals.setDefaultPickUpDelay();
+                level.addFreshEntity(minerals);
+            }
+
+            ItemEntity trophy = new ItemEntity(level,
+                    this.getX() + 0.5D,
+                    (this.getY() + 1),
+                    this.getZ() + 0.5D, SpectrobesBlocks.xelles_trophy.get().asItem().getDefaultInstance());
+            trophy.setDefaultPickUpDelay();
+            level.addFreshEntity(trophy);
+        }
+    }
+
     public boolean isSpawningSpores() {
         return entityData.get(IS_SPAWNING_SPORES);
     }
@@ -209,7 +245,7 @@ public class EntityXelles extends EntityBossKrawl {
                 .withXpWorth(1000)
                 .withAtkLevel(0)
                 .withDefLevel(0)
-                .withHpLevel(100)
+                .withHpLevel(800)
                 .withAtkOffset(10)
                 .withDefOffset(10)
                 .withHpOffset(10)
@@ -227,11 +263,11 @@ public class EntityXelles extends EntityBossKrawl {
         if(event.getAnimatable().isDeadOrDying()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.xelles.death", false));
             return PlayState.CONTINUE;
-        }else if(((EntityXelles)event.getAnimatable()).lastHurtTicksAgo() == 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.xelles.hurt", false));
-            return PlayState.CONTINUE;
         } else if(((EntityXelles)event.getAnimatable()).isSpawningSpores()) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.xelles.spawning", true));
+            return PlayState.CONTINUE;
+        } else if(((EntityXelles)event.getAnimatable()).lastHurtTicksAgo() == 0) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.xelles.hurt", false));
             return PlayState.CONTINUE;
         }
         event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.xelles.idle", true));
