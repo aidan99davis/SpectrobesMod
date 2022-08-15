@@ -1,3 +1,4 @@
+
 package com.spectrobes.spectrobesmod.common.registry;
 
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
@@ -25,6 +26,9 @@ public class SpectrobePropertyRegistry {
 
     //DONGOR LINE
     public static SpectrobeProperties DONGOR = new SpectrobeProperties(SpectrobeProperties.Nature.CORONA, SpectrobeProperties.Stage.CHILD);
+
+    //DANAWA LINE
+    public static SpectrobeProperties DANAWA = new SpectrobeProperties(SpectrobeProperties.Nature.CORONA, SpectrobeProperties.Stage.CHILD);
 
     //AURORA
 

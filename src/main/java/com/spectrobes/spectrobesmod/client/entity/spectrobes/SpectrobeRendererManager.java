@@ -38,5 +38,6 @@ public class SpectrobeRendererManager {
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_MESA.get(), MesaRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_DONGOR.get(), DongorRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_INKANA.get(), InkanaRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_DANAWA.get(), DanawaRenderer::new);
     }
 }

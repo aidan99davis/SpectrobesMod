@@ -62,6 +62,7 @@
     "block.spectrobesmod.mesa_fossil": "Mesapod",
     "block.spectrobesmod.dongor_fossil": "Dongopod",
     "block.spectrobesmod.inkana_fossil": "Inkapod",
+    "block.spectrobesmod.danawa_fossil": "Danapod",
     "block.spectrobesmod.mineral_block": "Mineral Block",
     "block.spectrobesmod.fossil_block": "Fossil Block",
     "block.spectrobesmod.healer_block": "Healer",
@@ -115,6 +116,7 @@
     "entity.spectrobesmod.entity_bartor": "Bartor",
     "entity.spectrobesmod.entity_bartolor": "Bartolor",
     "entity.spectrobesmod.entity_inkana": "Inkana",
+    "entity.spectrobesmod.entity_danawa": "Danawa",
     "key.prizmod.category": "Prizmod Controls",
     "key.prizmod.cycle.left": "Cycle team left",
     "key.prizmod.cycle.right": "Cycle team right"

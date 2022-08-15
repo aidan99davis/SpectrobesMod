@@ -28,5 +28,6 @@ public class SpectrobesTileRegistry {
         public static final RegistryObject<TileEntityType<MesaFossilBlockTileEntity>> MESA_FOSSIL_TILE = TILES.register("mesafossiltile", () -> TileEntityType.Builder.of(MesaFossilBlockTileEntity::new, SpectrobesBlocks.mesa_fossil.get()).build(null));
         public static final RegistryObject<TileEntityType<DongorFossilBlockTileEntity>> DONGOR_FOSSIL_TILE = TILES.register("dongorfossiltile", () -> TileEntityType.Builder.of(DongorFossilBlockTileEntity::new, SpectrobesBlocks.dongor_fossil.get()).build(null));
         public static final RegistryObject<TileEntityType<InkanaFossilBlockTileEntity>> INKANA_FOSSIL_TILE = TILES.register("inkanafossiltile", () -> TileEntityType.Builder.of(InkanaFossilBlockTileEntity::new, SpectrobesBlocks.inkana_fossil.get()).build(null));
+        public static final RegistryObject<TileEntityType<DanawaFossilBlockTileEntity>> DANAWA_FOSSIL_TILE = TILES.register("danawafossiltile", () -> TileEntityType.Builder.of(DanawaFossilBlockTileEntity::new, SpectrobesBlocks.danawa_fossil.get()).build(null));
         public static final RegistryObject<TileEntityType<HealerBlockTileEntity>> HEALER_TILE = TILES.register("healertile", () -> TileEntityType.Builder.of(HealerBlockTileEntity::new, SpectrobesBlocks.healer_block.get()).build(null));
 }

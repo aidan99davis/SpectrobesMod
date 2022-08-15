@@ -36,6 +36,7 @@ public class SpectrobesBlocks {
     public static final RegistryObject<MesaFossilBlock> mesa_fossil = BLOCKS.register("mesa_fossil", MesaFossilBlock::new);
     public static final RegistryObject<DongorFossilBlock> dongor_fossil = BLOCKS.register("dongor_fossil", DongorFossilBlock::new);
     public static final RegistryObject<InkanaFossilBlock> inkana_fossil = BLOCKS.register("inkana_fossil", InkanaFossilBlock::new);
+    public static final RegistryObject<DanawaFossilBlock> danawa_fossil = BLOCKS.register("danawa_fossil", DanawaFossilBlock::new);
     public static final RegistryObject<HealerBlock> healer_block = BLOCKS.register("healer_block", HealerBlock::new);
     public static final RegistryObject<Block> mineral_block = BLOCKS.register("mineral_block", MineralBlock::new);
     public static final RegistryObject<Block> fossil_block = BLOCKS.register("fossil_block", FossilBlock::new);
