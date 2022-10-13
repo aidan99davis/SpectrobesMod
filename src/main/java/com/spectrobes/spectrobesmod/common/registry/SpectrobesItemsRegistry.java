@@ -189,6 +189,27 @@ public class SpectrobesItemsRegistry {
                                     .setISTER(() -> MossariFossilItemRenderer::new)
                                     .tab(SpectrobesItems.SpectrobesFossilsItemGroup.Instance)));
 
+    public static final RegistryObject<BlockItem> masetto_fossil_item =
+            ITEMS.register("masetto_fossil_item",
+                    () -> new MasettoFossilItem(SpectrobesBlocks.masetto_fossil.get(),
+                            new Item.Properties()
+                                    .setISTER(() -> MasettoFossilItemRenderer::new)
+                                    .tab(SpectrobesItems.SpectrobesFossilsItemGroup.Instance)));
+
+    public static final RegistryObject<BlockItem> tenkro_fossil_item =
+            ITEMS.register("tenkro_fossil_item",
+                    () -> new TenkroFossilItem(SpectrobesBlocks.tenkro_fossil.get(),
+                            new Item.Properties()
+                                    .setISTER(() -> TenkroFossilItemRenderer::new)
+                                    .tab(SpectrobesItems.SpectrobesFossilsItemGroup.Instance)));
+
+    public static final RegistryObject<BlockItem> kasumi_fossil_item =
+            ITEMS.register("kasumi_fossil_item",
+                    () -> new KasumiFossilItem(SpectrobesBlocks.kasumi_fossil.get(),
+                            new Item.Properties()
+                                    .setISTER(() -> KasumiFossilItemRenderer::new)
+                                    .tab(SpectrobesItems.SpectrobesFossilsItemGroup.Instance)));
+
     private static void init() {
         flash_fossils.add(harumi_fossil_item.get());
         flash_fossils.add(nagu_fossil_item.get());
@@ -196,6 +217,7 @@ public class SpectrobesItemsRegistry {
         flash_fossils.add(shakin_fossil_item.get());
         flash_fossils.add(samukabu_fossil_item.get());
         flash_fossils.add(mossari_fossil_item.get());
+        flash_fossils.add(kasumi_fossil_item.get());
 
         aurora_fossils.add(segu_fossil_item.get());
         aurora_fossils.add(spiko_fossil_item.get());
@@ -203,6 +225,7 @@ public class SpectrobesItemsRegistry {
         aurora_fossils.add(grilda_fossil_item.get());
         aurora_fossils.add(kubaku_fossil_item.get());
         aurora_fossils.add(gejio_fossil_item.get());
+        aurora_fossils.add(masetto_fossil_item.get());
 
         corona_fossils.add(komainu_fossil_item.get());
         corona_fossils.add(vilar_fossil_item.get());
@@ -211,6 +234,7 @@ public class SpectrobesItemsRegistry {
         corona_fossils.add(dongor_fossil_item.get());
         corona_fossils.add(inkana_fossil_item.get());
         corona_fossils.add(danawa_fossil_item.get());
+        corona_fossils.add(tenkro_fossil_item.get());
 
         all_fossils.addAll(corona_fossils);
         all_fossils.addAll(flash_fossils);

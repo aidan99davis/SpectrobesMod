@@ -1,8 +1,6 @@
 package com.spectrobes.spectrobesmod.client.entity.spectrobes;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
-import com.spectrobes.spectrobesmod.common.entities.krawl.*;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.*;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.aoi.EntityAoi;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.bartor.EntityBartolor;
@@ -15,14 +13,17 @@ import com.spectrobes.spectrobesmod.common.entities.spectrobes.grilda.EntityGril
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.harumi.EntityHarumi;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.harumi.EntityHarumite;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.inkana.EntityInkana;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.kasumi.EntityKasumi;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.komainu.EntityKomainu;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.komainu.EntityKomanoto;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.kubaku.EntityKubaku;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.kubaku.EntityKuganon;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.masetto.EntityMasetto;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.mesa.EntityMesa;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.mossari.EntityMossari;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.mossari.EntityMossarito;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.nagu.EntityNagu;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.nagu.EntityNaguryu;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.samubaku.EntitySamukabu;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.samubaku.EntitySamurite;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.segu.EntitySegu;
@@ -31,6 +32,7 @@ import com.spectrobes.spectrobesmod.common.entities.spectrobes.shakin.EntityShak
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.shakin.EntityShakor;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.spiko.EntitySpikan;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.spiko.EntitySpiko;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.tenkro.EntityTenkro;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.vilar.EntityVilamasta;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.vilar.EntityVilar;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.zoza.EntityZoza;
@@ -54,6 +56,20 @@ public class SpectrobesEntities {
 
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES
             = DeferredRegister.create(ForgeRegistries.ENTITIES, SpectrobesInfo.MOD_ID);
+
+    public static final RegistryObject<EntityType<EntityKasumi>> ENTITY_KASUMI
+            = ENTITY_TYPES.register("entity_kasumi",
+            () -> EntityType.Builder.of(EntityKasumi::new,
+                    EntityClassification.MONSTER)
+                    .sized(0.5f, 0.5f)
+                    .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "kasumi").toString()));
+
+    public static final RegistryObject<EntityType<EntityTenkro>> ENTITY_TENKRO
+            = ENTITY_TYPES.register("entity_tenkro",
+            () -> EntityType.Builder.of(EntityTenkro::new,
+                    EntityClassification.MONSTER)
+                    .sized(0.5f, 0.5f)
+                    .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "tenkro").toString()));
 
     public static final RegistryObject<EntityType<EntityDanawa>> ENTITY_DANAWA
             = ENTITY_TYPES.register("entity_danawa",
@@ -230,6 +246,13 @@ public class SpectrobesEntities {
                     .sized(1f, 1f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "nagu").toString()));
 
+    public static final RegistryObject<EntityType<EntityNaguryu>> ENTITY_NAGURYU
+            = ENTITY_TYPES.register("entity_naguryu",
+            () -> EntityType.Builder.of(EntityNaguryu::new,
+                    EntityClassification.MONSTER)
+                    .sized(2f, 2f)
+                    .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "naguryu").toString()));
+
     public static final RegistryObject<EntityType<EntityMossari>> ENTITY_MOSSARI
             = ENTITY_TYPES.register("entity_mossari",
             () -> EntityType.Builder.of(EntityMossari::new,
@@ -272,6 +295,13 @@ public class SpectrobesEntities {
                     .sized(1.6f, 1.6f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "bartolor").toString()));
 
+    public static final RegistryObject<EntityType<EntityMasetto>> ENTITY_MASETTO
+            = ENTITY_TYPES.register("entity_masetto",
+            () -> EntityType.Builder.of(EntityMasetto::new,
+                    EntityClassification.MONSTER)
+                    .sized(1f, 1f)
+                    .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "masetto").toString()));
+
     public static <T extends Entity> RegistryObject<EntityType<T>> BuildEntity(EntityType.IFactory<T> entity, Class<T> entityClass, float width, float height)
     {
         String name = entityClass.getSimpleName().toLowerCase();
@@ -293,6 +323,7 @@ public class SpectrobesEntities {
             GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_MOSSARI.get(), EntityMossari.setCustomAttributes().build());
             GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_MOSSARITO.get(), EntityMossarito.setCustomAttributes().build());
             GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_NAGU.get(), EntityNagu.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_NAGURYU.get(), EntityNaguryu.setCustomAttributes().build());
             GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_SAMUKABU.get(), EntitySamukabu.setCustomAttributes().build());
             GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_SAMURITE.get(), EntitySamurite.setCustomAttributes().build());
             GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_SEGU.get(), EntitySegu.setCustomAttributes().build());
@@ -313,6 +344,9 @@ public class SpectrobesEntities {
             GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_DONGOR.get(), EntityDongor.setCustomAttributes().build());
             GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_INKANA.get(), EntityInkana.setCustomAttributes().build());
             GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_DANAWA.get(), EntityDanawa.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_MASETTO.get(), EntityMasetto.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_TENKRO.get(), EntityTenkro.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_KASUMI.get(), EntityKasumi.setCustomAttributes().build());
         });
 
         populateMap();
@@ -340,6 +374,7 @@ public class SpectrobesEntities {
         SPECTROBES.put("zoza", ENTITY_ZOZA.get());
         SPECTROBES.put("zozane", ENTITY_ZOZANE.get());
         SPECTROBES.put("nagu", ENTITY_NAGU.get());
+        SPECTROBES.put("naguryu", ENTITY_NAGURYU.get());
         SPECTROBES.put("mossari", ENTITY_MOSSARI.get());
         SPECTROBES.put("mossarito", ENTITY_MOSSARITO.get());
         SPECTROBES.put("aoi", ENTITY_AOI.get());
@@ -350,6 +385,9 @@ public class SpectrobesEntities {
         SPECTROBES.put("dongor", ENTITY_DONGOR.get());
         SPECTROBES.put("inkana", ENTITY_INKANA.get());
         SPECTROBES.put("danawa", ENTITY_DANAWA.get());
+        SPECTROBES.put("masetto", ENTITY_MASETTO.get());
+        SPECTROBES.put("tenkro", ENTITY_TENKRO.get());
+        SPECTROBES.put("kasumi", ENTITY_KASUMI.get());
     }
 
     public static EntityType<? extends EntitySpectrobe> getByName(String name) throws ClassNotFoundException {

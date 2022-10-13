@@ -4,7 +4,6 @@ import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityMammalSpectrobe;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.items.fossils.FossilBlockItem;
-import com.spectrobes.spectrobesmod.common.items.fossils.FossilItem;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobesItemsRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
@@ -16,29 +15,29 @@ import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class EntityNagu extends EntityMammalSpectrobe {
+public class EntityNaguryu extends EntityMammalSpectrobe {
 
-    public EntityNagu(EntityType<EntityNagu> entityTypeIn, World worldIn) {
+    public EntityNaguryu(EntityType<EntityNaguryu> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
     }
 
     public Spectrobe GetNewSpectrobeInstance() {
-        return SpectrobeRegistry.Nagu.copy(false);
+        return SpectrobeRegistry.Naguryu.copy(false);
     }
 
     @Override
     public EntityType<? extends EntitySpectrobe> getEvolutionRegistry() {
-        return SpectrobesEntities.ENTITY_NAGURYU.get();
+        return null;
     }
 
     @Override
     public String getRegistryName() {
-        return "entity_nagu";
+        return "entity_naguryu";
     }
 
     @Override
     public Class getSpectrobeClass() {
-        return EntityNagu.class;
+        return EntityNaguryu.class;
     }
 
     @Override
@@ -50,10 +49,21 @@ public class EntityNagu extends EntityMammalSpectrobe {
     public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event) {
         if(event.isMoving())
         {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.nagu.idle", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.Naguryu.walk", true));
+            return PlayState.CONTINUE;
+        }
+        else if(event.getAnimatable().isOrderedToSit()) {
+            event.getController().setAnimation(new AnimationBuilder()
+                    .addAnimation("animation.Naguryu.sitting", false)
+                    .addAnimation("animation.Naguryu.sit", true));
+            return PlayState.CONTINUE;
+        } else if(event.getAnimatable().isAttacking()) {
+            event.getController().setAnimation(new AnimationBuilder()
+                    .addAnimation("animation.Naguryu.game_1_attack", true));
             return PlayState.CONTINUE;
         } else {
-            return PlayState.STOP;
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.Naguryu.idle", true));
+            return PlayState.CONTINUE;
         }
     }
 
@@ -65,7 +75,7 @@ public class EntityNagu extends EntityMammalSpectrobe {
 
     @Override
     protected EvolutionRequirements getEvolutionRequirements() {
-        return new EvolutionRequirements(1, 4, 0);
+        return new EvolutionRequirements(46, 15, 10);
     }
 
     @Override
@@ -75,6 +85,6 @@ public class EntityNagu extends EntityMammalSpectrobe {
 
     @Override
     public int getLitterSize() {
-        return 0;
+        return 2;
     }
 }

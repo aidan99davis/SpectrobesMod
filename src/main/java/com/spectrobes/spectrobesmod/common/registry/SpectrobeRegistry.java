@@ -117,6 +117,17 @@ public class SpectrobeRegistry {
                     .build())
             .build();
 
+    public static final Spectrobe Tenkro
+            = new SpectrobeBuilder()
+            .withName("Tenkro")
+            .withProperties(SpectrobePropertyRegistry.TENKRO)
+            .withStats(new SpectrobeStatsBuilder()
+                    .withHealthStat(70, 5, 115)
+                    .withAttackStat(30, 10, 135)
+                    .withDefenceStat(45, 8, 108)
+                    .build())
+            .build();
+
     //Aurora Spectrobes
     public static final Spectrobe Gejio
             = new SpectrobeBuilder()
@@ -239,6 +250,17 @@ public class SpectrobeRegistry {
                     .build())
             .build();
 
+    public static final Spectrobe Masetto
+            = new SpectrobeBuilder()
+            .withName("masetto")
+            .withProperties(SpectrobePropertyRegistry.MASETTO)
+            .withStats(new SpectrobeStatsBuilder()
+                    .withHealthStat(75, 12, 150)
+                    .withAttackStat(50, 10, 150)
+                    .withDefenceStat(80, 5, 80)
+                    .build())
+            .build();
+
     //Flash Spectrobes
     public static final Spectrobe Aoi
             = new SpectrobeBuilder()
@@ -330,6 +352,17 @@ public class SpectrobeRegistry {
                     .build())
             .build();
 
+    public static final Spectrobe Naguryu
+            = new SpectrobeBuilder()
+            .withName("Naguryu")
+            .withProperties(SpectrobePropertyRegistry.NAGURYU)
+            .withStats(new SpectrobeStatsBuilder()
+                    .withHealthStat(108, 13, 390)
+                    .withAttackStat(140, 10, 320)
+                    .withDefenceStat(110, 9, 300)
+                    .build())
+            .build();
+
     public static final Spectrobe Mossari
             = new SpectrobeBuilder()
             .withName("Mossari")
@@ -349,6 +382,17 @@ public class SpectrobeRegistry {
                     .withHealthStat(72, 12, 320)
                     .withAttackStat(103, 8, 294)
                     .withDefenceStat(73, 9, 280)
+                    .build())
+            .build();
+
+    public static final Spectrobe Kasumi
+            = new SpectrobeBuilder()
+            .withName("Kasumi")
+            .withProperties(SpectrobePropertyRegistry.KASUMI)
+            .withStats(new SpectrobeStatsBuilder()
+                    .withHealthStat(53, 6, 92)
+                    .withAttackStat(70, 9, 140)
+                    .withDefenceStat(44, 8, 99)
                     .build())
             .build();
 }
