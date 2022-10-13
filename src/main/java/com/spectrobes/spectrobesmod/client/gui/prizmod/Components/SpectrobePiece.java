@@ -15,7 +15,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class SpectrobePiece extends AbstractGui {
 
-    private static ResourceLocation CROSS = new ResourceLocation("spectrobesmod:textures/gui/cross.png");
+    private static ResourceLocation DELETE_BACKGROUND = new ResourceLocation("spectrobesmod:textures/gui/spectrobe_slot_delete.png");
 
     public Spectrobe spectrobe;
     private final int x, y;
@@ -59,13 +59,16 @@ public class SpectrobePiece extends AbstractGui {
     @OnlyIn(Dist.CLIENT)
     public void drawBackground() {
         ResourceLocation bg;
-        if(!current) {
+        if(Screen.hasAltDown()) {
+            GuiUtils.drawTexture(DELETE_BACKGROUND, posX, posY, 32, 32, 28);
+        } else if(!current) {
             bg = selected? PrizmodScreen.SPECTROBE_SLOT_SELECTED_TEXTURE : PrizmodScreen.SPECTROBE_SLOT_TEXTURE;
+            GuiUtils.drawTexture(bg, posX, posY, 32, 32,0);
         } else {
-            bg = PrizmodScreen.SPECTROBE_SLOT_CURRENT_TEXTURE;
+            bg = PrizmodScreen.SPECTROBE_SLOT_SELECTED_TEXTURE;
+            GuiUtils.drawTexture(bg, posX - 2, posY - 2, 36, 36,1);
         }
 
-        GuiUtils.drawTexture(bg, posX, posY, 32, 32,0);
     }
 
     /**
@@ -97,9 +100,7 @@ public class SpectrobePiece extends AbstractGui {
             GuiUtils.drawColour(55, 179, 41, 100, posX + 1, posY + 30, Math.round(widthScaled), 2, 28);
 
             //draw indicator that you're deleting a spectrobe.
-            if(Screen.hasAltDown()) {
-                GuiUtils.drawTexture(CROSS, posX, posY, 32, 32, 28);
-            }
+
 
         }
     }
