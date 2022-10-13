@@ -37,6 +37,7 @@ public class IconRegistry {
         icons.put("zoza", new SpectrobeIconInfo("zoza", 31, 20));
         icons.put("zozane", new SpectrobeIconInfo("zozane", 32, 22));
         icons.put("nagu", new SpectrobeIconInfo("nagu", 32, 28));
+        icons.put("naguryu", new SpectrobeIconInfo("naguryu", 32, 25));
         icons.put("mossari", new SpectrobeIconInfo("mossari", 26, 29));
         icons.put("mossarito", new SpectrobeIconInfo("mossarito", 29, 31));
         icons.put("aoi", new SpectrobeIconInfo("aoi", 32, 19));
@@ -46,6 +47,10 @@ public class IconRegistry {
         icons.put("mesa", new SpectrobeIconInfo("mesa", 22, 28));
         icons.put("dongor", new SpectrobeIconInfo("dongor", 24, 23));
         icons.put("inkana", new SpectrobeIconInfo("inkana", 18, 32));
+        icons.put("danawa", new SpectrobeIconInfo("danawa", 20, 25));
+        icons.put("masetto", new SpectrobeIconInfo("masetto", 25, 22));
+        icons.put("tenkro", new SpectrobeIconInfo("tenkro", 24, 27));
+        icons.put("kasumi", new SpectrobeIconInfo("kasumi", 24, 27));
     }
 
     public static IconRegistry getInstance() {
