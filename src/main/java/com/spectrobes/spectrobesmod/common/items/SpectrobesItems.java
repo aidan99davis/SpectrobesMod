@@ -72,6 +72,8 @@ public class SpectrobesItems {
 
     //Weapons
     public static final Item basic_sword = null;
+    public static final Item basic_glove = null;
+    public static final Item basic_blaster = null;
 
     private static final HashMap<Mineral.MineralRarity, List<Item>> all_minerals = new HashMap<>();
 

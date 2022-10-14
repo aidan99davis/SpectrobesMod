@@ -2,12 +2,13 @@ package com.spectrobes.spectrobesmod.common.registry;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.items.renderer.*;
+import com.spectrobes.spectrobesmod.client.items.weapons.renderer.BasicBlasterItemRenderer;
+import com.spectrobes.spectrobesmod.client.items.weapons.renderer.BasicGloveItemRenderer;
 import com.spectrobes.spectrobesmod.client.items.weapons.renderer.BasicSwordItemRenderer;
 import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
 import com.spectrobes.spectrobesmod.common.items.fossils.*;
 import com.spectrobes.spectrobesmod.common.items.machines.HealerBlockItem;
-import com.spectrobes.spectrobesmod.common.items.weapons.BasicSwordItem;
-import com.spectrobes.spectrobesmod.common.items.weapons.SpectrobesWeapon;
+import com.spectrobes.spectrobesmod.common.items.weapons.*;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.item.BlockItem;
@@ -29,10 +30,22 @@ public class SpectrobesItemsRegistry {
     private static final List<Item> aurora_fossils = new ArrayList<>();
     private static final List<Item> corona_fossils = new ArrayList<>();
 
+    public static final RegistryObject<SpectrobesRangedWeapon> basic_blaster_item =
+            ITEMS.register("basic_blaster_item",
+                    () -> new BasicBlasterItem(new Item.Properties()
+                            .setISTER(() -> BasicBlasterItemRenderer::new)
+                            .tab(SpectrobesItems.SpectrobesWeaponsItemGroup.Instance)));
+
     public static final RegistryObject<SpectrobesWeapon> basic_sword_item =
             ITEMS.register("basic_sword_item",
                     () -> new BasicSwordItem(new Item.Properties()
                             .setISTER(() -> BasicSwordItemRenderer::new)
+                            .tab(SpectrobesItems.SpectrobesWeaponsItemGroup.Instance)));
+
+    public static final RegistryObject<SpectrobesWeapon> basic_glove_item =
+            ITEMS.register("basic_glove_item",
+                    () -> new BasicGloveItem(new Item.Properties()
+                            .setISTER(() -> BasicGloveItemRenderer::new)
                             .tab(SpectrobesItems.SpectrobesWeaponsItemGroup.Instance)));
     
     public static final RegistryObject<Item> metalium = 

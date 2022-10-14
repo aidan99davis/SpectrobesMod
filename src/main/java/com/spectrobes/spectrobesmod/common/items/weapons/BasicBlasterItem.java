@@ -5,8 +5,8 @@ import com.spectrobes.spectrobesmod.util.WeaponStats;
 import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
-public class BasicSwordItem extends SpectrobesWeapon {
-    public BasicSwordItem(Properties pProperties) {
+public class BasicBlasterItem extends SpectrobesRangedWeapon {
+    public BasicBlasterItem(Properties pProperties) {
         super(pProperties);
     }
 
@@ -17,11 +17,11 @@ public class BasicSwordItem extends SpectrobesWeapon {
 
     @Override
     public WeaponStats GetWeaponStats() {
-        return new WeaponStats(15, 1, 1, false, false, SpectrobeProperties.Nature.OTHER);
+        return new WeaponStats(20, 1, 1, true, false, SpectrobeProperties.Nature.OTHER);
     }
 
     @Override
     public String getControllerName() {
-        return "basic_sword";
+        return "basic_blaster";
     }
 }

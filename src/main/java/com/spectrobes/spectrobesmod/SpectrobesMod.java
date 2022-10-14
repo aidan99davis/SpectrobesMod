@@ -3,6 +3,8 @@ package com.spectrobes.spectrobesmod;
 import com.spectrobes.spectrobesmod.client.blocks.BlockRendererManager;
 import com.spectrobes.spectrobesmod.client.container.HealerContainer;
 import com.spectrobes.spectrobesmod.client.container.PrizmodContainer;
+import com.spectrobes.spectrobesmod.client.entity.attacks.AttackEntities;
+import com.spectrobes.spectrobesmod.client.entity.attacks.AttackRendererManager;
 import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
 import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlRendererManager;
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobeRendererManager;
@@ -61,6 +63,7 @@ public class SpectrobesMod
         MinecraftForge.EVENT_BUS.register(new SpectrobesOreGen());
         MinecraftForge.EVENT_BUS.register(new SpectrobesEntitySpawns());
         SpectrobesEntities.ENTITY_TYPES.register(modEventBus);
+        AttackEntities.ENTITY_TYPES.register(modEventBus);
         KrawlEntities.ENTITY_TYPES.register(modEventBus);
         SpectrobesItemsRegistry.ITEMS.register(modEventBus);
         SpectrobesTileRegistry.TILES.register(modEventBus);
@@ -103,6 +106,7 @@ public class SpectrobesMod
         IDataSerializer serializer = Spectrobe.SpectrobeSerializer;
         BlockRendererManager.init();
         KrawlRendererManager.init();
+        AttackRendererManager.init();
         MineralRegistry.init();
         SpectrobesKeybindings.initKeybinds();
     }

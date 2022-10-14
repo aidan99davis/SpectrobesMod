@@ -1,6 +1,5 @@
 package com.spectrobes.spectrobesmod.common.items.weapons;
 
-import com.spectrobes.spectrobesmod.common.entities.IHasNature;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import com.spectrobes.spectrobesmod.util.WeaponStats;
 import net.minecraft.item.*;
@@ -17,7 +16,7 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import java.util.HashSet;
 
-public abstract class SpectrobesWeapon extends ToolItem implements IHasNature, IAnimatable, ISyncable {
+public abstract class SpectrobesWeapon extends ToolItem implements IAnimatable, ISyncable, ISpectrobeWeapon {
     private static final int ANIM_OPEN = 0;
     public AnimationFactory factory = new AnimationFactory(this);
 
