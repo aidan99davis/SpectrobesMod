@@ -8,6 +8,7 @@ public class MineralPropertiesBuilder {
     private int atkOffset = 0;
     private int defOffset = 0;
     private int xpWorth = 0;
+    private int guraWorth = 0;
     private SpectrobeProperties.Nature nature;
 
     public MineralPropertiesBuilder setHpOffset(int offset) {
@@ -30,6 +31,11 @@ public class MineralPropertiesBuilder {
         return this;
     }
 
+    public MineralPropertiesBuilder setGuraWorth(int guraWorth) {
+        this.guraWorth = guraWorth;
+        return this;
+    }
+
     public MineralPropertiesBuilder setNature(SpectrobeProperties.Nature nature) {
         this.nature = nature;
         return this;
@@ -43,6 +49,7 @@ public class MineralPropertiesBuilder {
         properties.setDefOffset(this.defOffset);
         properties.setNature(this.nature);
         properties.setXpWorth(this.xpWorth);
+        properties.setGuraWorth(this.guraWorth);
 
         return properties;
     }
@@ -55,6 +62,7 @@ public class MineralPropertiesBuilder {
         properties.setDefOffset(mineralProperties.getDefOffset());
         properties.setNature(mineralProperties.getNature());
         properties.setXpWorth(mineralProperties.getXpWorth());
+        properties.setGuraWorth(mineralProperties.getGuraWorth());
 
         return properties;
     }

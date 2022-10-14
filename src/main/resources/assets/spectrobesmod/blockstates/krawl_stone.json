@@ -1,0 +1,17 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "spectrobesmod:block/krawl_stone"
+      }
+    },
+    {
+      "when": {
+        "up": "false"
+      },
+      "apply": {
+        "model": "spectrobesmod:block/krawl_stone_surface"
+      }
+    }
+  ]
+}

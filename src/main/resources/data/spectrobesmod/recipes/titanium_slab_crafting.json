@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    "xxx"
+  ],
+  "key":
+  {
+    "x":
+    {
+      "item": "spectrobesmod:titanium_block"
+    }
+  },
+  "result":
+  {
+    "item": "spectrobesmod:titanium_slab",
+    "count": 6
+  }
+}

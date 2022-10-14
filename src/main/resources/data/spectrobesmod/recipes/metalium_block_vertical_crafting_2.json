@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "spectrobesmod:metalium_block_horizontal"
+    }
+  ],
+  "result":
+  {
+    "item": "spectrobesmod:metalium_block_vertical",
+    "count": 1
+  }
+}

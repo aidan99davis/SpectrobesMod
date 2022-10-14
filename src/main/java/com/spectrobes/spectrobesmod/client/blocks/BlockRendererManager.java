@@ -1,7 +1,10 @@
 package com.spectrobes.spectrobesmod.client.blocks;
 
 import com.spectrobes.spectrobesmod.client.blocks.renderer.*;
+import com.spectrobes.spectrobesmod.common.registry.SpectrobesBlocks;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobesTileRegistry;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -26,6 +29,12 @@ public class BlockRendererManager {
         ClientRegistry.bindTileEntityRenderer(SpectrobesTileRegistry.GEJIO_FOSSIL_TILE.get(), GejioFossilRenderer::new);
         ClientRegistry.bindTileEntityRenderer(SpectrobesTileRegistry.MESA_FOSSIL_TILE.get(), MesaFossilRenderer::new);
         ClientRegistry.bindTileEntityRenderer(SpectrobesTileRegistry.DONGOR_FOSSIL_TILE.get(), DongorFossilRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(SpectrobesTileRegistry.INKANA_FOSSIL_TILE.get(), InkanaFossilRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(SpectrobesTileRegistry.DANAWA_FOSSIL_TILE.get(), DanawaFossilRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(SpectrobesTileRegistry.MASETTO_FOSSIL_TILE.get(), MasettoFossilRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(SpectrobesTileRegistry.TENKRO_FOSSIL_TILE.get(), TenkroFossilRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(SpectrobesTileRegistry.KASUMI_FOSSIL_TILE.get(), KasumiFossilRenderer::new);
         ClientRegistry.bindTileEntityRenderer(SpectrobesTileRegistry.HEALER_TILE.get(), HealerBlockRenderer::new);
+        RenderTypeLookup.setRenderLayer(SpectrobesBlocks.krawl_vine.get(), RenderType.cutout());
     }
 }
