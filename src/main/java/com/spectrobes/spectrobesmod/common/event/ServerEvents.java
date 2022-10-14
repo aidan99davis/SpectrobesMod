@@ -2,7 +2,6 @@ package com.spectrobes.spectrobesmod.common.event;
 
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
@@ -23,10 +22,10 @@ public class ServerEvents {
     @SubscribeEvent
     public static void OnPlayerJoin(PlayerEvent.PlayerLoggedInEvent evt) {
         if(!evt.getPlayer().level.isClientSide()) {
-            evt.getPlayer().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
-                SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(sm),
-                        (ServerPlayerEntity) evt.getPlayer());
-            });
+            evt.getPlayer().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
+                    .ifPresent(sm ->
+                            SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(sm),
+                                (ServerPlayerEntity) evt.getPlayer()));
         }
     }
 
@@ -36,6 +35,14 @@ public class ServerEvents {
             if(event.getEntityLiving().getKillCredit() instanceof EntitySpectrobe) {
                 EntitySpectrobe spectrobe = (EntitySpectrobe) event.getEntityLiving().getKillCredit();
                 spectrobe.awardKillStats(((EntityKrawl)event.getEntityLiving()).krawlProperties);
+            }
+            if(event.getEntityLiving().getKillCredit() instanceof ServerPlayerEntity) {
+                ServerPlayerEntity player = (ServerPlayerEntity)event.getEntityLiving().getKillCredit();
+
+                player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
+                    sm.addGura(((EntityKrawl)event.getEntityLiving()).krawlProperties.getGuraWorth());
+                    SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(sm), player);
+                });
             }
         }
     }
