@@ -7,6 +7,7 @@ import com.spectrobes.spectrobesmod.common.entities.spectrobes.bartor.EntityBart
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.bartor.EntityBartor;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.danawa.EntityDanawa;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.dongor.EntityDongor;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.dongor.EntityDongora;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.gejio.EntityGejio;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.grilda.EntityGrilda;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.grilda.EntityGrilden;
@@ -91,6 +92,13 @@ public class SpectrobesEntities {
                     EntityClassification.MONSTER)
                     .sized(0.5f, 0.6f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "dongor").toString()));
+
+    public static final RegistryObject<EntityType<EntityDongora>> ENTITY_DONGORA
+            = ENTITY_TYPES.register("entity_dongora",
+            () -> EntityType.Builder.of(EntityDongora::new,
+                    EntityClassification.MONSTER)
+                    .sized(2f, 2f)
+                    .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "dongora").toString()));
 
     public static final RegistryObject<EntityType<EntityGejio>> ENTITY_GEJIO
             = ENTITY_TYPES.register("entity_gejio",
@@ -342,6 +350,7 @@ public class SpectrobesEntities {
             GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_GEJIO.get(), EntityGejio.setCustomAttributes().build());
             GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_MESA.get(), EntityMesa.setCustomAttributes().build());
             GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_DONGOR.get(), EntityDongor.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_DONGORA.get(), EntityDongora.setCustomAttributes().build());
             GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_INKANA.get(), EntityInkana.setCustomAttributes().build());
             GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_DANAWA.get(), EntityDanawa.setCustomAttributes().build());
             GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_MASETTO.get(), EntityMasetto.setCustomAttributes().build());
@@ -383,6 +392,7 @@ public class SpectrobesEntities {
         SPECTROBES.put("gejio", ENTITY_GEJIO.get());
         SPECTROBES.put("mesa", ENTITY_MESA.get());
         SPECTROBES.put("dongor", ENTITY_DONGOR.get());
+        SPECTROBES.put("dongora", ENTITY_DONGORA.get());
         SPECTROBES.put("inkana", ENTITY_INKANA.get());
         SPECTROBES.put("danawa", ENTITY_DANAWA.get());
         SPECTROBES.put("masetto", ENTITY_MASETTO.get());
