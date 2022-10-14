@@ -26,6 +26,7 @@ public class SpectrobePropertyRegistry {
 
     //DONGOR LINE
     public static SpectrobeProperties DONGOR = new SpectrobeProperties(SpectrobeProperties.Nature.CORONA, SpectrobeProperties.Stage.CHILD);
+    public static SpectrobeProperties DONGORA = new SpectrobeProperties(SpectrobeProperties.Nature.CORONA, SpectrobeProperties.Stage.ADULT);
 
     //DANAWA LINE
     public static SpectrobeProperties DANAWA = new SpectrobeProperties(SpectrobeProperties.Nature.CORONA, SpectrobeProperties.Stage.CHILD);

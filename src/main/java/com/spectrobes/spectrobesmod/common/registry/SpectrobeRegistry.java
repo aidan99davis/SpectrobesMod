@@ -40,6 +40,17 @@ public class SpectrobeRegistry {
                     .build())
             .build();
 
+    public static final Spectrobe Dongora
+            = new SpectrobeBuilder()
+            .withName("Dongora")
+            .withProperties(SpectrobePropertyRegistry.DONGORA)
+            .withStats(new SpectrobeStatsBuilder()
+                    .withHealthStat(195, 16, 560)
+                    .withAttackStat(117, 8, 275)
+                    .withDefenceStat(107, 10, 298)
+                    .build())
+            .build();
+
     public static final Spectrobe Komainu
             = new SpectrobeBuilder()
             .withName("Komainu")

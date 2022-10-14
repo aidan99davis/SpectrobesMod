@@ -15,29 +15,30 @@ import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class EntityDongor extends EntityMammalSpectrobe {
+public class EntityDongora extends EntityMammalSpectrobe {
 
-    public EntityDongor(EntityType<EntityDongor> entityTypeIn, World worldIn) {
+    public EntityDongora(EntityType<EntityDongora> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
     }
 
     public Spectrobe GetNewSpectrobeInstance() {
-        return SpectrobeRegistry.Dongor.copy(false);
+        return SpectrobeRegistry.Dongora.copy(false);
     }
 
     @Override
     public EntityType<? extends EntitySpectrobe> getEvolutionRegistry() {
-        return SpectrobesEntities.ENTITY_DONGORA.get();
+//        return SpectrobesEntities.ENTITY_DONGIGA.get();
+        return null;
     }
 
     @Override
     public String getRegistryName() {
-        return "entity_dongor";
+        return "entity_dongora";
     }
 
     @Override
     public Class getSpectrobeClass() {
-        return EntityDongor.class;
+        return EntityDongora.class;
     }
 
     @Override
@@ -49,16 +50,16 @@ public class EntityDongor extends EntityMammalSpectrobe {
     public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event) {
         if(event.isMoving())
         {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dongor.walk", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dongora.walk", true));
             return PlayState.CONTINUE;
         }
         else if(event.getAnimatable().isOrderedToSit()) {
             event.getController().setAnimation(new AnimationBuilder()
-                    .addAnimation("animation.dongor.sitting", false)
-                    .addAnimation("animation.dongor.sit", true));
+                    .addAnimation("animation.dongora.sitting", false)
+                    .addAnimation("animation.dongora.sit", true));
             return PlayState.CONTINUE;
         } else {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dongor.idle", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dongora.idle", true));
             return PlayState.CONTINUE;
         }
     }
@@ -71,7 +72,7 @@ public class EntityDongor extends EntityMammalSpectrobe {
 
     @Override
     protected EvolutionRequirements getEvolutionRequirements() {
-        return new EvolutionRequirements(1, 6, 0);
+        return new EvolutionRequirements(26, 13, 20);
     }
 
     @Override
@@ -81,6 +82,6 @@ public class EntityDongor extends EntityMammalSpectrobe {
 
     @Override
     public int getLitterSize() {
-        return 0;
+        return 3;
     }
 }
