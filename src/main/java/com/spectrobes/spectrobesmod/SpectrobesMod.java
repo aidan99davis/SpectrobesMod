@@ -3,6 +3,8 @@ package com.spectrobes.spectrobesmod;
 import com.spectrobes.spectrobesmod.client.blocks.BlockRendererManager;
 import com.spectrobes.spectrobesmod.client.container.HealerContainer;
 import com.spectrobes.spectrobesmod.client.container.PrizmodContainer;
+import com.spectrobes.spectrobesmod.client.entity.attacks.AttackEntities;
+import com.spectrobes.spectrobesmod.client.entity.attacks.AttackRendererManager;
 import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
 import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlRendererManager;
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobeRendererManager;
@@ -16,9 +18,12 @@ import com.spectrobes.spectrobesmod.common.capability.PlayerEvents;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
-import com.spectrobes.spectrobesmod.common.worldgen.SpectrobesEntitySpawns;
-import com.spectrobes.spectrobesmod.common.worldgen.SpectrobesOreGen;
+import com.spectrobes.spectrobesmod.common.world.SpectrobesEntitySpawns;
+import com.spectrobes.spectrobesmod.common.world.SpectrobesOreGen;
+import com.spectrobes.spectrobesmod.common.world.dimensions.SpectrobesDimensions;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.network.datasync.IDataSerializer;
@@ -36,6 +41,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import software.bernie.geckolib3.GeckoLib;
 
 import javax.annotation.Nullable;
+import java.beans.EventHandler;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(SpectrobesInfo.MOD_ID)
@@ -58,6 +64,7 @@ public class SpectrobesMod
         MinecraftForge.EVENT_BUS.register(new SpectrobesOreGen());
         MinecraftForge.EVENT_BUS.register(new SpectrobesEntitySpawns());
         SpectrobesEntities.ENTITY_TYPES.register(modEventBus);
+        AttackEntities.ENTITY_TYPES.register(modEventBus);
         KrawlEntities.ENTITY_TYPES.register(modEventBus);
         SpectrobesItemsRegistry.ITEMS.register(modEventBus);
         SpectrobesTileRegistry.TILES.register(modEventBus);
@@ -100,6 +107,7 @@ public class SpectrobesMod
         IDataSerializer serializer = Spectrobe.SpectrobeSerializer;
         BlockRendererManager.init();
         KrawlRendererManager.init();
+        AttackRendererManager.init();
         MineralRegistry.init();
         SpectrobesKeybindings.initKeybinds();
     }

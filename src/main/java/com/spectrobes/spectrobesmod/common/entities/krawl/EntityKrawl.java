@@ -1,10 +1,11 @@
 package com.spectrobes.spectrobesmod.common.entities.krawl;
 
-import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.entities.IHasNature;
+import com.spectrobes.spectrobesmod.common.entities.attacks.EnergyBoltEntity;
 import com.spectrobes.spectrobesmod.common.entities.krawl.goals.AttackSpectrobeGoal;
 import com.spectrobes.spectrobesmod.common.entities.krawl.goals.AttackSpectrobeMasterGoal;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
+import com.spectrobes.spectrobesmod.common.items.weapons.ISpectrobeWeapon;
 import com.spectrobes.spectrobesmod.common.items.weapons.SpectrobesWeapon;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
@@ -80,18 +81,26 @@ public abstract class EntityKrawl extends MonsterEntity implements IAnimatable, 
         if (damageSrc.getDirectEntity() instanceof IHasNature) {
             IHasNature attacker = (IHasNature) damageSrc.getDirectEntity();
             int advantage = Spectrobe.hasTypeAdvantage(attacker, this);
-            float atkPower = ((EntitySpectrobe) damageSrc.getDirectEntity()).getSpectrobeData().stats.getAtkLevel();
+
+            float atkPower = 0;
+
+            if(damageSrc.getDirectEntity() instanceof EntitySpectrobe)
+                atkPower = ((EntitySpectrobe) damageSrc.getDirectEntity()).getSpectrobeData().stats.getAtkLevel();
+            else if (damageSrc.getDirectEntity() instanceof EnergyBoltEntity)
+                atkPower = ((EnergyBoltEntity) damageSrc.getDirectEntity()).AtkDamage;
+
             float typeBonus = getTypeBonus(advantage, Math.round(atkPower));
             float defPower = GetKrawlProperties().getDefLevel();
             int powerScale = 1;
             float scaledAmount = typeBonus + (atkPower * powerScale) - (defPower / 4);
 
             super.actuallyHurt(damageSrc, scaledAmount);
-        } else if(damageSrc.getDirectEntity() instanceof PlayerEntity) {
+        }
+        else if(damageSrc.getDirectEntity() instanceof PlayerEntity) {
             PlayerEntity playerEntity = (PlayerEntity) damageSrc.getDirectEntity();
             if(playerEntity.getMainHandItem().getItem() != null
                     && playerEntity.getMainHandItem().getItem() instanceof SpectrobesWeapon) {
-                SpectrobesWeapon weapon = (SpectrobesWeapon) playerEntity.getMainHandItem().getItem();
+                ISpectrobeWeapon weapon = (ISpectrobeWeapon) playerEntity.getMainHandItem().getItem();
                 int advantage = Spectrobe.hasTypeAdvantage(weapon, this);
                 int atkPower = weapon.GetWeaponStats().AtkDamage;
                 float typeBonus = getTypeBonus(advantage, atkPower);
@@ -102,7 +111,7 @@ public abstract class EntityKrawl extends MonsterEntity implements IAnimatable, 
             }
             else if(playerEntity.getOffhandItem().getItem() != null
                     && playerEntity.getOffhandItem().getItem() instanceof SpectrobesWeapon) {
-                SpectrobesWeapon weapon = (SpectrobesWeapon) playerEntity.getOffhandItem().getItem();
+                ISpectrobeWeapon weapon = (ISpectrobeWeapon) playerEntity.getOffhandItem().getItem();
                 int advantage = Spectrobe.hasTypeAdvantage(weapon, this);
                 int atkPower = weapon.GetWeaponStats().AtkDamage;
                 float typeBonus = getTypeBonus(advantage, atkPower);

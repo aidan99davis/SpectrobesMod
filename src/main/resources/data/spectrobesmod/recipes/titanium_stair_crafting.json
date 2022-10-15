@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#  ",
+    "## ",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "spectrobesmod:titanium_block"
+    }
+  },
+  "result": {
+    "item": "spectrobesmod:titanium_stairs",
+    "count": 6
+  }
+}

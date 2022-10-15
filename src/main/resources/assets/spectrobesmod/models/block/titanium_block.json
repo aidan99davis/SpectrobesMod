@@ -1,6 +1,6 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "all": "spectrobesmod:blocks/metalium_block_top"
+    "all": "spectrobesmod:blocks/titanium_block"
   }
 }

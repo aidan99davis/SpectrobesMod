@@ -1,10 +1,6 @@
 package com.spectrobes.spectrobesmod.common.items;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.client.items.renderer.HealerBlockItemRenderer;
-import com.spectrobes.spectrobesmod.client.items.weapons.renderer.BasicSwordItemRenderer;
-import com.spectrobes.spectrobesmod.common.items.machines.HealerBlockItem;
-import com.spectrobes.spectrobesmod.common.items.weapons.BasicSwordItem;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobesBlocks;
 import com.spectrobes.spectrobesmod.common.items.minerals.Mineral;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
@@ -24,8 +20,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
-
-import static com.spectrobes.spectrobesmod.common.registry.SpectrobesItemsRegistry.ITEMS;
 
 @SuppressWarnings("unused")
 @Mod.EventBusSubscriber(modid = SpectrobesInfo.MOD_ID, bus = Bus.MOD)
@@ -78,6 +72,8 @@ public class SpectrobesItems {
 
     //Weapons
     public static final Item basic_sword = null;
+    public static final Item basic_glove = null;
+    public static final Item basic_blaster = null;
 
     private static final HashMap<Mineral.MineralRarity, List<Item>> all_minerals = new HashMap<>();
 
@@ -108,59 +104,79 @@ public class SpectrobesItems {
         event.getRegistry().register(new BlockItem(SpectrobesBlocks.fossil_block.get(),
                 new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
                 .setRegistryName("fossil_block"));
-        
+
         event.getRegistry().register(new BlockItem(SpectrobesBlocks.metalium_ore.get(),
                 new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
                 .setRegistryName("metalium_ore"));
-        
+
         event.getRegistry().register(new BlockItem(SpectrobesBlocks.titanium_ore.get(),
                 new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
                 .setRegistryName("titanium_ore"));
-        
+
         event.getRegistry().register(new BlockItem(SpectrobesBlocks.marble_ore.get(),
                 new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
                 .setRegistryName("marble_ore"));
-        
-        event.getRegistry().register(new BlockItem(SpectrobesBlocks.metalium_block.get(),
+
+        event.getRegistry().register(new BlockItem(SpectrobesBlocks.metalium_block_horizontal.get(),
                 new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
-                .setRegistryName("metalium_block"));
-        
+                .setRegistryName("metalium_block_horizontal"));
+
+        event.getRegistry().register(new BlockItem(SpectrobesBlocks.metalium_block_vertical.get(),
+                new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
+                .setRegistryName("metalium_block_vertical"));
+
         event.getRegistry().register(new BlockItem(SpectrobesBlocks.titanium_block.get(),
                 new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
                 .setRegistryName("titanium_block"));
-        
+
+        event.getRegistry().register(new BlockItem(SpectrobesBlocks.titanium_slab.get(),
+                new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
+                .setRegistryName("titanium_slab"));
+
+        event.getRegistry().register(new BlockItem(SpectrobesBlocks.titanium_stairs.get(),
+                new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
+                .setRegistryName("titanium_stairs"));
+
+        event.getRegistry().register(new BlockItem(SpectrobesBlocks.minergy_lamp.get(),
+                new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
+                .setRegistryName("minergy_lamp"));
+
         event.getRegistry().register(new BlockItem(SpectrobesBlocks.marble_block.get(),
                 new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
                 .setRegistryName("marble_block"));
-       
+
         event.getRegistry().register(new BlockItem(SpectrobesBlocks.krawl_nest.get(),
                 new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
                 .setRegistryName("krawl_nest"));
-        
+
         event.getRegistry().register(new BlockItem(SpectrobesBlocks.krawl_stone.get(),
                 new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
                 .setRegistryName("krawl_stone"));
-        
+
+        event.getRegistry().register(new BlockItem(SpectrobesBlocks.planetary_teleporter.get(),
+                new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
+                .setRegistryName("planetary_teleporter"));
+
         event.getRegistry().register(new BlockItem(SpectrobesBlocks.krawl_vine.get(),
                 new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
                 .setRegistryName("krawl_vine"));
-        
+
         event.getRegistry().register(new BlockItem(SpectrobesBlocks.krawl_mycelium.get(),
                 new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
                 .setRegistryName("krawl_mycelium"));
-        
+
         event.getRegistry().register(new BlockItem(SpectrobesBlocks.krawl_mud.get(),
                 new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
                 .setRegistryName("krawl_mud"));
-        
+
         event.getRegistry().register(new BlockItem(SpectrobesBlocks.snag_log.get(),
                 new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
-                .setRegistryName("snag"));
-        
+                .setRegistryName("snag_log"));
+
         event.getRegistry().register(new BlockItem(SpectrobesBlocks.snag_planks.get(),
                 new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
                 .setRegistryName("snag_planks"));
-        
+
         event.getRegistry().register(new BlockItem(SpectrobesBlocks.krawlshroom.get(),
                 new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
                 .setRegistryName("krawlshroom"));

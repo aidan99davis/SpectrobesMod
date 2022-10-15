@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    " y ",
+    "yxy",
+    " y "
+  ],
+  "key":
+  {
+    "x":
+    {
+      "item": "minecraft:shield"
+    },
+    "y":
+    {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result":
+  {
+    "item": "spectrobesmod:basic_glove_item",
+    "count": 1
+  }
+}

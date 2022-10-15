@@ -29,6 +29,7 @@ public class SpectrobeRendererManager {
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_ZOZA.get(), ZozaRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_ZOZANE.get(), ZozaneRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_NAGU.get(), NaguRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_NAGURYU.get(), NaguryuRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_MOSSARI.get(), MossariRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_MOSSARITO.get(), MossaritoRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_AOI.get(), AoiRenderer::new);
@@ -37,6 +38,11 @@ public class SpectrobeRendererManager {
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_GEJIO.get(), GejioRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_MESA.get(), MesaRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_DONGOR.get(), DongorRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_DONGORA.get(), DongoraRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_INKANA.get(), InkanaRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_DANAWA.get(), DanawaRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_MASETTO.get(), MasettoRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_TENKRO.get(), TenkroRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(SpectrobesEntities.ENTITY_KASUMI.get(), KasumiRenderer::new);
     }
 }

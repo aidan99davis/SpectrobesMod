@@ -27,8 +27,7 @@ public class EntityDongor extends EntityMammalSpectrobe {
 
     @Override
     public EntityType<? extends EntitySpectrobe> getEvolutionRegistry() {
-//        return SpectrobesEntities.ENTITY_DONGORA.get();
-        return null;
+        return SpectrobesEntities.ENTITY_DONGORA.get();
     }
 
     @Override

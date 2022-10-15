@@ -28,7 +28,7 @@ public class EntityNagu extends EntityMammalSpectrobe {
 
     @Override
     public EntityType<? extends EntitySpectrobe> getEvolutionRegistry() {
-        return null;
+        return SpectrobesEntities.ENTITY_NAGURYU.get();
     }
 
     @Override

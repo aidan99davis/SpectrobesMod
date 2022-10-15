@@ -1,3 +1,4 @@
+
 package com.spectrobes.spectrobesmod.common.registry;
 
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
@@ -25,6 +26,13 @@ public class SpectrobePropertyRegistry {
 
     //DONGOR LINE
     public static SpectrobeProperties DONGOR = new SpectrobeProperties(SpectrobeProperties.Nature.CORONA, SpectrobeProperties.Stage.CHILD);
+    public static SpectrobeProperties DONGORA = new SpectrobeProperties(SpectrobeProperties.Nature.CORONA, SpectrobeProperties.Stage.ADULT);
+
+    //DANAWA LINE
+    public static SpectrobeProperties DANAWA = new SpectrobeProperties(SpectrobeProperties.Nature.CORONA, SpectrobeProperties.Stage.CHILD);
+
+    //TENKRO LINE
+    public static SpectrobeProperties TENKRO = new SpectrobeProperties(SpectrobeProperties.Nature.CORONA, SpectrobeProperties.Stage.CHILD);
 
     //AURORA
 
@@ -51,6 +59,9 @@ public class SpectrobePropertyRegistry {
     public static SpectrobeProperties BARTOR = new SpectrobeProperties(SpectrobeProperties.Nature.AURORA, SpectrobeProperties.Stage.CHILD);
     public static SpectrobeProperties BARTOLOR = new SpectrobeProperties(SpectrobeProperties.Nature.AURORA, SpectrobeProperties.Stage.ADULT);
 
+    //MASETTO LINE
+    public static SpectrobeProperties MASETTO = new SpectrobeProperties(SpectrobeProperties.Nature.AURORA, SpectrobeProperties.Stage.CHILD);
+
     //FLASH
 
     //SAMUKABU LINE
@@ -66,6 +77,7 @@ public class SpectrobePropertyRegistry {
 
     //NAGU LINE
     public static SpectrobeProperties NAGU = new SpectrobeProperties(SpectrobeProperties.Nature.FLASH, SpectrobeProperties.Stage.CHILD);
+    public static SpectrobeProperties NAGURYU = new SpectrobeProperties(SpectrobeProperties.Nature.FLASH, SpectrobeProperties.Stage.ADULT);
 
     //MOSSARI LINE
     public static SpectrobeProperties MOSSARI = new SpectrobeProperties(SpectrobeProperties.Nature.FLASH, SpectrobeProperties.Stage.CHILD);
@@ -73,4 +85,7 @@ public class SpectrobePropertyRegistry {
 
     //AOI LINE
     public static SpectrobeProperties AOI = new SpectrobeProperties(SpectrobeProperties.Nature.FLASH, SpectrobeProperties.Stage.CHILD);
+
+    //KASUMI LINE
+    public static SpectrobeProperties KASUMI = new SpectrobeProperties(SpectrobeProperties.Nature.FLASH, SpectrobeProperties.Stage.CHILD);
 }
