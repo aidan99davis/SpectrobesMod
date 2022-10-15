@@ -65,7 +65,7 @@ public class SpectrobesBlocks {
     public static final RegistryObject<Block> krawl_stone = BLOCKS.register("krawl_stone", 
     		() -> new MultiTextureBlock(AbstractBlock.Properties.of(Material.STONE).harvestTool(ToolType.PICKAXE).strength(10f).sound(SoundType.STONE)));
     public static final RegistryObject<PlanetaryTeleporterBlock> planetary_teleporter = BLOCKS.register("planetary_teleporter",
-            () -> new PlanetaryTeleporterBlock());
+            PlanetaryTeleporterBlock::new);
     public static final RegistryObject<Block> krawl_vine = BLOCKS.register("krawl_vine", 
     		() -> new VineBlock(AbstractBlock.Properties.of(Material.REPLACEABLE_PLANT).noOcclusion().strength(0.2F).sound(SoundType.VINE)));
     public static final RegistryObject<Block> krawl_mycelium = BLOCKS.register("krawl_mycelium", 
@@ -73,11 +73,9 @@ public class SpectrobesBlocks {
     public static final RegistryObject<Block> krawl_mud = BLOCKS.register("krawl_mud", 
     		() -> new Block(AbstractBlock.Properties.of(Material.SNOW).strength(1F).sound(SoundType.SOUL_SAND)));
     public static final RegistryObject<Block> snag_log = BLOCKS.register("snag_log", 
-    		() -> new RotatedPillarBlock(AbstractBlock.Properties.of(Material.WOOD, (p_235431_2_) -> {
-    	         return p_235431_2_.getValue(RotatedPillarBlock.AXIS) == Direction.Axis.Y ? MaterialColor.WOOD : MaterialColor.COLOR_PURPLE;
-    	      }).strength(2.0F).sound(SoundType.WOOD)));
+    		() -> new RotatedPillarBlock(AbstractBlock.Properties.of(Material.WOOD, (p_235431_2_) -> p_235431_2_.getValue(RotatedPillarBlock.AXIS) == Direction.Axis.Y ? MaterialColor.WOOD : MaterialColor.COLOR_PURPLE).strength(2.0F).sound(SoundType.WOOD)));
     public static final RegistryObject<Block> snag_planks = BLOCKS.register("snag_planks", 
     		() ->  new Block(AbstractBlock.Properties.of(Material.WOOD, MaterialColor.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD)));
-    public static final RegistryObject<Block> krawlshroom = BLOCKS.register("krawlshroom", 
+    public static final RegistryObject<Block> krawlshroom = BLOCKS.register("krawlshroom",
     		() -> new HugeMushroomBlock(AbstractBlock.Properties.of(Material.WOOD, MaterialColor.COLOR_GREEN).strength(0.2F).sound(SoundType.WOOD)));
 }

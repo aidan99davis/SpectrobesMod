@@ -38,15 +38,13 @@ public class GenshiTeleporter implements ITeleporter {
         }
         entity.setPos(destPos.getX(), destPos.getY(), destPos.getZ());
         if (thisIsToDaylightDim) {
-            boolean doSetBlock = true;
             for (BlockPos checkPos : BlockPos.betweenClosed(destPos.below(10).west(10), destPos.above(10).east(10))) {
                 if (destWorld.getBlockState(checkPos).getBlock() instanceof FossilBlock) {
-                    doSetBlock = false;
                     break;
                 }
             }
         }
-        if(!destWorld.getBlockStates(entity.getBoundingBox().inflate(10, 10, 10)).anyMatch(blockState -> blockState.getBlock() instanceof PlanetaryTeleporterBlock)) {
+        if(destWorld.getBlockStates(entity.getBoundingBox().inflate(10, 10, 10)).noneMatch(blockState -> blockState.getBlock() instanceof PlanetaryTeleporterBlock)) {
             destWorld.setBlock(destPos, SpectrobesBlocks.planetary_teleporter.get().defaultBlockState(), 1);
         }
         return entity;
