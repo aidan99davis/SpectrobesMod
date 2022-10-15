@@ -153,6 +153,10 @@ public class SpectrobesItems {
                 new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
                 .setRegistryName("krawl_stone"));
 
+        event.getRegistry().register(new BlockItem(SpectrobesBlocks.planetary_teleporter.get(),
+                new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
+                .setRegistryName("planetary_teleporter"));
+
         event.getRegistry().register(new BlockItem(SpectrobesBlocks.krawl_vine.get(),
                 new Item.Properties().tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance))
                 .setRegistryName("krawl_vine"));

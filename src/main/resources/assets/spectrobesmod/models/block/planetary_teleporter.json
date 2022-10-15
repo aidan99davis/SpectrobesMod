@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube_all",
+	"textures": {
+		"up": "spectrobesmod:blocks/planetary_teleporter_top",
+		"down": "spectrobesmod:blocks/planetary_teleporter_bottom",
+		"north":"spectrobesmod:blocks/planetary_teleporter_side",
+		"east":"spectrobesmod:blocks/planetary_teleporter_side",
+		"south":"spectrobesmod:blocks/planetary_teleporter_side",
+		"west":"spectrobesmod:blocks/planetary_teleporter_side",
+		"particle": "spectrobesmod:blocks/planetary_teleporter_bottom"
+	}
+}

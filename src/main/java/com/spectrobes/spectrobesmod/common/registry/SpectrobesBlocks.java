@@ -13,8 +13,6 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.function.ToIntFunction;
-
 public class SpectrobesBlocks {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, SpectrobesInfo.MOD_ID);
 
@@ -66,6 +64,8 @@ public class SpectrobesBlocks {
     		() -> new Block(AbstractBlock.Properties.of(Material.STONE).harvestTool(ToolType.PICKAXE).strength(10f).sound(SoundType.STONE)));
     public static final RegistryObject<Block> krawl_stone = BLOCKS.register("krawl_stone", 
     		() -> new MultiTextureBlock(AbstractBlock.Properties.of(Material.STONE).harvestTool(ToolType.PICKAXE).strength(10f).sound(SoundType.STONE)));
+    public static final RegistryObject<PlanetaryTeleporterBlock> planetary_teleporter = BLOCKS.register("planetary_teleporter",
+            () -> new PlanetaryTeleporterBlock());
     public static final RegistryObject<Block> krawl_vine = BLOCKS.register("krawl_vine", 
     		() -> new VineBlock(AbstractBlock.Properties.of(Material.REPLACEABLE_PLANT).noOcclusion().strength(0.2F).sound(SoundType.VINE)));
     public static final RegistryObject<Block> krawl_mycelium = BLOCKS.register("krawl_mycelium", 

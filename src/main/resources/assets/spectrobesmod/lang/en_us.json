@@ -83,6 +83,7 @@
     "block.spectrobesmod.marble_block": "Marble Block",
     "block.spectrobesmod.krawl_nest": "Krawl Nest",
     "block.spectrobesmod.krawl_stone": "Krawl Stone",
+    "block.spectrobesmod.planetary_teleporter": "Planetary Teleporter",
     "block.spectrobesmod.krawl_vine": "Krawl Vine",
     "block.spectrobesmod.krawl_mycelium": "Krawl Mycelium",
     "block.spectrobesmod.krawl_mud": "Krawl Mud",
@@ -129,5 +130,6 @@
     "entity.spectrobesmod.entity_kasumi": "Kasumi",
     "key.prizmod.category": "Prizmod Controls",
     "key.prizmod.cycle.left": "Cycle team left",
-    "key.prizmod.cycle.right": "Cycle team right"
+    "key.prizmod.cycle.right": "Cycle team right",
+    "biome.spectrobesmod.genshi_volcano_biome": "Genshi Volcano"
 }
