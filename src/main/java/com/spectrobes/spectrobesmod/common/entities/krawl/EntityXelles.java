@@ -24,6 +24,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.BossInfo;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import software.bernie.geckolib3.core.PlayState;
@@ -31,6 +32,7 @@ import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 public class EntityXelles extends EntityBossKrawl {
@@ -90,6 +92,7 @@ public class EntityXelles extends EntityBossKrawl {
     }
 
     @Override
+    @ParametersAreNonnullByDefault
     public void addAdditionalSaveData(CompoundNBT pCompound) {
         super.addAdditionalSaveData(pCompound);
         pCompound.putInt("AGE_IN_TICKS", entityData.get(AGE_IN_TICKS));
@@ -148,6 +151,7 @@ public class EntityXelles extends EntityBossKrawl {
 
 
     @Override
+    @ParametersAreNonnullByDefault
     public void die(DamageSource pCause) {
         super.die(pCause);
         if(!level.isClientSide()) {
@@ -230,12 +234,19 @@ public class EntityXelles extends EntityBossKrawl {
                                         SpawnReason.MOB_SUMMONED,
                                         false,
                                         false);
-                spore.setTarget(krawl);
-                spore.setDeltaMovement(0, 0.5, 0);
+                if (spore != null) {
+                    spore.setTarget(krawl);
+                    spore.setDeltaMovement(0, 0.5, 0);
+                }
             }
         }
 
         setIsSpawningSpores(false);
+    }
+
+    @Override
+    public BossInfo.Color getBossNameColour() {
+        return BossInfo.Color.PURPLE;
     }
 
     @Override
@@ -274,7 +285,7 @@ public class EntityXelles extends EntityBossKrawl {
         return PlayState.CONTINUE;
     }
 
-    private class XellesSpawnKrawlGroupGoal extends Goal {
+    private static class XellesSpawnKrawlGroupGoal extends Goal {
 
         EntityXelles mob;
 
@@ -307,7 +318,9 @@ public class EntityXelles extends EntityBossKrawl {
                                     SpawnReason.MOB_SUMMONED,
                                     false,
                                     false);
-                    spore.setDeltaMovement(0, 0.5, 0);
+                    if (spore != null) {
+                        spore.setDeltaMovement(0, 0.5, 0);
+                    }
                     mob.entityData.set(LAST_SPAWNED_SUMMONING_SPORES_TICKS, 0);
                     //TODO Replace this with spawning spores.
                 }

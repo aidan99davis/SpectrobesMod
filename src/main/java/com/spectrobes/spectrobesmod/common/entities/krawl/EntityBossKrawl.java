@@ -16,8 +16,10 @@ public abstract class EntityBossKrawl extends EntityKrawl {
 
     public EntityBossKrawl(EntityType<? extends MonsterEntity> type, World worldIn) {
         super(type, worldIn);
-        this.bossEvent = (ServerBossInfo)(new ServerBossInfo(this.getDisplayName(), BossInfo.Color.PURPLE, BossInfo.Overlay.PROGRESS)).setDarkenScreen(false);
+        this.bossEvent = (ServerBossInfo)(new ServerBossInfo(this.getDisplayName(), getBossNameColour(), BossInfo.Overlay.PROGRESS)).setDarkenScreen(false);
     }
+
+    public abstract BossInfo.Color getBossNameColour();
 
     @Override
     public void readAdditionalSaveData(CompoundNBT pCompound) {

@@ -26,14 +26,12 @@ public class KrawlVortexFormXellesGoal extends Goal {
 
     @Override
     public boolean canUse() {
-//        return vortex.getAge() >= 3;
         SpectrobesWorldSaveData worldData = (SpectrobesWorldSaveData.getWorldData((ServerWorld) vortex.level));
-        boolean canUse = vortex.getAge() >= 0
+
+        return vortex.getAge() >= 0 //TODO: Make this configurable
                 && ((worldData.canSpawnNest((vortex.blockPosition()))
                 || (worldData.getNest(vortex.blockPosition()) != null
                 && worldData.getNest(vortex.blockPosition()).stage == 1)));
-
-        return canUse;
     }
 
     @Override

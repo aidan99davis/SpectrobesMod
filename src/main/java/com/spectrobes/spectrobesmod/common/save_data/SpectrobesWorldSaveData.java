@@ -11,6 +11,7 @@ import net.minecraft.world.storage.WorldSavedData;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class SpectrobesWorldSaveData extends WorldSavedData {
 
@@ -18,7 +19,9 @@ public class SpectrobesWorldSaveData extends WorldSavedData {
 
     private final List<KrawlNest> nests = new ArrayList<>();
 
-    //remember to call data.setDirty() so it knows to update.
+    public SpectrobesWorldSaveData() { super(name); }
+
+    //remember to call data.setDirty() so it knows to update and sync.
     public static SpectrobesWorldSaveData getWorldData(ServerWorld world) {
         return world.getDataStorage().computeIfAbsent(SpectrobesWorldSaveData::new, SpectrobesWorldSaveData.name);
     }
@@ -37,6 +40,10 @@ public class SpectrobesWorldSaveData extends WorldSavedData {
         return true;
     }
 
+    public List<KrawlNest> getNests() { return nests; }
+    public List<KrawlNest> getNestsAlive() { return nests.stream().filter(KrawlNest::isAlive).collect(Collectors.toList()); }
+    public List<KrawlNest> getNestsDead() { return nests.stream().filter(krawlNest -> !krawlNest.isAlive()).collect(Collectors.toList()); }
+
     public KrawlNest getNest(BlockPos position) {
         for (KrawlNest krawlNest : nests) {
             if (position.closerThan(krawlNest.position, 1000)) {
@@ -46,18 +53,14 @@ public class SpectrobesWorldSaveData extends WorldSavedData {
         return null;
     }
 
-    public List<KrawlNest> getNests() { return nests; }
-
-    public SpectrobesWorldSaveData() { super(name); }
-
     @Override
     public void load(CompoundNBT nbt) {
-        for (INBT inbt : ((ListNBT) Objects.requireNonNull(nbt.get("nests")))) {
+        ListNBT nbtNestList = ((ListNBT) Objects.requireNonNull(nbt.get("nests")));
+        for (INBT inbt : nbtNestList) {
             KrawlNest nest = new KrawlNest();
             nest.deserializeNBT(inbt);
             nests.add(nest);
         }
-
     }
 
     @Override

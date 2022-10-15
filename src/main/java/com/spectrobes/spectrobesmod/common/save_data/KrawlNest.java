@@ -5,8 +5,6 @@ import net.minecraft.nbt.INBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.INBTSerializable;
 
-import java.util.UUID;
-
 public class KrawlNest implements INBTSerializable {
     public BlockPos position;
     public String dimension;
