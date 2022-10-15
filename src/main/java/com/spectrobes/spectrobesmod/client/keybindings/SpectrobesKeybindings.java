@@ -12,17 +12,12 @@ import com.spectrobes.spectrobesmod.common.packets.networking.packets.SChangeDim
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SDespawnSpectrobePacket;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSpawnSpectrobePacket;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
-import com.spectrobes.spectrobesmod.common.world.dimensions.SpectrobesDimensions;
-import com.spectrobes.spectrobesmod.common.world.teleporters.GenshiTeleporter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.InputMappings;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -38,12 +33,12 @@ public class SpectrobesKeybindings {
     public static KeyBinding OPEN_TOOL_MENU_KEYBIND;
     public static KeyBinding CYCLE_TOOL_MENU_LEFT_KEYBIND;
     public static KeyBinding CYCLE_TOOL_MENU_RIGHT_KEYBIND;
-    public static KeyBinding TP_TO_GENSHI_KEYBIND;
+//    public static KeyBinding TP_TO_GENSHI_KEYBIND;
 
     private static boolean toolMenuKeyWasDown = false;
     private static boolean cycleLeftKeyWasDown = false;
     private static boolean cycleRightKeyWasDown = false;
-    private static boolean tpKeyWasDown = false;
+//    private static boolean tpKeyWasDown = false;
 
     public static void initKeybinds()
     {
@@ -56,8 +51,8 @@ public class SpectrobesKeybindings {
         ClientRegistry.registerKeyBinding(CYCLE_TOOL_MENU_RIGHT_KEYBIND =
                 new KeyBinding("key.prizmod.cycle.right",  InputMappings.UNKNOWN.getValue(), "key.prizmod.category"));
 
-        ClientRegistry.registerKeyBinding(TP_TO_GENSHI_KEYBIND =
-                new KeyBinding("key.prizmod.tp.genshi",  InputMappings.UNKNOWN.getValue(), "key.prizmod.category"));
+//        ClientRegistry.registerKeyBinding(TP_TO_GENSHI_KEYBIND =
+//                new KeyBinding("key.prizmod.tp.genshi",  InputMappings.UNKNOWN.getValue(), "key.prizmod.category"));
 
     }
 
@@ -66,15 +61,15 @@ public class SpectrobesKeybindings {
     {
         Minecraft mc = Minecraft.getInstance();
 
-        boolean tpKeyDown = TP_TO_GENSHI_KEYBIND.isDown();
-        if (tpKeyDown && !tpKeyWasDown)
-        {
-            while (TP_TO_GENSHI_KEYBIND.consumeClick())
-            {
-                test(mc);
-            }
-        }
-        tpKeyWasDown = tpKeyDown;
+//        boolean tpKeyDown = TP_TO_GENSHI_KEYBIND.isDown();
+//        if (tpKeyDown && !tpKeyWasDown)
+//        {
+//            while (TP_TO_GENSHI_KEYBIND.consumeClick())
+//            {
+//                teleportToGenshi(mc);
+//            }
+//        }
+//        tpKeyWasDown = tpKeyDown;
 
         if (mc.screen == null && mc.player.inventory
                 .contains(new ItemStack(SpectrobesItems.prizmod_item)))
@@ -154,15 +149,13 @@ public class SpectrobesKeybindings {
         }
 
     }
-
-    private static void test(Minecraft mc) {
-        World worldIn = mc.player.level;
-        SpectrobesInfo.LOGGER.debug("DOOTING 0");
-        if(worldIn.isClientSide()) {
-            SpectrobesInfo.LOGGER.debug("DOOTING 1");
-            SpectrobesNetwork.sendToServer(new SChangeDimensionPacket());
-        }
-    }
+//
+//    private static void teleportToGenshi(Minecraft mc) {
+//        World worldIn = mc.player.level;
+//        if(worldIn.isClientSide()) {
+//            SpectrobesNetwork.sendToServer(new SChangeDimensionPacket());
+//        }
+//    }
 
     private static void SummonPlayerSpectrobe(Minecraft mc, Spectrobe currentMember, UUID oldUUID, List<EntitySpectrobe> spectrobes) {
         if(oldUUID != null) {
@@ -176,23 +169,5 @@ public class SpectrobesKeybindings {
             }
 
         }
-    }
-
-    public static boolean isKeyDown(KeyBinding keybind)
-    {
-        if (keybind.isUnbound())
-            return false;
-
-        boolean isDown = false;
-        switch (keybind.getKey().getType())
-        {
-            case KEYSYM:
-                isDown = InputMappings.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), keybind.getKey().getValue());
-                break;
-            case MOUSE:
-                isDown = GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), keybind.getKey().getValue()) == GLFW.GLFW_PRESS;
-                break;
-        }
-        return isDown && keybind.getKeyConflictContext().isActive() && keybind.getKeyModifier().isActive(keybind.getKeyConflictContext());
     }
 }

@@ -1,6 +1,7 @@
 package com.spectrobes.spectrobesmod.common.world.teleporters;
 
 import com.spectrobes.spectrobesmod.common.blocks.FossilBlock;
+import com.spectrobes.spectrobesmod.common.blocks.PlanetaryTeleporterBlock;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobesBlocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -44,9 +45,9 @@ public class GenshiTeleporter implements ITeleporter {
                     break;
                 }
             }
-            if (doSetBlock) {
-                destWorld.setBlock(destPos, SpectrobesBlocks.fossil_block.get().defaultBlockState(), 1);
-            }
+        }
+        if(!destWorld.getBlockStates(entity.getBoundingBox().inflate(10, 10, 10)).anyMatch(blockState -> blockState.getBlock() instanceof PlanetaryTeleporterBlock)) {
+            destWorld.setBlock(destPos, SpectrobesBlocks.planetary_teleporter.get().defaultBlockState(), 1);
         }
         return entity;
     }
