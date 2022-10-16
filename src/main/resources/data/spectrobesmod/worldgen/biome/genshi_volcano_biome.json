@@ -186,6 +186,12 @@
         "weight": 5,
         "minCount": 2,
         "maxCount": 5
+      },
+      {
+        "type": "spectrobesmod:krawl_vortex",
+        "weight": 40,
+        "minCount": 1,
+        "maxCount": 2
       }
     ],
     "ambient": [
