@@ -1,0 +1,84 @@
+{
+  "type": "minecraft:decorated",
+  "config": {
+    "decorator": {
+      "type": "minecraft:count_noise_biased",
+      "config": {
+        "noise_to_count_ratio": 50,
+        "noise_factor": 400,
+        "noise_offset": -0.2
+      }
+    },
+    "feature": {
+      "type": "minecraft:decorated",
+      "config": {
+        "decorator": {
+          "type": "minecraft:count_noise_biased",
+          "config": {
+            "noise_to_count_ratio": 50,
+            "noise_factor": 165,
+            "noise_offset": -0.2
+          }
+        },
+        "feature": {
+          "type": "minecraft:decorated",
+          "config": {
+            "decorator": {
+              "type": "minecraft:square",
+              "config": {}
+            },
+            "feature": {
+              "type": "minecraft:decorated",
+              "config": {
+                "decorator": {
+                  "type": "minecraft:nope",
+                  "config": {}
+                },
+                "feature": {
+                  "type": "minecraft:decorated",
+                  "config": {
+                    "decorator": {
+                      "type": "minecraft:nope",
+                      "config": {}
+                    },
+                    "feature": {
+                      "type": "minecraft:decorated",
+                      "config": {
+                        "decorator": {
+                          "type": "minecraft:heightmap",
+                          "config": {}
+                        },
+                        "feature": {
+                          "type": "minecraft:delta_feature",
+                          "config": {
+                            "contents": {
+                              "Name": "minecraft:lava",
+                              "Properties": {
+                                "level": "0"
+                              }
+                            },
+                            "rim": {
+                              "Name": "minecraft:magma_block"
+                            },
+                            "size": {
+                              "base": 5,
+                              "spread": 5
+                            },
+                            "rim_size": {
+                              "base": 0,
+                              "spread": 1
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
 {
   "name": "spectrobesmod:genshi_dimension",
-  "ultrawarm": false,
+  "ultrawarm": true,
   "natural": true,
   "coordinate_scale": 1,
   "has_skylight": true,

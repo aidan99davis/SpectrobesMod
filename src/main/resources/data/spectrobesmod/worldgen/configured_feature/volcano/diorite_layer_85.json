@@ -1,0 +1,76 @@
+{
+  "type": "minecraft:decorated",
+  "config": {
+    "decorator": {
+      "type": "minecraft:count_noise_biased",
+      "config": {
+        "noise_to_count_ratio": 50000,
+        "noise_factor": 257,
+        "noise_offset": 0.1
+      }
+    },
+    "feature": {
+      "type": "minecraft:decorated",
+      "config": {
+        "decorator": {
+          "type": "minecraft:square",
+          "config": {}
+        },
+        "feature": {
+          "type": "minecraft:decorated",
+          "config": {
+            "decorator": {
+              "type": "minecraft:square",
+              "config": {}
+            },
+            "feature": {
+              "type": "minecraft:decorated",
+              "config": {
+                "decorator": {
+                  "type": "minecraft:range_biased",
+                  "config": {
+                    "maximum": 88,
+                    "bottom_offset": 85,
+                    "top_offset": 86
+                  }
+                },
+                "feature": {
+                  "type": "minecraft:simple_block",
+                  "config": {
+                    "to_place": {
+                      "Name": "minecraft:diorite"
+                    },
+                    "place_on": [
+                      {
+                        "Name": "minecraft:basalt",
+                        "Properties": {
+                          "axis": "y"
+                        }
+                      }
+                    ],
+                    "place_in": [
+                      {
+                        "Name": "minecraft:basalt",
+                        "Properties": {
+                          "axis": "y"
+                        }
+                      }
+                    ],
+                    "place_under": [
+                      {
+                        "Name": "minecraft:basalt",
+                        "Properties": {
+                          "axis": "y"
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
