@@ -95,6 +95,7 @@
     "itemGroup.spectrobestab.minerals": "Spectrobes Minerals",
     "itemGroup.spectrobestab.tools": "Spectrobes Tools",
     "itemGroup.spectrobestab.weapons": "Spectrobes Weapons",
+    "itemGroup.spectrobestab.armour": "Spectrobes Armour",
     "entity.spectrobesmod.entity_swar": "Swar",
     "entity.spectrobesmod.entity_komainu": "Komainu",
     "entity.spectrobesmod.entity_kubaku": "Kubaku",
@@ -131,5 +132,8 @@
     "key.prizmod.category": "Prizmod Controls",
     "key.prizmod.cycle.left": "Cycle team left",
     "key.prizmod.cycle.right": "Cycle team right",
-    "biome.spectrobesmod.genshi_volcano_biome": "Genshi Volcano"
+    "biome.spectrobesmod.genshi_lava_ocean_biome": "Genshi Lava Ocean",
+    "biome.spectrobesmod.genshi_lava_river_biome": "Genshi Lava River",
+    "biome.spectrobesmod.genshi_volcano_biome": "Genshi Volcano",
+    "biome.spectrobesmod.genshi_volcano_biome_edge": "Genshi Volcano Edge"
 }
