@@ -35,13 +35,33 @@
       },
       "biomes": [
         {
+          "biome": "minecraft:savanna",
+          "parameters": {
+            "altitude": 0.4,
+            "weirdness": 0.3,
+            "offset": 0,
+            "temperature": 0.65,
+            "humidity": 0.4
+          }
+        },
+        {
+          "biome": "minecraft:plains",
+          "parameters": {
+            "altitude": 0.4,
+            "weirdness": 0.1,
+            "offset": 0,
+            "temperature": 0.45,
+            "humidity": 0.6
+          }
+        },
+        {
           "biome": "minecraft:jungle",
           "parameters": {
-            "altitude": 0.1,
-            "weirdness": 0,
+            "altitude": 0.4,
+            "weirdness": 0.5,
             "offset": 0,
-            "temperature": 0.95,
-            "humidity": 0.9
+            "temperature": 0.65,
+            "humidity": 0.7
           }
         },
         {
@@ -51,52 +71,72 @@
             "weirdness": 0.6,
             "offset": 0,
             "temperature": 0.55,
-            "humidity": 0.9
+            "humidity": 0.7
           }
         },
         {
           "biome": "minecraft:badlands",
           "parameters": {
-            "altitude": 0.1,
+            "altitude": 0.5,
             "weirdness": 0,
             "offset": 0,
-            "temperature": 0.95,
+            "temperature": 0.75,
             "humidity": 0.6
-          }
-        },
-        {
-          "biome": "minecraft:wooded_badlands_plateau",
-          "parameters": {
-            "altitude": 0.1,
-            "weirdness": 0,
-            "offset": 0,
-            "temperature": 0.95,
-            "humidity": 0.5
           }
         },
         {
           "biome": "minecraft:badlands_plateau",
           "parameters": {
             "altitude": 0.6,
-            "weirdness": 0.6,
+            "weirdness": 0.2,
             "offset": 0,
-            "temperature": 0.45,
-            "humidity": 0.3
+            "temperature": 0.65,
+            "humidity": 0.6
           }
         },
         {
           "biome": "spectrobesmod:genshi_volcano_biome",
           "parameters": {
-            "altitude": 0.9,
-            "weirdness": 0.6,
+            "altitude": 0.7,
+            "weirdness": 0.2,
             "offset": 0,
             "temperature": 1,
-            "humidity": 0.1
+            "humidity": 0
+          }
+        },
+        {
+          "biome": "spectrobesmod:genshi_volcano_biome_edge",
+          "parameters": {
+            "altitude": 0.6,
+            "weirdness": 0.1,
+            "offset": 0,
+            "temperature": 1,
+            "humidity": 0
+          }
+        },
+        {
+          "biome": "spectrobesmod:genshi_lava_river_biome",
+          "parameters": {
+            "altitude": 0.4,
+            "weirdness": 0.1,
+            "offset": 0,
+            "temperature": 1,
+            "humidity": 0
+          }
+        },
+        {
+          "biome": "spectrobesmod:genshi_lava_ocean_biome",
+          "parameters": {
+            "altitude": 0.3,
+            "weirdness": 0.1,
+            "offset": 0,
+            "temperature": 1,
+            "humidity": 0
           }
         }
       ]
     },
-    "settings": "minecraft:overworld"
+    "settings": "spectrobesmod:genshi_dimension_settings"
   },
   "type": "spectrobesmod:genshi_dimension"
 }
