@@ -1,14 +1,10 @@
 package com.spectrobes.spectrobesmod.common.entities.krawl;
 
-import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
-import com.spectrobes.spectrobesmod.common.entities.krawl.goals.MoveToTargetGoal;
-import com.spectrobes.spectrobesmod.common.save_data.SpectrobesWorldSaveData;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.FlyingMovementController;
-import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.IFlyingAnimal;
 import net.minecraft.nbt.CompoundNBT;
@@ -18,8 +14,6 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.util.DamageSource;
-import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -31,11 +25,8 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-import javax.annotation.Nullable;
-import java.util.Random;
-
 public class EntitySpawningSpore extends MonsterEntity implements IAnimatable, IFlyingAnimal {
-    private static final DataParameter<Boolean> BOSS_SPORE =
+    protected static final DataParameter<Boolean> BOSS_SPORE =
             EntityDataManager.defineId(EntitySpawningSpore.class,
                     DataSerializers.BOOLEAN);
     private static final DataParameter<Integer> AGE_TICKS =
@@ -93,15 +84,15 @@ public class EntitySpawningSpore extends MonsterEntity implements IAnimatable, I
 
     private void spawnKrawl() {
         if(entityData.get(BOSS_SPORE)) {
-//            EntityKrawl bossKrawl = (EntityKrawl) KrawlEntities.getBossForDimension(level)
-//                    .spawn((ServerWorld) level,
-//                            null,
-//                            null,
-//                            blockPosition(),
-//                            SpawnReason.MOB_SUMMONED,
-//                            false,
-//                            false);
-//            this.remove();
+            EntityKrawl bossKrawl = (EntityKrawl) KrawlEntities.getBossForDimension(level)
+                    .spawn((ServerWorld) level,
+                            null,
+                            null,
+                            blockPosition(),
+                            SpawnReason.MOB_SUMMONED,
+                            false,
+                            false);
+            this.remove();
 
         } else {
             EntityKrawl krawl = (EntityKrawl) KrawlEntities.getByLevel(100, level)

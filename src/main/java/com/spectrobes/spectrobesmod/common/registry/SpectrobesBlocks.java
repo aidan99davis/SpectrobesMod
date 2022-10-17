@@ -63,22 +63,22 @@ public class SpectrobesBlocks {
                     .lightLevel(BlockState -> 15)));
     public static final RegistryObject<Block> marble_block = BLOCKS.register("marble_block", 
     		() -> new Block(AbstractBlock.Properties.of(Material.GLASS).harvestTool(ToolType.PICKAXE).strength(3f).sound(SoundType.GLASS)));
-    public static final RegistryObject<Block> krawl_nest = BLOCKS.register("krawl_nest", 
-    		() -> new Block(AbstractBlock.Properties.of(Material.STONE).harvestTool(ToolType.PICKAXE).strength(10f).sound(SoundType.STONE)));
-    public static final RegistryObject<Block> krawl_stone = BLOCKS.register("krawl_stone", 
+    public static final RegistryObject<SpectrobesBlock> krawl_nest = BLOCKS.register("krawl_nest",
+    		() -> new SpectrobesBlock(AbstractBlock.Properties.of(Material.STONE).harvestTool(ToolType.PICKAXE).strength(10f).sound(SoundType.STONE)));
+    public static final RegistryObject<SpectrobesBlock> krawl_stone = BLOCKS.register("krawl_stone",
     		() -> new MultiTextureBlock(AbstractBlock.Properties.of(Material.STONE).harvestTool(ToolType.PICKAXE).strength(10f).sound(SoundType.STONE)));
     public static final RegistryObject<PlanetaryTeleporterBlock> planetary_teleporter = BLOCKS.register("planetary_teleporter",
             PlanetaryTeleporterBlock::new);
-    public static final RegistryObject<Block> krawl_vine = BLOCKS.register("krawl_vine", 
+    public static final RegistryObject<Block> krawl_vine = BLOCKS.register("krawl_vine",
     		() -> new VineBlock(AbstractBlock.Properties.of(Material.REPLACEABLE_PLANT).noOcclusion().strength(0.2F).sound(SoundType.VINE)));
-    public static final RegistryObject<Block> krawl_mycelium = BLOCKS.register("krawl_mycelium", 
+    public static final RegistryObject<SpectrobesBlock> krawl_mycelium = BLOCKS.register("krawl_mycelium",
     		() -> new MultiTextureBlock(AbstractBlock.Properties.of(Material.DIRT).strength(1F).sound(SoundType.WET_GRASS)));
-    public static final RegistryObject<Block> krawl_mud = BLOCKS.register("krawl_mud", 
-    		() -> new Block(AbstractBlock.Properties.of(Material.SNOW).strength(1F).sound(SoundType.SOUL_SAND)));
-    public static final RegistryObject<Block> snag_log = BLOCKS.register("snag_log", 
+    public static final RegistryObject<SpectrobesBlock> krawl_mud = BLOCKS.register("krawl_mud",
+    		() -> new SpectrobesBlock(AbstractBlock.Properties.of(Material.SNOW).strength(1F).sound(SoundType.SOUL_SAND)));
+    public static final RegistryObject<Block> snag_log = BLOCKS.register("snag_log",
     		() -> new RotatedPillarBlock(AbstractBlock.Properties.of(Material.WOOD, (p_235431_2_) -> p_235431_2_.getValue(RotatedPillarBlock.AXIS) == Direction.Axis.Y ? MaterialColor.WOOD : MaterialColor.COLOR_PURPLE).strength(2.0F).sound(SoundType.WOOD)));
-    public static final RegistryObject<Block> snag_planks = BLOCKS.register("snag_planks", 
-    		() ->  new Block(AbstractBlock.Properties.of(Material.WOOD, MaterialColor.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD)));
+    public static final RegistryObject<SpectrobesBlock> snag_planks = BLOCKS.register("snag_planks",
+    		() ->  new SpectrobesBlock(AbstractBlock.Properties.of(Material.WOOD, MaterialColor.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD)));
     public static final RegistryObject<Block> krawlshroom = BLOCKS.register("krawlshroom",
     		() -> new HugeMushroomBlock(AbstractBlock.Properties.of(Material.WOOD, MaterialColor.COLOR_GREEN).strength(0.2F).sound(SoundType.WOOD)));
 }

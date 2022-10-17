@@ -4,6 +4,7 @@ import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.entities.krawl.*;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
@@ -52,6 +53,13 @@ public class KrawlEntities {
                     EntityClassification.MONSTER)
                     .sized(1f, 1f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "spawning_spores").toString()));
+
+    public static final RegistryObject<EntityType<EntityOrbix>> ENTITY_ORBIX
+            = ENTITY_TYPES.register("entity_orbix",
+            () -> EntityType.Builder.of(EntityOrbix::new,
+                    EntityClassification.MONSTER)
+                    .sized(1f, 1.5f)
+                    .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "orbix").toString()));
 
     public static final RegistryObject<EntityType<EntitySwar>> ENTITY_SWAR
             = ENTITY_TYPES.register("entity_swar",
@@ -104,6 +112,7 @@ public class KrawlEntities {
             GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_SUBAR.get(), EntitySubar.setCustomAttributes().build());
             GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_VIZBAR.get(), EntityVizbar.setCustomAttributes().build());
             GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_XELLES.get(), EntityXelles.setCustomAttributes().build());
+            GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_ORBIX.get(), EntityOrbix.setCustomAttributes().build());
             GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_HEALING_SPORES.get(), EntityHealingSpore.setCustomAttributes().build());
             GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_SPAWNING_SPORE.get(), EntitySpawningSpore.setCustomAttributes().build());
         });
@@ -214,5 +223,9 @@ public class KrawlEntities {
                 return false;
             }
         };
+    }
+
+    public static EntityType<? extends EntityKrawl> getBossForDimension(World level) {
+        return ENTITY_ORBIX.get();
     }
 }

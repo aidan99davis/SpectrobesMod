@@ -8,14 +8,15 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 @OnlyIn(Dist.CLIENT)
 public class KrawlRendererManager {
     public static void init() {
-        RenderingRegistry.registerEntityRenderingHandler(KrawlEntities.ENTITY_SWAR.get(), manager -> new SwarRenderer(manager));
-        RenderingRegistry.registerEntityRenderingHandler(KrawlEntities.ENTITY_SUBAR.get(), manager -> new SubarRenderer(manager));
-        RenderingRegistry.registerEntityRenderingHandler(KrawlEntities.ENTITY_VIZBAR.get(), manager -> new VizbarRenderer(manager));
-        RenderingRegistry.registerEntityRenderingHandler(KrawlEntities.ENTITY_GRIS.get(), manager -> new GrisRenderer(manager));
-        RenderingRegistry.registerEntityRenderingHandler(KrawlEntities.ENTITY_GRISEN.get(), manager -> new GrisenRenderer(manager));
-        RenderingRegistry.registerEntityRenderingHandler(KrawlEntities.ENTITY_VORTEX.get(), manager -> new VortexRenderer((manager)));
-        RenderingRegistry.registerEntityRenderingHandler(KrawlEntities.ENTITY_XELLES.get(), manager -> new XellesRenderer((manager)));
-        RenderingRegistry.registerEntityRenderingHandler(KrawlEntities.ENTITY_HEALING_SPORES.get(), manager -> new XellesSporeHealRenderer((manager)));
-        RenderingRegistry.registerEntityRenderingHandler(KrawlEntities.ENTITY_SPAWNING_SPORE.get(), manager -> new XellesSpawningSporeRenderer((manager)));
+        RenderingRegistry.registerEntityRenderingHandler(KrawlEntities.ENTITY_SWAR.get(), SwarRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(KrawlEntities.ENTITY_SUBAR.get(), SubarRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(KrawlEntities.ENTITY_VIZBAR.get(), VizbarRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(KrawlEntities.ENTITY_GRIS.get(), GrisRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(KrawlEntities.ENTITY_GRISEN.get(), GrisenRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(KrawlEntities.ENTITY_VORTEX.get(), VortexRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(KrawlEntities.ENTITY_XELLES.get(), XellesRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(KrawlEntities.ENTITY_HEALING_SPORES.get(), XellesSporeHealRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(KrawlEntities.ENTITY_SPAWNING_SPORE.get(), XellesSpawningSporeRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(KrawlEntities.ENTITY_ORBIX.get(), OrbixRenderer::new);
     }
 }

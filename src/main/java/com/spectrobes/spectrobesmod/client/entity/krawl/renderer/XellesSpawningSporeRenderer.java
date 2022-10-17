@@ -2,8 +2,6 @@ package com.spectrobes.spectrobesmod.client.entity.krawl.renderer;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.spectrobes.spectrobesmod.client.entity.krawl.model.XellesSpawningSporeModel;
-import com.spectrobes.spectrobesmod.client.entity.krawl.model.XellesSporeHealModel;
-import com.spectrobes.spectrobesmod.common.entities.krawl.EntityHealingSpore;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntitySpawningSpore;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;

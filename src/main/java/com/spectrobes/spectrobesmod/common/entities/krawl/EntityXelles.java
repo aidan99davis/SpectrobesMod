@@ -23,6 +23,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.World;
@@ -34,6 +35,8 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
+
+import static com.spectrobes.spectrobesmod.common.entities.krawl.EntitySpawningSpore.BOSS_SPORE;
 
 public class EntityXelles extends EntityBossKrawl {
 
@@ -76,7 +79,7 @@ public class EntityXelles extends EntityBossKrawl {
         this.goalSelector.addGoal(0, new AttackSpectrobeGoal(this, true, true));
         this.goalSelector.addGoal(1, new HealKrawlGoal(this));
         this.goalSelector.addGoal(1, new XellesSpawnKrawlGroupGoal(this));
-//        this.goalSelector.addGoal(1, new XellesSpawnKrawlBossGoal(this));
+        this.goalSelector.addGoal(1, new XellesSpawnKrawlBossGoal(this));
         this.goalSelector.addGoal(1, new AbsorbKrawlGoal(this));
     }
 
@@ -87,6 +90,7 @@ public class EntityXelles extends EntityBossKrawl {
         entityData.define(STAGE, 1);
         entityData.define(LAST_SPAWNED_SUMMONING_SPORES_TICKS, 0);
         entityData.define(LAST_SPAWNED_HEALING_SPORES_TICKS, 0);
+        entityData.define(LAST_SPAWNED_BOSS_SUMMONING_SPORE_TICKS, 24000);
         entityData.define(LAST_HURT_TICKS, 1000);
         entityData.define(IS_SPAWNING_SPORES, false);
     }
@@ -99,6 +103,7 @@ public class EntityXelles extends EntityBossKrawl {
         pCompound.putInt("STAGE", entityData.get(STAGE));
         pCompound.putInt("LAST_SPAWNED_SUMMONING_SPORES_TICKS", entityData.get(LAST_SPAWNED_SUMMONING_SPORES_TICKS));
         pCompound.putInt("LAST_SPAWNED_HEALING_SPORES_TICKS", entityData.get(LAST_SPAWNED_HEALING_SPORES_TICKS));
+        pCompound.putInt("LAST_SPAWNED_BOSS_SPORES_TICKS", entityData.get(LAST_SPAWNED_BOSS_SUMMONING_SPORE_TICKS));
         pCompound.putInt("LAST_HURT_TICKS", entityData.get(LAST_HURT_TICKS));
     }
 
@@ -109,6 +114,7 @@ public class EntityXelles extends EntityBossKrawl {
         entityData.set(STAGE, pCompound.getInt("STAGE"));
         entityData.set(LAST_SPAWNED_SUMMONING_SPORES_TICKS, pCompound.getInt("LAST_SPAWNED_SUMMONING_SPORES_TICKS"));
         entityData.set(LAST_SPAWNED_HEALING_SPORES_TICKS, pCompound.getInt("LAST_SPAWNED_HEALING_SPORES_TICKS"));
+        entityData.set(LAST_SPAWNED_BOSS_SUMMONING_SPORE_TICKS, pCompound.getInt("LAST_SPAWNED_BOSS_SPORES_TICKS"));
         entityData.set(LAST_HURT_TICKS, pCompound.getInt("LAST_HURT_TICKS"));
     }
 
@@ -133,6 +139,7 @@ public class EntityXelles extends EntityBossKrawl {
         entityData.set(LAST_HURT_TICKS, entityData.get(LAST_HURT_TICKS) + 1);
         entityData.set(LAST_SPAWNED_SUMMONING_SPORES_TICKS, entityData.get(LAST_SPAWNED_SUMMONING_SPORES_TICKS) + 1);
         entityData.set(LAST_SPAWNED_HEALING_SPORES_TICKS, entityData.get(LAST_SPAWNED_HEALING_SPORES_TICKS) + 1);
+        entityData.set(LAST_SPAWNED_BOSS_SUMMONING_SPORE_TICKS, entityData.get(LAST_SPAWNED_BOSS_SUMMONING_SPORE_TICKS) + 1);
         if(!level.isClientSide()) {
 
             SpectrobesWorldSaveData worldData = SpectrobesWorldSaveData.getWorldData((ServerWorld) level);
@@ -202,6 +209,14 @@ public class EntityXelles extends EntityBossKrawl {
 
     public boolean canSpawnHealSpores() {
         return entityData.get(LAST_SPAWNED_HEALING_SPORES_TICKS) >= 600;
+    }
+
+    public boolean canSpawnBossSpore() {
+        AxisAlignedBB searchBox = getBoundingBox().inflate(50, 50, 50);
+        List<EntityOrbix> nearbyBosses = level.getEntities(KrawlEntities.ENTITY_ORBIX.get(), searchBox, entityOrbix -> true);
+        boolean hasSpawnedBoss = nearbyBosses.size() > 0;
+        return entityData.get(LAST_SPAWNED_BOSS_SUMMONING_SPORE_TICKS) >= 24000
+                && !hasSpawnedBoss;
     }
 
     private boolean canSummonWave() {
@@ -324,6 +339,47 @@ public class EntityXelles extends EntityBossKrawl {
                     mob.entityData.set(LAST_SPAWNED_SUMMONING_SPORES_TICKS, 0);
                     //TODO Replace this with spawning spores.
                 }
+            }
+            mob.setIsSpawningSpores(false);
+
+        }
+    }
+
+    private static class XellesSpawnKrawlBossGoal extends Goal {
+
+        EntityXelles mob;
+
+        public XellesSpawnKrawlBossGoal(EntityXelles xelles) {
+            mob = xelles;
+        }
+
+        @Override
+        public boolean canUse() {
+            return mob.getTarget() != null && mob.canSpawnBossSpore();
+        }
+
+        @Override
+        public void start() {
+            super.start();
+
+            mob.setIsSpawningSpores(true);
+
+            if(!mob.level.isClientSide()) {
+                SpectrobesInfo.LOGGER.debug("DOOT");
+                EntitySpawningSpore spore = (EntitySpawningSpore) KrawlEntities.ENTITY_SPAWNING_SPORE.get()
+                        .spawn((ServerWorld) mob.level,
+                                null,
+                                null,
+                                mob.blockPosition(),
+                                SpawnReason.MOB_SUMMONED,
+                                false,
+                                false);
+                if (spore != null) {
+                    spore.getEntityData().set(BOSS_SPORE, true);
+                    spore.setDeltaMovement(0, 0.5, 0);
+                }
+                mob.entityData.set(LAST_SPAWNED_BOSS_SUMMONING_SPORE_TICKS, 0);
+                //TODO Replace this with spawning spores.
             }
             mob.setIsSpawningSpores(false);
 

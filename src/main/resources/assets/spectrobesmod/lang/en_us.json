@@ -96,6 +96,8 @@
     "itemGroup.spectrobestab.minerals": "Spectrobes Minerals",
     "itemGroup.spectrobestab.tools": "Spectrobes Tools",
     "itemGroup.spectrobestab.weapons": "Spectrobes Weapons",
+    "entity.spectrobesmod.entity_orbix": "Orbix",
+    "entity.spectrobesmod.entity_orbux": "Orbux",
     "entity.spectrobesmod.entity_swar": "Swar",
     "entity.spectrobesmod.entity_xelles": "Xelles",
     "entity.spectrobesmod.entity_komainu": "Komainu",

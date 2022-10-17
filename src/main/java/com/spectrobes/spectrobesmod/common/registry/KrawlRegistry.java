@@ -74,6 +74,20 @@ public class KrawlRegistry {
             .withLevel(10)
             .build();
 
+    public static final KrawlProperties Orbix_Properties
+            = new KrawlPropertiesBuilder()
+            .withNature(SpectrobeProperties.Nature.AURORA)
+            .withAtkLevel(175)
+            .withAtkOffset(18)
+            .withDefLevel(300)
+            .withDefOffset(30)
+            .withHpLevel(350)
+            .withHpOffset(20)
+            .withXpWorth(200)
+            .withGuraWorth(300)
+            .withLevel(40)
+            .build();
+
     public static final KrawlProperties Vortex_Properties =
             new KrawlPropertiesBuilder()
             .withNature(SpectrobeProperties.Nature.OTHER)

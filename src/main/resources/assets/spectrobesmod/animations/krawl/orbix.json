@@ -1,0 +1,100 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.orbix.idle": {
+			"loop": true,
+			"animation_length": 1.04,
+			"bones": {
+				"body": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.52": {
+							"vector": [0, 180, 0]
+						},
+						"1.04": {
+							"vector": [0, 360, 0]
+						}
+					}
+				},
+				"spikes": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.52": {
+							"vector": [0, -180, 0]
+						},
+						"1.04": {
+							"vector": [0, -360, 0]
+						}
+					}
+				}
+			}
+		},
+		"animation.orbix.attack": {
+			"loop": true,
+			"animation_length": 0.8,
+			"bones": {
+				"spikes": {
+					"scale": {
+						"0.0": {
+							"vector": [1, 1, 1]
+						},
+						"0.24": {
+							"vector": [1.5, 1.5, 1.5]
+						},
+						"0.48": {
+							"vector": [0.8, 0.8, 0.8]
+						},
+						"0.76": {
+							"vector": [1, 1, 1]
+						}
+					}
+				},
+				"spike1": {
+					"scale": {
+						"0.0": {
+							"vector": [1, 1, 1]
+						},
+						"0.52": {
+							"vector": [1, 1, 1]
+						}
+					}
+				},
+				"spike2": {
+					"scale": {
+						"0.0": {
+							"vector": [1, 1, 1]
+						},
+						"0.52": {
+							"vector": [1, 1, 1]
+						}
+					}
+				},
+				"spike3": {
+					"scale": {
+						"0.0": {
+							"vector": [1, 1, 1]
+						},
+						"0.52": {
+							"vector": [1, 1, 1]
+						}
+					}
+				},
+				"spike4": {
+					"scale": {
+						"0.0": {
+							"vector": [1, 1, 1]
+						},
+						"0.52": {
+							"vector": [1, 1, 1]
+						}
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}
