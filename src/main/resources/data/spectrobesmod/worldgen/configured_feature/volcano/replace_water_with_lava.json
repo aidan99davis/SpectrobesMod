@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:netherrack_replace_blobs",
+  "config": {
+    "state": {
+      "Name": "minecraft:lava",
+      "Properties": {
+      }
+    },
+    "target": {
+      "Name": "minecraft:water",
+      "Properties": {
+      }
+    },
+    "radius": {
+      "type": "constant",
+      "value": 12
+    }
+  }
+}

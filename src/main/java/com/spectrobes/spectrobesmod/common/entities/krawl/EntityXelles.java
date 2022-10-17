@@ -121,7 +121,6 @@ public class EntityXelles extends EntityBossKrawl {
     @Override
     protected void actuallyHurt(DamageSource damageSrc, float damageAmount) {
         if(damageSrc != DamageSource.CRAMMING) {
-            SpectrobesInfo.LOGGER.debug(damageSrc);
             super.actuallyHurt(damageSrc, damageAmount);
             entityData.set(LAST_HURT_TICKS, 0);
         }

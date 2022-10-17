@@ -1,0 +1,205 @@
+{
+  "scale": 0.35,
+  "effects": {
+    "mood_sound": {
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000,
+      "block_search_extent": 8,
+      "offset": 2.0
+    },
+    "particle": {
+      "options": {
+        "type": "minecraft:white_ash"
+      },
+      "probability": 0.01
+    },
+    //"sky_color": 10924479,
+    "sky_color": 7842047,
+    "grass_color": 6080542,
+    "foliage_color": 6080542,
+    "fog_color": 12638463,
+    "water_color": 4445678,
+    "water_fog_color": 329011
+  },
+  "surface_builder": "minecraft:basalt_deltas",
+  "carvers": {
+    "air": [
+      "minecraft:cave",
+      "minecraft:canyon"
+    ],
+    "liquid": [
+      "spectrobesmod:half_caves"
+    ]
+  },
+  "features": [
+
+    [ 
+      //"spectrobesmod:desert/red_sand",
+      //"spectrobesmod:desert/top_sand",
+      "spectrobesmod:volcano/basalt_pillars",
+      "spectrobesmod:volcano/basalt_pillars_small",
+      "spectrobesmod:volcano/basalt_pillars_smoothing"
+      //"spectrobesmod:desert/anti_red_sand"
+    ],
+    [
+      "spectrobesmod:volcano/lava_river",
+      //"spectrobesmod:volcano/remove_lava_river",
+      "minecraft:lake_lava"
+    ],
+    [],
+    [
+      "minecraft:fossil",
+      "minecraft:monster_room"
+    ],
+    [
+    ],
+    [],
+    [
+      //"spectrobesmod:volcano/diorite_layer_85",
+      //"spectrobesmod:volcano/andesite_layer_91",
+      //"spectrobesmod:volcano/granite_layer_97",
+      //"spectrobesmod:volcano/peaks",
+      "spectrobesmod:volcano/diorite_bits",
+      "spectrobesmod:volcano/magma_ores",
+      "spectrobesmod:volcano/gravel_beaches",
+      "spectrobesmod:volcano/sand_beaches",
+      //"spectrobesmod:volcano/granite_ores",
+      "minecraft:ore_dirt",
+      "minecraft:ore_gravel",
+      "minecraft:ore_granite",
+      "minecraft:ore_diorite",
+      "minecraft:ore_andesite",
+      "minecraft:ore_coal",
+      "minecraft:ore_iron",
+      "minecraft:ore_gold",
+      "minecraft:ore_redstone",
+      "minecraft:ore_diamond",
+      "minecraft:ore_lapis",
+      "minecraft:disk_sand",
+      "minecraft:disk_clay",
+      "minecraft:disk_gravel"
+    ],
+    [],
+    [
+      "spectrobesmod:volcano/lava",
+      "spectrobesmod:volcano/lava2",
+      //"spectrobesmod:volcano/lava3",
+      "spectrobesmod:volcano/lava5",
+      //"spectrobesmod:volcano/lava6",
+      "spectrobesmod:volcano/red_sand_beaches",
+      "spectrobesmod:volcano/trees_volcano",
+      "spectrobesmod:volcano/fuck_basalt",
+      "minecraft:patch_grass_jungle",
+      "minecraft:patch_dead_bush_2",
+      "minecraft:spring_lava"
+    ],
+    [
+    ]
+  ],
+  "starts": [
+    "minecraft:mineshaft",
+    "minecraft:stronghold"
+  ],
+  "spawners": {
+    "monster": [
+      {
+        "type": "minecraft:spider",
+        "weight": 100,
+        "minCount": 4,
+        "maxCount": 4
+      },
+      {
+        "type": "minecraft:zombie",
+        "weight": 19,
+        "minCount": 4,
+        "maxCount": 4
+      },
+      {
+        "type": "minecraft:zombie_villager",
+        "weight": 1,
+        "minCount": 1,
+        "maxCount": 1
+      },
+      {
+        "type": "minecraft:skeleton",
+        "weight": 100,
+        "minCount": 4,
+        "maxCount": 4
+      },
+      {
+        "type": "minecraft:creeper",
+        "weight": 100,
+        "minCount": 4,
+        "maxCount": 4
+      },
+      {
+        "type": "minecraft:slime",
+        "weight": 100,
+        "minCount": 4,
+        "maxCount": 4
+      },
+      {
+        "type": "minecraft:enderman",
+        "weight": 10,
+        "minCount": 1,
+        "maxCount": 4
+      },
+      {
+        "type": "minecraft:husk",
+        "weight": 80,
+        "minCount": 4,
+        "maxCount": 4
+      }
+    ],
+    "creature": [
+      {
+        "type": "minecraft:sheep",
+        "weight": 1,
+        "minCount": 4,
+        "maxCount": 4
+      },
+      {
+        "type": "minecraft:pig",
+        "weight": 2,
+        "minCount": 4,
+        "maxCount": 4
+      },
+      {
+        "type": "minecraft:chicken",
+        "weight": 1,
+        "minCount": 4,
+        "maxCount": 4
+      },
+      {
+        "type": "minecraft:cow",
+        "weight": 2,
+        "minCount": 4,
+        "maxCount": 4
+      },
+      {
+        "type": "spectrobesmod:krawl_vortex",
+        "weight": 40,
+        "minCount": 1,
+        "maxCount": 2
+      }
+    ],
+    "ambient": [
+      {
+        "type": "minecraft:bat",
+        "weight": 10,
+        "minCount": 8,
+        "maxCount": 8
+      }
+    ],
+    "water_creature": [],
+    "water_ambient": [],
+    "misc": []
+  },
+  "spawn_costs": {},
+  "player_spawn_friendly": false,
+  "precipitation": "none",
+  "temperature": 2.0,
+  "downfall": 0.0,
+  "category": "jungle",
+  "depth": 0.115
+}

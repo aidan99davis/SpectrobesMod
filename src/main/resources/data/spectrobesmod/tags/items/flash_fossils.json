@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "spectrobesmod:harumi_fossil_item",
+    "spectrobesmod:nagu_fossil_item",
+    "spectrobesmod:aoi_fossil_item",
+    "spectrobesmod:shakin_fossil_item",
+    "spectrobesmod:kasumi_fossil_item",
+    "spectrobesmod:samukabu_fossil_item",
+    "spectrobesmod:mossari_fossil_item"
+  ]
+}
