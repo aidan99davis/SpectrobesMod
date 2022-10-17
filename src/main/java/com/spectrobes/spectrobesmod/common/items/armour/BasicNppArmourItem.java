@@ -11,9 +11,11 @@ import software.bernie.geckolib3.item.GeoArmorItem;
 
 public class BasicNppArmourItem extends GeoArmorItem implements IAnimatable, IHasNature {
     private AnimationFactory factory = new AnimationFactory(this);
+    private final SpectrobeProperties.Nature ArmourNature;
 
-    public BasicNppArmourItem(IArmorMaterial materialIn, EquipmentSlotType slot, Properties builder) {
+    public BasicNppArmourItem(SpectrobeProperties.Nature nature, IArmorMaterial materialIn, EquipmentSlotType slot, Properties builder) {
         super(materialIn, slot, builder);
+        this.ArmourNature = nature;
     }
 
     @Override
@@ -27,6 +29,6 @@ public class BasicNppArmourItem extends GeoArmorItem implements IAnimatable, IHa
 
     @Override
     public SpectrobeProperties.Nature getNature() {
-        return SpectrobeProperties.Nature.OTHER;
+        return ArmourNature;
     }
 }

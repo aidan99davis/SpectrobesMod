@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "spectrobesmod:vilar_fossil_item",
+    "spectrobesmod:inkana_fossil_item",
+    "spectrobesmod:dongor_fossil_item",
+    "spectrobesmod:komainu_fossil_item",
+    "spectrobesmod:zoza_fossil_item",
+    "spectrobesmod:danawa_fossil_item",
+    "spectrobesmod:tenkro_fossil_item",
+    "spectrobesmod:mesa_fossil_item"
+  ]
+}

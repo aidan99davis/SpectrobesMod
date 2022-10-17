@@ -13,7 +13,16 @@ public class BasicNppArmourModel extends AnimatedGeoModel<BasicNppArmourItem> {
 
     @Override
     public ResourceLocation getTextureLocation(BasicNppArmourItem object) {
-        return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/armour/basic.png");
+        switch(object.getNature()) {
+            case AURORA:
+                return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/armour/basic_aurora.png");
+            case CORONA:
+                return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/armour/basic_corona.png");
+            case FLASH:
+                return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/armour/basic_flash.png");
+            default:
+                return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/armour/basic.png");
+        }
     }
 
     @Override

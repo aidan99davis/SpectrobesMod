@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "spectrobesmod:spiko_fossil_item",
+    "spectrobesmod:segu_fossil_item",
+    "spectrobesmod:bartor_fossil_item",
+    "spectrobesmod:grilda_fossil_item",
+    "spectrobesmod:gejio_fossil_item",
+    "spectrobesmod:kubaku_fossil_item",
+    "spectrobesmod:masetto_fossil_item"
+  ]
+}

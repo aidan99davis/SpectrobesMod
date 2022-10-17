@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    " y ",
+    "yxy",
+    " y "
+  ],
+  "key":
+  {
+    "x":
+    {
+      "item": "spectrobesmod:basic_npp_chestplate"
+    },
+    "y":
+    {
+      "tag": "spectrobesmod:corona_fossils"
+    }
+  },
+  "result":
+  {
+    "item": "spectrobesmod:basic_corona_chestplate",
+    "count": 1
+  }
+}
