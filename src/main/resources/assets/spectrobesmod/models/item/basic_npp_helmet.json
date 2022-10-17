@@ -2,6 +2,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "geckolib3:item/potato_head"
+    "layer0": "spectrobesmod:items/basic_helmet"
   }
 }
