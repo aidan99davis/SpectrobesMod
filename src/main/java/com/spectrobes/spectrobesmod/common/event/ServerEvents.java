@@ -3,12 +3,16 @@ package com.spectrobes.spectrobesmod.common.event;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
+import com.spectrobes.spectrobesmod.common.entities.IHasNature;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSyncSpectrobeMasterPacket;
+import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
+import com.spectrobes.spectrobesmod.util.DamageUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -61,7 +65,24 @@ public class ServerEvents {
     public static void OnLivingEntityUpdate(LivingHurtEvent event) {
         if(event.getEntityLiving() instanceof PlayerEntity) {
             if(event.getSource().getDirectEntity() instanceof EntityKrawl) {
+                int beneficialArmours = 0;
+                int detrimentalArmours = 0;
+                Iterable<ItemStack> armourItems = event.getEntityLiving().getArmorSlots();
 
+                for (ItemStack armourItem :
+                        armourItems) {
+                    if(armourItem.getItem() instanceof IHasNature) {
+                        beneficialArmours = beneficialArmours + 10; //A base addition just for having armour from the mod.
+                        SpectrobeProperties.Nature attackerNature = ((EntityKrawl) event.getSource().getDirectEntity()).krawlProperties.getNature();
+                        if(DamageUtils.hasAdvantage(attackerNature, ((IHasNature) armourItem.getItem()).getNature())) detrimentalArmours+=15;
+                        if(DamageUtils.hasDisadvantage(attackerNature, ((IHasNature) armourItem.getItem()).getNature())) beneficialArmours+=15;
+                    }
+                }
+
+                int armourBenefitVal = beneficialArmours - detrimentalArmours;
+                SpectrobesInfo.LOGGER.debug("Armour Benefit Val: " + armourBenefitVal);
+                //TODO: When adding more armours, framework a way to increase the armours benefit for higher tiers
+                event.setAmount(event.getAmount() + ((event.getAmount() * armourBenefitVal) / 10));
             }
         }
     }

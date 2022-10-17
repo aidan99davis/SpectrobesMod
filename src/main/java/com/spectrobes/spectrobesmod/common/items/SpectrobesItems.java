@@ -308,5 +308,18 @@ public class SpectrobesItems {
             return SpectrobesItems.prizmod_item.getDefaultInstance();
         }
     }
+    public static class SpectrobesArmourItemGroup extends ItemGroup {
+
+        public static final SpectrobesArmourItemGroup Instance = new SpectrobesArmourItemGroup(ItemGroup.TABS.length, "spectrobestab.armour");
+
+        public SpectrobesArmourItemGroup(int index, String label) {
+            super(index, label);
+        }
+
+        @Override
+        public ItemStack makeIcon() {
+            return SpectrobesItemsRegistry.BASIC_CHEST.get().getDefaultInstance();
+        }
+    }
 
 }

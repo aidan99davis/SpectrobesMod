@@ -29,7 +29,11 @@ public class PlayerSpectrobeMaster {
         ownedSpectrobes;
 
     public boolean canFight() {
-        return currentTeam.get(0) != null && currentTeam.get(1) != null;
+        return ownedSpectrobes
+                .stream()
+                .anyMatch(spectrobe ->
+                        spectrobe.properties.getStage()
+                                != SpectrobeProperties.Stage.CHILD);
     }
 
     public Spectrobe getCurrentTeamMember() {

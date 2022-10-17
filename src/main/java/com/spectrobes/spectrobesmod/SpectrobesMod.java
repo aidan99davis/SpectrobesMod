@@ -1,5 +1,6 @@
 package com.spectrobes.spectrobesmod;
 
+import com.spectrobes.spectrobesmod.client.armour.ArmourRendererRegisterer;
 import com.spectrobes.spectrobesmod.client.blocks.BlockRendererManager;
 import com.spectrobes.spectrobesmod.client.container.HealerContainer;
 import com.spectrobes.spectrobesmod.client.container.PrizmodContainer;
@@ -108,6 +109,7 @@ public class SpectrobesMod
         BlockRendererManager.init();
         KrawlRendererManager.init();
         AttackRendererManager.init();
+        ArmourRendererRegisterer.registerRenderers();
         MineralRegistry.init();
         SpectrobesKeybindings.initKeybinds();
     }

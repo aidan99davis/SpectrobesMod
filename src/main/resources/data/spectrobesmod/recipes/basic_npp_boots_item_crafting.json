@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    "   ",
+    "x x",
+    "x x"
+  ],
+  "key":
+  {
+    "x":
+    {
+      "item": "spectrobesmod:titanium"
+    }
+  },
+  "result":
+  {
+    "item": "spectrobesmod:basic_npp_boots",
+    "count": 1
+  }
+}
