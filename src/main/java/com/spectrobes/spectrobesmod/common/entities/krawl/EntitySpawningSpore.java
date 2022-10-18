@@ -92,6 +92,15 @@ public class EntitySpawningSpore extends MonsterEntity implements IAnimatable, I
                             SpawnReason.MOB_SUMMONED,
                             false,
                             false);
+
+            EntityKrawl bossKrawl2 = (EntityKrawl) KrawlEntities.ENTITY_ORBUX.get()
+                    .spawn((ServerWorld) level,
+                            null,
+                            null,
+                            blockPosition(),
+                            SpawnReason.MOB_SUMMONED,
+                            false,
+                            false);
             this.remove();
 
         } else {

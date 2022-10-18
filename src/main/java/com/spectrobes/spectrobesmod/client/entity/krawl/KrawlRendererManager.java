@@ -18,5 +18,6 @@ public class KrawlRendererManager {
         RenderingRegistry.registerEntityRenderingHandler(KrawlEntities.ENTITY_HEALING_SPORES.get(), XellesSporeHealRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(KrawlEntities.ENTITY_SPAWNING_SPORE.get(), XellesSpawningSporeRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(KrawlEntities.ENTITY_ORBIX.get(), OrbixRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(KrawlEntities.ENTITY_ORBUX.get(), OrbixRenderer::new);
     }
 }
