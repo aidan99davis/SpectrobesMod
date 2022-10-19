@@ -15,6 +15,11 @@ public class SpectrobesBlock extends Block {
     }
 
     @Override
+    public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
+        return super.getLightValue(state, world, pos);
+    }
+
+    @Override
     public boolean canCreatureSpawn(BlockState state, IBlockReader world, BlockPos pos, EntitySpawnPlacementRegistry.PlacementType type, @Nullable EntityType<?> entityType) {
         return false;
     }

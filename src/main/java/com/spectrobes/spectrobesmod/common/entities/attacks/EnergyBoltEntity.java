@@ -14,7 +14,7 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 public class EnergyBoltEntity extends ThrowableEntity implements IHasNature, IAnimatable {
-    public float AtkDamage;
+    public int AtkDamage;
     public SpectrobeProperties.Nature Nature;
 
     public AnimationFactory factory = new AnimationFactory(this);

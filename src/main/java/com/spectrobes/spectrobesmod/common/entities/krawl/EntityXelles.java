@@ -1,6 +1,5 @@
 package com.spectrobes.spectrobesmod.common.entities.krawl;
 
-import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
 import com.spectrobes.spectrobesmod.common.entities.krawl.goals.AbsorbKrawlGoal;
 import com.spectrobes.spectrobesmod.common.entities.krawl.goals.AttackSpectrobeGoal;
@@ -121,7 +120,11 @@ public class EntityXelles extends EntityBossKrawl {
     @Override
     protected void actuallyHurt(DamageSource damageSrc, float damageAmount) {
         if(damageSrc != DamageSource.CRAMMING) {
-            super.actuallyHurt(damageSrc, damageAmount);
+            AxisAlignedBB bounds = getBoundingBox().inflate(40, 40, 40);
+            List<EntityOtorso> otorso = level.getEntities(KrawlEntities.ENTITY_OTORSO.get(), bounds, entity -> true);
+            if(otorso.size() == 0) {
+                super.actuallyHurt(damageSrc, damageAmount);
+            }
             entityData.set(LAST_HURT_TICKS, 0);
         }
     }
@@ -151,6 +154,11 @@ public class EntityXelles extends EntityBossKrawl {
             if(getAge() >= 3 && (worldData.getNest(blockPosition()).stage == 2)) {
                 worldData.getNest(blockPosition()).stage = 3;
                 worldData.setDirty();
+            }
+            if(getAge() >= 3) {
+                AxisAlignedBB bound = getBoundingBox().inflate(40,40,40);
+                List<EntityVortex> nearbyVortex = level.getEntities(KrawlEntities.ENTITY_VORTEX.get(), bound, entityVortex -> true);
+                nearbyVortex.forEach(entityVortex -> entityVortex.remove());
             }
         }
     }
@@ -317,13 +325,10 @@ public class EntityXelles extends EntityBossKrawl {
             super.start();
 
             int numToSpawn = mob.waveSize();
-            SpectrobesInfo.LOGGER.debug("DOOT:" + numToSpawn);
-
             mob.setIsSpawningSpores(true);
 
             for (int i = 0; i < numToSpawn; i++) {
                 if(!mob.level.isClientSide()) {
-                    SpectrobesInfo.LOGGER.debug("DOOT");
                     EntitySpawningSpore spore = (EntitySpawningSpore) KrawlEntities.ENTITY_SPAWNING_SPORE.get()
                             .spawn((ServerWorld) mob.level,
                                     null,
@@ -336,7 +341,6 @@ public class EntityXelles extends EntityBossKrawl {
                         spore.setDeltaMovement(0, 0.5, 0);
                     }
                     mob.entityData.set(LAST_SPAWNED_SUMMONING_SPORES_TICKS, 0);
-                    //TODO Replace this with spawning spores.
                 }
             }
             mob.setIsSpawningSpores(false);
@@ -364,7 +368,6 @@ public class EntityXelles extends EntityBossKrawl {
             mob.setIsSpawningSpores(true);
 
             if(!mob.level.isClientSide()) {
-                SpectrobesInfo.LOGGER.debug("DOOT");
                 EntitySpawningSpore spore = (EntitySpawningSpore) KrawlEntities.ENTITY_SPAWNING_SPORE.get()
                         .spawn((ServerWorld) mob.level,
                                 null,
@@ -378,7 +381,6 @@ public class EntityXelles extends EntityBossKrawl {
                     spore.setDeltaMovement(0, 0.5, 0);
                 }
                 mob.entityData.set(LAST_SPAWNED_BOSS_SUMMONING_SPORE_TICKS, 0);
-                //TODO Replace this with spawning spores.
             }
             mob.setIsSpawningSpores(false);
 

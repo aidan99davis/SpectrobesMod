@@ -80,7 +80,6 @@ public class ServerEvents {
                 }
 
                 int armourBenefitVal = beneficialArmours - detrimentalArmours;
-                SpectrobesInfo.LOGGER.debug("Armour Benefit Val: " + armourBenefitVal);
                 //TODO: When adding more armours, framework a way to increase the armours benefit for higher tiers
                 event.setAmount(event.getAmount() + ((event.getAmount() * armourBenefitVal) / 10));
             }

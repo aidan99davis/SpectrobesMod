@@ -53,6 +53,7 @@ public class EntityOrbix extends EntityBossKrawl {
 
     @Override
     protected void registerGoals() {
+        super.registerGoals();
         this.goalSelector.addGoal(0, new AttackSpectrobeMasterGoal(this, true, true));
         this.goalSelector.addGoal(0, new AttackSpectrobeGoal(this, true, true));
     }
@@ -90,11 +91,6 @@ public class EntityOrbix extends EntityBossKrawl {
     public void setIsAttacking(boolean attacking) {
         entityData.set(IS_ATTACKING, attacking);
         super.setIsAttacking(attacking);
-    }
-
-    @Override
-    public Vector3d getDeltaMovement() {
-        return Vector3d.ZERO;
     }
 
     public boolean isAttacking() {return entityData.get(IS_ATTACKING); }

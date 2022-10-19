@@ -1,7 +1,6 @@
-package com.spectrobes.spectrobesmod.common.worldgen.structures.krawl_nest;
+package com.spectrobes.spectrobesmod.common.world.structures.krawl_nest;
 
 import com.mojang.serialization.Codec;
-import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityXelles;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobesBlocks;
@@ -20,7 +19,7 @@ import net.minecraft.world.server.ServerWorld;
 
 import java.util.Random;
 
-import static com.spectrobes.spectrobesmod.common.worldgen.WorldGenUtils.*;
+import static com.spectrobes.spectrobesmod.common.world.WorldGenUtils.*;
 
 public class WorldGenKrawlNest extends Feature<NoFeatureConfig> {
     private static final BlockState KRAWL_NEST_BLOCK = SpectrobesBlocks.krawl_nest.get().defaultBlockState();
@@ -47,6 +46,7 @@ public class WorldGenKrawlNest extends Feature<NoFeatureConfig> {
         while(direction == Direction.DOWN || direction == Direction.UP) {direction = Direction.getRandom(rand);}
         generateEntrance(world, rand, position.relative(direction, 17).below(4), 4, 4, direction);
         generateCircle(world, position.below(8), 20, 0, SpectrobesBlocks.krawl_stone.get().defaultBlockState());
+        world.setBlock(new BlockPos(position.below(6).getX(), position.below(6).getY(), position.below(6).getZ()), SpectrobesBlocks.krawl_stone.get().defaultBlockState(), 11);
         if(!world.isClientSide()) {
             EntityXelles xelles = (EntityXelles) KrawlEntities.ENTITY_XELLES.get()
                     .spawn((ServerWorld)world, null, null, position.below(5), SpawnReason.MOB_SUMMONED, false, false);

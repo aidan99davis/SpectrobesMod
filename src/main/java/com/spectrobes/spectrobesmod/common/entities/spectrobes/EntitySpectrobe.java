@@ -1,5 +1,6 @@
 package com.spectrobes.spectrobesmod.common.entities.spectrobes;
 
+import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.entities.IHasNature;
@@ -15,6 +16,7 @@ import com.spectrobes.spectrobesmod.common.packets.networking.packets.CSyncSpect
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSyncSpectrobeMasterPacket;
 import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
+import com.spectrobes.spectrobesmod.util.DamageUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
@@ -467,27 +469,18 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         if(damageSrc.getDirectEntity() instanceof EntityKrawl) {
             IHasNature attacker = (IHasNature)damageSrc.getDirectEntity();
             int advantage = Spectrobe.hasTypeAdvantage(attacker, this);
-            float atkPower = ((EntityKrawl)damageSrc.getDirectEntity()).krawlProperties.getAtkLevel();
-            float typeBonus;
+            int atkPower = ((EntityKrawl)damageSrc.getDirectEntity()).krawlProperties.getAtkLevel();
+            float typeBonus = DamageUtils.getTypeBonus(advantage, atkPower);
 
-            switch (advantage) {
-                case -1:
-                    typeBonus = atkPower * 0.75f;
-                    break;
-                case 1:
-                    typeBonus = atkPower * 1.5f;
-                    break;
-                default:
-                    typeBonus = atkPower;
-                    break;
-            }
-            float defPower = getSpectrobeData().stats.getDefLevel();
+            int defPower = getSpectrobeData().stats.getDefLevel();
             int powerScale = 1;
-            float scaledAmount = typeBonus + (atkPower * powerScale) - (defPower/4);
+            float scaledAmount = DamageUtils.getFinalDamageAmount(typeBonus, atkPower, powerScale, defPower);
 
             Spectrobe updatedSpectrobe = this.getSpectrobeData().copy(true);
             updatedSpectrobe.damage(Math.round(scaledAmount));
             setSpectrobeData(updatedSpectrobe);
+
+
             super.actuallyHurt(damageSrc, scaledAmount);
         } else {
             Spectrobe updatedSpectrobe = this.getSpectrobeData().copy(true);
@@ -499,7 +492,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         if(getOwner() != null) {
             getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
                 sm.updateSpectrobe(this.getSpectrobeData());
-                SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket(sm));
+                SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(sm), (ServerPlayerEntity) getOwner());
             });
         }
     }

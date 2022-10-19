@@ -5,14 +5,28 @@ import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import com.spectrobes.spectrobesmod.util.KrawlPropertiesBuilder;
 
 public class KrawlRegistry {
+    public static final KrawlProperties Otorso_Properties
+            = new KrawlPropertiesBuilder()
+            .withNature(SpectrobeProperties.Nature.AURORA)
+            .withAtkLevel(300)
+            .withAtkOffset(25)
+            .withDefLevel(400)
+            .withDefOffset(30)
+            .withHpLevel(700)
+            .withHpOffset(30)
+            .withXpWorth(100)
+            .withGuraWorth(1000)
+            .withLevel(100)
+            .build();
+
     public static final KrawlProperties Swar_Properties
             = new KrawlPropertiesBuilder()
             .withNature(SpectrobeProperties.Nature.CORONA)
-            .withAtkLevel(50)
+            .withAtkLevel(125)
             .withAtkOffset(5)
             .withDefLevel(40)
             .withDefOffset(6)
-            .withHpLevel(200)
+            .withHpLevel(250)
             .withHpOffset(15)
             .withXpWorth(25)
             .withLevel(1)
@@ -21,7 +35,7 @@ public class KrawlRegistry {
     public static final KrawlProperties Subar_Properties
             = new KrawlPropertiesBuilder()
             .withNature(SpectrobeProperties.Nature.FLASH)
-            .withAtkLevel(80)
+            .withAtkLevel(180)
             .withAtkOffset(10)
             .withDefLevel(100)
             .withDefOffset(16)
@@ -35,9 +49,9 @@ public class KrawlRegistry {
     public static final KrawlProperties Vizbar_Properties
             = new KrawlPropertiesBuilder()
             .withNature(SpectrobeProperties.Nature.AURORA)
-            .withAtkLevel(125)
+            .withAtkLevel(175)
             .withAtkOffset(15)
-            .withDefLevel(200)
+            .withDefLevel(250)
             .withDefOffset(18)
             .withHpLevel(700)
             .withHpOffset(30)
@@ -49,11 +63,11 @@ public class KrawlRegistry {
     public static final KrawlProperties Gris_Properties
             = new KrawlPropertiesBuilder()
             .withNature(SpectrobeProperties.Nature.CORONA)
-            .withAtkLevel(100)
+            .withAtkLevel(125)
             .withAtkOffset(15)
-            .withDefLevel(125)
+            .withDefLevel(150)
             .withDefOffset(12)
-            .withHpLevel(200)
+            .withHpLevel(300)
             .withHpOffset(10)
             .withXpWorth(50)
             .withGuraWorth(100)
@@ -63,7 +77,7 @@ public class KrawlRegistry {
     public static final KrawlProperties Grisen_Properties
             = new KrawlPropertiesBuilder()
             .withNature(SpectrobeProperties.Nature.AURORA)
-            .withAtkLevel(175)
+            .withAtkLevel(200)
             .withAtkOffset(18)
             .withDefLevel(150)
             .withDefOffset(15)
@@ -77,9 +91,9 @@ public class KrawlRegistry {
     public static final KrawlProperties Orbix_Properties
             = new KrawlPropertiesBuilder()
             .withNature(SpectrobeProperties.Nature.AURORA)
-            .withAtkLevel(175)
+            .withAtkLevel(200)
             .withAtkOffset(18)
-            .withDefLevel(300)
+            .withDefLevel(350)
             .withDefOffset(30)
             .withHpLevel(350)
             .withHpOffset(20)

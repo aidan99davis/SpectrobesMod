@@ -4,7 +4,7 @@ import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityVortex;
 import com.spectrobes.spectrobesmod.common.save_data.KrawlNest;
 import com.spectrobes.spectrobesmod.common.save_data.SpectrobesWorldSaveData;
-import com.spectrobes.spectrobesmod.common.worldgen.structures.krawl_nest.WorldGenKrawlNest;
+import com.spectrobes.spectrobesmod.common.world.structures.krawl_nest.WorldGenKrawlNest;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
@@ -28,7 +28,7 @@ public class KrawlVortexFormXellesGoal extends Goal {
     public boolean canUse() {
         SpectrobesWorldSaveData worldData = (SpectrobesWorldSaveData.getWorldData((ServerWorld) vortex.level));
 
-        return vortex.getAge() >= 0 //TODO: Make this configurable
+        return vortex.getAge() >= 1 //TODO: Make this configurable
                 && ((worldData.canSpawnNest((vortex.blockPosition()))
                 || (worldData.getNest(vortex.blockPosition()) != null
                 && worldData.getNest(vortex.blockPosition()).stage == 1)));

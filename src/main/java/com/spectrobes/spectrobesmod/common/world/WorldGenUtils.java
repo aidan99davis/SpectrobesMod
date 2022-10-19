@@ -1,4 +1,4 @@
-package com.spectrobes.spectrobesmod.common.worldgen;
+package com.spectrobes.spectrobesmod.common.world;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
