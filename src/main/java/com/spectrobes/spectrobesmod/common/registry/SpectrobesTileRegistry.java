@@ -32,6 +32,7 @@ public class SpectrobesTileRegistry {
         public static final RegistryObject<TileEntityType<MasettoFossilBlockTileEntity>> MASETTO_FOSSIL_TILE = TILES.register("masettofossiltile", () -> TileEntityType.Builder.of(MasettoFossilBlockTileEntity::new, SpectrobesBlocks.masetto_fossil.get()).build(null));
         public static final RegistryObject<TileEntityType<TenkroFossilBlockTileEntity>> TENKRO_FOSSIL_TILE = TILES.register("tenkrofossiltile", () -> TileEntityType.Builder.of(TenkroFossilBlockTileEntity::new, SpectrobesBlocks.tenkro_fossil.get()).build(null));
         public static final RegistryObject<TileEntityType<KasumiFossilBlockTileEntity>> KASUMI_FOSSIL_TILE = TILES.register("kasumifossiltile", () -> TileEntityType.Builder.of(KasumiFossilBlockTileEntity::new, SpectrobesBlocks.kasumi_fossil.get()).build(null));
+        public static final RegistryObject<TileEntityType<FossilBlockTileEntity>> FOSSIL_TILE = TILES.register("fossiltile", () -> TileEntityType.Builder.of(FossilBlockTileEntity::new, SpectrobesBlocks.fossil_block.get()).build(null));
         public static final RegistryObject<TileEntityType<HealerBlockTileEntity>> HEALER_TILE = TILES.register("healertile", () -> TileEntityType.Builder.of(HealerBlockTileEntity::new, SpectrobesBlocks.healer_block.get()).build(null));
         public static final RegistryObject<TileEntityType<XellesTrophyBlockTileEntity>> XELLES_TROPHY_TILE = TILES.register("xellestrophytile", () -> TileEntityType.Builder.of(XellesTrophyBlockTileEntity::new, SpectrobesBlocks.xelles_trophy.get()).build(null));
 }
