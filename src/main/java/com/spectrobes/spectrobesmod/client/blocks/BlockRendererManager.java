@@ -36,5 +36,6 @@ public class BlockRendererManager {
         ClientRegistry.bindTileEntityRenderer(SpectrobesTileRegistry.KASUMI_FOSSIL_TILE.get(), KasumiFossilRenderer::new);
         ClientRegistry.bindTileEntityRenderer(SpectrobesTileRegistry.HEALER_TILE.get(), HealerBlockRenderer::new);
         RenderTypeLookup.setRenderLayer(SpectrobesBlocks.krawl_vine.get(), RenderType.cutout());
+        ClientRegistry.bindTileEntityRenderer(SpectrobesTileRegistry.XELLES_TROPHY_TILE.get(), XellesTrophyRenderer::new);
     }
 }

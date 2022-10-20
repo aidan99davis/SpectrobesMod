@@ -5,20 +5,15 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.gui.utils.GuiUtils;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
-import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeIconInfo;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.storage.PlayerData;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -37,10 +32,6 @@ public class HUDHandler {
             MainWindow resolution = event.getWindow();
             float partialTicks = event.getPartialTicks();
             drawSpectrobeTeamBar(event.getMatrixStack(), resolution, partialTicks);
-
-//            if (!MinecraftForge.EVENT_BUS.post(new RenderPsiHudEvent(PsiHudElementType.PSI_BAR))) {
-//                drawSpectrobeTeamBar(event.getMatrixStack(), resolution, partialTicks);
-//            }
         }
     }
 
@@ -52,83 +43,82 @@ public class HUDHandler {
             return;
         }
 
-        ms.pushPose();
-        RenderSystem.enableAlphaTest();
+        mc.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
+                .ifPresent(sm -> {
+                    ms.pushPose();
+                    RenderSystem.enableAlphaTest();
 
+                    boolean right = true;
 
-        boolean right = true;
+                    int pad = 3;
+                    int width = 64;
+                    int height = 128;
 
-        int pad = 3;
-        int width = 64;
-        int height = 128;
+                    int x = -pad;
+                    if (right) {
+                        x = res.getGuiScaledWidth() + pad - width;
+                    }
+                    int y = res.getGuiScaledHeight() / 2 - height / 2;
+                    int finalX = x;
 
-        int x = -pad;
-        if (right) {
-            x = res.getGuiScaledWidth() + pad - width;
-        }
-        int y = res.getGuiScaledHeight() / 2 - height / 2;
-        int finalX = x;
+                    Map<Integer, UUID> currentTeamUuids = sm.getCurrentTeamUuids();
+                    int currentSelected = sm.getCurrentTeamMemberSlot();
+                    currentTeamUuids.forEach((integer, uuid) -> {
+                        ResourceLocation slotBackground;
+                        boolean leftHandColumn = integer.intValue() % 2 == 0;
+                        int row = (integer.intValue() / 2);
 
-        PlayerSpectrobeMaster sm = mc.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
-                .orElseThrow(IllegalStateException::new);
+                        if(currentSelected == integer.intValue()) {
+                            slotBackground = SPECTROBE_SLOT_CURRENT_TEXTURE;
+                        } else {
+                            slotBackground = SPECTROBE_SLOT_TEXTURE;
+                        }
 
-        Map<Integer, UUID> currentTeamUuids = sm.getCurrentTeamUuids();
-        int currentSelected = sm.getCurrentTeamMemberSlot();
-        currentTeamUuids.forEach((integer, uuid) -> {
-            ResourceLocation slotBackground;
-            boolean leftHandColumn = integer.intValue() % 2 == 0;
-            int row = (integer.intValue() / 2);
+                        if(integer.intValue() == 6) {
+                            GuiUtils.drawTexture(slotBackground, finalX + 16, y + 96, 32, 32, 26);
+                        } else {
+                            GuiUtils.drawTexture(slotBackground, finalX + (leftHandColumn? 0 : 32),
+                                    y + (32 * row), 32, 32, 26);
+                        }
 
-            if(currentSelected == integer.intValue()) {
-                slotBackground = SPECTROBE_SLOT_CURRENT_TEXTURE;
-            } else {
-                slotBackground = SPECTROBE_SLOT_TEXTURE;
-            }
+                        //draw spectrobes into the slots.
+                        if(uuid != null) {
+                            Spectrobe spectrobe = sm.getSpectrobeByUuid(uuid);
+                            SpectrobeIconInfo iconInfo = spectrobe.getIcon();
+                            float scalex = 32 / iconInfo.getWidth();
+                            float scaley = 32 / iconInfo.getHeight();
 
-            if(integer.intValue() == 6) {
-                GuiUtils.drawTexture(slotBackground, finalX + 16, y + 96, 32, 32, 26);
-            } else {
-                GuiUtils.drawTexture(slotBackground, finalX + (leftHandColumn? 0 : 32),
-                        y + (32 * row), 32, 32, 26);
-            }
+                            int marginleft = iconInfo.getWidth() < 31
+                                    ? ((32 - iconInfo.getWidth())/2)
+                                    : 0;
+                            int margintop = iconInfo.getHeight() < 31
+                                    ? ((32 - iconInfo.getHeight())/2)
+                                    : 0;
+                            if(integer.intValue() == 6) {
+                                GuiUtils.drawTexture(iconInfo.icon(), finalX + marginleft + 16, y + margintop + 96, iconInfo.getWidth() * scalex, iconInfo.getHeight() * scaley, 26);
+                                //draw red health bar.
+                                GuiUtils.drawColour(245, 66, 66, 100, finalX + 17, y + 126, 30, 2, 27);
 
-            //draw spectrobes into the slots.
-            if(uuid != null) {
-                Spectrobe spectrobe = sm.getSpectrobeByUuid(uuid);
-                SpectrobeIconInfo iconInfo = spectrobe.getIcon();
-                float scalex = 32 / iconInfo.getWidth();
-                float scaley = 32 / iconInfo.getHeight();
+                                //draw green for health bar, only fill a % of 30 pixels based on the % of health remaining.
+                                float widthScaled = ((float)spectrobe.currentHealth / (float)spectrobe.stats.getHpLevel()) * 30f;
+                                GuiUtils.drawColour(55, 179, 41, 100, finalX + 17, y + 126, Math.round(widthScaled), 2, 28);
 
-                int marginleft = iconInfo.getWidth() < 31
-                        ? ((32 - iconInfo.getWidth())/2)
-                        : 0;
-                int margintop = iconInfo.getHeight() < 31
-                        ? ((32 - iconInfo.getHeight())/2)
-                        : 0;
-                if(integer.intValue() == 6) {
-                    GuiUtils.drawTexture(iconInfo.icon(), finalX + marginleft + 16, y + margintop + 96, iconInfo.getWidth() * scalex, iconInfo.getHeight() * scaley, 26);
-                    //draw red health bar.
-                    GuiUtils.drawColour(245, 66, 66, 100, finalX + 17, y + 126, 30, 2, 27);
+                            } else {
+                                GuiUtils.drawTexture(iconInfo.icon(),
+                                        finalX + marginleft + (leftHandColumn? 0 : 32),
+                                        y + margintop + (row * 32), iconInfo.getWidth() * scalex, iconInfo.getHeight() * scaley, 26);
+                                //draw red health bar.
+                                GuiUtils.drawColour(245, 66, 66, 100, finalX + (leftHandColumn? 0 : 32), y + (row * 32) + 30, 30, 2, 27);
 
-                    //draw green for health bar, only fill a % of 30 pixels based on the % of health remaining.
-                    float widthScaled = ((float)spectrobe.currentHealth / (float)spectrobe.stats.getHpLevel()) * 30f;
-                    GuiUtils.drawColour(55, 179, 41, 100, finalX + 17, y + 126, Math.round(widthScaled), 2, 28);
+                                //draw green for health bar, only fill a % of 30 pixels based on the % of health remaining.
+                                float widthScaled = ((float)spectrobe.currentHealth / (float)spectrobe.stats.getHpLevel()) * 30f;
+                                GuiUtils.drawColour(55, 179, 41, 100, finalX + (leftHandColumn? 0 : 32), y + (row * 32) + 30, Math.round(widthScaled), 2, 28);
 
-                } else {
-                    GuiUtils.drawTexture(iconInfo.icon(),
-                            finalX + marginleft + (leftHandColumn? 0 : 32),
-                            y + margintop + (row * 32), iconInfo.getWidth() * scalex, iconInfo.getHeight() * scaley, 26);
-                    //draw red health bar.
-                    GuiUtils.drawColour(245, 66, 66, 100, finalX + (leftHandColumn? 0 : 32), y + (row * 32) + 30, 30, 2, 27);
-
-                    //draw green for health bar, only fill a % of 30 pixels based on the % of health remaining.
-                    float widthScaled = ((float)spectrobe.currentHealth / (float)spectrobe.stats.getHpLevel()) * 30f;
-                    GuiUtils.drawColour(55, 179, 41, 100, finalX + (leftHandColumn? 0 : 32), y + (row * 32) + 30, Math.round(widthScaled), 2, 28);
-
-                }
-            }
-        });
-        RenderSystem.disableAlphaTest();
-        ms.popPose();
+                            }
+                        }
+                    });
+                    RenderSystem.disableAlphaTest();
+                    ms.popPose();
+                });
     }
 }

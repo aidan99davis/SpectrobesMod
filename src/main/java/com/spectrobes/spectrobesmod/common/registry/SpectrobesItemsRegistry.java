@@ -10,6 +10,9 @@ import com.spectrobes.spectrobesmod.common.items.armour.BasicNppArmourItem;
 import com.spectrobes.spectrobesmod.common.items.fossils.*;
 import com.spectrobes.spectrobesmod.common.items.machines.HealerBlockItem;
 import com.spectrobes.spectrobesmod.common.items.weapons.*;
+import com.spectrobes.spectrobesmod.common.items.special.XellesTrophyItem;
+import com.spectrobes.spectrobesmod.common.items.weapons.BasicSwordItem;
+import com.spectrobes.spectrobesmod.common.items.weapons.SpectrobesWeapon;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorMaterial;
@@ -121,6 +124,14 @@ public class SpectrobesItemsRegistry {
                     () -> new HealerBlockItem(SpectrobesBlocks.healer_block.get(),
                             new Item.Properties()
                                     .setISTER(() -> HealerBlockItemRenderer::new)
+                                    .tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance)));
+
+    @SuppressWarnings("unused")
+    public static final RegistryObject<BlockItem> xelles_trophy_item =
+            ITEMS.register("xelles_trophy_item",
+                    () -> new XellesTrophyItem(SpectrobesBlocks.xelles_trophy.get(),
+                            new Item.Properties()
+                                    .setISTER(() -> XellesTrophyItemRenderer::new)
                                     .tab(SpectrobesItems.SpectrobesBlocksItemGroup.Instance)));
 
     public static final RegistryObject<BlockItem> grilda_fossil_item =

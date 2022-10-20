@@ -55,7 +55,7 @@ public abstract class SpectrobesRangedWeapon extends BowItem implements IAnimata
                 abstractarrowentity.setOwner(playerentity);
                 abstractarrowentity.setPos(playerentity.getX(), playerentity.getY() + 1.5, playerentity.getZ());
                 abstractarrowentity.shootFromRotation(playerentity, playerentity.xRot, playerentity.yRot, 0.0F, f, 1.0F);
-                abstractarrowentity.AtkDamage = GetWeaponStats().AtkDamage * f;
+                abstractarrowentity.AtkDamage = GetWeaponStats().AtkDamage;
                 abstractarrowentity.Nature = GetWeaponStats().Nature;
 
                 pLevel.addFreshEntity(abstractarrowentity);

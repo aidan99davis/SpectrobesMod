@@ -1,5 +1,6 @@
 package com.spectrobes.spectrobesmod.util;
 
+import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 
 public class DamageUtils {
@@ -9,13 +10,13 @@ public class DamageUtils {
 
         switch (advantage) {
             case -1:
-                typeBonus = atkPower * 0.75f;
+                typeBonus = 0.75f;
                 break;
             case 1:
-                typeBonus = atkPower * 1.5f;
+                typeBonus = 1.25f;
                 break;
             default:
-                typeBonus = atkPower;
+                typeBonus = 1;
                 break;
         }
         return typeBonus;
@@ -61,5 +62,13 @@ public class DamageUtils {
             default:
                 return false;
         }
+    }
+
+    public static float getFinalDamageAmount(float typeBonus, int atkPower, int powerScale, int defPower) {
+        float amount = (typeBonus * ((atkPower / 2.5f) * powerScale)) - ((defPower / 5) * typeBonus);
+
+        if(amount < 0) amount = 0;
+
+        return amount;
     }
 }

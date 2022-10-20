@@ -3,14 +3,15 @@ package com.spectrobes.spectrobesmod.common.entities.krawl;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.entities.IHasNature;
 import com.spectrobes.spectrobesmod.common.entities.attacks.EnergyBoltEntity;
-import com.spectrobes.spectrobesmod.common.entities.goals.AttackSpectrobeGoal;
-import com.spectrobes.spectrobesmod.common.entities.goals.AttackSpectrobeMasterGoal;
+import com.spectrobes.spectrobesmod.common.entities.krawl.goals.AttackSpectrobeGoal;
+import com.spectrobes.spectrobesmod.common.entities.krawl.goals.AttackSpectrobeMasterGoal;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.items.weapons.ISpectrobeWeapon;
 import com.spectrobes.spectrobesmod.common.items.weapons.SpectrobesWeapon;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
+import com.spectrobes.spectrobesmod.util.DamageUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
@@ -83,7 +84,7 @@ public abstract class EntityKrawl extends MonsterEntity implements IAnimatable, 
             IHasNature attacker = (IHasNature) damageSrc.getDirectEntity();
             int advantage = Spectrobe.hasTypeAdvantage(attacker, this);
 
-            float atkPower = 0;
+            int atkPower = 0;
 
             if(damageSrc.getDirectEntity() instanceof EntitySpectrobe)
                 atkPower = ((EntitySpectrobe) damageSrc.getDirectEntity()).getSpectrobeData().stats.getAtkLevel();
@@ -91,9 +92,9 @@ public abstract class EntityKrawl extends MonsterEntity implements IAnimatable, 
                 atkPower = ((EnergyBoltEntity) damageSrc.getDirectEntity()).AtkDamage;
 
             float typeBonus = getTypeBonus(advantage, Math.round(atkPower));
-            float defPower = GetKrawlProperties().getDefLevel();
+            int defPower = GetKrawlProperties().getDefLevel();
             int powerScale = 1;
-            float scaledAmount = typeBonus + (atkPower * powerScale) - (defPower / 4);
+            float scaledAmount = DamageUtils.getFinalDamageAmount(typeBonus, atkPower, powerScale, defPower);
 
             super.actuallyHurt(damageSrc, scaledAmount);
         }
@@ -105,10 +106,10 @@ public abstract class EntityKrawl extends MonsterEntity implements IAnimatable, 
                 int advantage = Spectrobe.hasTypeAdvantage(weapon, this);
                 int atkPower = weapon.GetWeaponStats().AtkDamage;
                 float typeBonus = getTypeBonus(advantage, atkPower);
-                float defPower = GetKrawlProperties().getDefLevel();
+                int defPower = GetKrawlProperties().getDefLevel();
                 int powerScale = 1; //todo this can be used to create secondary attacks for weapons which deal extra damage.
-                float scaledAmount = typeBonus + (atkPower * powerScale) - (defPower / 4);
-                SpectrobesInfo.LOGGER.debug("DAMAGING KRAWL BY: " + scaledAmount);
+
+                float scaledAmount = DamageUtils.getFinalDamageAmount(typeBonus, atkPower, powerScale, defPower);
                 super.actuallyHurt(damageSrc, scaledAmount);
             }
             else if(playerEntity.getOffhandItem().getItem() != null
@@ -117,10 +118,9 @@ public abstract class EntityKrawl extends MonsterEntity implements IAnimatable, 
                 int advantage = Spectrobe.hasTypeAdvantage(weapon, this);
                 int atkPower = weapon.GetWeaponStats().AtkDamage;
                 float typeBonus = getTypeBonus(advantage, atkPower);
-                float defPower = GetKrawlProperties().getDefLevel();
+                int defPower = GetKrawlProperties().getDefLevel();
                 int powerScale = 1; //todo this can be used to create secondary attacks for weapons which deal extra damage.
-                float scaledAmount = typeBonus + (atkPower * powerScale) - (defPower / 4);
-                SpectrobesInfo.LOGGER.debug("DAMAGING KRAWL BY: " + scaledAmount);
+                float scaledAmount = DamageUtils.getFinalDamageAmount(typeBonus, atkPower, powerScale, defPower);
                 super.actuallyHurt(damageSrc, scaledAmount);
             }
             else {

@@ -21,14 +21,13 @@ import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.world.SpectrobesEntitySpawns;
 import com.spectrobes.spectrobesmod.common.world.SpectrobesOreGen;
-import com.spectrobes.spectrobesmod.common.world.dimensions.SpectrobesDimensions;
 import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.network.datasync.IDataSerializer;
 import net.minecraft.util.Direction;
+import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -42,7 +41,6 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import software.bernie.geckolib3.GeckoLib;
 
 import javax.annotation.Nullable;
-import java.beans.EventHandler;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(SpectrobesInfo.MOD_ID)
@@ -83,6 +81,8 @@ public class SpectrobesMod
         IconRegistry.init();
         SpectrobesEntities.init();
         KrawlEntities.init();
+
+        event.enqueueWork(() -> EntitySpawnPlacementRegistry.register(KrawlEntities.ENTITY_VORTEX.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, SpectrobesEntitySpawns.MONSTER));
 
         CapabilityManager.INSTANCE.register(PlayerSpectrobeMaster.class, new Capability.IStorage<PlayerSpectrobeMaster>() {
             @Nullable

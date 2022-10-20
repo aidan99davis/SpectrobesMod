@@ -1,0 +1,27 @@
+package com.spectrobes.spectrobesmod.client.entity.krawl.renderer;
+
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.spectrobes.spectrobesmod.client.entity.krawl.model.XellesModel;
+import com.spectrobes.spectrobesmod.client.entity.krawl.model.XellesSporeHealModel;
+import com.spectrobes.spectrobesmod.common.entities.krawl.EntityHealingSpore;
+import com.spectrobes.spectrobesmod.common.entities.krawl.EntityXelles;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
+
+@OnlyIn(Dist.CLIENT)
+public class XellesSporeHealRenderer extends GeoEntityRenderer<EntityHealingSpore> {
+
+    public XellesSporeHealRenderer(EntityRendererManager renderManagerIn) {
+        super(renderManagerIn, new XellesSporeHealModel());
+    }
+
+    @Override
+    public void render(EntityHealingSpore entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
+        matrixStackIn.scale(4,4,4);
+        super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
+    }
+
+}
