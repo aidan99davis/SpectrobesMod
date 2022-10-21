@@ -8,6 +8,7 @@ import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
 import com.spectrobes.spectrobesmod.common.items.minerals.Mineral;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import com.spectrobes.spectrobesmod.common.registry.KrawlRegistry;
+import com.spectrobes.spectrobesmod.common.save_data.SpectrobesWorldSaveData;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ILivingEntityData;
@@ -24,6 +25,7 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.server.ServerWorld;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
@@ -48,7 +50,6 @@ public class EntityVortex extends EntityKrawl {
     public EntityVortex(EntityType<? extends MonsterEntity> type, World worldIn) {
         super(type, worldIn);
         children = new ArrayList<>();
-        setPersistenceRequired();
     }
 
     @Override
@@ -68,6 +69,10 @@ public class EntityVortex extends EntityKrawl {
 
     @Override
     public boolean isPersistenceRequired() {
+        if(!level.isClientSide()) {
+            SpectrobesWorldSaveData worldData = (SpectrobesWorldSaveData.getWorldData((ServerWorld) level));
+            return worldData.canSpawnNest(blockPosition());
+        }
         return super.isPersistenceRequired();
     }
 
@@ -79,6 +84,8 @@ public class EntityVortex extends EntityKrawl {
     @Override
     public void tick() {
         super.tick();
+
+        if(this.isOnFire()) this.remove();
 
         entityData.set(AGE_IN_TICKS, entityData.get(AGE_IN_TICKS) + 1);
     }

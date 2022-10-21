@@ -37,7 +37,7 @@ public class EnergyBoltEntity extends ThrowableEntity implements IHasNature, IAn
 
     protected void tickDespawn() {
         ++this.life;
-        if (this.life >= 1200) {
+        if (this.life >= 120) {
             this.remove();
         }
 
