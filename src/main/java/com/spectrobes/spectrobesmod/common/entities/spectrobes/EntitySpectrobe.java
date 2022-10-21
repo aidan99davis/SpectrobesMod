@@ -1,6 +1,5 @@
 package com.spectrobes.spectrobesmod.common.entities.spectrobes;
 
-import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.entities.IHasNature;
@@ -106,8 +105,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         this.goalSelector.addGoal(3, new FollowMasterGoal(this, 1, 2, 10, canFly()));
         this.goalSelector.addGoal(1, new AttackKrawlGoal(this, true, true));
         this.goalSelector.addGoal(1, new FindMineralsGoal(this));
-        this.goalSelector.addGoal(1, new FindFossilsGoal(this));
-        this.goalSelector.addGoal(1, new FindMineralOreGoal(this));
+        this.goalSelector.addGoal(1, new ChildFormSearchGoal(this));
         this.goalSelector.addGoal(3, new AvoidKrawlGoal(this, EntityKrawl.class, 10.0F, 1f, 1.1D));
         this.goalSelector.addGoal(4, new LeapAtTargetGoal(this, 0.4f));
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1f, true));

@@ -26,7 +26,6 @@ public class FollowMasterGoal extends Goal {
     private int timeToRecalcPath;
     private final float stopDistance;
     private final float startDistance;
-    private float oldWaterCost;
     private final boolean canFly;
 
     public FollowMasterGoal(TameableEntity entity, double followSpeed, float minDist, float maxDist, boolean canFly) {
@@ -82,7 +81,6 @@ public class FollowMasterGoal extends Goal {
      */
     public void start() {
         this.timeToRecalcPath = 0;
-        this.oldWaterCost = this.tamable.getPathfindingMalus(PathNodeType.WATER);
         this.tamable.setPathfindingMalus(PathNodeType.WATER, 0.0F);
     }
 
@@ -134,7 +132,7 @@ public class FollowMasterGoal extends Goal {
         } else if (!this.canTeleportTo(new BlockPos(pX, pY, pZ))) {
             return false;
         } else {
-            this.tamable.moveTo((double)pX + 0.5D, (double)pY, (double)pZ + 0.5D, this.tamable.yRot, this.tamable.xRot);
+            this.tamable.moveTo((double)pX + 0.5D, pY, (double)pZ + 0.5D, this.tamable.yRot, this.tamable.xRot);
             this.navigation.stop();
             return true;
         }
