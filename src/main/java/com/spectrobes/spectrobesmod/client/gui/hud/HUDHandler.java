@@ -129,10 +129,6 @@ public class HUDHandler {
     @OnlyIn(Dist.CLIENT)
     private static void drawSpectrobeMasterHealthBar(MatrixStack ms, MainWindow res) {
         Minecraft mc = Minecraft.getInstance();
-        if (!mc.player.inventory
-                .contains(SpectrobesItems.prizmod_item.getDefaultInstance())) {
-            return;
-        }
 
         mc.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
             .ifPresent(sm -> {
@@ -159,7 +155,7 @@ public class HUDHandler {
                 //draw green for health bar, only fill a % of 30 pixels based on the % of health remaining.
                 float widthScaled = ((float)sm.getCurrentHealth() / (float)sm.getMaxHealth()) * 100;
                 GuiUtils.drawColour(55, 179, 41, 100, finalX, y, Math.round(widthScaled), 15, 28);
-                Minecraft.getInstance().font.draw(ms, "Health: " + sm.getCurrentHealth() + "/" + sm.getMaxHealth(), finalX, y - 10, Color.BLACK.hashCode());
+                mc.font.draw(ms, "Health: " + sm.getCurrentHealth() + "/" + sm.getMaxHealth(), finalX, y - 10, Color.BLACK.hashCode());
                 RenderSystem.disableAlphaTest();
                 ms.popPose();
             });
