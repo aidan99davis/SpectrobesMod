@@ -50,7 +50,7 @@ public class AttackSpectrobeGoal extends TargetGoal {
     public void start() {
         this.mob.setTarget(this.target);
         ((EntityKrawl)this.mob).setIsAttacking(true);
-        this.mob.getNavigation().moveTo(this.mob.getNavigation().createPath(this.target, 1), 1.2);
+        this.mob.getNavigation().moveTo(this.mob.getNavigation().createPath(this.target, 1), 0.5);
         this.mob.setAggressive(true);
         super.start();
     }

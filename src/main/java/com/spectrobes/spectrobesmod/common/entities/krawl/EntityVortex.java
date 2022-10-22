@@ -13,6 +13,8 @@ import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ILivingEntityData;
 import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.ai.goal.FleeSunGoal;
+import net.minecraft.entity.ai.goal.RandomWalkingGoal;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.item.ItemStack;
@@ -58,6 +60,8 @@ public class EntityVortex extends EntityKrawl {
         this.goalSelector.addGoal(0, new AttackSpectrobeGoal(this, true, true));
         this.goalSelector.addGoal(1, new SpawnWaveGoal(this));
         this.goalSelector.addGoal(1, new KrawlVortexFormXellesGoal(this));
+        this.goalSelector.addGoal(2, new RandomWalkingGoal(this, 0.5d));
+        this.goalSelector.addGoal(3, new FleeSunGoal(this, 1.0D));
     }
 
     @Override
@@ -117,7 +121,6 @@ public class EntityVortex extends EntityKrawl {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Nullable
     @Override
     public ILivingEntityData finalizeSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
@@ -188,7 +191,6 @@ public class EntityVortex extends EntityKrawl {
         return KrawlRegistry.Vortex_Properties.copy();
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public void die(DamageSource source) {
         if(source == DamageSource.MAGIC) {

@@ -28,14 +28,6 @@ public class PlayerSpectrobeMaster {
     private List<Spectrobe>
         ownedSpectrobes;
 
-    public boolean canFight() {
-        return ownedSpectrobes
-                .stream()
-                .anyMatch(spectrobe ->
-                        spectrobe.properties.getStage()
-                                != SpectrobeProperties.Stage.CHILD);
-    }
-
     public Spectrobe getCurrentTeamMember() {
         UUID selectedUUID = getCurrentTeamUuids().get(currentSelected);
 
