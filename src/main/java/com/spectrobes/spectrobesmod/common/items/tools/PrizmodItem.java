@@ -13,8 +13,6 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-import net.minecraft.item.Item.Properties;
-
 public class PrizmodItem extends Item {
     public PrizmodItem(Properties properties) {
         super(properties);
@@ -30,12 +28,16 @@ public class PrizmodItem extends Item {
                 NetworkHooks.openGui((ServerPlayerEntity) playerIn, new SimpleNamedContainerProvider(
                                 (id, player, stack) -> new PrizmodContainer(id, (ServerPlayerEntity)playerIn),
                                 new StringTextComponent(""))
-//                        buf -> buf.writeItemStack(stack)
                 );
             }
         }
 
 
         return new ActionResult<>(ActionResultType.SUCCESS, itemStack);
+    }
+
+    @Override
+    public int getItemStackLimit(ItemStack stack) {
+        return 1;
     }
 }

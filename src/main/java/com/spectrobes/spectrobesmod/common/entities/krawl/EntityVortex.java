@@ -8,10 +8,13 @@ import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
 import com.spectrobes.spectrobesmod.common.items.minerals.Mineral;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import com.spectrobes.spectrobesmod.common.registry.KrawlRegistry;
+import com.spectrobes.spectrobesmod.common.save_data.SpectrobesWorldSaveData;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ILivingEntityData;
 import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.ai.goal.FleeSunGoal;
+import net.minecraft.entity.ai.goal.RandomWalkingGoal;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.item.ItemStack;
@@ -24,6 +27,7 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.server.ServerWorld;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
@@ -48,7 +52,6 @@ public class EntityVortex extends EntityKrawl {
     public EntityVortex(EntityType<? extends MonsterEntity> type, World worldIn) {
         super(type, worldIn);
         children = new ArrayList<>();
-        setPersistenceRequired();
     }
 
     @Override
@@ -57,6 +60,8 @@ public class EntityVortex extends EntityKrawl {
         this.goalSelector.addGoal(0, new AttackSpectrobeGoal(this, true, true));
         this.goalSelector.addGoal(1, new SpawnWaveGoal(this));
         this.goalSelector.addGoal(1, new KrawlVortexFormXellesGoal(this));
+        this.goalSelector.addGoal(2, new RandomWalkingGoal(this, 0.5d));
+        this.goalSelector.addGoal(3, new FleeSunGoal(this, 1.0D));
     }
 
     @Override
@@ -68,6 +73,10 @@ public class EntityVortex extends EntityKrawl {
 
     @Override
     public boolean isPersistenceRequired() {
+        if(!level.isClientSide()) {
+            SpectrobesWorldSaveData worldData = (SpectrobesWorldSaveData.getWorldData((ServerWorld) level));
+            return worldData.canSpawnNest(blockPosition());
+        }
         return super.isPersistenceRequired();
     }
 
@@ -79,6 +88,8 @@ public class EntityVortex extends EntityKrawl {
     @Override
     public void tick() {
         super.tick();
+
+        if(this.isOnFire()) this.remove();
 
         entityData.set(AGE_IN_TICKS, entityData.get(AGE_IN_TICKS) + 1);
     }
@@ -110,7 +121,6 @@ public class EntityVortex extends EntityKrawl {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Nullable
     @Override
     public ILivingEntityData finalizeSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
@@ -181,7 +191,6 @@ public class EntityVortex extends EntityKrawl {
         return KrawlRegistry.Vortex_Properties.copy();
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public void die(DamageSource source) {
         if(source == DamageSource.MAGIC) {

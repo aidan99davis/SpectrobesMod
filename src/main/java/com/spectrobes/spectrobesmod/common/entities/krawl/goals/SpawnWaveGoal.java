@@ -1,6 +1,7 @@
 package com.spectrobes.spectrobesmod.common.entities.krawl.goals;
 
 import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
+import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityVortex;
 import com.spectrobes.spectrobesmod.common.save_data.KrawlNest;
@@ -9,6 +10,8 @@ import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.TargetGoal;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.world.server.ServerWorld;
 
 import java.util.Random;
@@ -95,6 +98,16 @@ public class SpawnWaveGoal extends TargetGoal {
                     levelToSpawnAt[0] = 20;
                 }
             }
+
+            //check if player average spectrobes level is higher
+            if(mob.getTarget() instanceof PlayerEntity) {
+                mob.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(playerSpectrobeMaster -> {
+                    if(playerSpectrobeMaster.averageBattleTeamLevel() > levelToSpawnAt[0]) {
+                        levelToSpawnAt[0] = new Double(playerSpectrobeMaster.averageBattleTeamLevel()).intValue();
+                    }
+                });
+            }
+
             int krawlInWave = random.nextInt(2) + 1;
             for (int i = 0; i < krawlInWave; i++) {
                 EntityType<? extends EntityKrawl> krawl = KrawlEntities.getByLevel(levelToSpawnAt[0], mob.level);

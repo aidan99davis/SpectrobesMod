@@ -1,6 +1,5 @@
 package com.spectrobes.spectrobesmod.common.entities.spectrobes;
 
-import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.entities.IHasNature;
@@ -54,15 +53,11 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.function.Predicate;
 
 public abstract class EntitySpectrobe extends TameableEntity implements IEntityAdditionalSpawnData, IAnimatable, IHasNature {
     public static final Predicate<ItemEntity> MINERAL_SELECTOR = (itemEntity) -> !itemEntity.hasPickUpDelay() && itemEntity.isAlive() && itemEntity.getItem().getItem() instanceof MineralItem;
-    private static final Predicate<EntityKrawl> TARGET_KRAWL = (entity) -> {
-        EntityType<?> entitytype = entity.getType();
-        return !(entity).isVortex();
-    };
+    private static final Predicate<EntityKrawl> TARGET_KRAWL = (entity) -> !(entity).isVortex();
     private boolean recentInteract = false;
     private int ticksTillInteract = 0;
 
@@ -91,7 +86,6 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
 
     public AnimationFactory animationControllers = new AnimationFactory(this);
     protected AnimationController moveAnimationController = new AnimationController(this, "moveAnimationController", 10F, this::moveController);
-    private List<? extends EntitySpectrobe> children;
 
 
     public EntitySpectrobe(EntityType<? extends EntitySpectrobe> entityTypeIn,
@@ -106,11 +100,10 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         this.goalSelector.addGoal(3, new FollowMasterGoal(this, 1, 2, 10, canFly()));
         this.goalSelector.addGoal(1, new AttackKrawlGoal(this, true, true));
         this.goalSelector.addGoal(1, new FindMineralsGoal(this));
-        this.goalSelector.addGoal(1, new FindFossilsGoal(this));
-        this.goalSelector.addGoal(1, new FindMineralOreGoal(this));
-        this.goalSelector.addGoal(3, new AvoidKrawlGoal(this, EntityKrawl.class, 10.0F, 1f, 1.1D));
+        this.goalSelector.addGoal(1, new ChildFormSearchGoal(this));
+        this.goalSelector.addGoal(3, new AvoidKrawlGoal(this, EntityKrawl.class, 10.0F, 0.5d, 0.75d));
         this.goalSelector.addGoal(4, new LeapAtTargetGoal(this, 0.4f));
-        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1f, true));
+        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 0.5f, true));
         this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
 
@@ -208,13 +201,13 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
 
     public void despawn() {
         this.getSpectrobeData().setInactive();
-        if(this.getOwnerUUID() != null) {
-            this.getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
-                sm.setSpectrobeInactive(this.getSpectrobeData());
-            });
+        if(this.getOwner() != null) {
+            this.getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> sm.setSpectrobeInactive(this.getSpectrobeData()));
         }
         if(level.isClientSide()) {
-            Minecraft.getInstance().level.addParticle(ParticleTypes.FIREWORK, getX() + 0.5D, getY() + 1.0D, getZ() + 0.5D, 0.0D, 1.0D, 0.0D);
+            if (Minecraft.getInstance().level != null) {
+                Minecraft.getInstance().level.addParticle(ParticleTypes.FIREWORK, getX() + 0.5D, getY() + 1.0D, getZ() + 0.5D, 0.0D, 1.0D, 0.0D);
+            }
         }
         this.remove(false);
     }
@@ -384,7 +377,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     public abstract void mate();
 
     private boolean hasEvolution() {
-        return getEvolution() != null? true : false;
+        return getEvolution() != null;
     }
 
     private EntityType<? extends EntitySpectrobe> getEvolution() {

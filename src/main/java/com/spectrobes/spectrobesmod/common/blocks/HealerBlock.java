@@ -52,6 +52,7 @@ public class HealerBlock extends SpectrobesTileEntityBlock {
         if(!pLevel.isClientSide && pEntity instanceof PlayerEntity) {
             PlayerSpectrobeMaster capability = pEntity.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
                     .orElseThrow(IllegalStateException::new);
+            capability.setCurrentHealth(capability.getMaxHealth());
             capability.getCurrentTeamUuids().forEach((integer, uuid) -> {
 
                 if(uuid != null) {

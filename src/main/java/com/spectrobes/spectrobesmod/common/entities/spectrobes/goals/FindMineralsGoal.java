@@ -23,7 +23,7 @@ public class FindMineralsGoal extends Goal {
     }
 
     public boolean canUse() {
-        if(entity.getStage() == SpectrobeProperties.Stage.CHILD && (entity.isSearching() || entity.getOwner() == null)) {
+        if(entity.getStage() == SpectrobeProperties.Stage.CHILD && entity.getOwner() == null) {
             List<ItemEntity> minerals = entity.level.getEntitiesOfClass(ItemEntity.class, this.entity.getBoundingBox().inflate(8.0D, 8.0D, 8.0D), EntitySpectrobe.MINERAL_SELECTOR);
             return !minerals.isEmpty();
         }

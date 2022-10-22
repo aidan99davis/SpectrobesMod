@@ -16,7 +16,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import software.bernie.shadowed.eliotlash.mclib.math.functions.limit.Min;
 
+import java.awt.*;
 import java.util.Map;
 import java.util.UUID;
 
@@ -32,6 +34,8 @@ public class HUDHandler {
             MainWindow resolution = event.getWindow();
             float partialTicks = event.getPartialTicks();
             drawSpectrobeTeamBar(event.getMatrixStack(), resolution, partialTicks);
+
+            drawSpectrobeMasterHealthBar(event.getMatrixStack(), resolution);
         }
     }
 
@@ -120,5 +124,40 @@ public class HUDHandler {
                     RenderSystem.disableAlphaTest();
                     ms.popPose();
                 });
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    private static void drawSpectrobeMasterHealthBar(MatrixStack ms, MainWindow res) {
+        Minecraft mc = Minecraft.getInstance();
+
+        mc.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
+            .ifPresent(sm -> {
+                ms.pushPose();
+                RenderSystem.enableAlphaTest();
+
+                boolean right = false;
+
+                int pad = 5;
+                int width = 64;
+                int height = 20;
+                int bottomPadding = 10;
+
+                int x = pad;
+                if (right) {
+                    x = res.getGuiScaledWidth() + pad - width;
+                }
+                int y = (res.getGuiScaledHeight() - (height / 2)) - bottomPadding;
+                int finalX = x;
+
+                //draw red health bar.
+                GuiUtils.drawColour(245, 66, 66, 100, finalX, y, 100, 15, 27);
+
+                //draw green for health bar, only fill a % of 30 pixels based on the % of health remaining.
+                float widthScaled = ((float)sm.getCurrentHealth() / (float)sm.getMaxHealth()) * 100;
+                GuiUtils.drawColour(55, 179, 41, 100, finalX, y, Math.round(widthScaled), 15, 28);
+                mc.font.draw(ms, "Health: " + sm.getCurrentHealth() + "/" + sm.getMaxHealth(), finalX, y - 10, Color.BLACK.hashCode());
+                RenderSystem.disableAlphaTest();
+                ms.popPose();
+            });
     }
 }

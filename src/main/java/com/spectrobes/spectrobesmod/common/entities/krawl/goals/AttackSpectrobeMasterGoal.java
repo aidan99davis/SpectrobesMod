@@ -1,9 +1,6 @@
 package com.spectrobes.spectrobesmod.common.entities.krawl.goals;
 
-import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
-import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
-import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.TargetGoal;
 import net.minecraft.entity.player.PlayerEntity;
@@ -38,11 +35,8 @@ public class AttackSpectrobeMasterGoal extends TargetGoal {
             if (toAttack.get() != null || player.isCreative()) {
                 break;
             }
-            player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
-                if(sm.canFight()) {
-                    toAttack.set(player);
-                }
-            });
+            toAttack.set(player);
+
         }
 
         if (toAttack.get() != null) {
@@ -67,7 +61,7 @@ public class AttackSpectrobeMasterGoal extends TargetGoal {
     public void start() {
         this.mob.setTarget(this.target);
         ((EntityKrawl)this.mob).setIsAttacking(true);
-        this.mob.getNavigation().moveTo(this.mob.getNavigation().createPath(this.target, 1), 1.2);
+        this.mob.getNavigation().moveTo(this.mob.getNavigation().createPath(this.target, 1), 0.5);
         this.mob.setAggressive(true);
         super.start();
     }

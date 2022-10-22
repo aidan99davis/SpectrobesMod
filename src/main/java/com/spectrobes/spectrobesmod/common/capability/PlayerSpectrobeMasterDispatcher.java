@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
 
 public class PlayerSpectrobeMasterDispatcher implements ICapabilitySerializable<CompoundNBT> {
 
-    private PlayerSpectrobeMaster playerSpectrobeMaster = new PlayerSpectrobeMaster();
+    private final PlayerSpectrobeMaster playerSpectrobeMaster = new PlayerSpectrobeMaster();
 
     @Nonnull
     @Override
