@@ -43,6 +43,7 @@ public class PlayerEvents {
                 event.getOriginal().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(oldStore -> {
                     event.getPlayer().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(newStore -> {
                         newStore.copyFrom(oldStore);
+                        newStore.setCurrentHealth(newStore.getMaxHealth());
                         despawnSpectrobes(event, newStore);
                     });
                 });

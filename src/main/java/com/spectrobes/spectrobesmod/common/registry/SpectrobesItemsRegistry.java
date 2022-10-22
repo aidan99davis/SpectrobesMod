@@ -37,55 +37,55 @@ public class SpectrobesItemsRegistry {
 
     //Armour
     public static final RegistryObject<BasicNppArmourItem> BASIC_HEAD = ITEMS.register("basic_npp_helmet",
-            () -> new BasicNppArmourItem(SpectrobeProperties.Nature.OTHER, ArmorMaterial.DIAMOND, EquipmentSlotType.HEAD,
+            () -> new BasicNppArmourItem(SpectrobeProperties.Nature.OTHER, 10, ArmorMaterial.DIAMOND, EquipmentSlotType.HEAD,
                     new Item.Properties().tab(SpectrobesItems.SpectrobesArmourItemGroup.Instance)));
     public static final RegistryObject<BasicNppArmourItem> BASIC_CHEST = ITEMS.register("basic_npp_chestplate",
-            () -> new BasicNppArmourItem(SpectrobeProperties.Nature.OTHER, ArmorMaterial.DIAMOND, EquipmentSlotType.CHEST,
+            () -> new BasicNppArmourItem(SpectrobeProperties.Nature.OTHER, 20, ArmorMaterial.DIAMOND, EquipmentSlotType.CHEST,
                     new Item.Properties().tab(SpectrobesItems.SpectrobesArmourItemGroup.Instance)));
     public static final RegistryObject<BasicNppArmourItem> BASIC_LEGGINGS = ITEMS.register("basic_npp_leggings",
-            () -> new BasicNppArmourItem(SpectrobeProperties.Nature.OTHER, ArmorMaterial.DIAMOND, EquipmentSlotType.LEGS,
+            () -> new BasicNppArmourItem(SpectrobeProperties.Nature.OTHER, 10, ArmorMaterial.DIAMOND, EquipmentSlotType.LEGS,
                     new Item.Properties().tab(SpectrobesItems.SpectrobesArmourItemGroup.Instance)));
     public static final RegistryObject<BasicNppArmourItem> BASIC_BOOTS = ITEMS.register("basic_npp_boots",
-            () -> new BasicNppArmourItem(SpectrobeProperties.Nature.OTHER, ArmorMaterial.DIAMOND, EquipmentSlotType.FEET,
+            () -> new BasicNppArmourItem(SpectrobeProperties.Nature.OTHER, 10, ArmorMaterial.DIAMOND, EquipmentSlotType.FEET,
                     new Item.Properties().tab(SpectrobesItems.SpectrobesArmourItemGroup.Instance)));
 
     public static final RegistryObject<BasicNppArmourItem> BASIC_CORONA_HEAD = ITEMS.register("basic_corona_helmet",
-            () -> new BasicNppArmourItem(SpectrobeProperties.Nature.CORONA, ArmorMaterial.DIAMOND, EquipmentSlotType.HEAD,
+            () -> new BasicNppArmourItem(SpectrobeProperties.Nature.CORONA, 10, ArmorMaterial.DIAMOND, EquipmentSlotType.HEAD,
                     new Item.Properties().tab(SpectrobesItems.SpectrobesArmourItemGroup.Instance)));
     public static final RegistryObject<BasicNppArmourItem> BASIC_CORONA_CHEST = ITEMS.register("basic_corona_chestplate",
-            () -> new BasicNppArmourItem(SpectrobeProperties.Nature.CORONA, ArmorMaterial.DIAMOND, EquipmentSlotType.CHEST,
+            () -> new BasicNppArmourItem(SpectrobeProperties.Nature.CORONA, 20, ArmorMaterial.DIAMOND, EquipmentSlotType.CHEST,
                     new Item.Properties().tab(SpectrobesItems.SpectrobesArmourItemGroup.Instance)));
     public static final RegistryObject<BasicNppArmourItem> BASIC_CORONA_LEGGINGS = ITEMS.register("basic_corona_leggings",
-            () -> new BasicNppArmourItem(SpectrobeProperties.Nature.CORONA, ArmorMaterial.DIAMOND, EquipmentSlotType.LEGS,
+            () -> new BasicNppArmourItem(SpectrobeProperties.Nature.CORONA, 10, ArmorMaterial.DIAMOND, EquipmentSlotType.LEGS,
                     new Item.Properties().tab(SpectrobesItems.SpectrobesArmourItemGroup.Instance)));
     public static final RegistryObject<BasicNppArmourItem> BASIC_CORONA_BOOTS = ITEMS.register("basic_corona_boots",
-            () -> new BasicNppArmourItem(SpectrobeProperties.Nature.CORONA, ArmorMaterial.DIAMOND, EquipmentSlotType.FEET,
+            () -> new BasicNppArmourItem(SpectrobeProperties.Nature.CORONA, 10, ArmorMaterial.DIAMOND, EquipmentSlotType.FEET,
                     new Item.Properties().tab(SpectrobesItems.SpectrobesArmourItemGroup.Instance)));
 
     public static final RegistryObject<BasicNppArmourItem> BASIC_AURORA_HEAD = ITEMS.register("basic_aurora_helmet",
-            () -> new BasicNppArmourItem(SpectrobeProperties.Nature.AURORA, ArmorMaterial.DIAMOND, EquipmentSlotType.HEAD,
+            () -> new BasicNppArmourItem(SpectrobeProperties.Nature.AURORA, 10, ArmorMaterial.DIAMOND, EquipmentSlotType.HEAD,
                     new Item.Properties().tab(SpectrobesItems.SpectrobesArmourItemGroup.Instance)));
     public static final RegistryObject<BasicNppArmourItem> BASIC_AURORA_CHEST = ITEMS.register("basic_aurora_chestplate",
-            () -> new BasicNppArmourItem(SpectrobeProperties.Nature.AURORA, ArmorMaterial.DIAMOND, EquipmentSlotType.CHEST,
+            () -> new BasicNppArmourItem(SpectrobeProperties.Nature.AURORA, 20, ArmorMaterial.DIAMOND, EquipmentSlotType.CHEST,
                     new Item.Properties().tab(SpectrobesItems.SpectrobesArmourItemGroup.Instance)));
     public static final RegistryObject<BasicNppArmourItem> BASIC_AURORA_LEGGINGS = ITEMS.register("basic_aurora_leggings",
-            () -> new BasicNppArmourItem(SpectrobeProperties.Nature.AURORA, ArmorMaterial.DIAMOND, EquipmentSlotType.LEGS,
+            () -> new BasicNppArmourItem(SpectrobeProperties.Nature.AURORA, 10, ArmorMaterial.DIAMOND, EquipmentSlotType.LEGS,
                     new Item.Properties().tab(SpectrobesItems.SpectrobesArmourItemGroup.Instance)));
     public static final RegistryObject<BasicNppArmourItem> BASIC_AURORA_BOOTS = ITEMS.register("basic_aurora_boots",
-            () -> new BasicNppArmourItem(SpectrobeProperties.Nature.AURORA, ArmorMaterial.DIAMOND, EquipmentSlotType.FEET,
+            () -> new BasicNppArmourItem(SpectrobeProperties.Nature.AURORA, 20, ArmorMaterial.DIAMOND, EquipmentSlotType.FEET,
                     new Item.Properties().tab(SpectrobesItems.SpectrobesArmourItemGroup.Instance)));
 
     public static final RegistryObject<BasicNppArmourItem> BASIC_FLASH_HEAD = ITEMS.register("basic_flash_helmet",
-            () -> new BasicNppArmourItem(SpectrobeProperties.Nature.FLASH, ArmorMaterial.DIAMOND, EquipmentSlotType.HEAD,
+            () -> new BasicNppArmourItem(SpectrobeProperties.Nature.FLASH, 10, ArmorMaterial.DIAMOND, EquipmentSlotType.HEAD,
                     new Item.Properties().tab(SpectrobesItems.SpectrobesArmourItemGroup.Instance)));
     public static final RegistryObject<BasicNppArmourItem> BASIC_FLASH_CHEST = ITEMS.register("basic_flash_chestplate",
-            () -> new BasicNppArmourItem(SpectrobeProperties.Nature.FLASH, ArmorMaterial.DIAMOND, EquipmentSlotType.CHEST,
+            () -> new BasicNppArmourItem(SpectrobeProperties.Nature.FLASH, 20, ArmorMaterial.DIAMOND, EquipmentSlotType.CHEST,
                     new Item.Properties().tab(SpectrobesItems.SpectrobesArmourItemGroup.Instance)));
     public static final RegistryObject<BasicNppArmourItem> BASIC_FLASH_LEGGINGS = ITEMS.register("basic_flash_leggings",
-            () -> new BasicNppArmourItem(SpectrobeProperties.Nature.FLASH, ArmorMaterial.DIAMOND, EquipmentSlotType.LEGS,
+            () -> new BasicNppArmourItem(SpectrobeProperties.Nature.FLASH, 10, ArmorMaterial.DIAMOND, EquipmentSlotType.LEGS,
                     new Item.Properties().tab(SpectrobesItems.SpectrobesArmourItemGroup.Instance)));
     public static final RegistryObject<BasicNppArmourItem> BASIC_FLASH_BOOTS = ITEMS.register("basic_flash_boots",
-            () -> new BasicNppArmourItem(SpectrobeProperties.Nature.FLASH, ArmorMaterial.DIAMOND, EquipmentSlotType.FEET,
+            () -> new BasicNppArmourItem(SpectrobeProperties.Nature.FLASH, 10, ArmorMaterial.DIAMOND, EquipmentSlotType.FEET,
                     new Item.Properties().tab(SpectrobesItems.SpectrobesArmourItemGroup.Instance)));
 
     public static final RegistryObject<SpectrobesRangedWeapon> basic_blaster_item =

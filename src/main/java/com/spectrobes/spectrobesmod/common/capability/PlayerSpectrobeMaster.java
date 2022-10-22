@@ -21,7 +21,8 @@ public class PlayerSpectrobeMaster {
     private int guraBalance;
 
     private int currentHealth = 200;
-    private int level = 0;
+    private int maxHealth = 200;
+    private int level = 1;
     private int currentXp = 0;
     private int xp_required = 100;
 
@@ -119,6 +120,11 @@ public class PlayerSpectrobeMaster {
         }
         myData.putInt("currentSelected", currentSelected);
         myData.putInt("guraBalance", guraBalance);
+        myData.putInt("xpRequired", xp_required);
+        myData.putInt("currentXp", currentXp);
+        myData.putInt("level", level);
+        myData.putInt("currentHealth", currentHealth);
+        myData.putInt("maxHealth", maxHealth);
         myData.put("spectrobesOwned", spectrobes);
         myData.put("currentTeam", currentTeamNbt);
         return myData;
@@ -149,6 +155,46 @@ public class PlayerSpectrobeMaster {
         }
         guraBalance = gura;
 
+        int level;
+        try {
+            level = nbt.getInt("level");
+        } catch(NullPointerException ex) {
+            level = 0;
+        }
+        this.level = level;
+
+        int xpRequired;
+        try {
+            xpRequired = nbt.getInt("xpRequired");
+        } catch(NullPointerException ex) {
+            xpRequired = 200;
+        }
+        this.xp_required = xpRequired;
+
+        int currentXp;
+        try {
+            currentXp = nbt.getInt("currentXp");
+        } catch(NullPointerException ex) {
+            currentXp = 0;
+        }
+        this.currentXp = currentXp;
+
+        int maxHealth;
+        try {
+            maxHealth = nbt.getInt("maxHealth");
+        } catch(NullPointerException ex) {
+            maxHealth = 200;
+        }
+        this.maxHealth = maxHealth;
+
+        int currentHealth;
+        try {
+            currentHealth = nbt.getInt("currentHealth");
+        } catch(NullPointerException ex) {
+            currentHealth = 1;
+        }
+        this.currentHealth = currentHealth;
+
         List<Spectrobe> spectrobes = new ArrayList<>();
         for(INBT spectrobeNbt : ownedSpectrobesNbt) {
             spectrobes.add(Spectrobe.read((CompoundNBT)spectrobeNbt));
@@ -168,6 +214,11 @@ public class PlayerSpectrobeMaster {
         ownedSpectrobes = oldStore.ownedSpectrobes;
         currentTeam = oldStore.currentTeam;
         currentSelected = oldStore.currentSelected;
+        level = oldStore.level;
+        xp_required = oldStore.xp_required;
+        currentXp = oldStore.currentXp;
+        currentHealth = oldStore.currentHealth;
+        maxHealth = oldStore.maxHealth;
     }
 
     public int getOwnedSpectrobesCount() {
@@ -224,7 +275,6 @@ public class PlayerSpectrobeMaster {
         getCurrentTeamMember().setActive();
     }
 
-
     public Spectrobe getSpectrobeByUuid(UUID uuid) {
         for (Spectrobe s : getOwnedSpectrobes()) {
             if(s.SpectrobeUUID.equals(uuid)) {
@@ -253,5 +303,53 @@ public class PlayerSpectrobeMaster {
         } else {
             return false;
         }
+    }
+
+    public int getCurrentHealth() {
+        return currentHealth;
+    }
+
+    public void setCurrentHealth(int currentHealth) {
+        this.currentHealth = currentHealth;
+    }
+
+    public int getMaxHealth() {
+        return maxHealth;
+    }
+
+    public void setMaxHealth(int maxHealth) {
+        this.maxHealth = maxHealth;
+        if(currentHealth > maxHealth) currentHealth = maxHealth;
+        if(maxHealth < 200) setMaxHealth(200);
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public int getCurrentXp() {
+        return currentXp;
+    }
+
+    public void setCurrentXp(int currentXp) {
+        this.currentXp = currentXp;
+
+        if(this.currentXp >= getXp_required()) {
+            this.currentXp = this.currentXp - getXp_required();
+            this.level++;
+            this.setXp_required(new Double(getXp_required() * 1.2).intValue());
+        }
+    }
+
+    public int getXp_required() {
+        return xp_required;
+    }
+
+    public void setXp_required(int xp_required) {
+        this.xp_required = xp_required;
     }
 }
