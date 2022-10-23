@@ -120,7 +120,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
                 .add(Attributes.ATTACK_DAMAGE, 5.0D)
                 .add(Attributes.ATTACK_SPEED, 1f)
                 .add(Attributes.FOLLOW_RANGE, 10.0D)
-                .add(Attributes.ATTACK_KNOCKBACK, 5.0D);
+                .add(Attributes.ATTACK_KNOCKBACK, 3.0D);
     }
 
     @Override

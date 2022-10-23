@@ -35,7 +35,8 @@ public class PlanetaryTeleporterBlock extends MultiTextureBlock {
     @Override
     public ActionResultType use(BlockState pState, World pLevel, BlockPos pPos, PlayerEntity pPlayer, Hand pHand, BlockRayTraceResult pHit) {
         if(pLevel.isClientSide) {
-            SpectrobesNetwork.sendToServer(new SChangeDimensionPacket());
+            if(!pPlayer.isShiftKeyDown())
+                SpectrobesNetwork.sendToServer(new SChangeDimensionPacket());
             return ActionResultType.SUCCESS;
         }
         return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);

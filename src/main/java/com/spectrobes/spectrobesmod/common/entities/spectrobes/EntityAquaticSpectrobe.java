@@ -1,6 +1,7 @@
 package com.spectrobes.spectrobesmod.common.entities.spectrobes;
 
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.AquaticJumpGoal;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.SpectrobeFindWaterGoal;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.LookController;
@@ -15,7 +16,6 @@ import java.util.List;
 import java.util.Random;
 
 public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
-    private static final EntityPredicate SWIM_WITH_PLAYER_TARGETING = (new EntityPredicate()).range(10.0D).allowSameTeam().allowInvulnerable().allowUnseeable();
     public EntityAquaticSpectrobe(EntityType<? extends EntitySpectrobe> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
         this.setPathfindingMalus(PathNodeType.WATER, 0.0F);
@@ -49,8 +49,7 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
         super.registerGoals();
 //        this.goalSelector.addGoal(0, new SwimWithPlayerGoal(this, 1.0D));
         this.goalSelector.addGoal(8, new RandomSwimmingGoal(this, 1D, 10));
-        this.goalSelector.addGoal(4, new FindWaterGoal(this));
-        this.goalSelector.addGoal(8, new FollowBoatGoal(this));
+        this.goalSelector.addGoal(4, new SpectrobeFindWaterGoal(this));
         this.goalSelector.addGoal(5, new AquaticJumpGoal(this, 10));
     }
 
