@@ -318,8 +318,11 @@ public class PlayerSpectrobeMaster {
     }
 
     public void setMaxHealth(int maxHealth) {
+        boolean scaleHealth = false;
+        if(this.currentHealth == this.maxHealth) scaleHealth = true;
         this.maxHealth = maxHealth;
         if(currentHealth > maxHealth) currentHealth = maxHealth;
+        if(scaleHealth) this.currentHealth = (this.currentHealth / this.maxHealth);
         if(maxHealth < 200) setMaxHealth(200);
     }
 
@@ -335,8 +338,8 @@ public class PlayerSpectrobeMaster {
         return currentXp;
     }
 
-    public void setCurrentXp(int currentXp) {
-        this.currentXp = currentXp;
+    public void addXp(int currentXp) {
+        this.currentXp = this.currentXp + currentXp;
 
         if(this.currentXp >= getXp_required()) {
             this.currentXp = this.currentXp - getXp_required();
