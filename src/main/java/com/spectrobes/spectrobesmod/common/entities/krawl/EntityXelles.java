@@ -24,6 +24,8 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -163,6 +165,10 @@ public class EntityXelles extends EntityBossKrawl {
         }
     }
 
+    @Override
+    public ITextComponent getDisplayName() {
+        return new StringTextComponent(super.getDisplayName().getString() + " - Stage: " + getStage());
+    }
 
     @Override
     @ParametersAreNonnullByDefault

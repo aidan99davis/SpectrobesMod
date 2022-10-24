@@ -1,31 +1,24 @@
 package com.spectrobes.spectrobesmod.common.entities.spectrobes;
 
-import net.minecraft.block.Blocks;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.SpectrobeFindWaterGoal;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.LookController;
 import net.minecraft.entity.ai.controller.MovementController;
 import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.pathfinding.*;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.tags.FluidTags;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Random;
 
 
 public abstract class EntityCrustaceanSpectrobe extends EntitySpectrobe {
-    private static final EntityPredicate SWIM_WITH_PLAYER_TARGETING = (new EntityPredicate()).range(10.0D).allowSameTeam().allowInvulnerable().allowUnseeable();
     public EntityCrustaceanSpectrobe(EntityType<? extends EntitySpectrobe> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
         this.setPathfindingMalus(PathNodeType.WATER, 0.0F);
-        this.setPathfindingMalus(PathNodeType.WALKABLE, 1.0F);
+        this.setPathfindingMalus(PathNodeType.WALKABLE, 0.0F);
         this.moveControl = new MoveHelperController(this);
         this.lookControl = new SpectrobeLookController(this, 10);
     }
@@ -45,19 +38,13 @@ public abstract class EntityCrustaceanSpectrobe extends EntitySpectrobe {
         super.aiStep();
     }
 
-//    protected PathNavigator createNavigator(World world) {
-//        return new EntityCrustaceanSpectrobe.Navigator(this, world);
-//    }
-
-
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(2, new FindWaterGoal(this));
+        this.goalSelector.addGoal(2, new SpectrobeFindWaterGoal(this));
         this.goalSelector.addGoal(9, new LookRandomlyGoal(this));
         this.goalSelector.addGoal(7, new RandomWalkingGoal(this, 1));
         this.goalSelector.addGoal(7, new RandomSwimmingGoal(this, 1, 10));
-        this.goalSelector.addGoal(8, new FollowBoatGoal(this));
     }
 
     @Override
@@ -130,7 +117,7 @@ public abstract class EntityCrustaceanSpectrobe extends EntitySpectrobe {
                 double lvt_1_1_ = this.wantedX - this.fish.getX();
                 double lvt_3_1_ = this.wantedY - this.fish.getY();
                 double lvt_5_1_ = this.wantedZ - this.fish.getZ();
-                double lvt_7_1_ = (double)MathHelper.sqrt(lvt_1_1_ * lvt_1_1_ + lvt_3_1_ * lvt_3_1_ + lvt_5_1_ * lvt_5_1_);
+                double lvt_7_1_ = MathHelper.sqrt(lvt_1_1_ * lvt_1_1_ + lvt_3_1_ * lvt_3_1_ + lvt_5_1_ * lvt_5_1_);
                 lvt_3_1_ /= lvt_7_1_;
                 float lvt_9_1_ = (float)(MathHelper.atan2(lvt_5_1_, lvt_1_1_) * 57.2957763671875D) - 90.0F;
                 this.fish.yRot = this.rotlerp(this.fish.yRot, lvt_9_1_, 90.0F);
@@ -141,7 +128,7 @@ public abstract class EntityCrustaceanSpectrobe extends EntitySpectrobe {
         }
     }
 
-    public class SpectrobeLookController extends LookController {
+    private static class SpectrobeLookController extends LookController {
         private final int maxYRotFromCenter;
 
         public SpectrobeLookController(MobEntity p_i48942_1_, int p_i48942_2_) {
@@ -165,12 +152,12 @@ public abstract class EntityCrustaceanSpectrobe extends EntitySpectrobe {
                 this.mob.yHeadRot = this.rotateTowards(this.mob.yHeadRot, this.mob.yBodyRot, this.yMaxRotSpeed);
             }
 
-            float f = MathHelper.wrapDegrees(this.mob.yHeadRot - this.mob.yBodyRot);
-            if (f < (float)(-this.maxYRotFromCenter)) {
-                this.mob.yBodyRot -= 4.0F;
-            } else if (f > (float)this.maxYRotFromCenter) {
-                this.mob.yBodyRot += 4.0F;
-            }
+//            float f = MathHelper.wrapDegrees(this.mob.yHeadRot - this.mob.yBodyRot);
+//            if (f < (float)(-this.maxYRotFromCenter)) {
+//                this.mob.yBodyRot -= 4.0F;
+//            } else if (f > (float)this.maxYRotFromCenter) {
+//                this.mob.yBodyRot += 4.0F;
+//            }
 
         }
     }
