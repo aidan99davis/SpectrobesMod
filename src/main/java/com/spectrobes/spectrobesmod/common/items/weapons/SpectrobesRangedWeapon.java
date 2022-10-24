@@ -4,6 +4,7 @@ import com.spectrobes.spectrobesmod.client.entity.attacks.AttackEntities;
 import com.spectrobes.spectrobesmod.common.entities.attacks.EnergyBoltEntity;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import com.spectrobes.spectrobesmod.util.WeaponStats;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
@@ -15,6 +16,8 @@ import net.minecraft.item.*;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -27,7 +30,9 @@ import software.bernie.geckolib3.network.GeckoLibNetwork;
 import software.bernie.geckolib3.network.ISyncable;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
+import javax.annotation.Nullable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.function.Predicate;
 
 public abstract class SpectrobesRangedWeapon extends BowItem implements IAnimatable, ISyncable, ISpectrobeWeapon {
@@ -68,6 +73,15 @@ public abstract class SpectrobesRangedWeapon extends BowItem implements IAnimata
             }
         }
     }
+
+    @Override
+    public void appendHoverText(ItemStack pStack, @Nullable World pLevel, List<ITextComponent> pTooltip, ITooltipFlag pFlag) {
+        super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
+        pTooltip.add(new StringTextComponent("Weapon Tier: " + GetWeaponStats().Tier));
+        pTooltip.add(new StringTextComponent("Attack Stat: " + GetWeaponStats().AtkDamage));
+        pTooltip.add(new StringTextComponent("Weapon Speed: " + GetWeaponStats().Speed));
+    }
+
 
     @Override
     public Predicate<ItemStack> getAllSupportedProjectiles() {
