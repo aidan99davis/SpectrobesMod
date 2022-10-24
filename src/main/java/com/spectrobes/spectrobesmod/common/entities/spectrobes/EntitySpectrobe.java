@@ -120,7 +120,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
                 .add(Attributes.ATTACK_DAMAGE, 5.0D)
                 .add(Attributes.ATTACK_SPEED, 1f)
                 .add(Attributes.FOLLOW_RANGE, 10.0D)
-                .add(Attributes.ATTACK_KNOCKBACK, 3.0D);
+                .add(Attributes.ATTACK_KNOCKBACK, 1.0D);
     }
 
     @Override
@@ -513,6 +513,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
             if(getOwner() != null) {
                 getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
                     sm.updateSpectrobe(spectrobeInstance);
+                    sm.addXp(krawlProperties.getXpWorth());
                     sm.addGura(krawlProperties.getGuraWorth());
                     SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(sm), (ServerPlayerEntity) getOwner());
                 });

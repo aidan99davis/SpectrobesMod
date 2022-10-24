@@ -16,11 +16,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import software.bernie.shadowed.eliotlash.mclib.math.functions.limit.Min;
 
 import java.awt.*;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = SpectrobesInfo.MOD_ID)
 public class HUDHandler {
@@ -35,7 +35,9 @@ public class HUDHandler {
             float partialTicks = event.getPartialTicks();
             drawSpectrobeTeamBar(event.getMatrixStack(), resolution, partialTicks);
 
-            drawSpectrobeMasterHealthBar(event.getMatrixStack(), resolution);
+            int finalWidth = drawSpectrobeMasterHealthBar(event.getMatrixStack(), resolution);
+
+            drawSpectrobeMasterXpBar(event.getMatrixStack(), resolution, finalWidth);
         }
     }
 
@@ -127,7 +129,44 @@ public class HUDHandler {
     }
 
     @OnlyIn(Dist.CLIENT)
-    private static void drawSpectrobeMasterHealthBar(MatrixStack ms, MainWindow res) {
+    private static int drawSpectrobeMasterHealthBar(MatrixStack ms, MainWindow res) {
+        Minecraft mc = Minecraft.getInstance();
+        AtomicInteger finalWidth = new AtomicInteger(0);
+
+        mc.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
+            .ifPresent(sm -> {
+                ms.pushPose();
+                RenderSystem.enableAlphaTest();
+
+                int pad = 5;
+                int width = 10;
+                int height = 32;
+                int bottomPadding = 40;
+
+                int x = pad;
+                int y = (res.getGuiScaledHeight() - (height / 2)) - bottomPadding;
+                String healthText = sm.getCurrentHealth() + "/" + sm.getMaxHealth();
+                int finalX = x + (Minecraft.getInstance().font.width(healthText) / 2) - (width / 2);
+
+                //draw red health bar.
+                GuiUtils.drawColour(107, 0, 0, 100, finalX, y, width, height, 27);
+
+                //draw green for health bar, only fill a % of 30 pixels based on the % of health remaining.
+                float heightScaled = ((float)sm.getCurrentHealth() / (float)sm.getMaxHealth()) * height;
+                GuiUtils.drawColour(33, 252, 13, 100, finalX, y + (height-Math.round(heightScaled)), width, Math.round(heightScaled), 28);
+                mc.font.draw(ms, "HP", finalX, y - 10, Color.BLACK.hashCode());
+                mc.font.draw(ms, healthText, x, y + height + 10, Color.BLACK.hashCode());
+                RenderSystem.disableAlphaTest();
+                ms.popPose();
+                int completeWidth = finalX + Minecraft.getInstance().font.width(healthText);
+                finalWidth.set(completeWidth);
+            });
+
+        return finalWidth.get();
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    private static void drawSpectrobeMasterXpBar(MatrixStack ms, MainWindow res, int basePadding) {
         Minecraft mc = Minecraft.getInstance();
 
         mc.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
@@ -135,27 +174,25 @@ public class HUDHandler {
                 ms.pushPose();
                 RenderSystem.enableAlphaTest();
 
-                boolean right = false;
-
-                int pad = 5;
-                int width = 64;
-                int height = 20;
-                int bottomPadding = 10;
+                int pad = 10 + basePadding;
+                int width = 10;
+                int height = 32;
+                int bottomPadding = 40;
 
                 int x = pad;
-                if (right) {
-                    x = res.getGuiScaledWidth() + pad - width;
-                }
                 int y = (res.getGuiScaledHeight() - (height / 2)) - bottomPadding;
-                int finalX = x;
+                String xpText = sm.getCurrentXp() + "/" + sm.getXp_required();
+                String lvlText = "Lvl: " + sm.getLevel();
+                int finalX = x + (Minecraft.getInstance().font.width(xpText) / 2) - (width / 2);
 
                 //draw red health bar.
-                GuiUtils.drawColour(245, 66, 66, 100, finalX, y, 100, 15, 27);
+                GuiUtils.drawColour(0, 128, 129, 100, finalX, y, width, height, 27);
 
                 //draw green for health bar, only fill a % of 30 pixels based on the % of health remaining.
-                float widthScaled = ((float)sm.getCurrentHealth() / (float)sm.getMaxHealth()) * 100;
-                GuiUtils.drawColour(55, 179, 41, 100, finalX, y, Math.round(widthScaled), 15, 28);
-                mc.font.draw(ms, "Health: " + sm.getCurrentHealth() + "/" + sm.getMaxHealth(), finalX, y - 10, Color.BLACK.hashCode());
+                float heightScaled = ((float)sm.getCurrentXp() / (float)sm.getXp_required()) * height;
+                GuiUtils.drawColour(0, 255, 255, 100, finalX, y + (height-Math.round(heightScaled)), width, Math.round(heightScaled), 28);
+                mc.font.draw(ms, lvlText, finalX - (Minecraft.getInstance().font.width(lvlText) / 2) + (width/2), y - 10, Color.BLACK.hashCode());
+                mc.font.draw(ms, xpText, x, y + height + 10, Color.BLACK.hashCode());
                 RenderSystem.disableAlphaTest();
                 ms.popPose();
             });

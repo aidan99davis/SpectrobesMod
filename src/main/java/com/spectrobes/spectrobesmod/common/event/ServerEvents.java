@@ -8,15 +8,14 @@ import com.spectrobes.spectrobesmod.common.entities.IHasNature;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.items.armour.ISpectrobeArmour;
+import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSyncSpectrobeMasterPacket;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import com.spectrobes.spectrobesmod.util.DamageUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -32,30 +31,43 @@ public class ServerEvents {
     public static void OnPlayerJoin(PlayerEvent.PlayerLoggedInEvent evt) {
         if(!evt.getPlayer().level.isClientSide()) {
             evt.getPlayer().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
-                    .ifPresent(sm ->
-                            SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(sm),
-                                (ServerPlayerEntity) evt.getPlayer()));
+                .ifPresent(sm -> {
+                    int currentHealth = sm.getCurrentHealth();
+                    sm.setMaxHealth(200);
+//                    evt.getPlayer().getArmorSlots().forEach(armourItem -> {
+//                        if(armourItem.getItem() instanceof ISpectrobeArmour) {
+//                            ISpectrobeArmour specArmourItem = (ISpectrobeArmour) armourItem.getItem();
+//                            sm.setMaxHealth(sm.getMaxHealth() + specArmourItem.GetHealthBonus());
+//                        }
+//                    });
+                    sm.setCurrentHealth(currentHealth);
+
+                    SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(sm),
+                        (ServerPlayerEntity) evt.getPlayer());
+                });
+
         }
     }
 
     @SubscribeEvent
     public static void OnLivingEntityDeath(LivingDeathEvent event) {
         if(event.getEntityLiving() instanceof EntityKrawl) {
+            KrawlProperties krawlProperties = ((EntityKrawl)event.getEntityLiving()).krawlProperties;
             if(event.getEntityLiving().getKillCredit() instanceof EntitySpectrobe) {
                 EntitySpectrobe spectrobe = (EntitySpectrobe) event.getEntityLiving().getKillCredit();
-                spectrobe.awardKillStats(((EntityKrawl)event.getEntityLiving()).krawlProperties);
+                spectrobe.awardKillStats(krawlProperties);
             }
             if(event.getEntityLiving().getKillCredit() instanceof ServerPlayerEntity) {
                 ServerPlayerEntity player = (ServerPlayerEntity)event.getEntityLiving().getKillCredit();
 
                 player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
+                    sm.addXp(krawlProperties.getXpWorth());
                     sm.addGura(((EntityKrawl)event.getEntityLiving()).krawlProperties.getGuraWorth());
                     SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(sm), player);
                 });
             }
         }
     }
-
 
     @SubscribeEvent
     public static void OnLivingEntityUpdate(LivingEvent.LivingUpdateEvent event) {
@@ -86,7 +98,7 @@ public class ServerEvents {
                 if(!event.getEntityLiving().level.isClientSide()) {
                     SpectrobesInfo.LOGGER.debug("beneficialArmours: " + beneficialArmours);
                     SpectrobesInfo.LOGGER.debug("detrimentalArmours: " + detrimentalArmours);
-                    float armourBenefitVal = (beneficialArmours - detrimentalArmours) / 100;
+                    float armourBenefitVal = (beneficialArmours - detrimentalArmours) / 100f;
                     SpectrobesInfo.LOGGER.debug("armourBenefitVal 1: " + armourBenefitVal);
                     if(armourBenefitVal <= 0) armourBenefitVal = 0;
                     SpectrobesInfo.LOGGER.debug("armount: " + event.getAmount());

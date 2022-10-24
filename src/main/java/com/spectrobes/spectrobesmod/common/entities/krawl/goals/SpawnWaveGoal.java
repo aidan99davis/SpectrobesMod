@@ -4,6 +4,7 @@ import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityVortex;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.save_data.KrawlNest;
 import com.spectrobes.spectrobesmod.common.save_data.SpectrobesWorldSaveData;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
@@ -11,7 +12,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.TargetGoal;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.world.server.ServerWorld;
 
 import java.util.Random;
@@ -67,22 +67,6 @@ public class SpawnWaveGoal extends TargetGoal {
         Random random = new Random();
 
         final int[] levelToSpawnAt = {1};
-//        if(mob.getTarget() instanceof PlayerEntity) {
-//            PlayerEntity player = (PlayerEntity) mob.getTarget();
-//            player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(playerCap -> {
-//                levelToSpawnAt[0] = Math.toIntExact(Math.round(playerCap.averageBattleTeamLevel()));
-//            });
-//        } else if(mob.getTarget() instanceof EntitySpectrobe) {
-//            EntitySpectrobe spectrobe = (EntitySpectrobe) mob.getTarget();
-//            if(spectrobe.getOwner() != null) {
-//                PlayerEntity player = (PlayerEntity) spectrobe.getOwner();
-//                player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(playerCap -> {
-//                    levelToSpawnAt[0] = Math.toIntExact(Math.round(playerCap.averageBattleTeamLevel()));
-//                });
-//            } else {
-//                levelToSpawnAt[0] = spectrobe.getLevel();
-//            }
-//        }
 
         if(!mob.level.isClientSide()) {
             SpectrobesWorldSaveData spectrobesWorldSaveData = SpectrobesWorldSaveData.getWorldData((ServerWorld) mob.level);
@@ -101,11 +85,20 @@ public class SpawnWaveGoal extends TargetGoal {
 
             //check if player average spectrobes level is higher
             if(mob.getTarget() instanceof PlayerEntity) {
-                mob.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(playerSpectrobeMaster -> {
-                    if(playerSpectrobeMaster.averageBattleTeamLevel() > levelToSpawnAt[0]) {
-                        levelToSpawnAt[0] = new Double(playerSpectrobeMaster.averageBattleTeamLevel()).intValue();
+                mob.getTarget().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(playerSpectrobeMaster -> {
+                    if(playerSpectrobeMaster.getLevel() > levelToSpawnAt[0]) {
+                        levelToSpawnAt[0] = playerSpectrobeMaster.getLevel();
                     }
                 });
+            }
+            if(mob.getTarget() instanceof EntitySpectrobe) {
+                if(((EntitySpectrobe)mob.getTarget()).getOwner() != null) {
+                    ((EntitySpectrobe)mob.getTarget()).getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(playerSpectrobeMaster -> {
+                        if(playerSpectrobeMaster.getLevel() > levelToSpawnAt[0]) levelToSpawnAt[0] = playerSpectrobeMaster.getLevel();
+                    });
+                } else {
+                    if(((EntitySpectrobe)mob.getTarget()).getLevel() > levelToSpawnAt[0]) levelToSpawnAt[0] = ((EntitySpectrobe)mob).getLevel();
+                }
             }
 
             int krawlInWave = random.nextInt(2) + 1;

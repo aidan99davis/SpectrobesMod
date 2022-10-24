@@ -230,7 +230,7 @@ public class SpectrobesEntities {
             = ENTITY_TYPES.register("entity_harumite",
             () -> EntityType.Builder.of(EntityHarumite::new,
                     EntityClassification.MONSTER)
-                    .sized(2f, 2f)
+                    .sized(1.5f, 1.5f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "harumite").toString()));
 
     public static final RegistryObject<EntityType<EntityGrilda>> ENTITY_GRILDA
