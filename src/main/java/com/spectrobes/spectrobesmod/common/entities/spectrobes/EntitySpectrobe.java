@@ -407,9 +407,11 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
             spectrobe.setCustomName(new StringTextComponent(spectrobeInstance.name));
             updateEntityAttributes();
             if(getOwner() != null) {
+
                 getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
                     sm.updateSpectrobe(spectrobe.getSpectrobeData());
                     SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(sm), (ServerPlayerEntity) getOwner());
+                    spectrobe.despawn();
                 });
                 spectrobe.setOwnerUUID(getOwnerUUID());
             }
@@ -418,6 +420,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
                 getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
                     sm.updateSpectrobe(spectrobeInstance);
                     SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket(sm));
+                    getOwner().sendMessage(new StringTextComponent("Your spectrobe has evolved and returned to the prizmod."), getOwner().getUUID());
                 });
             }
             level.addParticle(ParticleTypes.FLASH, getX() + 0.5D, getY() + 1.0D, getZ() + 0.5D, 0.0D, 0.0D, 0.0D);
