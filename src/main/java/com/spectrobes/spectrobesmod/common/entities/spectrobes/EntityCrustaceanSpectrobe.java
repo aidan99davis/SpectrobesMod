@@ -152,12 +152,12 @@ public abstract class EntityCrustaceanSpectrobe extends EntitySpectrobe {
                 this.mob.yHeadRot = this.rotateTowards(this.mob.yHeadRot, this.mob.yBodyRot, this.yMaxRotSpeed);
             }
 
-            float f = MathHelper.wrapDegrees(this.mob.yHeadRot - this.mob.yBodyRot);
-            if (f < (float)(-this.maxYRotFromCenter)) {
-                this.mob.yBodyRot -= 4.0F;
-            } else if (f > (float)this.maxYRotFromCenter) {
-                this.mob.yBodyRot += 4.0F;
-            }
+//            float f = MathHelper.wrapDegrees(this.mob.yHeadRot - this.mob.yBodyRot);
+//            if (f < (float)(-this.maxYRotFromCenter)) {
+//                this.mob.yBodyRot -= 4.0F;
+//            } else if (f > (float)this.maxYRotFromCenter) {
+//                this.mob.yBodyRot += 4.0F;
+//            }
 
         }
     }

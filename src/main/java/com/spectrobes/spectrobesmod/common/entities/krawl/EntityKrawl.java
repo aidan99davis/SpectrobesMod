@@ -1,6 +1,5 @@
 package com.spectrobes.spectrobesmod.common.entities.krawl;
 
-import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.entities.IHasNature;
 import com.spectrobes.spectrobesmod.common.entities.attacks.EnergyBoltEntity;
 import com.spectrobes.spectrobesmod.common.entities.krawl.goals.AttackSpectrobeGoal;
@@ -139,6 +138,7 @@ public abstract class EntityKrawl extends MonsterEntity implements IAnimatable, 
         if(this.isSunBurnTick()) {
             this.setSecondsOnFire(8);
         }
+        if((getLastHurtByMobTimestamp() - this.tickCount) > 200) this.setHealth(getHealth() + (getHealth() / 100));
     }
 
     @Override

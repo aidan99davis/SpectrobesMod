@@ -323,6 +323,7 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
             ticksTillInteract--;
         if(ticksTillInteract == 0)
             recentInteract = false;
+        if(getOwner() == null && (getLastHurtByMobTimestamp() - this.tickCount) > 200) this.setHealth(getHealth() + (getHealth() / 100));
         tryEvolve();
 
     }
