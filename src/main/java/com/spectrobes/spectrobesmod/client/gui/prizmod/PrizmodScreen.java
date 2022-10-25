@@ -1,7 +1,6 @@
 package com.spectrobes.spectrobesmod.client.gui.prizmod;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.spectrobes.spectrobesmod.client.container.PrizmodContainer;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.Pages.LineUpPage;
 import com.spectrobes.spectrobesmod.client.gui.utils.GuiUtils;

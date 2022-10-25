@@ -5,13 +5,8 @@ import com.spectrobes.spectrobesmod.common.entities.attacks.EnergyBoltEntity;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import com.spectrobes.spectrobesmod.util.WeaponStats;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
-import net.minecraft.entity.projectile.AbstractFireballEntity;
-import net.minecraft.entity.projectile.FireballEntity;
 import net.minecraft.item.*;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.SoundCategory;
@@ -31,7 +26,6 @@ import software.bernie.geckolib3.network.ISyncable;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
-import java.util.HashSet;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -64,11 +58,8 @@ public abstract class SpectrobesRangedWeapon extends BowItem implements IAnimata
                 abstractarrowentity.Nature = GetWeaponStats().Nature;
 
                 pLevel.addFreshEntity(abstractarrowentity);
-//                if (!pLevel.isClientSide) {
-//
-//                }
 
-                pLevel.playSound((PlayerEntity)null, playerentity.getX(), playerentity.getY(), playerentity.getZ(), SoundEvents.ARROW_SHOOT, SoundCategory.PLAYERS, 1.0F, 1.0F / (random.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
+                pLevel.playSound(null, playerentity.getX(), playerentity.getY(), playerentity.getZ(), SoundEvents.ARROW_SHOOT, SoundCategory.PLAYERS, 1.0F, 1.0F / (random.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
                 playerentity.awardStat(Stats.ITEM_USED.get(this));
             }
         }
@@ -103,7 +94,7 @@ public abstract class SpectrobesRangedWeapon extends BowItem implements IAnimata
     }
 
     public <P extends Item & IAnimatable> PlayState predicate(AnimationEvent<P> event) {
-        return PlayState.CONTINUE;
+        return event.isMoving() ? PlayState.CONTINUE : PlayState.STOP;
     }
 
     public abstract WeaponStats GetWeaponStats();

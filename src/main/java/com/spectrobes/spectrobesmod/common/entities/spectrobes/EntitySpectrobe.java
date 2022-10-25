@@ -1,5 +1,8 @@
 package com.spectrobes.spectrobesmod.common.entities.spectrobes;
 
+import com.spectrobes.spectrobesmod.client.container.PrizmodContainer;
+import com.spectrobes.spectrobesmod.client.container.SpectrobeDetailsContainer;
+import com.spectrobes.spectrobesmod.client.gui.spectrobes_details.SpectrobeDetailsScreen;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.entities.IHasNature;
@@ -26,6 +29,7 @@ import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.container.SimpleNamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
@@ -155,9 +159,19 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
                 SpecialMineralItem mineralItem = (SpecialMineralItem)itemstack.getItem();
                 applySpecialMineral(mineralItem);
                 itemstack.shrink(1);
-            } else if(itemstack.getItem() instanceof PrizmodItem && player.isShiftKeyDown()) {
+            } else if(itemstack.getItem() instanceof PrizmodItem) {
                 if(player == getOwner()) {
-                    despawn();
+                    if(player.isShiftKeyDown()) {
+                        if(player.level.isClientSide())
+                            Minecraft.getInstance()
+                                    .setScreen(
+                                    new SpectrobeDetailsScreen(
+                                            new SpectrobeDetailsContainer(
+                                                    0,
+                                                    getSpectrobeData()),
+                                            player.inventory,
+                                            new StringTextComponent("")));
+                    }
                 }
             }
         }
@@ -385,7 +399,9 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         return getEvolutionRegistry();
     }
 
-    protected abstract EvolutionRequirements getEvolutionRequirements();
+    protected EvolutionRequirements getEvolutionRequirements() {
+        return getSpectrobeData().evolutionRequirements;
+    }
 
     protected boolean canEvolve() {
         EvolutionRequirements requirements = getEvolutionRequirements();
@@ -398,28 +414,27 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
     private void evolve() {
         Spectrobe spectrobeInstance = getSpectrobeData();
         if(!level.isClientSide()) {
-            EntitySpectrobe spectrobe = getEvolutionRegistry().create(level);
-            spectrobe.moveTo(getX(), getY(), getZ(), 0.0F, 0.0F);
-            this.level.addFreshEntity(spectrobe);
-            spectrobe.setPos(getX(), getY(), getZ());
-            spectrobeInstance.evolve(spectrobe.getSpectrobeData());
-            spectrobe.setSpectrobeData(spectrobeInstance);
-            spectrobe.setCustomName(new StringTextComponent(spectrobeInstance.name));
+            EntitySpectrobe evolution = getEvolutionRegistry().create(level);
+            evolution.moveTo(getX(), getY(), getZ(), 0.0F, 0.0F);
+            this.level.addFreshEntity(evolution);
+            evolution.setPos(getX(), getY(), getZ());
+            spectrobeInstance.evolve(evolution.getSpectrobeData());
+            evolution.setSpectrobeData(spectrobeInstance);
+            evolution.setCustomName(new StringTextComponent(spectrobeInstance.name));
             updateEntityAttributes();
             if(getOwner() != null) {
-
+                evolution.setOwnerUUID(getOwnerUUID());
                 getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
-                    sm.updateSpectrobe(spectrobe.getSpectrobeData());
+                    sm.updateSpectrobe(evolution.getSpectrobeData());
                     SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(sm), (ServerPlayerEntity) getOwner());
-                    spectrobe.despawn();
+                    evolution.despawn();
                 });
-                spectrobe.setOwnerUUID(getOwnerUUID());
             }
         } else {
             if(getOwner() != null) {
                 getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
                     sm.updateSpectrobe(spectrobeInstance);
-                    SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket(sm));
+//                    SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket(sm));
                     getOwner().sendMessage(new StringTextComponent("Your spectrobe has evolved and returned to the prizmod."), getOwner().getUUID());
                 });
             }

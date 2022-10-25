@@ -74,11 +74,6 @@ public class EntityNaguryu extends EntityMammalSpectrobe {
     }
 
     @Override
-    protected EvolutionRequirements getEvolutionRequirements() {
-        return new EvolutionRequirements(46, 15, 10);
-    }
-
-    @Override
     protected FossilBlockItem getFossil() {
         return (FossilBlockItem) SpectrobesItemsRegistry.nagu_fossil_item.get().getItem();
     }

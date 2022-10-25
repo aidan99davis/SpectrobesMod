@@ -68,12 +68,6 @@ public class EntityZozane extends EntityMammalSpectrobe {
     }
 
     @Override
-    protected EvolutionRequirements getEvolutionRequirements() {
-        //returning null makes canEvolve always evaluate to false.
-        return null;
-    }
-
-    @Override
     protected FossilBlockItem getFossil() {
         return (FossilBlockItem) SpectrobesItemsRegistry.zoza_fossil_item.get().getItem();
     }

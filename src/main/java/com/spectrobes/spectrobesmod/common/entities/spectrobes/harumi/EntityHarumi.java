@@ -76,9 +76,4 @@ public class EntityHarumi extends EntityCrustaceanSpectrobe {
     protected FossilBlockItem getFossil() {
         return (FossilBlockItem) SpectrobesItemsRegistry.harumi_fossil_item.get().getItem();
     }
-
-    @Override
-    protected EvolutionRequirements getEvolutionRequirements() {
-        return new EvolutionRequirements(1, 5, 0);
-    }
 }
