@@ -277,7 +277,6 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         return entityData.get(SPECTROBE_DATA);
     }
     public void setSpectrobeData(Spectrobe spectrobe) {
-        Spectrobe oldData = entityData.get(SPECTROBE_DATA);
         entityData.set(SPECTROBE_DATA, spectrobe);
         updateEntityAttributes();
     }
