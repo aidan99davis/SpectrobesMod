@@ -4,6 +4,7 @@ import com.spectrobes.spectrobesmod.client.armour.ArmourRendererRegisterer;
 import com.spectrobes.spectrobesmod.client.blocks.BlockRendererManager;
 import com.spectrobes.spectrobesmod.client.container.HealerContainer;
 import com.spectrobes.spectrobesmod.client.container.PrizmodContainer;
+import com.spectrobes.spectrobesmod.client.container.SpectrobeDetailsContainer;
 import com.spectrobes.spectrobesmod.client.entity.attacks.AttackEntities;
 import com.spectrobes.spectrobesmod.client.entity.attacks.AttackRendererManager;
 import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
@@ -11,6 +12,7 @@ import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlRendererManager;
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobeRendererManager;
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.client.gui.healer.HealerScreen;
+import com.spectrobes.spectrobesmod.client.gui.spectrobes_details.SpectrobeDetailsScreen;
 import com.spectrobes.spectrobesmod.client.keybindings.SpectrobesKeybindings;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.registry.*;
@@ -103,6 +105,7 @@ public class SpectrobesMod
     {
         ScreenManager.register(PrizmodContainer.PRIZMOD.get(), PrizmodScreen::new);
         ScreenManager.register(HealerContainer.HEALER.get(), HealerScreen::new);
+        ScreenManager.register(SpectrobeDetailsContainer.SPECTROBE_DETAILS.get(), SpectrobeDetailsScreen::new);
         SpectrobeRendererManager.init();
         //force load the serializer to prevent clients crashing
         IDataSerializer serializer = Spectrobe.SpectrobeSerializer;

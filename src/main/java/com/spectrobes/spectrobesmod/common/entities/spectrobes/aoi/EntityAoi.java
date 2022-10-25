@@ -70,11 +70,6 @@ public class EntityAoi extends EntityAvianSpectrobe {
     }
 
     @Override
-    protected EvolutionRequirements getEvolutionRequirements() {
-        return new EvolutionRequirements(1, 6, 0);
-    }
-
-    @Override
     protected FossilBlockItem getFossil() {
         return (FossilBlockItem) SpectrobesItemsRegistry.aoi_fossil_item.get();
     }

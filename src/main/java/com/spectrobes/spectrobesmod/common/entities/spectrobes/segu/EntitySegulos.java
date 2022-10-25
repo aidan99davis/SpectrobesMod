@@ -84,11 +84,6 @@ public class EntitySegulos extends EntityMammalSpectrobe {
     }
 
     @Override
-    protected EvolutionRequirements getEvolutionRequirements() {
-        return null;
-    }
-
-    @Override
     protected FossilBlockItem getFossil() {
         return (FossilBlockItem) SpectrobesItemsRegistry.segu_fossil_item.get().getItem();
     }

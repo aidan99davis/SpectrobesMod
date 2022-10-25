@@ -70,11 +70,6 @@ public class EntityDongor extends EntityMammalSpectrobe {
     }
 
     @Override
-    protected EvolutionRequirements getEvolutionRequirements() {
-        return new EvolutionRequirements(1, 6, 0);
-    }
-
-    @Override
     protected FossilBlockItem getFossil() {
         return (FossilBlockItem) SpectrobesItemsRegistry.dongor_fossil_item.get().getItem();
     }

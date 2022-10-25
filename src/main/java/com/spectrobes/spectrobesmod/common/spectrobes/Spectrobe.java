@@ -21,8 +21,12 @@ public class Spectrobe {
     public UUID MasterUUID;
 
     public UUID SpectrobeUUID = UuidUtil.getTimeBasedUuid();
+
     @Required
     public String name;
+
+    public String custom_name;
+
     @Required
     public SpectrobeProperties properties;
 
@@ -35,12 +39,19 @@ public class Spectrobe {
 
     public int Variant;
 
+    @Required
+    public EvolutionRequirements evolutionRequirements;
+
     public Spectrobe copy(boolean copyUUID) {
         return new SpectrobeBuilder().buildFrom(this, copyUUID);
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setCustomName(String name) {
+        this.custom_name = name;
     }
 
     public void setCurrentHealth(int currentHealth) {
@@ -52,6 +63,10 @@ public class Spectrobe {
 
     public void setMasterUUID(UUID masterUUID) {
         this.MasterUUID = masterUUID;
+    }
+
+    public void setEvolutionRequirements(EvolutionRequirements evolutionRequirements) {
+        this.evolutionRequirements = evolutionRequirements;
     }
 
     public void setProperties(SpectrobeProperties properties) {
@@ -77,6 +92,7 @@ public class Spectrobe {
         this.name = evolution.name;
         this.properties = evolution.properties;
         this.stats.setStatsOrBase(evolution.stats);
+        this.evolutionRequirements = evolution.evolutionRequirements;
         this.currentHealth = this.stats.getHpLevel();
     }
 
@@ -88,6 +104,7 @@ public class Spectrobe {
     public CompoundNBT write() {
         CompoundNBT compoundnbt = new CompoundNBT();
         compoundnbt.putString("name", name);
+        compoundnbt.putString("custom_name", custom_name);
         compoundnbt.putInt("currentHealth", currentHealth);
         compoundnbt.putUUID("SpectrobeUUID", SpectrobeUUID);
         if(MasterUUID != null) {
@@ -98,6 +115,7 @@ public class Spectrobe {
 
         compoundnbt.put("SpectrobeStats", stats.write());
         compoundnbt.put("SpectrobeProperties", properties.write());
+        compoundnbt.put("EvolutionRequirements", evolutionRequirements.write());
 
         return compoundnbt;
     }
@@ -120,10 +138,17 @@ public class Spectrobe {
         }
 
         s.name = nbtData.get("name").getAsString();
+        try {
+            s.custom_name = nbtData.getString("custom_name");
+        } catch(NullPointerException ex) {
+            s.custom_name = s.name;
+        }
+
         s.active = nbtData.getBoolean("active");
         s.properties = SpectrobeProperties.read(((CompoundNBT) nbtData.get("SpectrobeProperties")));
 
         s.stats = SpectrobeStats.read((CompoundNBT) nbtData.get("SpectrobeStats"));
+        s.evolutionRequirements = EvolutionRequirements.read((CompoundNBT) nbtData.get("EvolutionRequirements"));
         try {
             s.currentHealth = nbtData.getInt("currentHealth");
         } catch(NullPointerException ex) {
@@ -151,10 +176,12 @@ public class Spectrobe {
 
     public void update(Spectrobe spectrobeInstance) {
         setName(spectrobeInstance.name);
+        setCustomName(spectrobeInstance.custom_name);
         setProperties(spectrobeInstance.properties);
         setVariant(spectrobeInstance.Variant);
         setStats(spectrobeInstance.stats);
         setMasterUUID(spectrobeInstance.MasterUUID);
+        setEvolutionRequirements(spectrobeInstance.evolutionRequirements);
         setCurrentHealth(spectrobeInstance.currentHealth);
     }
 

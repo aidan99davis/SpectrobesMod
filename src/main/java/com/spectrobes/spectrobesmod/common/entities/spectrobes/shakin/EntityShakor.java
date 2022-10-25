@@ -80,12 +80,6 @@ public class EntityShakor extends EntityAquaticSpectrobe {
     }
 
     @Override
-    protected EvolutionRequirements getEvolutionRequirements() {
-        //returning null makes canEvolve always evaluate to false.
-        return null;
-    }
-
-    @Override
     public Class getSpectrobeClass() {
         return EntityShakor.class;
     }

@@ -132,13 +132,14 @@ public class ServerEvents {
             if(event.getFrom().getItem()  instanceof ISpectrobeArmour) {
                 ISpectrobeArmour armourItem = (ISpectrobeArmour) event.getFrom().getItem();
                 psm.setMaxHealth(psm.getMaxHealth() - armourItem.GetHealthBonus());
+                SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(psm), (ServerPlayerEntity) event.getEntityLiving());
             }
             if(event.getTo().getItem() instanceof ISpectrobeArmour) {
                 ISpectrobeArmour armourItem = (ISpectrobeArmour) event.getTo().getItem();
                 psm.setMaxHealth(psm.getMaxHealth() + armourItem.GetHealthBonus());
+                SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(psm), (ServerPlayerEntity) event.getEntityLiving());
             }
 
-            SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(psm), (ServerPlayerEntity) event.getEntityLiving());
         }
     }
 }

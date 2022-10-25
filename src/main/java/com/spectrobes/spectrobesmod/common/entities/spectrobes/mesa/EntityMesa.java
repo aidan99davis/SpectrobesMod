@@ -71,11 +71,6 @@ public class EntityMesa extends EntityMammalSpectrobe {
     }
 
     @Override
-    protected EvolutionRequirements getEvolutionRequirements() {
-        return new EvolutionRequirements(1, 4, 0);
-    }
-
-    @Override
     protected FossilBlockItem getFossil() {
         return (FossilBlockItem) SpectrobesItemsRegistry.mesa_fossil_item.get().getItem();
     }

@@ -75,9 +75,4 @@ public class EntityShakin extends EntityAquaticSpectrobe {
     protected FossilBlockItem getFossil() {
         return (FossilBlockItem) SpectrobesItemsRegistry.shakin_fossil_item.get().getItem();
     }
-
-    @Override
-    protected EvolutionRequirements getEvolutionRequirements() {
-        return new EvolutionRequirements(1, 5, 0);
-    }
 }

@@ -70,11 +70,6 @@ public class EntityBartor extends EntityMammalSpectrobe {
     }
 
     @Override
-    protected EvolutionRequirements getEvolutionRequirements() {
-        return new EvolutionRequirements(1, 3, 0);
-    }
-
-    @Override
     protected FossilBlockItem getFossil() {
         return (FossilBlockItem) SpectrobesItemsRegistry.bartor_fossil_item.get().getItem();
     }

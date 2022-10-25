@@ -73,12 +73,6 @@ public class EntitySpikan extends EntityMammalSpectrobe {
     }
 
     @Override
-    protected EvolutionRequirements getEvolutionRequirements() {
-        //returning null makes canEvolve always evaluate to false.
-        return null;
-    }
-
-    @Override
     protected FossilBlockItem getFossil() {
         return (FossilBlockItem) SpectrobesItemsRegistry.spiko_fossil_item.get().getItem();
     }

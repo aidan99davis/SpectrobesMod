@@ -74,11 +74,6 @@ public class EntityMossarito extends EntityMammalSpectrobe {
     }
 
     @Override
-    protected EvolutionRequirements getEvolutionRequirements() {
-        return new EvolutionRequirements(25, 6, 9);
-    }
-
-    @Override
     protected FossilBlockItem getFossil() {
         return (FossilBlockItem) SpectrobesItemsRegistry.mossari_fossil_item.get().getItem();
     }

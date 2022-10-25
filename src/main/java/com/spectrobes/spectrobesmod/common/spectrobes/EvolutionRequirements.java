@@ -58,4 +58,16 @@ public class EvolutionRequirements {
     public EvolutionRequirements copy() {
         return new EvolutionRequirements(level_required, minerals_eaten, battles_fought);
     }
+
+    public int getMineralsRequired() {
+        return minerals_eaten;
+    }
+
+    public int getBattlesRequired() {
+        return battles_fought;
+    }
+
+    public int getLevelRequired() {
+        return level_required;
+    }
 }
