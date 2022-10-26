@@ -4,18 +4,23 @@ import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.container.PrizmodContainer;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
+import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.CSyncSpectrobeMasterPacket;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.SChangeDimensionPacket;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.SDespawnSpectrobePacket;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSpawnSpectrobePacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.*;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
+import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.InputMappings;
+import net.minecraft.entity.projectile.ProjectileHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.EntityRayTraceResult;
+import net.minecraft.util.math.RayTraceContext;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -33,11 +38,13 @@ public class SpectrobesKeybindings {
     public static KeyBinding OPEN_TOOL_MENU_KEYBIND;
     public static KeyBinding CYCLE_TOOL_MENU_LEFT_KEYBIND;
     public static KeyBinding CYCLE_TOOL_MENU_RIGHT_KEYBIND;
+    public static KeyBinding ATTACK_KEYBIND;
 //    public static KeyBinding TP_TO_GENSHI_KEYBIND;
 
     private static boolean toolMenuKeyWasDown = false;
     private static boolean cycleLeftKeyWasDown = false;
     private static boolean cycleRightKeyWasDown = false;
+    private static boolean attackKeyWasDown = false;
 //    private static boolean tpKeyWasDown = false;
 
     public static void initKeybinds()
@@ -50,6 +57,9 @@ public class SpectrobesKeybindings {
 
         ClientRegistry.registerKeyBinding(CYCLE_TOOL_MENU_RIGHT_KEYBIND =
                 new KeyBinding("key.prizmod.cycle.right",  InputMappings.UNKNOWN.getValue(), "key.prizmod.category"));
+
+        ClientRegistry.registerKeyBinding(ATTACK_KEYBIND =
+                new KeyBinding("key.prizmod.attack",  GLFW.GLFW_KEY_F, "key.prizmod.category"));
 
 //        ClientRegistry.registerKeyBinding(TP_TO_GENSHI_KEYBIND =
 //                new KeyBinding("key.prizmod.tp.genshi",  InputMappings.UNKNOWN.getValue(), "key.prizmod.category"));
@@ -74,6 +84,55 @@ public class SpectrobesKeybindings {
         if (mc.screen == null && mc.player.inventory
                 .contains(new ItemStack(SpectrobesItems.prizmod_item)))
         {
+            boolean attackKeyIsDown = ATTACK_KEYBIND.isDown();
+            if (attackKeyIsDown && !attackKeyWasDown)
+            {
+                while (ATTACK_KEYBIND.consumeClick())
+                {
+                    Vector3d vector3d = mc.player.getEyePosition(1.0F);
+                    Vector3d vector3d1 = mc.player.getViewVector(1.0F);
+                    double d0 = 15;
+                    double d1 = d0 * d0;
+                    Vector3d vector3d2 = vector3d.add(vector3d1.x * d0, vector3d1.y * d0, vector3d1.z * d0);
+                    AxisAlignedBB axisalignedbb = mc.player.getBoundingBox().expandTowards(vector3d1.scale(d0)).inflate(1.0D, 1.0D, 1.0D);
+
+                    SpectrobesInfo.LOGGER.debug("STARTED RAYTRACTING");
+                    EntityRayTraceResult result = ProjectileHelper.getEntityHitResult(mc.player,
+                            vector3d, vector3d2, axisalignedbb,
+                            entity -> entity instanceof EntityKrawl,
+                            d1);
+                    SpectrobesInfo.LOGGER.debug("FINISHED RAYTRACTING");
+
+                    if (result != null) {
+                        SpectrobesInfo.LOGGER.debug("RESULT NOT NULL");
+                        if (result.getEntity() != null) {
+                            SpectrobesInfo.LOGGER.debug("RESULT.getEntity() NOT NULL");
+                            if (result.getEntity() instanceof EntityKrawl) {
+                                EntityKrawl krawl = (EntityKrawl) result.getEntity();
+                                SpectrobesInfo.LOGGER.debug("FOUND A KRAWL");
+                                mc.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
+                                    if (sm.getCurrentTeamMember() != null && sm.getCurrentTeamMember().active && sm.getCurrentTeamMember().properties.getStage() != SpectrobeProperties.Stage.CHILD) {
+                                        List<EntitySpectrobe> spectrobes = mc.player.level
+                                                .getEntitiesOfClass(EntitySpectrobe.class, mc.player.getBoundingBox().inflate(30, 30, 30));
+                                        SpectrobesInfo.LOGGER.debug("PLAYER SPECTROBE ACTIVE AND NOT A CHILD");
+                                        for (EntitySpectrobe spectrobe :
+                                                spectrobes) {
+                                            SpectrobesInfo.LOGGER.debug("CHECKING SPECTROBE: " + spectrobe.getSpectrobeData().name);
+                                            if (spectrobe.getSpectrobeData().SpectrobeUUID.equals(sm.getCurrentTeamMember().SpectrobeUUID)) {
+                                                SpectrobesInfo.LOGGER.debug("SENDING ATTACK PACKET");
+                                                SpectrobesNetwork.sendToServer(new CSpectrobeAttackPacket(spectrobe.getId(), krawl.getId()));
+                                                spectrobe.setTarget(krawl);
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+            attackKeyWasDown = attackKeyIsDown;
+
             boolean toolMenuKeyIsDown = OPEN_TOOL_MENU_KEYBIND.isDown();
             if (toolMenuKeyIsDown && !toolMenuKeyWasDown)
             {

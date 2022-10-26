@@ -72,6 +72,12 @@ public class SpectrobesNetwork {
                 .decoder(SDespawnSpectrobePacket::fromBytes)
                 .consumer(SDespawnSpectrobePacket::handle)
                 .add();
+
+        INSTANCE.messageBuilder(CSpectrobeAttackPacket.class, nextID())
+                .encoder(CSpectrobeAttackPacket::toBytes)
+                .decoder(CSpectrobeAttackPacket::fromBytes)
+                .consumer(CSpectrobeAttackPacket::handle)
+                .add();
     }
 
     public static void sendToClient(Object packet, ServerPlayerEntity player) {
