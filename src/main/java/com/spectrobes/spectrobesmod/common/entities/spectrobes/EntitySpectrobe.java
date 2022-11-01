@@ -1,6 +1,5 @@
 package com.spectrobes.spectrobesmod.common.entities.spectrobes;
 
-import com.spectrobes.spectrobesmod.client.container.PrizmodContainer;
 import com.spectrobes.spectrobesmod.client.container.SpectrobeDetailsContainer;
 import com.spectrobes.spectrobesmod.client.gui.spectrobes_details.SpectrobeDetailsScreen;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
@@ -12,6 +11,7 @@ import com.spectrobes.spectrobesmod.common.items.fossils.FossilBlockItem;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
 import com.spectrobes.spectrobesmod.common.items.minerals.SpecialMineralItem;
 import com.spectrobes.spectrobesmod.common.items.tools.PrizmodItem;
+import com.spectrobes.spectrobesmod.common.items.tools.healing.SpectrobeSerumHealingItem;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.CSyncSpectrobeMasterPacket;
@@ -151,6 +151,10 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
                     printSpectrobeToChat(player);
                 }
 
+            } else if (itemstack.getItem() instanceof SpectrobeSerumHealingItem){
+                SpectrobeSerumHealingItem serum = (SpectrobeSerumHealingItem)itemstack.getItem();
+                healSpectrobe(serum.getSpectrobeHealAmount());
+                itemstack.shrink(1);
             } else if (itemstack.getItem() instanceof MineralItem){
                 MineralItem mineralItem = (MineralItem)itemstack.getItem();
                 applyMineral(mineralItem);
@@ -179,6 +183,20 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
         recentInteract = true;
         ticksTillInteract = 15;
         return super.mobInteract(player, hand);
+    }
+
+    private void healSpectrobe(int spectrobeHealAmount) {
+        if(level.isClientSide()) {
+            if(getOwner() != null) {
+                getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
+                    Spectrobe specData = getSpectrobeData();
+                    specData.addHealth(spectrobeHealAmount);
+                    sm.updateSpectrobe(specData);
+                    SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket(sm));
+                    getOwner().sendMessage(new StringTextComponent("Your spectrobe has been healed: " + spectrobeHealAmount + " HP Points."), getOwner().getUUID());
+                });
+            }
+        }
     }
 
     private void cycleState(PlayerEntity player) {

@@ -1,6 +1,7 @@
 package com.spectrobes.spectrobesmod.common.registry;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
+import com.spectrobes.spectrobesmod.client.items.healing.renderer.SerumItemRenderer;
 import com.spectrobes.spectrobesmod.client.items.renderer.*;
 import com.spectrobes.spectrobesmod.client.items.weapons.renderer.BasicBlasterItemRenderer;
 import com.spectrobes.spectrobesmod.client.items.weapons.renderer.BasicGloveItemRenderer;
@@ -9,6 +10,7 @@ import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
 import com.spectrobes.spectrobesmod.common.items.armour.BasicNppArmourItem;
 import com.spectrobes.spectrobesmod.common.items.fossils.*;
 import com.spectrobes.spectrobesmod.common.items.machines.HealerBlockItem;
+import com.spectrobes.spectrobesmod.common.items.tools.healing.SpectrobeSerumHealingItem;
 import com.spectrobes.spectrobesmod.common.items.weapons.*;
 import com.spectrobes.spectrobesmod.common.items.special.XellesTrophyItem;
 import com.spectrobes.spectrobesmod.common.items.weapons.BasicSwordItem;
@@ -105,6 +107,12 @@ public class SpectrobesItemsRegistry {
                     () -> new BasicGloveItem(new Item.Properties()
                             .setISTER(() -> BasicGloveItemRenderer::new)
                             .tab(SpectrobesItems.SpectrobesWeaponsItemGroup.Instance)));
+
+    public static final RegistryObject<SpectrobeSerumHealingItem> basic_serum =
+            ITEMS.register("basic_serum",
+                    () -> new SpectrobeSerumHealingItem(50, 500, 1, new Item.Properties()
+                            .setISTER(() -> SerumItemRenderer::new)
+                            .tab(SpectrobesItems.SpectrobesToolsItemGroup.Instance)));
     
     public static final RegistryObject<Item> metalium = 
     		ITEMS.register("metalium",

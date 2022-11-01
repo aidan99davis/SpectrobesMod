@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    "   ",
+    "xyx",
+    "   "
+  ],
+  "key":
+  {
+    "x":
+    {
+      "tag": "forge:ingots/iron"
+    },
+    "y":
+    {
+      "item": "spectrobesmod:mineral_item_health_c"
+    }
+  },
+  "result":
+  {
+    "item": "spectrobesmod:basic_serum",
+    "count": 1
+  }
+}

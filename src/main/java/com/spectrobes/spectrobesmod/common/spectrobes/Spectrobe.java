@@ -61,6 +61,13 @@ public class Spectrobe {
         }
     }
 
+    public void addHealth(int toAdd) {
+        this.currentHealth += toAdd;
+        if(stats != null && this.currentHealth > stats.getHpLevel()) {
+            this.currentHealth = stats.getHpLevel();
+        }
+    }
+
     public void setMasterUUID(UUID masterUUID) {
         this.MasterUUID = masterUUID;
     }
