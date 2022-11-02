@@ -1,7 +1,5 @@
 package com.spectrobes.spectrobesmod.common.entities.spectrobes;
 
-import com.spectrobes.spectrobesmod.client.container.SpectrobeDetailsContainer;
-import com.spectrobes.spectrobesmod.client.gui.spectrobes_details.SpectrobeDetailsScreen;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.entities.IHasNature;
@@ -15,6 +13,7 @@ import com.spectrobes.spectrobesmod.common.items.tools.healing.SpectrobeSerumHea
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.CSyncSpectrobeMasterPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.COpenSpectrobeDetailsPacket;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSyncSpectrobeMasterPacket;
 import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
@@ -29,7 +28,6 @@ import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.SimpleNamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
@@ -90,7 +88,6 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
 
     public AnimationFactory animationControllers = new AnimationFactory(this);
     protected AnimationController moveAnimationController = new AnimationController(this, "moveAnimationController", 10F, this::moveController);
-
 
     public EntitySpectrobe(EntityType<? extends EntitySpectrobe> entityTypeIn,
                            World worldIn) {
@@ -166,15 +163,9 @@ public abstract class EntitySpectrobe extends TameableEntity implements IEntityA
             } else if(itemstack.getItem() instanceof PrizmodItem) {
                 if(player == getOwner()) {
                     if(player.isShiftKeyDown()) {
-                        if(player.level.isClientSide())
-                            Minecraft.getInstance()
-                                    .setScreen(
-                                    new SpectrobeDetailsScreen(
-                                            new SpectrobeDetailsContainer(
-                                                    0,
-                                                    getSpectrobeData()),
-                                            player.inventory,
-                                            new StringTextComponent("")));
+                        if(!level.isClientSide()) {
+                            SpectrobesNetwork.sendToClient(new COpenSpectrobeDetailsPacket(getSpectrobeData()), (ServerPlayerEntity) getOwner());
+                        }
                     }
                 }
             }

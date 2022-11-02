@@ -78,6 +78,12 @@ public class SpectrobesNetwork {
                 .decoder(CSpectrobeAttackPacket::fromBytes)
                 .consumer(CSpectrobeAttackPacket::handle)
                 .add();
+
+        INSTANCE.messageBuilder(COpenSpectrobeDetailsPacket.class, nextID())
+                .encoder(COpenSpectrobeDetailsPacket::toBytes)
+                .decoder(COpenSpectrobeDetailsPacket::fromBytes)
+                .consumer(COpenSpectrobeDetailsPacket::handle)
+                .add();
     }
 
     public static void sendToClient(Object packet, ServerPlayerEntity player) {
