@@ -7,6 +7,8 @@ import com.spectrobes.spectrobesmod.common.registry.IconRegistry;
 import com.spectrobes.spectrobesmod.util.SpectrobeBuilder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.syncher.EntityDataSerializer;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import org.apache.logging.log4j.core.config.plugins.validation.constraints.Required;
 import org.apache.logging.log4j.core.util.UuidUtil;
 
@@ -14,7 +16,7 @@ import javax.annotation.Nullable;
 import java.util.UUID;
 
 public class Spectrobe {
-    public static final Serializer<Spectrobe> SpectrobeSerializer = new SpectrobeSerializer().init();
+    public static final EntityDataSerializer<Spectrobe> SpectrobeSerializer = new SpectrobeSerializer().init();
     @Nullable
     public UUID MasterUUID;
 
@@ -228,7 +230,7 @@ public class Spectrobe {
         }
     }
 
-    public static class SpectrobeSerializer implements IDataSerializer<Spectrobe> {
+    public static class SpectrobeSerializer implements EntityDataSerializer<Spectrobe> {
 
         @Override
         public void write(FriendlyByteBuf buf, Spectrobe value) {
@@ -245,10 +247,10 @@ public class Spectrobe {
             return value.copy(true);
         }
 
-        public IDataSerializer<Spectrobe> init() {
-            if(DataSerializers.getSerializer(DataSerializers.getSerializedId(this)) == null) {
+        public EntityDataSerializer<Spectrobe> init() {
+            if(EntityDataSerializers.getSerializer(EntityDataSerializers.getSerializedId(this)) == null) {
                 SpectrobesInfo.LOGGER.info("Registering serializer");
-                DataSerializers.registerSerializer(this);
+                EntityDataSerializers.registerSerializer(this);
             }
             return this;
         }

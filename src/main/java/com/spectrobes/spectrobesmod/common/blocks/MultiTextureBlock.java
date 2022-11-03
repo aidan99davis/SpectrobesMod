@@ -10,6 +10,8 @@ import net.minecraft.state.StateContainer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
 public class MultiTextureBlock extends SpectrobesBlock
 {
@@ -20,7 +22,7 @@ public class MultiTextureBlock extends SpectrobesBlock
 	public static final BooleanProperty UP = SixWayBlock.UP;
 	public static final BooleanProperty DOWN = SixWayBlock.DOWN;
 	
-	public MultiTextureBlock(AbstractBlock.Properties p_i49982_1_)
+	public MultiTextureBlock(BlockBehaviour.Properties p_i49982_1_)
 	{
 		super(p_i49982_1_);
 		this.registerDefaultState(this.stateDefinition.any().setValue(NORTH, false)

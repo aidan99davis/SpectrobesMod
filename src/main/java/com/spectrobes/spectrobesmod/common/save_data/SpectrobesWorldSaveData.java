@@ -1,12 +1,12 @@
 package com.spectrobes.spectrobesmod.common.save_data;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.storage.WorldSavedData;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.storage.WorldData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ public class SpectrobesWorldSaveData extends WorldSavedData {
     public SpectrobesWorldSaveData() { super(name); }
 
     //remember to call data.setDirty() so it knows to update and sync.
-    public static SpectrobesWorldSaveData getWorldData(ServerWorld world) {
+    public static SpectrobesWorldSaveData getWorldData(ServerLevel world) {
         return world.getDataStorage().computeIfAbsent(SpectrobesWorldSaveData::new, SpectrobesWorldSaveData.name);
     }
 
@@ -54,9 +54,9 @@ public class SpectrobesWorldSaveData extends WorldSavedData {
     }
 
     @Override
-    public void load(CompoundNBT nbt) {
-        ListNBT nbtNestList = ((ListNBT) Objects.requireNonNull(nbt.get("nests")));
-        for (INBT inbt : nbtNestList) {
+    public void load(CompoundTag nbt) {
+        ListTag nbtNestList = ((ListTag) Objects.requireNonNull(nbt.get("nests")));
+        for (Tag inbt : nbtNestList) {
             KrawlNest nest = new KrawlNest();
             nest.deserializeNBT(inbt);
             nests.add(nest);
@@ -64,8 +64,8 @@ public class SpectrobesWorldSaveData extends WorldSavedData {
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT nbt) {
-        ListNBT nbtList = new ListNBT();
+    public CompoundTag save(CompoundTag nbt) {
+        ListTag nbtList = new ListTag();
         nests.forEach(krawlNest -> nbtList.add(krawlNest.serializeNBT()));
         nbt.put("nests", nbtList);
         return nbt;

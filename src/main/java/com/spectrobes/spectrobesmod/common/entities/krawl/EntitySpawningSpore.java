@@ -15,6 +15,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkHooks;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -25,7 +26,7 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class EntitySpawningSpore extends MonsterEntity implements IAnimatable, IFlyingAnimal {
+public class EntitySpawningSpore extends Monster implements IAnimatable, IFlyingAnimal {
     protected static final DataParameter<Boolean> BOSS_SPORE =
             EntityDataManager.defineId(EntitySpawningSpore.class,
                     DataSerializers.BOOLEAN);

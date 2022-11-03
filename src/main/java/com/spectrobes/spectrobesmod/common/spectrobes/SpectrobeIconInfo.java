@@ -1,6 +1,6 @@
 package com.spectrobes.spectrobesmod.common.spectrobes;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 public class SpectrobeIconInfo {
     private final ResourceLocation iconRl;

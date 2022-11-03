@@ -6,29 +6,33 @@
 package com.spectrobes.spectrobesmod.common.entities.spectrobes.goals;
 
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.LeavesBlock;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.pathfinding.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorldReader;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
 
 import java.util.EnumSet;
 
 public class FollowMasterGoal extends Goal {
-    private final TameableEntity tamable;
+    private final TamableAnimal tamable;
     private LivingEntity owner;
-    private final IWorldReader level;
+    private final Level level;
     private final double speedModifier;
-    private final PathNavigator navigation;
+    private final PathNavigation navigation;
     private int timeToRecalcPath;
     private final float stopDistance;
     private final float startDistance;
     private final boolean canFly;
 
-    public FollowMasterGoal(TameableEntity entity, double followSpeed, float minDist, float maxDist, boolean canFly) {
+    public FollowMasterGoal(TamableAnimal entity, double followSpeed, float minDist, float maxDist, boolean canFly) {
         this.tamable = entity;
         this.level = entity.level;
         this.speedModifier = followSpeed;
@@ -37,8 +41,8 @@ public class FollowMasterGoal extends Goal {
         this.stopDistance = maxDist;
         this.canFly = canFly;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
-        if (!(entity.getNavigation() instanceof GroundPathNavigator)
-                && !(entity.getNavigation() instanceof FlyingPathNavigator)
+        if (!(entity.getNavigation() instanceof GroundPathNavigation)
+                && !(entity.getNavigation() instanceof FlyingPathNavigation)
                 && !(entity.getNavigation() instanceof SwimmerPathNavigator)) {
             throw new IllegalArgumentException("Unsupported navigation type for FollowMasterGoal");
         }
@@ -81,7 +85,7 @@ public class FollowMasterGoal extends Goal {
      */
     public void start() {
         this.timeToRecalcPath = 0;
-        this.tamable.setPathfindingMalus(PathNodeType.WATER, 0.0F);
+        this.tamable.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
     }
 
     /**
@@ -90,7 +94,7 @@ public class FollowMasterGoal extends Goal {
     public void stop() {
         this.owner = null;
         this.navigation.stop();
-        this.tamable.setPathfindingMalus(PathNodeType.WATER, 0.0f);
+        this.tamable.setPathfindingMalus(BlockPathTypes.WATER, 0.0f);
     }
 
     /**
@@ -132,15 +136,15 @@ public class FollowMasterGoal extends Goal {
         } else if (!this.canTeleportTo(new BlockPos(pX, pY, pZ))) {
             return false;
         } else {
-            this.tamable.moveTo((double)pX + 0.5D, pY, (double)pZ + 0.5D, this.tamable.yRot, this.tamable.xRot);
+            this.tamable.moveTo((double)pX + 0.5D, pY, (double)pZ + 0.5D, this.tamable.yRotO, this.tamable.xRotO);
             this.navigation.stop();
             return true;
         }
     }
 
     private boolean canTeleportTo(BlockPos pPos) {
-        PathNodeType pathnodetype = WalkNodeProcessor.getBlockPathTypeStatic(this.level, pPos.mutable());
-        if (pathnodetype != PathNodeType.WALKABLE && pathnodetype != PathNodeType.WATER) {
+        BlockPathTypes pathnodetype = WalkNodeEvaluator.getBlockPathTypeStatic(this.level, pPos.mutable());
+        if (pathnodetype != BlockPathTypes.WALKABLE && pathnodetype != BlockPathTypes.WATER) {
             return false;
         } else {
             BlockState blockstate = this.level.getBlockState(pPos.below());

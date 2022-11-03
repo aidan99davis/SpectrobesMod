@@ -1,13 +1,13 @@
 package com.spectrobes.spectrobesmod.common.entities.krawl.goals;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.monster.Monster;
 
 public class MoveToTargetGoal extends Goal {
-    MonsterEntity owner;
+    Monster owner;
 
-    public MoveToTargetGoal(MonsterEntity mob) {
+    public MoveToTargetGoal(Monster mob) {
         owner = mob;
     }
 

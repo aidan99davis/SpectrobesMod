@@ -11,6 +11,7 @@ import net.minecraft.world.World;
 import java.util.List;
 
 import net.minecraft.item.Item.Properties;
+import net.minecraft.world.item.Item;
 
 public abstract class SpecialMineralItem extends Item {
 

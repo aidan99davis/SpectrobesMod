@@ -12,14 +12,23 @@ import com.spectrobes.spectrobesmod.common.registry.SpectrobesBlocks;
 import com.spectrobes.spectrobesmod.common.save_data.SpectrobesWorldSaveData;
 import com.spectrobes.spectrobesmod.util.KrawlPropertiesBuilder;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
@@ -34,31 +43,31 @@ public class EntityXelles extends EntityBossKrawl {
 
     private static final EntityDataAccessor<Integer> STAGE =
             SynchedEntityData.defineId(EntityXelles.class,
-                    DataSerializers.INT);
+                    EntityDataSerializers.INT);
 
     private static final EntityDataAccessor<Integer> AGE_IN_TICKS =
             SynchedEntityData.defineId(EntityXelles.class,
-                    DataSerializers.INT);
+                    EntityDataSerializers.INT);
 
     private static final EntityDataAccessor<Integer> LAST_HURT_TICKS =
             SynchedEntityData.defineId(EntityXelles.class,
-                    DataSerializers.INT);
+                    EntityDataSerializers.INT);
 
     private static final EntityDataAccessor<Integer> LAST_SPAWNED_HEALING_SPORES_TICKS =
             SynchedEntityData.defineId(EntityXelles.class,
-                    DataSerializers.INT);
+                    EntityDataSerializers.INT);
 
     private static final EntityDataAccessor<Integer> LAST_SPAWNED_SUMMONING_SPORES_TICKS =
             SynchedEntityData.defineId(EntityXelles.class,
-                    DataSerializers.INT);
+                    EntityDataSerializers.INT);
 
     private static final EntityDataAccessor<Integer> LAST_SPAWNED_BOSS_SUMMONING_SPORE_TICKS =
             SynchedEntityData.defineId(EntityXelles.class,
-                    DataSerializers.INT);
+                    EntityDataSerializers.INT);
 
     private static final EntityDataAccessor<Boolean> IS_SPAWNING_SPORES =
             SynchedEntityData.defineId(EntityXelles.class,
-                    DataSerializers.BOOLEAN);
+                    EntityDataSerializers.BOOLEAN);
 
     public EntityXelles(EntityType<? extends Monster> type, Level worldIn) {
         super(type, worldIn);
@@ -137,7 +146,7 @@ public class EntityXelles extends EntityBossKrawl {
         entityData.set(LAST_SPAWNED_BOSS_SUMMONING_SPORE_TICKS, entityData.get(LAST_SPAWNED_BOSS_SUMMONING_SPORE_TICKS) + 1);
         if(!level.isClientSide()) {
 
-            SpectrobesWorldSaveData worldData = SpectrobesWorldSaveData.getWorldData((ServerWorld) level);
+            SpectrobesWorldSaveData worldData = SpectrobesWorldSaveData.getWorldData((ServerLevel) level);
             entityData.set(STAGE, worldData.getNest(blockPosition()).stage);
 
             if(getStage() == 1 && (worldData.getNest(blockPosition()).vortex_absorbed > 5)) {
@@ -149,24 +158,26 @@ public class EntityXelles extends EntityBossKrawl {
                 worldData.setDirty();
             }
             if(getAge() >= 3) {
-                AxisAlignedBB bound = getBoundingBox().inflate(40,40,40);
+                AABB bound = getBoundingBox().inflate(40,40,40);
                 List<EntityVortex> nearbyVortex = level.getEntities(KrawlEntities.ENTITY_VORTEX.get(), bound, entityVortex -> true);
-                nearbyVortex.forEach(entityVortex -> entityVortex.remove());
+                nearbyVortex.forEach(entityVortex -> entityVortex.remove(RemovalReason.DISCARDED));
             }
         }
     }
 
+    @Nullable
     @Override
-    public ITextComponent getDisplayName() {
-        return new StringTextComponent(super.getDisplayName().getString() + " - Stage: " + getStage());
+    public Component getCustomName() {
+        return Component.literal(super.getDisplayName().getString() + " - Stage: " + getStage());
     }
+
 
     @Override
     @ParametersAreNonnullByDefault
     public void die(DamageSource pCause) {
         super.die(pCause);
         if(!level.isClientSide()) {
-            SpectrobesWorldSaveData saveData = SpectrobesWorldSaveData.getWorldData((ServerWorld) level);
+            SpectrobesWorldSaveData saveData = SpectrobesWorldSaveData.getWorldData((ServerLevel) level);
             saveData.getNest(blockPosition()).setDead();
             saveData.setDirty();
         }
@@ -216,7 +227,7 @@ public class EntityXelles extends EntityBossKrawl {
     }
 
     public boolean canSpawnBossSpore() {
-        AxisAlignedBB searchBox = getBoundingBox().inflate(50, 50, 50);
+        AABB searchBox = getBoundingBox().inflate(50, 50, 50);
         List<EntityOrbix> nearbyBosses = level.getEntities(KrawlEntities.ENTITY_ORBIX.get(), searchBox, entityOrbix -> true);
         boolean hasSpawnedBoss = nearbyBosses.size() > 0;
         return entityData.get(LAST_SPAWNED_BOSS_SUMMONING_SPORE_TICKS) >= 24000
@@ -246,11 +257,11 @@ public class EntityXelles extends EntityBossKrawl {
                 //create healing spore
                 EntityHealingSpore spore =
                         (EntityHealingSpore) KrawlEntities.ENTITY_HEALING_SPORES.get()
-                                .spawn((ServerWorld) level,
+                                .spawn((ServerLevel) level,
                                         null,
                                         null,
                                         blockPosition(),
-                                        SpawnReason.MOB_SUMMONED,
+                                        MobSpawnType.MOB_SUMMONED,
                                         false,
                                         false);
                 if (spore != null) {
@@ -264,9 +275,10 @@ public class EntityXelles extends EntityBossKrawl {
     }
 
     @Override
-    public BossInfo.Color getBossNameColour() {
-        return BossInfo.Color.PURPLE;
+    public BossEvent.BossBarColor getBossNameColour() {
+        return BossEvent.BossBarColor.PURPLE;
     }
+
 
     @Override
     public KrawlProperties GetKrawlProperties() {
@@ -327,11 +339,11 @@ public class EntityXelles extends EntityBossKrawl {
             for (int i = 0; i < numToSpawn; i++) {
                 if(!mob.level.isClientSide()) {
                     EntitySpawningSpore spore = (EntitySpawningSpore) KrawlEntities.ENTITY_SPAWNING_SPORE.get()
-                            .spawn((ServerWorld) mob.level,
+                            .spawn((ServerLevel) mob.level,
                                     null,
                                     null,
                                     mob.blockPosition(),
-                                    SpawnReason.MOB_SUMMONED,
+                                    MobSpawnType.MOB_SUMMONED,
                                     false,
                                     false);
                     if (spore != null) {
@@ -366,11 +378,11 @@ public class EntityXelles extends EntityBossKrawl {
 
             if(!mob.level.isClientSide()) {
                 EntitySpawningSpore spore = (EntitySpawningSpore) KrawlEntities.ENTITY_SPAWNING_SPORE.get()
-                        .spawn((ServerWorld) mob.level,
+                        .spawn((ServerLevel) mob.level,
                                 null,
                                 null,
                                 mob.blockPosition(),
-                                SpawnReason.MOB_SUMMONED,
+                                MobSpawnType.MOB_SUMMONED,
                                 false,
                                 false);
                 if (spore != null) {

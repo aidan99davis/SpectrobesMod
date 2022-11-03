@@ -12,6 +12,9 @@ import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import com.spectrobes.spectrobesmod.util.DamageUtils;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -37,9 +40,9 @@ public abstract class EntityKrawl extends Monster implements IAnimatable, IHasNa
     public AnimationFactory animationControllers = new AnimationFactory(this);
     protected AnimationController moveController = new AnimationController(this, "moveAnimationController", 10F, this::moveController);
 
-    private static final DataParameter<Boolean> IS_ATTACKING =
-            EntityDataManager.defineId(EntityKrawl.class,
-                    DataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> IS_ATTACKING =
+            SynchedEntityData.defineId(EntityKrawl.class,
+                    EntityDataSerializers.BOOLEAN);
 
     protected EntityKrawl(EntityType<? extends Monster> type, Level worldIn) {
         super(type, worldIn);

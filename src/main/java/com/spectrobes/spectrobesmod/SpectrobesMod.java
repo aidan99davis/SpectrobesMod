@@ -26,6 +26,7 @@ import com.spectrobes.spectrobesmod.common.world.SpectrobesOreGen;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.common.MinecraftForge;
@@ -93,7 +94,7 @@ public class SpectrobesMod
         MenuScreens.register(SpectrobeDetailsContainer.SPECTROBE_DETAILS.get(), SpectrobeDetailsScreen::new);
         SpectrobeRendererManager.init();
         //force load the serializer to prevent clients crashing
-        IDataSerializer serializer = Spectrobe.SpectrobeSerializer;
+        EntityDataSerializer serializer = Spectrobe.SpectrobeSerializer;
         BlockRendererManager.init();
         KrawlRendererManager.init();
         AttackRendererManager.init();

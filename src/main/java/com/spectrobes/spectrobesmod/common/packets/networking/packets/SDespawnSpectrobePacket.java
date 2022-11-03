@@ -4,6 +4,7 @@ import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.network.NetworkEvent;
 
 import javax.annotation.Nullable;
@@ -38,11 +39,8 @@ public class SDespawnSpectrobePacket {
         ctx.get().enqueueWork(() -> {
             Level world = ctx.get().getSender().level;
 
-            MutableBoundingBox boundingBox = MutableBoundingBox.createProper(playerPos.getX(), playerPos.getY(), playerPos.getZ(), playerPos.getX(), playerPos.getY(), playerPos.getZ());
-            AxisAlignedBB axisAlignedBB = AxisAlignedBB.of(boundingBox);
-
             List<EntitySpectrobe> spectrobes = world
-                    .getEntitiesOfClass(EntitySpectrobe.class, axisAlignedBB.inflate(30, 30, 30));
+                    .getEntitiesOfClass(EntitySpectrobe.class, ctx.get().getSender().getBoundingBox().inflate(30, 30, 30));
             for(EntitySpectrobe spectrobe : spectrobes) {
                 if(spectrobe.getOwner() != null && spectrobe.getOwnerUUID()
                         .equals(ctx.get().getSender().getUUID())) {

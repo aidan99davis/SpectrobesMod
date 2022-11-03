@@ -2,9 +2,13 @@ package com.spectrobes.spectrobesmod.common.entities.attacks;
 
 import com.spectrobes.spectrobesmod.common.entities.IHasNature;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraftforge.network.NetworkHooks;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
@@ -34,7 +38,7 @@ public class EnergyBoltEntity extends ThrowableProjectile implements IHasNature,
     protected void tickDespawn() {
         ++this.life;
         if (this.life >= 120) {
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
         }
 
     }
@@ -59,13 +63,14 @@ public class EnergyBoltEntity extends ThrowableProjectile implements IHasNature,
     }
 
     @Override
-    protected void onHitEntity(EntityRayTraceResult pResult) {
+    protected void onHitEntity(EntityHitResult pResult) {
         super.onHitEntity(pResult);
         pResult.getEntity().hurt(DamageSource.thrown(this, this.getOwner()), AtkDamage);
     }
 
+
     @Override
-    public IPacket<?> getAddEntityPacket() {
+    public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 }

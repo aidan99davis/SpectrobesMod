@@ -8,7 +8,9 @@ import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -50,10 +52,10 @@ public class SSpawnSpectrobePacket {
                 spectrobe1 = SpectrobesEntities.getByName(spectrobe.name).spawn(
                         (ServerLevel) player.level,
                         spectrobe.write(),
-                        new StringTextComponent(spectrobe.name),
+                        Component.literal(spectrobe.name),
                         player,
                         player.blockPosition(),
-                        SpawnReason.MOB_SUMMONED,
+                        MobSpawnType.MOB_SUMMONED,
                         true,true);
                 spectrobe1.setSpectrobeData(spectrobe);
                 spectrobe1.setOwnerUUID(player.getUUID());

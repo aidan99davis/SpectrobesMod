@@ -13,6 +13,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;

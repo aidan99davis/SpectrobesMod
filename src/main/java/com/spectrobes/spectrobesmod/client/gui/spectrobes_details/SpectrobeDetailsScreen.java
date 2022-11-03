@@ -1,6 +1,5 @@
 package com.spectrobes.spectrobesmod.client.gui.spectrobes_details;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.spectrobes.spectrobesmod.client.container.SpectrobeDetailsContainer;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
@@ -8,11 +7,10 @@ import com.spectrobes.spectrobesmod.client.gui.utils.GuiUtils;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeIconInfo;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeStats;
-import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.screens.inventory.ContainerScreen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -21,7 +19,7 @@ import java.awt.*;
 @OnlyIn(Dist.CLIENT)
 public class SpectrobeDetailsScreen extends ContainerScreen<SpectrobeDetailsContainer> {
 
-    public SpectrobeDetailsScreen(SpectrobeDetailsContainer pMenu, PlayerInventory pPlayerInventory, ITextComponent pTitle) {
+    public SpectrobeDetailsScreen(SpectrobeDetailsContainer pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
         this.imageWidth = Minecraft.getInstance().getWindow().getScreenWidth();
         this.imageHeight = Minecraft.getInstance().getWindow().getScreenHeight();

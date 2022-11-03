@@ -1,11 +1,11 @@
 package com.spectrobes.spectrobesmod.common.entities.krawl.goals;
 
-import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityXelles;
 import com.spectrobes.spectrobesmod.common.save_data.SpectrobesWorldSaveData;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ai.goal.Goal;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,11 +29,11 @@ public class AbsorbKrawlGoal extends Goal {
         List<EntityKrawl> filteredKrawl = nearbyKrawl.stream().filter(entityKrawl -> entityKrawl.isVortex() && !(entityKrawl instanceof EntityXelles)).collect(Collectors.toList());
 
         if(filteredKrawl.size() > 0) {
-            SpectrobesWorldSaveData worldData = SpectrobesWorldSaveData.getWorldData((ServerWorld) owner.level);
+            SpectrobesWorldSaveData worldData = SpectrobesWorldSaveData.getWorldData((ServerLevel) owner.level);
             worldData.getNest(owner.blockPosition()).absorbVortexes(filteredKrawl.size());
             worldData.setDirty();
 
-            filteredKrawl.forEach(entityKrawl -> entityKrawl.remove());
+            filteredKrawl.forEach(entityKrawl -> entityKrawl.remove(Entity.RemovalReason.DISCARDED));
         }
     }
 }
