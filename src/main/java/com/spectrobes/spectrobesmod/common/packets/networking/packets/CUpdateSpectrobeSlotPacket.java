@@ -1,13 +1,9 @@
 package com.spectrobes.spectrobesmod.common.packets.networking.packets;
 
 
-import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
-import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobePacketHandler;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -23,12 +19,12 @@ public class CUpdateSpectrobeSlotPacket {
         this.spectrobeUUID = spectrobeUUID;
     }
 
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeUUID(spectrobeUUID);
         buf.writeInt(slot);
     }
 
-    public static CUpdateSpectrobeSlotPacket fromBytes(PacketBuffer buf) {
+    public static CUpdateSpectrobeSlotPacket fromBytes(FriendlyByteBuf buf) {
         int slot = buf.readInt();
         UUID spectrobeUUID = buf.readUUID();
 

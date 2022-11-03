@@ -11,24 +11,15 @@ import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobesBlocks;
 import com.spectrobes.spectrobesmod.common.save_data.SpectrobesWorldSaveData;
 import com.spectrobes.spectrobesmod.util.KrawlPropertiesBuilder;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.BossInfo;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
@@ -41,35 +32,35 @@ import static com.spectrobes.spectrobesmod.common.entities.krawl.EntitySpawningS
 
 public class EntityXelles extends EntityBossKrawl {
 
-    private static final DataParameter<Integer> STAGE =
-            EntityDataManager.defineId(EntityXelles.class,
+    private static final EntityDataAccessor<Integer> STAGE =
+            SynchedEntityData.defineId(EntityXelles.class,
                     DataSerializers.INT);
 
-    private static final DataParameter<Integer> AGE_IN_TICKS =
-            EntityDataManager.defineId(EntityXelles.class,
+    private static final EntityDataAccessor<Integer> AGE_IN_TICKS =
+            SynchedEntityData.defineId(EntityXelles.class,
                     DataSerializers.INT);
 
-    private static final DataParameter<Integer> LAST_HURT_TICKS =
-            EntityDataManager.defineId(EntityXelles.class,
+    private static final EntityDataAccessor<Integer> LAST_HURT_TICKS =
+            SynchedEntityData.defineId(EntityXelles.class,
                     DataSerializers.INT);
 
-    private static final DataParameter<Integer> LAST_SPAWNED_HEALING_SPORES_TICKS =
-            EntityDataManager.defineId(EntityXelles.class,
+    private static final EntityDataAccessor<Integer> LAST_SPAWNED_HEALING_SPORES_TICKS =
+            SynchedEntityData.defineId(EntityXelles.class,
                     DataSerializers.INT);
 
-    private static final DataParameter<Integer> LAST_SPAWNED_SUMMONING_SPORES_TICKS =
-            EntityDataManager.defineId(EntityXelles.class,
+    private static final EntityDataAccessor<Integer> LAST_SPAWNED_SUMMONING_SPORES_TICKS =
+            SynchedEntityData.defineId(EntityXelles.class,
                     DataSerializers.INT);
 
-    private static final DataParameter<Integer> LAST_SPAWNED_BOSS_SUMMONING_SPORE_TICKS =
-            EntityDataManager.defineId(EntityXelles.class,
+    private static final EntityDataAccessor<Integer> LAST_SPAWNED_BOSS_SUMMONING_SPORE_TICKS =
+            SynchedEntityData.defineId(EntityXelles.class,
                     DataSerializers.INT);
 
-    private static final DataParameter<Boolean> IS_SPAWNING_SPORES =
-            EntityDataManager.defineId(EntityXelles.class,
+    private static final EntityDataAccessor<Boolean> IS_SPAWNING_SPORES =
+            SynchedEntityData.defineId(EntityXelles.class,
                     DataSerializers.BOOLEAN);
 
-    public EntityXelles(EntityType<? extends MonsterEntity> type, World worldIn) {
+    public EntityXelles(EntityType<? extends Monster> type, Level worldIn) {
         super(type, worldIn);
         setPersistenceRequired();
     }
@@ -98,7 +89,7 @@ public class EntityXelles extends EntityBossKrawl {
 
     @Override
     @ParametersAreNonnullByDefault
-    public void addAdditionalSaveData(CompoundNBT pCompound) {
+    public void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
         pCompound.putInt("AGE_IN_TICKS", entityData.get(AGE_IN_TICKS));
         pCompound.putInt("STAGE", entityData.get(STAGE));
@@ -109,7 +100,7 @@ public class EntityXelles extends EntityBossKrawl {
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT pCompound) {
+    public void readAdditionalSaveData(CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
         entityData.set(AGE_IN_TICKS, pCompound.getInt("AGE_IN_TICKS"));
         entityData.set(STAGE, pCompound.getInt("STAGE"));
@@ -122,7 +113,7 @@ public class EntityXelles extends EntityBossKrawl {
     @Override
     protected void actuallyHurt(DamageSource damageSrc, float damageAmount) {
         if(damageSrc != DamageSource.CRAMMING) {
-            AxisAlignedBB bounds = getBoundingBox().inflate(40, 40, 40);
+            AABB bounds = getBoundingBox().inflate(40, 40, 40);
             List<EntityOtorso> otorso = level.getEntities(KrawlEntities.ENTITY_OTORSO.get(), bounds, entity -> true);
             if(otorso.size() == 0) {
                 super.actuallyHurt(damageSrc, damageAmount);
@@ -132,8 +123,8 @@ public class EntityXelles extends EntityBossKrawl {
     }
 
     @Override
-    public Vector3d getDeltaMovement() {
-        return Vector3d.ZERO;
+    public Vec3 getDeltaMovement() {
+        return Vec3.ZERO;
     }
 
     @Override

@@ -46,7 +46,10 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties.Nature;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties.Stage;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -59,7 +62,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import javax.annotation.Nullable;
 import java.util.function.Predicate;
 
-public abstract class EntitySpectrobe extends TameableEntity implements IEntityAdditionalSpawnData, IAnimatable, IHasNature {
+public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAdditionalSpawnData, IAnimatable, IHasNature {
     public static final Predicate<ItemEntity> MINERAL_SELECTOR = (itemEntity) -> !itemEntity.hasPickUpDelay() && itemEntity.isAlive() && itemEntity.getItem().getItem() instanceof MineralItem;
     private static final Predicate<EntityKrawl> TARGET_KRAWL = (entity) -> !(entity).isVortex();
     private boolean recentInteract = false;

@@ -1,7 +1,6 @@
 package com.spectrobes.spectrobesmod.common.spectrobes;
 
-import net.minecraft.nbt.CompoundNBT;
-import org.lwjgl.system.CallbackI;
+import net.minecraft.nbt.CompoundTag;
 
 public class SpectrobeProperties{
 
@@ -13,7 +12,7 @@ public class SpectrobeProperties{
         this.stage = stage;
     }
 
-    public static SpectrobeProperties read(CompoundNBT spectrobeProperties) {
+    public static SpectrobeProperties read(CompoundTag spectrobeProperties) {
 
         return new SpectrobeProperties(
                 SpectrobeProperties.Nature.valueOf(spectrobeProperties.get("nature").getAsString()),
@@ -37,8 +36,8 @@ public class SpectrobeProperties{
         this.stage = stage;
     }
 
-    public CompoundNBT write() {
-        CompoundNBT compoundnbt = new CompoundNBT();
+    public CompoundTag write() {
+        CompoundTag compoundnbt = new CompoundTag();
         compoundnbt.putString("nature", nature.toString());
         compoundnbt.putString("stage", stage.toString());
 

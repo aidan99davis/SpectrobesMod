@@ -2,25 +2,21 @@ package com.spectrobes.spectrobesmod.common.entities.attacks;
 
 import com.spectrobes.spectrobesmod.common.entities.IHasNature;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.projectile.ThrowableEntity;
-import net.minecraft.network.IPacket;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.projectile.ThrowableProjectile;
+import net.minecraft.world.level.Level;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class EnergyBoltEntity extends ThrowableEntity implements IHasNature, IAnimatable {
+public class EnergyBoltEntity extends ThrowableProjectile implements IHasNature, IAnimatable {
     public int AtkDamage;
     public SpectrobeProperties.Nature Nature;
 
     public AnimationFactory factory = new AnimationFactory(this);
     private int life = 0;
 
-    public EnergyBoltEntity(EntityType<? extends ThrowableEntity> type, World worldIn) {
+    public EnergyBoltEntity(EntityType<? extends ThrowableProjectile> type, Level worldIn) {
         super(type, worldIn);
     }
 

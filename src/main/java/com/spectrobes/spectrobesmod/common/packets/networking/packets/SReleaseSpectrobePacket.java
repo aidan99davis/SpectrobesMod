@@ -7,12 +7,10 @@ import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.network.NetworkEvent;
 
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
@@ -26,13 +24,13 @@ public class SReleaseSpectrobePacket {
         this.spectrobe = spectrobe;
     }
 
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         if(spectrobe != null) {
             buf.writeNbt(spectrobe.write());
         }
     }
 
-    public static SReleaseSpectrobePacket fromBytes(PacketBuffer buf) {
+    public static SReleaseSpectrobePacket fromBytes(FriendlyByteBuf buf) {
         Spectrobe spectrobe = Spectrobe.read(buf.readNbt());
 
         return new SReleaseSpectrobePacket(spectrobe);
@@ -40,7 +38,7 @@ public class SReleaseSpectrobePacket {
 
     public boolean handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            PlayerEntity player = ctx.get().getSender();
+            Player player = ctx.get().getSender();
 
             PlayerSpectrobeMaster serverCap = player
                     .getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
@@ -49,7 +47,7 @@ public class SReleaseSpectrobePacket {
             EntitySpectrobe spectrobe1 = null;
             try {
                 spectrobe1 = SpectrobesEntities.getByName(spectrobe.name).spawn(
-                        (ServerWorld) player.level,
+                        (ServerLevel) player.level,
                         spectrobe.write(),
                         new StringTextComponent(spectrobe.name),
                         player,

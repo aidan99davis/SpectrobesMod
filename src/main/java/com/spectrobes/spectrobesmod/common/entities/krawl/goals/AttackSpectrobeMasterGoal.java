@@ -1,19 +1,19 @@
 package com.spectrobes.spectrobesmod.common.entities.krawl.goals;
 
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.goal.TargetGoal;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.target.TargetGoal;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class AttackSpectrobeMasterGoal extends TargetGoal {
-    PlayerEntity target;
+    Player target;
     boolean tryKill;
 
 
-    public AttackSpectrobeMasterGoal(MobEntity mobIn, boolean checkSight, boolean toKill) {
+    public AttackSpectrobeMasterGoal(Mob mobIn, boolean checkSight, boolean toKill) {
         super(mobIn, checkSight, false);
         tryKill = toKill;
     }
@@ -26,12 +26,12 @@ public class AttackSpectrobeMasterGoal extends TargetGoal {
         if(!(mob instanceof EntityKrawl))
             return false;
 
-        List<PlayerEntity> nearbyPlayers = mob.level.getEntitiesOfClass(PlayerEntity.class, mob.getBoundingBox().inflate(20, 20, 20));
+        List<Player> nearbyPlayers = mob.level.getEntitiesOfClass(Player.class, mob.getBoundingBox().inflate(20, 20, 20));
 
-        AtomicReference<PlayerEntity> toAttack = new AtomicReference<>();
+        AtomicReference<Player> toAttack = new AtomicReference<>();
         toAttack.set(null);
 
-        for(PlayerEntity player : nearbyPlayers) {
+        for(Player player : nearbyPlayers) {
             if (toAttack.get() != null || player.isCreative()) {
                 break;
             }

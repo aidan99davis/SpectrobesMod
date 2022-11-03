@@ -23,22 +23,18 @@ import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.world.SpectrobesEntitySpawns;
 import com.spectrobes.spectrobesmod.common.world.SpectrobesOreGen;
-import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.entity.EntitySpawnPlacementRegistry;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.network.datasync.IDataSerializer;
-import net.minecraft.util.Direction;
-import net.minecraft.world.gen.Heightmap;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.*;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import software.bernie.geckolib3.GeckoLib;
 
@@ -78,34 +74,23 @@ public class SpectrobesMod
 
     private void setup(final FMLCommonSetupEvent event)
     {
-        DeferredWorkQueue.runLater(SpectrobesOreGen::registerOres);
+        event.enqueueWork(SpectrobesOreGen::registerOres);
         MinecraftForge.EVENT_BUS.register(PlayerEvents.instance);
         IconRegistry.init();
         SpectrobesEntities.init();
         KrawlEntities.init();
 
-        event.enqueueWork(() -> EntitySpawnPlacementRegistry.register(KrawlEntities.ENTITY_VORTEX.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, SpectrobesEntitySpawns.MONSTER));
+        event.enqueueWork(() -> SpawnPlacements.register(KrawlEntities.ENTITY_VORTEX.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpectrobesEntitySpawns.MONSTER));
 
-        CapabilityManager.INSTANCE.register(PlayerSpectrobeMaster.class, new Capability.IStorage<PlayerSpectrobeMaster>() {
-            @Nullable
-            @Override
-            public INBT writeNBT(Capability<PlayerSpectrobeMaster> capability, PlayerSpectrobeMaster instance, Direction side) {
-                return instance.serializeNBT();
-            }
-
-            @Override
-            public void readNBT(Capability<PlayerSpectrobeMaster> capability, PlayerSpectrobeMaster instance, Direction side, INBT nbt) {
-                instance.deserializeNBT((CompoundNBT) nbt);
-            }
-        }, () -> null);
+        CapabilityManager.INSTANCE.register(PlayerSpectrobeMaster.class);
     }
 
     @SubscribeEvent
     public void doClientStuff(final FMLClientSetupEvent event)
     {
-        ScreenManager.register(PrizmodContainer.PRIZMOD.get(), PrizmodScreen::new);
-        ScreenManager.register(HealerContainer.HEALER.get(), HealerScreen::new);
-        ScreenManager.register(SpectrobeDetailsContainer.SPECTROBE_DETAILS.get(), SpectrobeDetailsScreen::new);
+        MenuScreens.register(PrizmodContainer.PRIZMOD.get(), PrizmodScreen::new);
+        MenuScreens.register(HealerContainer.HEALER.get(), HealerScreen::new);
+        MenuScreens.register(SpectrobeDetailsContainer.SPECTROBE_DETAILS.get(), SpectrobeDetailsScreen::new);
         SpectrobeRendererManager.init();
         //force load the serializer to prevent clients crashing
         IDataSerializer serializer = Spectrobe.SpectrobeSerializer;
@@ -119,7 +104,7 @@ public class SpectrobesMod
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
-    public void onServerStarting(FMLServerStartingEvent event) {
+    public void onServerStarting(FMLDedicatedServerSetupEvent event) {
         // do something when the server starts
         //SpectrobesInfo.LOGGER.info("HELLO from server starting");
     }

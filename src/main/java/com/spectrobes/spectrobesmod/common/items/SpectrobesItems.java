@@ -9,8 +9,9 @@ import com.spectrobes.spectrobesmod.common.items.minerals.chroma.ChromaMineralIt
 import com.spectrobes.spectrobesmod.common.items.tools.PrizmodItem;
 import com.spectrobes.spectrobesmod.common.registry.MineralRegistry;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobesItemsRegistry;
-import net.minecraft.item.*;
-import net.minecraftforge.event.RegistryEvent;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
@@ -240,9 +241,9 @@ public class SpectrobesItems {
 
     //Creative Tabs
 
-    public static class SpectrobesBlocksItemGroup extends ItemGroup {
+    public static class SpectrobesBlocksItemGroup extends CreativeModeTab {
 
-        public static final SpectrobesBlocksItemGroup Instance = new SpectrobesBlocksItemGroup(ItemGroup.TABS.length, "spectrobestab.blocks");
+        public static final SpectrobesBlocksItemGroup Instance = new SpectrobesBlocksItemGroup(CreativeModeTab.TABS.length, "spectrobestab.blocks");
 
         public SpectrobesBlocksItemGroup(int index, String label) {
             super(index, label);
@@ -254,9 +255,9 @@ public class SpectrobesItems {
         }
     }
 
-    public static class SpectrobesFossilsItemGroup extends ItemGroup {
+    public static class SpectrobesFossilsItemGroup extends CreativeModeTab {
 
-        public static final SpectrobesFossilsItemGroup Instance = new SpectrobesFossilsItemGroup(ItemGroup.TABS.length, "spectrobestab.fossils");
+        public static final SpectrobesFossilsItemGroup Instance = new SpectrobesFossilsItemGroup(CreativeModeTab.TABS.length, "spectrobestab.fossils");
 
         public SpectrobesFossilsItemGroup(int index, String label) {
             super(index, label);
@@ -268,9 +269,9 @@ public class SpectrobesItems {
         }
     }
 
-    public static class SpectrobesWeaponsItemGroup extends ItemGroup {
+    public static class SpectrobesWeaponsItemGroup extends CreativeModeTab {
 
-        public static final SpectrobesWeaponsItemGroup Instance = new SpectrobesWeaponsItemGroup(ItemGroup.TABS.length, "spectrobestab.weapons");
+        public static final SpectrobesWeaponsItemGroup Instance = new SpectrobesWeaponsItemGroup(CreativeModeTab.TABS.length, "spectrobestab.weapons");
 
         public SpectrobesWeaponsItemGroup(int index, String label) {
             super(index, label);
@@ -282,9 +283,9 @@ public class SpectrobesItems {
         }
     }
 
-    public static class SpectrobesMineralItemGroup extends ItemGroup {
+    public static class SpectrobesMineralItemGroup extends CreativeModeTab {
 
-        public static final SpectrobesMineralItemGroup Instance = new SpectrobesMineralItemGroup(ItemGroup.TABS.length, "spectrobestab.minerals");
+        public static final SpectrobesMineralItemGroup Instance = new SpectrobesMineralItemGroup(CreativeModeTab.TABS.length, "spectrobestab.minerals");
 
         public SpectrobesMineralItemGroup(int index, String label) {
             super(index, label);
@@ -295,9 +296,9 @@ public class SpectrobesItems {
             return SpectrobesItems.mineral_item_power_c.getDefaultInstance();
         }
     }
-    public static class SpectrobesToolsItemGroup extends ItemGroup {
+    public static class SpectrobesToolsItemGroup extends CreativeModeTab {
 
-        public static final SpectrobesToolsItemGroup Instance = new SpectrobesToolsItemGroup(ItemGroup.TABS.length, "spectrobestab.tools");
+        public static final SpectrobesToolsItemGroup Instance = new SpectrobesToolsItemGroup(CreativeModeTab.TABS.length, "spectrobestab.tools");
 
         public SpectrobesToolsItemGroup(int index, String label) {
             super(index, label);
@@ -308,9 +309,9 @@ public class SpectrobesItems {
             return SpectrobesItems.prizmod_item.getDefaultInstance();
         }
     }
-    public static class SpectrobesArmourItemGroup extends ItemGroup {
+    public static class SpectrobesArmourItemGroup extends CreativeModeTab {
 
-        public static final SpectrobesArmourItemGroup Instance = new SpectrobesArmourItemGroup(ItemGroup.TABS.length, "spectrobestab.armour");
+        public static final SpectrobesArmourItemGroup Instance = new SpectrobesArmourItemGroup(CreativeModeTab.TABS.length, "spectrobestab.armour");
 
         public SpectrobesArmourItemGroup(int index, String label) {
             super(index, label);

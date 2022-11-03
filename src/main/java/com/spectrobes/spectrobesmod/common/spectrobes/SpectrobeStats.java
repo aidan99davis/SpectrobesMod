@@ -3,9 +3,8 @@ package com.spectrobes.spectrobesmod.common.spectrobes;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralProperties;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import software.bernie.shadowed.eliotlash.mclib.math.functions.limit.Min;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 
 public class SpectrobeStats {
     private Stat health;
@@ -68,7 +67,7 @@ public class SpectrobeStats {
             mineralsEaten++;
         } else {
             if(Minecraft.getInstance().level.isClientSide()) {
-                Minecraft.getInstance().player.chat("Your spectrobe cannot eat this mineral");
+                Minecraft.getInstance().player.chatSigned("Your spectrobe cannot eat this mineral", Component.empty());
             }
         }
 
@@ -106,8 +105,8 @@ public class SpectrobeStats {
         return xp;
     }
 
-    public CompoundNBT write() {
-        CompoundNBT statsNbt = new CompoundNBT();
+    public CompoundTag write() {
+        CompoundTag statsNbt = new CompoundTag();
 
         statsNbt.put("attack", attack.write());
         statsNbt.put("defence", defence.write());
@@ -121,7 +120,7 @@ public class SpectrobeStats {
         return statsNbt;
     }
 
-    public static SpectrobeStats read(CompoundNBT statsNbt) {
+    public static SpectrobeStats read(CompoundTag statsNbt) {
         SpectrobeStats stats = new SpectrobeStats();
         stats.attack = Stat.read(statsNbt.getCompound("attack"));
         stats.defence = Stat.read(statsNbt.getCompound("defence"));

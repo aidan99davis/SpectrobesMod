@@ -7,11 +7,14 @@ import com.spectrobes.spectrobesmod.common.world.dimensions.SpectrobesDimensions
 import com.spectrobes.spectrobesmod.common.world.teleporters.GenshiTeleporter;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -20,17 +23,17 @@ public class SChangeDimensionPacket {
     public SChangeDimensionPacket() {
     }
 
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
     }
 
-    public static SChangeDimensionPacket fromBytes(PacketBuffer buf) {
+    public static SChangeDimensionPacket fromBytes(FriendlyByteBuf buf) {
         return new SChangeDimensionPacket();
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            PlayerEntity player = ctx.get().getSender();
-            World worldIn = player.level;
+            Player player = ctx.get().getSender();
+            Level worldIn = player.level;
 
             MinecraftServer server = worldIn.getServer();
             if (server != null) {

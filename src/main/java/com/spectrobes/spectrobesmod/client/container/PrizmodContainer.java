@@ -10,6 +10,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.fml.RegistryObject;
 
 import java.util.*;
@@ -17,13 +18,13 @@ import java.util.*;
 
 public class PrizmodContainer extends Container {
 
-    private PlayerEntity player;
+    private Player player;
     private PlayerSpectrobeMaster capability;
     private boolean needsSync = true;
 
     public static RegistryObject<ContainerType<PrizmodContainer>> PRIZMOD = null;
 
-    public PrizmodContainer(int id, PlayerEntity player) {
+    public PrizmodContainer(int id, Player player) {
         super(PRIZMOD.get(), id);
         this.player = player;
         capability = this.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
@@ -58,7 +59,7 @@ public class PrizmodContainer extends Container {
      * @param playerIn
      */
     @Override
-    public boolean stillValid(PlayerEntity playerIn) {
+    public boolean stillValid(Player playerIn) {
         return playerIn.inventory.contains(SpectrobesItems.prizmod_item.getDefaultInstance());
     }
 

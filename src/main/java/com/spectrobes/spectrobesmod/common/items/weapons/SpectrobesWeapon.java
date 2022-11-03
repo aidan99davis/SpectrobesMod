@@ -2,11 +2,7 @@ package com.spectrobes.spectrobesmod.common.items.weapons;
 
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import com.spectrobes.spectrobesmod.util.WeaponStats;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.*;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.TieredItem;
 import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -22,7 +18,7 @@ import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.List;
 
-public abstract class SpectrobesWeapon extends ToolItem implements IAnimatable, ISyncable, ISpectrobeWeapon {
+public abstract class SpectrobesWeapon extends TieredItem implements IAnimatable, ISyncable, ISpectrobeWeapon {
     private static final int ANIM_OPEN = 0;
     public AnimationFactory factory = new AnimationFactory(this);
 

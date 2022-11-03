@@ -1,7 +1,6 @@
 package com.spectrobes.spectrobesmod.util;
 
 import com.spectrobes.spectrobesmod.common.spectrobes.*;
-import net.minecraft.util.ResourceLocation;
 
 import java.util.Random;
 import java.util.UUID;

@@ -3,9 +3,9 @@ package com.spectrobes.spectrobesmod.common.capability;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -106,10 +106,10 @@ public class PlayerSpectrobeMaster {
         return new ArrayList<>();
     }
 
-    public CompoundNBT serializeNBT() {
-        CompoundNBT myData = new CompoundNBT();
-        CompoundNBT currentTeamNbt = new CompoundNBT();
-        ListNBT spectrobes = new ListNBT();
+    public CompoundTag serializeNBT() {
+        CompoundTag myData = new CompoundTag();
+        CompoundTag currentTeamNbt = new CompoundTag();
+        ListTag spectrobes = new ListTag();
         for(Spectrobe s : ownedSpectrobes) {
             spectrobes.add(s.write());
         }
@@ -130,14 +130,14 @@ public class PlayerSpectrobeMaster {
         return myData;
     }
 
-    public void deserializeNBT(CompoundNBT nbt) {
+    public void deserializeNBT(CompoundTag nbt) {
         this.ownedSpectrobes = new ArrayList<>();
         this.currentTeam = new HashMap<>(7);
         for(int i = 0; i < 7; i++) {
             this.currentTeam.put(i, null);
         }
-        ListNBT ownedSpectrobesNbt = (ListNBT) nbt.get("spectrobesOwned");
-        CompoundNBT currentTeamNbt = (CompoundNBT) nbt.get("currentTeam");
+        ListTag ownedSpectrobesNbt = (ListTag) nbt.get("spectrobesOwned");
+        CompoundTag currentTeamNbt = (CompoundTag) nbt.get("currentTeam");
 
         int selected;
         try {
@@ -196,8 +196,8 @@ public class PlayerSpectrobeMaster {
         this.currentHealth = currentHealth;
 
         List<Spectrobe> spectrobes = new ArrayList<>();
-        for(INBT spectrobeNbt : ownedSpectrobesNbt) {
-            spectrobes.add(Spectrobe.read((CompoundNBT)spectrobeNbt));
+        for(Tag spectrobeNbt : ownedSpectrobesNbt) {
+            spectrobes.add(Spectrobe.read((CompoundTag)spectrobeNbt));
         }
         ownedSpectrobes.addAll(spectrobes);
 

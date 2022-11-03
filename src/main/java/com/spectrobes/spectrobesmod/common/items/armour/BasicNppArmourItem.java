@@ -1,8 +1,8 @@
 package com.spectrobes.spectrobesmod.common.items.armour;
 
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.IArmorMaterial;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorMaterial;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
@@ -13,7 +13,7 @@ public class BasicNppArmourItem extends GeoArmorItem implements IAnimatable, ISp
     private final SpectrobeProperties.Nature ArmourNature;
     private final int ArmourHealthBonus;
 
-    public BasicNppArmourItem(SpectrobeProperties.Nature nature, int healthBonus, IArmorMaterial materialIn, EquipmentSlotType slot, Properties builder) {
+    public BasicNppArmourItem(SpectrobeProperties.Nature nature, int healthBonus, ArmorMaterial materialIn, EquipmentSlot slot, Properties builder) {
         super(materialIn, slot, builder);
         this.ArmourNature = nature;
         this.ArmourHealthBonus = healthBonus;
