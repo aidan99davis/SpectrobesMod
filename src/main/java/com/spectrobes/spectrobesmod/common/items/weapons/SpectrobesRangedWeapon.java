@@ -14,6 +14,8 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
+import net.minecraft.world.item.BowItem;
+import net.minecraft.world.item.Item;
 import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -33,7 +35,7 @@ public abstract class SpectrobesRangedWeapon extends BowItem implements IAnimata
     private static final int ANIM_OPEN = 0;
     public AnimationFactory factory = new AnimationFactory(this);
 
-    public SpectrobesRangedWeapon(Properties pProperties) {
+    public SpectrobesRangedWeapon(Item.Properties pProperties) {
         super(pProperties);
         GeckoLibNetwork.registerSyncable(this);
     }

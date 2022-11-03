@@ -6,24 +6,24 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.storage.WorldData;
+import net.minecraft.world.level.saveddata.SavedData;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class SpectrobesWorldSaveData extends WorldSavedData {
+public class SpectrobesWorldSaveData extends SavedData {
 
     public static final String name = SpectrobesInfo.MOD_ID + "_data";
 
     private final List<KrawlNest> nests = new ArrayList<>();
 
-    public SpectrobesWorldSaveData() { super(name); }
+    public SpectrobesWorldSaveData() { super(); }
 
     //remember to call data.setDirty() so it knows to update and sync.
     public static SpectrobesWorldSaveData getWorldData(ServerLevel world) {
-        return world.getDataStorage().computeIfAbsent(SpectrobesWorldSaveData::new, SpectrobesWorldSaveData.name);
+        return world.getDataStorage().computeIfAbsent(SpectrobesWorldSaveData::load, SpectrobesWorldSaveData::new, SpectrobesWorldSaveData.name);
     }
 
     public void addNest(KrawlNest nest) {
@@ -53,14 +53,15 @@ public class SpectrobesWorldSaveData extends WorldSavedData {
         return null;
     }
 
-    @Override
-    public void load(CompoundTag nbt) {
+    public static SpectrobesWorldSaveData load(CompoundTag nbt) {
+        SpectrobesWorldSaveData data = new SpectrobesWorldSaveData();
         ListTag nbtNestList = ((ListTag) Objects.requireNonNull(nbt.get("nests")));
         for (Tag inbt : nbtNestList) {
             KrawlNest nest = new KrawlNest();
             nest.deserializeNBT(inbt);
-            nests.add(nest);
+            data.addNest(nest);
         }
+        return data;
     }
 
     @Override

@@ -2,19 +2,39 @@ package com.spectrobes.spectrobesmod.common.items.weapons;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import com.spectrobes.spectrobesmod.client.items.renderer.XellesTrophyItemRenderer;
+import com.spectrobes.spectrobesmod.client.items.weapons.renderer.BasicGloveItemRenderer;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import com.spectrobes.spectrobesmod.util.WeaponStats;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.minecraftforge.common.util.NonNullLazy;
 import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.manager.AnimationData;
+
+import java.util.function.Consumer;
 
 public class BasicGloveItem extends SpectrobesWeapon {
     public BasicGloveItem(Properties pProperties) {
         super(pProperties);
+    }
+
+    @Override
+    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+        consumer.accept(new IClientItemExtensions()
+        {
+            private final NonNullLazy<BlockEntityWithoutLevelRenderer> ister = NonNullLazy.of(() -> new BasicGloveItemRenderer());
+
+            @Override
+            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                return ister.get();
+            }
+        });
     }
 
     @Override

@@ -20,17 +20,12 @@ import com.spectrobes.spectrobesmod.common.registry.SpectrobesTileRegistry;
 import com.spectrobes.spectrobesmod.common.capability.PlayerEvents;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
-import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.world.SpectrobesEntitySpawns;
 import com.spectrobes.spectrobesmod.common.world.SpectrobesOreGen;
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.Tag;
-import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -65,6 +60,7 @@ public class SpectrobesMod
         AttackEntities.ENTITY_TYPES.register(modEventBus);
         KrawlEntities.ENTITY_TYPES.register(modEventBus);
         SpectrobesItemsRegistry.ITEMS.register(modEventBus);
+        DataSerializerRegistry.SERIALIZERS.register(modEventBus);
         SpectrobesTileRegistry.TILES.register(modEventBus);
         SpectrobesBlocks.BLOCKS.register(modEventBus);
         Containers.CONTAINERS.register(modEventBus);
@@ -94,7 +90,6 @@ public class SpectrobesMod
         MenuScreens.register(SpectrobeDetailsContainer.SPECTROBE_DETAILS.get(), SpectrobeDetailsScreen::new);
         SpectrobeRendererManager.init();
         //force load the serializer to prevent clients crashing
-        EntityDataSerializer serializer = Spectrobe.SpectrobeSerializer;
         BlockRendererManager.init();
         KrawlRendererManager.init();
         AttackRendererManager.init();
