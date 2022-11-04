@@ -16,10 +16,12 @@ import com.spectrobes.spectrobesmod.client.gui.spectrobes_details.SpectrobeDetai
 import com.spectrobes.spectrobesmod.client.keybindings.SpectrobesKeybindings;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.registry.*;
-import com.spectrobes.spectrobesmod.common.registry.SpectrobesTileRegistry;
+import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesBlocks;
+import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesTileRegistry;
 import com.spectrobes.spectrobesmod.common.capability.PlayerEvents;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
+import com.spectrobes.spectrobesmod.common.registry.items.*;
 import com.spectrobes.spectrobesmod.common.world.SpectrobesEntitySpawns;
 import com.spectrobes.spectrobesmod.common.world.SpectrobesOreGen;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -34,8 +36,6 @@ import net.minecraftforge.fml.event.lifecycle.*;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import software.bernie.geckolib3.GeckoLib;
 
-import javax.annotation.Nullable;
-
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(SpectrobesInfo.MOD_ID)
 @Mod.EventBusSubscriber(modid = SpectrobesInfo.MOD_ID)
@@ -46,6 +46,7 @@ public class SpectrobesMod
 
     public SpectrobesMod() {
         GeckoLib.initialize();
+        SpectrobesMineralsRegistry.init();
         modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         //register listeners to the event bus
@@ -59,6 +60,11 @@ public class SpectrobesMod
         SpectrobesEntities.ENTITY_TYPES.register(modEventBus);
         AttackEntities.ENTITY_TYPES.register(modEventBus);
         KrawlEntities.ENTITY_TYPES.register(modEventBus);
+        SpectrobesFossilsRegistry.ITEMS.register(modEventBus);
+        SpectrobesMineralsRegistry.ITEMS.register(modEventBus);
+        SpectrobesToolsRegistry.ITEMS.register(modEventBus);
+        SpectrobesArmourRegistry.ITEMS.register(modEventBus);
+        SpectrobesMachinesRegistry.ITEMS.register(modEventBus);
         SpectrobesItemsRegistry.ITEMS.register(modEventBus);
         DataSerializerRegistry.SERIALIZERS.register(modEventBus);
         SpectrobesTileRegistry.TILES.register(modEventBus);

@@ -1,7 +1,7 @@
 package com.spectrobes.spectrobesmod.common.blocks;
 
-import com.spectrobes.spectrobesmod.common.registry.SpectrobesItemsRegistry;
-import com.spectrobes.spectrobesmod.common.registry.SpectrobesTileRegistry;
+import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesItemsRegistry;
+import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesTileRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;

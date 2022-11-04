@@ -1,7 +1,7 @@
 package com.spectrobes.spectrobesmod.common.world;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.common.registry.SpectrobesBlocks;
+import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesBlocks;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.biome.Biome;

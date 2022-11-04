@@ -8,7 +8,7 @@ import com.spectrobes.spectrobesmod.common.entities.krawl.goals.HealKrawlGoal;
 import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
 import com.spectrobes.spectrobesmod.common.items.minerals.Mineral;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
-import com.spectrobes.spectrobesmod.common.registry.SpectrobesBlocks;
+import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesBlocks;
 import com.spectrobes.spectrobesmod.common.save_data.SpectrobesWorldSaveData;
 import com.spectrobes.spectrobesmod.util.KrawlPropertiesBuilder;
 import net.minecraft.nbt.CompoundTag;

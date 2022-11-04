@@ -1,18 +1,10 @@
 package com.spectrobes.spectrobesmod.common.entities.krawl;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
-import com.spectrobes.spectrobesmod.common.entities.krawl.goals.AbsorbKrawlGoal;
 import com.spectrobes.spectrobesmod.common.entities.krawl.goals.AttackSpectrobeGoal;
 import com.spectrobes.spectrobesmod.common.entities.krawl.goals.AttackSpectrobeMasterGoal;
-import com.spectrobes.spectrobesmod.common.entities.krawl.goals.HealKrawlGoal;
-import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
-import com.spectrobes.spectrobesmod.common.items.minerals.Mineral;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import com.spectrobes.spectrobesmod.common.registry.KrawlRegistry;
-import com.spectrobes.spectrobesmod.common.registry.SpectrobesBlocks;
-import com.spectrobes.spectrobesmod.common.save_data.SpectrobesWorldSaveData;
-import com.spectrobes.spectrobesmod.util.KrawlPropertiesBuilder;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.goal.Goal;
@@ -34,7 +26,6 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.List;
 
 public class EntityOrbix extends EntityBossKrawl {
 

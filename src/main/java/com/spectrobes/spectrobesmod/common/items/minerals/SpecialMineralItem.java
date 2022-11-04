@@ -15,9 +15,8 @@ import net.minecraft.world.item.Item;
 
 public abstract class SpecialMineralItem extends Item {
 
-    public SpecialMineralItem(Properties properties, String registryName) {
+    public SpecialMineralItem(Properties properties) {
         super(properties);
-        setRegistryName(registryName);
     }
 
     @Override

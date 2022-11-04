@@ -1,4 +1,4 @@
-package com.spectrobes.spectrobesmod.common.registry;
+package com.spectrobes.spectrobesmod.common.registry.blocks;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.blocks.*;

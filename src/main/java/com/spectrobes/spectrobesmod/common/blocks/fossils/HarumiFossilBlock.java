@@ -1,15 +1,14 @@
 package com.spectrobes.spectrobesmod.common.blocks.fossils;
 
 import com.spectrobes.spectrobesmod.common.blocks.DirectionalBlock;
-import com.spectrobes.spectrobesmod.common.registry.SpectrobesTileRegistry;
-import com.spectrobes.spectrobesmod.common.registry.SpectrobesItemsRegistry;
+import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesTileRegistry;
+import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 

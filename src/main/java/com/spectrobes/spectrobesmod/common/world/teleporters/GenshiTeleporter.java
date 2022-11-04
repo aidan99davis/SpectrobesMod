@@ -1,8 +1,7 @@
 package com.spectrobes.spectrobesmod.common.world.teleporters;
 
-import com.spectrobes.spectrobesmod.common.blocks.FossilBlock;
 import com.spectrobes.spectrobesmod.common.blocks.PlanetaryTeleporterBlock;
-import com.spectrobes.spectrobesmod.common.registry.SpectrobesBlocks;
+import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesBlocks;
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;

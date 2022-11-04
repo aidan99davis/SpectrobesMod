@@ -1,6 +1,6 @@
 package com.spectrobes.spectrobesmod.common.blocks.tile;
 
-import com.spectrobes.spectrobesmod.common.registry.SpectrobesTileRegistry;
+import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesTileRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;

@@ -1,51 +1,54 @@
 package com.spectrobes.spectrobesmod.common.items.minerals;
 
+import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
+import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesMineralsRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
-import com.spectrobes.spectrobesmod.util.MineralPropertiesBuilder;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
 
 import java.util.List;
 
-import net.minecraft.item.Item.Properties;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 
 public class MineralItem extends Item {
-    public MineralProperties mineralProperties = null;
+    public Mineral mineral = null;
 
-    public MineralItem(Properties properties, String registryName, MineralProperties mineralProperties) {
-        super(properties);
-        setRegistryName(registryName);
-        this.mineralProperties = mineralProperties;
+    public MineralItem(Mineral mineral) {
+        super(new Item.Properties()
+                .tab(SpectrobesItems.SpectrobesMineralItemGroup.Instance));
+        this.mineral = mineral;
+
+        List<Item> list = SpectrobesMineralsRegistry.all_minerals.get(mineral.rarity);
+        list.add(this);
+        SpectrobesMineralsRegistry.all_minerals.put(mineral.rarity, list);
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flag) {
+        MineralProperties mineralProperties = mineral.properties;
         if(mineralProperties.getNature() != SpectrobeProperties.Nature.OTHER) {
             switch(mineralProperties.getNature()) {
                 case CORONA:
-                    tooltip.add(new StringTextComponent("\u00A74" + "Corona" + "\u00A74"));
+                    tooltip.add(Component.literal("\u00A74" + "Corona" + "\u00A74"));
                     break;
                 case AURORA:
-                    tooltip.add(new StringTextComponent("\u00A72" + "Aurora" + "\u00A72"));
+                    tooltip.add(Component.literal("\u00A72" + "Aurora" + "\u00A72"));
                     break;
                 case FLASH:
-                    tooltip.add(new StringTextComponent("\u00A71" + "Flash" + "\u00A71"));
+                    tooltip.add(Component.literal("\u00A71" + "Flash" + "\u00A71"));
                     break;
                     default:break;
             }
         }
         if(mineralProperties.getHpOffset() != 0)
-            tooltip.add(new StringTextComponent("Hp: " + mineralProperties.getHpOffset()));
+            tooltip.add(Component.literal("Hp: " + mineralProperties.getHpOffset()));
         if(mineralProperties.getAtkOffset()!= 0)
-            tooltip.add(new StringTextComponent("Atk: " + mineralProperties.getAtkOffset()));
+            tooltip.add(Component.literal("Atk: " + mineralProperties.getAtkOffset()));
         if(mineralProperties.getDefOffset() != 0)
-            tooltip.add(new StringTextComponent("Def: " + mineralProperties.getDefOffset()));
+            tooltip.add(Component.literal("Def: " + mineralProperties.getDefOffset()));
 
-        tooltip.add(new StringTextComponent("Xp: " + mineralProperties.getXpWorth()));
+        tooltip.add(Component.literal("Xp: " + mineralProperties.getXpWorth()));
     }
 }

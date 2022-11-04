@@ -4,7 +4,7 @@ import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSyncSpectrobeMasterPacket;
-import com.spectrobes.spectrobesmod.common.registry.SpectrobesTileRegistry;
+import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesTileRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -17,8 +17,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import javax.annotation.Nullable;
 
 public class HealerBlock extends SpectrobesTileEntityBlock {
     protected static final VoxelShape SHAPE = Block.box(0D, 0.0D, 0D, 16.0D, 32.0D, 16.0D);
