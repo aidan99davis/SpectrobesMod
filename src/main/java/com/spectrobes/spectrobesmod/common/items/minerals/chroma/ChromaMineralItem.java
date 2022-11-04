@@ -4,7 +4,6 @@ import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
 import com.spectrobes.spectrobesmod.common.items.minerals.SpecialMineralItem;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 
-import net.minecraft.item.Item.Properties;
 import net.minecraft.world.item.Item;
 
 public class ChromaMineralItem extends SpecialMineralItem {

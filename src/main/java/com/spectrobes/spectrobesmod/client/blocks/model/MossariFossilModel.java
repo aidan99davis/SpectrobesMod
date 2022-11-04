@@ -2,8 +2,7 @@ package com.spectrobes.spectrobesmod.client.blocks.model;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.blocks.tile.MossariFossilBlockTileEntity;
-import com.spectrobes.spectrobesmod.common.blocks.tile.NaguFossilBlockTileEntity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
 public class MossariFossilModel extends AnimatedGeoModel<MossariFossilBlockTileEntity> {

@@ -4,18 +4,14 @@ import com.spectrobes.spectrobesmod.client.entity.attacks.AttackEntities;
 import com.spectrobes.spectrobesmod.common.entities.attacks.EnergyBoltEntity;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import com.spectrobes.spectrobesmod.util.WeaponStats;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.*;
+import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.item.BowItem;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.*;
+import net.minecraft.world.level.Level;
 import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -29,6 +25,7 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Random;
 import java.util.function.Predicate;
 
 public abstract class SpectrobesRangedWeapon extends BowItem implements IAnimatable, ISyncable, ISpectrobeWeapon {
@@ -41,9 +38,8 @@ public abstract class SpectrobesRangedWeapon extends BowItem implements IAnimata
     }
 
     @Override
-    public void releaseUsing(ItemStack pStack, World pLevel, LivingEntity pEntityLiving, int pTimeLeft) {
-        if (pEntityLiving instanceof PlayerEntity) {
-            PlayerEntity playerentity = (PlayerEntity)pEntityLiving;
+    public void releaseUsing(ItemStack pStack, Level pLevel, LivingEntity pEntityLiving, int pTimeLeft) {
+        if (pEntityLiving instanceof Player playerentity) {
 
             int i = this.getUseDuration(pStack) - pTimeLeft;
             i = net.minecraftforge.event.ForgeEventFactory.onArrowLoose(pStack, pLevel, playerentity, i, true);
@@ -55,24 +51,24 @@ public abstract class SpectrobesRangedWeapon extends BowItem implements IAnimata
 
                 abstractarrowentity.setOwner(playerentity);
                 abstractarrowentity.setPos(playerentity.getX(), playerentity.getY() + 1.5, playerentity.getZ());
-                abstractarrowentity.shootFromRotation(playerentity, playerentity.xRot, playerentity.yRot, 0.0F, f, 1.0F);
+                abstractarrowentity.shootFromRotation(playerentity, playerentity.xRotO, playerentity.yRotO, 0.0F, f, 1.0F);
                 abstractarrowentity.AtkDamage = GetWeaponStats().AtkDamage;
                 abstractarrowentity.Nature = GetWeaponStats().Nature;
 
                 pLevel.addFreshEntity(abstractarrowentity);
 
-                pLevel.playSound(null, playerentity.getX(), playerentity.getY(), playerentity.getZ(), SoundEvents.ARROW_SHOOT, SoundCategory.PLAYERS, 1.0F, 1.0F / (random.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
+                pLevel.playSound(null, playerentity.getX(), playerentity.getY(), playerentity.getZ(), SoundEvents.ARROW_SHOOT, SoundSource.PLAYERS, 1.0F, 1.0F / (new Random().nextFloat() * 0.4F + 1.2F) + f * 0.5F);
                 playerentity.awardStat(Stats.ITEM_USED.get(this));
             }
         }
     }
 
     @Override
-    public void appendHoverText(ItemStack pStack, @Nullable World pLevel, List<ITextComponent> pTooltip, ITooltipFlag pFlag) {
+    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
         super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
-        pTooltip.add(new StringTextComponent("Weapon Tier: " + GetWeaponStats().Tier));
-        pTooltip.add(new StringTextComponent("Attack Stat: " + GetWeaponStats().AtkDamage));
-        pTooltip.add(new StringTextComponent("Weapon Speed: " + GetWeaponStats().Speed));
+        pTooltip.add(Component.literal("Weapon Tier: " + GetWeaponStats().Tier));
+        pTooltip.add(Component.literal("Attack Stat: " + GetWeaponStats().AtkDamage));
+        pTooltip.add(Component.literal("Weapon Speed: " + GetWeaponStats().Speed));
     }
 
 
@@ -102,8 +98,8 @@ public abstract class SpectrobesRangedWeapon extends BowItem implements IAnimata
     public abstract WeaponStats GetWeaponStats();
 
     @Override
-    public UseAction getUseAnimation(ItemStack stack) {
-        return UseAction.BLOCK;
+    public UseAnim getUseAnimation(ItemStack pStack) {
+        return UseAnim.BOW;
     }
 
     @Override

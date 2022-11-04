@@ -6,6 +6,7 @@ import com.spectrobes.spectrobesmod.client.blocks.model.XellesTrophyBlockModel;
 import com.spectrobes.spectrobesmod.common.blocks.tile.HealerBlockTileEntity;
 import com.spectrobes.spectrobesmod.common.blocks.tile.XellesTrophyBlockTileEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -14,7 +15,7 @@ import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 @OnlyIn(Dist.CLIENT)
 public class XellesTrophyRenderer extends GeoBlockRenderer<XellesTrophyBlockTileEntity> {
 
-    public XellesTrophyRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
+    public XellesTrophyRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
         super(rendererDispatcherIn, new XellesTrophyBlockModel());
     }
 

@@ -1,23 +1,11 @@
 package com.spectrobes.spectrobesmod.common.entities.krawl;
 
 import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.controller.FlyingMovementController;
-import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.passive.IFlyingAnimal;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.pathfinding.PathNodeType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraft.world.level.Level;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -37,7 +25,7 @@ public class EntitySpawningSpore extends Monster implements IAnimatable, IFlying
     public AnimationFactory animationControllers = new AnimationFactory(this);
     protected AnimationController moveController = new AnimationController(this, "moveAnimationController", 10F, this::moveController);
 
-    public EntitySpawningSpore(EntityType<? extends MonsterEntity> type, World worldIn) {
+    public EntitySpawningSpore(EntityType<? extends Monster> type, Level worldIn) {
         super(type, worldIn);
         this.navigation.setCanFloat(true);
         this.moveControl = new FlyingMovementController(this, 10, false);
@@ -67,13 +55,13 @@ public class EntitySpawningSpore extends Monster implements IAnimatable, IFlying
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT pCompound) {
+    public void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
         pCompound.putBoolean("BOSS_SPORE", entityData.get(BOSS_SPORE));
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT pCompound) {
+    public void readAdditionalSaveData(CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
         entityData.set(BOSS_SPORE, pCompound.getBoolean("BOSS_SPORE"));
     }
@@ -86,7 +74,7 @@ public class EntitySpawningSpore extends Monster implements IAnimatable, IFlying
     private void spawnKrawl() {
         if(entityData.get(BOSS_SPORE)) {
             EntityKrawl bossKrawl = (EntityKrawl) KrawlEntities.getBossForDimension(level)
-                    .spawn((ServerWorld) level,
+                    .spawn((ServerLevel) level,
                             null,
                             null,
                             blockPosition(),

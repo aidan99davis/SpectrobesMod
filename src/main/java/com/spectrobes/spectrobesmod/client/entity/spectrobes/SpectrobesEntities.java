@@ -309,13 +309,13 @@ public class SpectrobesEntities {
                     .sized(1f, 1f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "masetto").toString()));
 
-    public static <T extends Entity> RegistryObject<EntityType<T>> BuildEntity(EntityType.IFactory<T> entity, Class<T> entityClass, float width, float height)
-    {
-        String name = entityClass.getSimpleName().toLowerCase();
-        return ENTITY_TYPES.register(name,
-                () -> EntityType.Builder.of(entity, MobCategory.CREATURE)
-                        .sized(width, height).build(name));
-    }
+//    public static <T extends Entity> RegistryObject<EntityType<T>> BuildEntity(EntityType.IFactory<T> entity, Class<T> entityClass, float width, float height)
+//    {
+//        String name = entityClass.getSimpleName().toLowerCase();
+//        return ENTITY_TYPES.register(name,
+//                () -> EntityType.Builder.of(entity, MobCategory.CREATURE)
+//                        .sized(width, height).build(name));
+//    }
 
     public static void init() {
         DeferredWorkQueue.runLater(() -> {

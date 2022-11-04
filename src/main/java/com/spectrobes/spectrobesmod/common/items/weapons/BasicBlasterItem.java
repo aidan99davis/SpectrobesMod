@@ -1,6 +1,5 @@
 package com.spectrobes.spectrobesmod.common.items.weapons;
 
-import com.spectrobes.spectrobesmod.client.items.renderer.XellesTrophyItemRenderer;
 import com.spectrobes.spectrobesmod.client.items.weapons.renderer.BasicBlasterItemRenderer;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import com.spectrobes.spectrobesmod.util.WeaponStats;

@@ -1,9 +1,8 @@
 package com.spectrobes.spectrobesmod.client.blocks.model;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.common.blocks.tile.HarumiFossilBlockTileEntity;
 import com.spectrobes.spectrobesmod.common.blocks.tile.KomainuFossilBlockTileEntity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
 public class KomainuFossilModel extends AnimatedGeoModel<KomainuFossilBlockTileEntity> {

@@ -1,22 +1,14 @@
 package com.spectrobes.spectrobesmod.client.gui.prizmod;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.spectrobes.spectrobesmod.client.container.PrizmodContainer;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.Pages.LineUpPage;
 import com.spectrobes.spectrobesmod.client.gui.utils.GuiUtils;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.Pages.PrizmodPage;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
 public class PrizmodScreen extends ContainerScreen<PrizmodContainer> {
