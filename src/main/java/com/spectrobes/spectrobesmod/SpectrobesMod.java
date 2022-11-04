@@ -52,6 +52,7 @@ public class SpectrobesMod
         //register listeners to the event bus
         modEventBus.addListener(this::setup);
         modEventBus.addListener(this::doClientStuff);
+        modEventBus.addListener(SpectrobesEntities::registerEntityAttributes);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
@@ -80,7 +81,7 @@ public class SpectrobesMod
         event.enqueueWork(SpectrobesOreGen::registerOres);
         MinecraftForge.EVENT_BUS.register(PlayerEvents.instance);
         IconRegistry.init();
-        SpectrobesEntities.init();
+        SpectrobesEntities.populateMap();
         KrawlEntities.init();
 
         event.enqueueWork(() -> SpawnPlacements.register(KrawlEntities.ENTITY_VORTEX.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpectrobesEntitySpawns.MONSTER));

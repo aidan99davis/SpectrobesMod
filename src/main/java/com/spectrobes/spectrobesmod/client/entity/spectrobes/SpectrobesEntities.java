@@ -39,10 +39,10 @@ import com.spectrobes.spectrobesmod.common.entities.spectrobes.vilar.EntityVilar
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.zoza.EntityZoza;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.zoza.EntityZozane;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraftforge.fml.DeferredWorkQueue;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -317,50 +317,47 @@ public class SpectrobesEntities {
 //                        .sized(width, height).build(name));
 //    }
 
-    public static void init() {
-        DeferredWorkQueue.runLater(() -> {
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_GRILDA.get(), EntityGrilda.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_GRILDEN.get(), EntityGrilden.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_HARUMI.get(), EntityHarumi.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_HARUMITE.get(), EntityHarumite.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_KOMAINU.get(), EntityKomainu.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_KOMANOTO.get(), EntityKomanoto.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_KUBAKU.get(), EntityKubaku.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_KUGANON.get(), EntityKuganon.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_MOSSARI.get(), EntityMossari.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_MOSSARITO.get(), EntityMossarito.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_NAGU.get(), EntityNagu.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_NAGURYU.get(), EntityNaguryu.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_SAMUKABU.get(), EntitySamukabu.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_SAMURITE.get(), EntitySamurite.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_SEGU.get(), EntitySegu.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_SEGULOS.get(), EntitySegulos.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_SHAKIN.get(), EntityShakin.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_SHAKOR.get(), EntityShakor.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_SPIKO.get(), EntitySpiko.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_SPIKAN.get(), EntitySpikan.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_VILAR.get(), EntityVilar.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_VILAMASTA.get(), EntityVilamasta.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_ZOZA.get(), EntityZoza.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_ZOZANE.get(), EntityZozane.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_AOI.get(), EntityAoi.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_BARTOR.get(), EntityBartor.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_BARTOLOR.get(), EntityBartolor.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_GEJIO.get(), EntityGejio.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_MESA.get(), EntityMesa.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_DONGOR.get(), EntityDongor.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_DONGORA.get(), EntityDongora.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_INKANA.get(), EntityInkana.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_DANAWA.get(), EntityDanawa.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_MASETTO.get(), EntityMasetto.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_TENKRO.get(), EntityTenkro.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(SpectrobesEntities.ENTITY_KASUMI.get(), EntityKasumi.setCustomAttributes().build());
-        });
-
-        populateMap();
+    @SubscribeEvent
+    public static void registerEntityAttributes(final EntityAttributeCreationEvent event) {
+        event.put(SpectrobesEntities.ENTITY_GRILDA.get(), EntityGrilda.setCustomAttributes().build());
+        event.put(SpectrobesEntities.ENTITY_GRILDEN.get(), EntityGrilden.setCustomAttributes().build());
+        event.put(SpectrobesEntities.ENTITY_HARUMI.get(), EntityHarumi.setCustomAttributes().build());
+        event.put(SpectrobesEntities.ENTITY_HARUMITE.get(), EntityHarumite.setCustomAttributes().build());
+        event.put(SpectrobesEntities.ENTITY_KOMAINU.get(), EntityKomainu.setCustomAttributes().build());
+        event.put(SpectrobesEntities.ENTITY_KOMANOTO.get(), EntityKomanoto.setCustomAttributes().build());
+        event.put(SpectrobesEntities.ENTITY_KUBAKU.get(), EntityKubaku.setCustomAttributes().build());
+        event.put(SpectrobesEntities.ENTITY_KUGANON.get(), EntityKuganon.setCustomAttributes().build());
+        event.put(SpectrobesEntities.ENTITY_MOSSARI.get(), EntityMossari.setCustomAttributes().build());
+        event.put(SpectrobesEntities.ENTITY_MOSSARITO.get(), EntityMossarito.setCustomAttributes().build());
+        event.put(SpectrobesEntities.ENTITY_NAGU.get(), EntityNagu.setCustomAttributes().build());
+        event.put(SpectrobesEntities.ENTITY_NAGURYU.get(), EntityNaguryu.setCustomAttributes().build());
+        event.put(SpectrobesEntities.ENTITY_SAMUKABU.get(), EntitySamukabu.setCustomAttributes().build());
+        event.put(SpectrobesEntities.ENTITY_SAMURITE.get(), EntitySamurite.setCustomAttributes().build());
+        event.put(SpectrobesEntities.ENTITY_SEGU.get(), EntitySegu.setCustomAttributes().build());
+        event.put(SpectrobesEntities.ENTITY_SEGULOS.get(), EntitySegulos.setCustomAttributes().build());
+        event.put(SpectrobesEntities.ENTITY_SHAKIN.get(), EntityShakin.setCustomAttributes().build());
+        event.put(SpectrobesEntities.ENTITY_SHAKOR.get(), EntityShakor.setCustomAttributes().build());
+        event.put(SpectrobesEntities.ENTITY_SPIKO.get(), EntitySpiko.setCustomAttributes().build());
+        event.put(SpectrobesEntities.ENTITY_SPIKAN.get(), EntitySpikan.setCustomAttributes().build());
+        event.put(SpectrobesEntities.ENTITY_VILAR.get(), EntityVilar.setCustomAttributes().build());
+        event.put(SpectrobesEntities.ENTITY_VILAMASTA.get(), EntityVilamasta.setCustomAttributes().build());
+        event.put(SpectrobesEntities.ENTITY_ZOZA.get(), EntityZoza.setCustomAttributes().build());
+        event.put(SpectrobesEntities.ENTITY_ZOZANE.get(), EntityZozane.setCustomAttributes().build());
+        event.put(SpectrobesEntities.ENTITY_AOI.get(), EntityAoi.setCustomAttributes().build());
+        event.put(SpectrobesEntities.ENTITY_BARTOR.get(), EntityBartor.setCustomAttributes().build());
+        event.put(SpectrobesEntities.ENTITY_BARTOLOR.get(), EntityBartolor.setCustomAttributes().build());
+        event.put(SpectrobesEntities.ENTITY_GEJIO.get(), EntityGejio.setCustomAttributes().build());
+        event.put(SpectrobesEntities.ENTITY_MESA.get(), EntityMesa.setCustomAttributes().build());
+        event.put(SpectrobesEntities.ENTITY_DONGOR.get(), EntityDongor.setCustomAttributes().build());
+        event.put(SpectrobesEntities.ENTITY_DONGORA.get(), EntityDongora.setCustomAttributes().build());
+        event.put(SpectrobesEntities.ENTITY_INKANA.get(), EntityInkana.setCustomAttributes().build());
+        event.put(SpectrobesEntities.ENTITY_DANAWA.get(), EntityDanawa.setCustomAttributes().build());
+        event.put(SpectrobesEntities.ENTITY_MASETTO.get(), EntityMasetto.setCustomAttributes().build());
+        event.put(SpectrobesEntities.ENTITY_TENKRO.get(), EntityTenkro.setCustomAttributes().build());
+        event.put(SpectrobesEntities.ENTITY_KASUMI.get(), EntityKasumi.setCustomAttributes().build());
     }
 
-    private static void populateMap() {
+    public static void populateMap() {
         SPECTROBES.put("komainu", ENTITY_KOMAINU.get());
         SPECTROBES.put("komanoto", ENTITY_KOMANOTO.get());
         SPECTROBES.put("samukabu", ENTITY_SAMUKABU.get());

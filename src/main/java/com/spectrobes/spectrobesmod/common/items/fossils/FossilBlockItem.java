@@ -4,18 +4,15 @@ import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSyncSpectrobeMasterPacket;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
-import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
@@ -23,7 +20,6 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.UUID;
 
 public abstract class FossilBlockItem extends BlockItem implements IAnimatable {
 
@@ -34,32 +30,31 @@ public abstract class FossilBlockItem extends BlockItem implements IAnimatable {
     }
 
     @Override
-    public ActionResultType useOn(ItemUseContext context) {
-        if(context.getPlayer().isShiftKeyDown()) {
-            context.getItemInHand().shrink(1);
-            if(!context.getLevel().isClientSide) {
+    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
+        if(pPlayer.isShiftKeyDown()) {
+            pPlayer.getItemInHand(pUsedHand).shrink(1);
+            if(!pLevel.isClientSide) {
                 Spectrobe spectrobe = getSpectrobeInstance();
-                context.getPlayer().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(playerCap -> {
+                pPlayer.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(playerCap -> {
                     playerCap.addSpectrobe(spectrobe);
                     SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(playerCap),
-                            (ServerPlayerEntity) context.getPlayer());
+                            (ServerPlayer) pPlayer);
                 });
             } else {
-                UUID playerUUID = Minecraft.getInstance().player.getUUID();
-                Minecraft.getInstance().player.sendMessage(new StringTextComponent("A new spectrobe has been sent to your prizmod."), playerUUID);
+                pPlayer.sendSystemMessage(Component.literal("A new spectrobe has been sent to your prizmod."));
             }
-            return ActionResultType.CONSUME;
+            return InteractionResultHolder.consume(this.getDefaultInstance());
         } else {
-            return super.useOn(context);
+            return super.use(pLevel, pPlayer, pUsedHand);
         }
     }
 
     public abstract Spectrobe getSpectrobeInstance();
 
     @Override
-    public void appendHoverText(ItemStack pStack, @Nullable World pLevel, List<ITextComponent> pTooltip, ITooltipFlag pFlag) {
+    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
         super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
-        pTooltip.add(new StringTextComponent("Shift right click a block to awaken this fossil."));
+        pTooltip.add(Component.literal("Shift right click a block to awaken this fossil."));
     }
 
     @Override

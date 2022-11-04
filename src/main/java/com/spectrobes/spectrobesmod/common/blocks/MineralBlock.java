@@ -1,7 +1,7 @@
 package com.spectrobes.spectrobesmod.common.blocks;
 
-import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
 import com.spectrobes.spectrobesmod.common.items.minerals.Mineral;
+import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesMineralsRegistry;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -16,15 +16,14 @@ public class MineralBlock extends SpectrobesBlock {
     private static final Properties props = Properties.of(Material.STONE)
             .requiresCorrectToolForDrops()
             .strength(1.5f)
-            .sound(SoundType.STONE)
-            .harvestLevel(2);
+            .sound(SoundType.STONE);
 
     public MineralBlock() {
         super(props);
     }
 
     @Override
-    @SuppressWarnings({"NullableProblems", "deprecation"})
+    @SuppressWarnings({"deprecation"})
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         Random random = new Random();
 
@@ -44,7 +43,7 @@ public class MineralBlock extends SpectrobesBlock {
                 rarity = Mineral.MineralRarity.Common;
                 break;
         }
-        ItemStack mineralItem = SpectrobesItems.getRandomMineral(rarity);
+        ItemStack mineralItem = SpectrobesMineralsRegistry.getRandomMineral(rarity);
         ArrayList<ItemStack> minerals = new ArrayList<>();
         minerals.add(mineralItem);
 

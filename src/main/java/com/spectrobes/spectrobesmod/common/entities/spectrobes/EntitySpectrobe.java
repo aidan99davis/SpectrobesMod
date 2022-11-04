@@ -556,9 +556,9 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAd
     public void applyMineral(MineralItem mineralItem) {
         Spectrobe spectrobeInstance = getSpectrobeData();
         if(spectrobeInstance.properties.getNature()
-                .equals(mineralItem.mineralProperties.getNature())
-                || mineralItem.mineralProperties.getNature().equals(Nature.OTHER)) {
-            spectrobeInstance.applyMineral(mineralItem.mineralProperties);
+                .equals(mineralItem.mineral.properties.getNature())
+                || mineralItem.mineral.properties.getNature().equals(Nature.OTHER)) {
+            spectrobeInstance.applyMineral(mineralItem.mineral.properties);
 
             updateEntityAttributes();
 

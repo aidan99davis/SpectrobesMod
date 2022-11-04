@@ -6,7 +6,6 @@ import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.items.fossils.FossilBlockItem;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
 import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesFossilsRegistry;
-import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesItemsRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
@@ -71,7 +70,7 @@ public class EntityMasetto extends EntityMammalSpectrobe {
 
     @Override
     protected FossilBlockItem getFossil() {
-        return (FossilBlockItem) SpectrobesFossilsRegistry.masetto_fossil_item.get().getItem();
+        return (FossilBlockItem) SpectrobesFossilsRegistry.masetto_fossil_item.get();
     }
 
     @Override

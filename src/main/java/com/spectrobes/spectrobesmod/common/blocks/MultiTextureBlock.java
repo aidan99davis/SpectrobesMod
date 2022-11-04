@@ -1,26 +1,21 @@
 package com.spectrobes.spectrobesmod.common.blocks;
 
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SixWayBlock;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.CrossCollisionBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
 public class MultiTextureBlock extends SpectrobesBlock
 {
-	public static final BooleanProperty NORTH = SixWayBlock.NORTH;
-	public static final BooleanProperty EAST = SixWayBlock.EAST;
-	public static final BooleanProperty SOUTH = SixWayBlock.SOUTH;
-	public static final BooleanProperty WEST = SixWayBlock.WEST;
-	public static final BooleanProperty UP = SixWayBlock.UP;
-	public static final BooleanProperty DOWN = SixWayBlock.DOWN;
+	public static final BooleanProperty NORTH = BlockStateProperties.NORTH;
+	public static final BooleanProperty EAST = BlockStateProperties.EAST;
+	public static final BooleanProperty SOUTH = BlockStateProperties.SOUTH;
+	public static final BooleanProperty WEST = BlockStateProperties.WEST;
+	public static final BooleanProperty UP = BlockStateProperties.UP;
+	public static final BooleanProperty DOWN = BlockStateProperties.DOWN;
 	
 	public MultiTextureBlock(BlockBehaviour.Properties p_i49982_1_)
 	{
@@ -44,7 +39,7 @@ public class MultiTextureBlock extends SpectrobesBlock
 	* returns its solidified counterpart.
 	* Note that this method should ideally consider only the specific face passed in.
 	*/
-	public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, IWorld pLevel, BlockPos pCurrentPos, BlockPos pFacingPos) 
+	public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, IWorld pLevel, BlockPos pCurrentPos, BlockPos pFacingPos)
 	{
 		return getUpdatedBlockState(pState, pLevel, pCurrentPos);
 	}

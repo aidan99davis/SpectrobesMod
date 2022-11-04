@@ -71,7 +71,7 @@ public class EntityTenkro extends EntityMammalSpectrobe {
 
     @Override
     protected FossilBlockItem getFossil() {
-        return (FossilBlockItem) SpectrobesFossilsRegistry.tenkro_fossil_item.get().getItem();
+        return (FossilBlockItem) SpectrobesFossilsRegistry.tenkro_fossil_item.get();
     }
 
     @Override

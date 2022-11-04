@@ -5,10 +5,10 @@ import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityMammalSpect
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.items.fossils.FossilBlockItem;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
-import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesItemsRegistry;
+import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesFossilsRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
-import net.minecraft.entity.EntityType;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.Level;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
@@ -17,7 +17,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 public class EntityZozane extends EntityMammalSpectrobe {
 
 
-    public EntityZozane(EntityType<EntityZozane> entityTypeIn, World worldIn) {
+    public EntityZozane(EntityType<EntityZozane> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
     }
 
@@ -68,7 +68,7 @@ public class EntityZozane extends EntityMammalSpectrobe {
 
     @Override
     protected FossilBlockItem getFossil() {
-        return (FossilBlockItem) SpectrobesItemsRegistry.zoza_fossil_item.get().getItem();
+        return (FossilBlockItem) SpectrobesFossilsRegistry.zoza_fossil_item.get();
     }
 
     @Override
