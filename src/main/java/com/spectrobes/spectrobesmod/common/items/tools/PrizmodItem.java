@@ -19,7 +19,6 @@ import java.util.List;
 public class PrizmodItem extends Item {
     public PrizmodItem(Properties properties) {
         super(properties);
-        setRegistryName("prizmod_item");
     }
 
     @Override

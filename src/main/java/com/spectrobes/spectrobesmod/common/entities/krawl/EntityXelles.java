@@ -5,10 +5,10 @@ import com.spectrobes.spectrobesmod.common.entities.krawl.goals.AbsorbKrawlGoal;
 import com.spectrobes.spectrobesmod.common.entities.krawl.goals.AttackSpectrobeGoal;
 import com.spectrobes.spectrobesmod.common.entities.krawl.goals.AttackSpectrobeMasterGoal;
 import com.spectrobes.spectrobesmod.common.entities.krawl.goals.HealKrawlGoal;
-import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
 import com.spectrobes.spectrobesmod.common.items.minerals.Mineral;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesBlocks;
+import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesMineralsRegistry;
 import com.spectrobes.spectrobesmod.common.save_data.SpectrobesWorldSaveData;
 import com.spectrobes.spectrobesmod.util.KrawlPropertiesBuilder;
 import net.minecraft.nbt.CompoundTag;
@@ -185,7 +185,7 @@ public class EntityXelles extends EntityBossKrawl {
         if(getStage() == 3) {
             int mineralCount = random.nextInt(3) + 3;
             for (int i = 0; i < mineralCount; i++) {
-                ItemStack mineralStack = SpectrobesItems.getRandomMineral(Mineral.MineralRarity.Rare);
+                ItemStack mineralStack = SpectrobesMineralsRegistry.getRandomMineral(Mineral.MineralRarity.Rare);
                 ItemEntity minerals = new ItemEntity(level,
                         this.getX() + 0.5D,
                         (this.getY() + 1),
@@ -239,13 +239,11 @@ public class EntityXelles extends EntityBossKrawl {
     }
 
     private int waveSize() {
-        switch (getStage()) {
-            case 2:
-                return 2;
-            case 3:
-                return 4;
-            default: return 0;
-        }
+        return switch (getStage()) {
+            case 2 -> 2;
+            case 3 -> 4;
+            default -> 0;
+        };
     }
 
     public void spawnHealingSpores(List<EntityKrawl> targets) {

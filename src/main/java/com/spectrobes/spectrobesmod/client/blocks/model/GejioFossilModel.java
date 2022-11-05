@@ -8,17 +8,17 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 public class GejioFossilModel extends AnimatedGeoModel<GejioFossilBlockTileEntity> {
 
     @Override
-    public ResourceLocation getModelLocation(GejioFossilBlockTileEntity grildaFossilBlock) {
+    public ResourceLocation getModelResource(GejioFossilBlockTileEntity grildaFossilBlock) {
         return new ResourceLocation(SpectrobesInfo.MOD_ID, "geo/blocks/gejio.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureLocation(GejioFossilBlockTileEntity grildaFossilBlock) {
+    public ResourceLocation getTextureResource(GejioFossilBlockTileEntity grildaFossilBlock) {
         return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/blocks/fossil.png");
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(GejioFossilBlockTileEntity grildaFossilBlock) {
+    public ResourceLocation getAnimationResource(GejioFossilBlockTileEntity grildaFossilBlock) {
         return null;
     }
 }

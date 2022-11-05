@@ -6,7 +6,8 @@ import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.DeferredWorkQueue;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -21,11 +22,11 @@ import static net.minecraft.world.entity.MobCategory.MONSTER;
 
 public class KrawlEntities {
 
-    private static ArrayList<EntityType<? extends EntityKrawl>> AURORA_KRAWL = new ArrayList<>();
-    private static ArrayList<EntityType<? extends EntityKrawl>> FLASH_KRAWL = new ArrayList<>();
-    private static ArrayList<EntityType<? extends EntityKrawl>> CORONA_KRAWL = new ArrayList<>();
-    private static ArrayList<EntityType<? extends EntityKrawl>> OTHER_KRAWL = new ArrayList<>();
-    private static ArrayList<EntityType<? extends EntityKrawl>> SPECIAL_KRAWL = new ArrayList<>();
+    private static final ArrayList<EntityType<? extends EntityKrawl>> AURORA_KRAWL = new ArrayList<>();
+    private static final ArrayList<EntityType<? extends EntityKrawl>> FLASH_KRAWL = new ArrayList<>();
+    private static final ArrayList<EntityType<? extends EntityKrawl>> CORONA_KRAWL = new ArrayList<>();
+    private static final ArrayList<EntityType<? extends EntityKrawl>> OTHER_KRAWL = new ArrayList<>();
+    private static final ArrayList<EntityType<? extends EntityKrawl>> SPECIAL_KRAWL = new ArrayList<>();
 
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES
             = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, SpectrobesInfo.MOD_ID);
@@ -47,93 +48,74 @@ public class KrawlEntities {
     public static final RegistryObject<EntityType<EntitySpawningSpore>> ENTITY_SPAWNING_SPORE
             = ENTITY_TYPES.register("entity_spawning_spores",
             () -> EntityType.Builder.of(EntitySpawningSpore::new,
-                    EntityClassification.MONSTER)
+                    MONSTER)
                     .sized(1f, 1f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "spawning_spores").toString()));
 
     public static final RegistryObject<EntityType<EntityOrbix>> ENTITY_ORBIX
             = ENTITY_TYPES.register("entity_orbix",
             () -> EntityType.Builder.of(EntityOrbix::new,
-                    EntityClassification.MONSTER)
+                    MONSTER)
                     .sized(1f, 1.5f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "orbix").toString()));
 
     public static final RegistryObject<EntityType<EntityOrbux>> ENTITY_ORBUX
             = ENTITY_TYPES.register("entity_orbux",
             () -> EntityType.Builder.of(EntityOrbux::new,
-                    EntityClassification.MONSTER)
+                    MONSTER)
                     .sized(1f, 1.5f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "orbux").toString()));
 
     public static final RegistryObject<EntityType<EntityOtorso>> ENTITY_OTORSO
             = ENTITY_TYPES.register("entity_otorso",
             () -> EntityType.Builder.of(EntityOtorso::new,
-                    EntityClassification.MONSTER)
+                    MONSTER)
                     .sized(2f, 2f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "otorso").toString()));
 
     public static final RegistryObject<EntityType<EntitySwar>> ENTITY_SWAR
             = ENTITY_TYPES.register("entity_swar",
             () -> EntityType.Builder.of(EntitySwar::new,
-                    EntityClassification.MONSTER)
+                    MONSTER)
                     .sized(1f, 2f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "swar").toString()));
 
     public static final RegistryObject<EntityType<EntitySubar>> ENTITY_SUBAR
             = ENTITY_TYPES.register("entity_subar",
             () -> EntityType.Builder.of(EntitySubar::new,
-                    EntityClassification.MONSTER)
+                    MONSTER)
                     .sized(1.5f, 1.25f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "subar").toString()));
 
     public static final RegistryObject<EntityType<EntityVizbar>> ENTITY_VIZBAR
             = ENTITY_TYPES.register("entity_vizbar",
             () -> EntityType.Builder.of(EntityVizbar::new,
-                    EntityClassification.MONSTER)
+                    MONSTER)
                     .sized(1.5f, 1.25f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "vizbar").toString()));
 
     public static final RegistryObject<EntityType<EntityGris>> ENTITY_GRIS
             = ENTITY_TYPES.register("entity_gris",
             () -> EntityType.Builder.of(EntityGris::new,
-                    EntityClassification.MONSTER)
+                    MONSTER)
                     .sized(1.5f, 1.25f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "gris").toString()));
 
     public static final RegistryObject<EntityType<EntityGrisen>> ENTITY_GRISEN
             = ENTITY_TYPES.register("entity_grisen",
             () -> EntityType.Builder.of(EntityGrisen::new,
-                    EntityClassification.MONSTER)
+                    MONSTER)
                     .sized(1.5f, 1.25f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "grisen").toString()));
 
     public static final RegistryObject<EntityType<EntityVortex>> ENTITY_VORTEX
             = ENTITY_TYPES.register("entity_vortex",
             () -> EntityType.Builder.of(EntityVortex::new,
-                    EntityClassification.MONSTER)
+                    MONSTER)
                     .sized(2f, 2f)
                     .build(new ResourceLocation(SpectrobesInfo.MOD_ID, "vortex").toString()));
 
-    public static void init() {
-        DeferredWorkQueue.runLater(() -> {
-            GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_VORTEX.get(), EntityVortex.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_SWAR.get(), EntitySwar.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_GRIS.get(), EntityGris.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_GRISEN.get(), EntityGrisen.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_SUBAR.get(), EntitySubar.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_VIZBAR.get(), EntityVizbar.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_XELLES.get(), EntityXelles.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_ORBIX.get(), EntityOrbix.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_ORBUX.get(), EntityOrbux.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_HEALING_SPORES.get(), EntityHealingSpore.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_SPAWNING_SPORE.get(), EntitySpawningSpore.setCustomAttributes().build());
-            GlobalEntityTypeAttributes.put(KrawlEntities.ENTITY_OTORSO.get(), EntityOtorso.setCustomAttributes().build());
-        });
-
-        populateMaps();
-    }
-
-    private static void populateMaps() {
+    public static void populateMaps() {
         SPECIAL_KRAWL.add(ENTITY_VORTEX.get());
 
         CORONA_KRAWL.add(ENTITY_SWAR.get());
@@ -194,26 +176,6 @@ public class KrawlEntities {
 
         return FLASH_KRAWL.get(randomInt);
     }
-//
-//    public static EntityType<? extends EntityKrawl> getByNatureAndLevel(SpectrobeProperties.Nature vortexNature, int level) {
-//        List<EntityType<? extends EntityKrawl>> options = new ArrayList<>();
-//        switch (vortexNature) {
-//            case CORONA:
-//                options = CORONA_KRAWL.stream().filter(filterKrawlByLevel(level)).collect(Collectors.toList());
-//                break;
-//            case AURORA:
-//                options = AURORA_KRAWL.stream().filter(filterKrawlByLevel(level)).collect(Collectors.toList());
-//                break;
-//            case FLASH:
-//                options = FLASH_KRAWL.stream().filter(filterKrawlByLevel(level)).collect(Collectors.toList());
-//                break;
-//            case OTHER:
-//                options = OTHER_KRAWL.stream().filter(filterKrawlByLevel(level)).collect(Collectors.toList());
-//                break;
-//        }
-//        return options.get(new Random().nextInt(options.size()) - 1);
-//
-//    }
 
     public static EntityType<? extends EntityKrawl> getByLevel(int level, Level world) {
         List<EntityType<? extends EntityKrawl>> options = new ArrayList<>();
@@ -240,5 +202,21 @@ public class KrawlEntities {
 
     public static EntityType<? extends EntityKrawl> getBossForDimension(Level level) {
         return ENTITY_OTORSO.get();
+    }
+
+    @SubscribeEvent
+    public static void registerEntityAttributes(final EntityAttributeCreationEvent event) {
+        event.put(KrawlEntities.ENTITY_VORTEX.get(), EntityVortex.setCustomAttributes().build());
+        event.put(KrawlEntities.ENTITY_SWAR.get(), EntitySwar.setCustomAttributes().build());
+        event.put(KrawlEntities.ENTITY_GRIS.get(), EntityGris.setCustomAttributes().build());
+        event.put(KrawlEntities.ENTITY_GRISEN.get(), EntityGrisen.setCustomAttributes().build());
+        event.put(KrawlEntities.ENTITY_SUBAR.get(), EntitySubar.setCustomAttributes().build());
+        event.put(KrawlEntities.ENTITY_VIZBAR.get(), EntityVizbar.setCustomAttributes().build());
+        event.put(KrawlEntities.ENTITY_XELLES.get(), EntityXelles.setCustomAttributes().build());
+        event.put(KrawlEntities.ENTITY_ORBIX.get(), EntityOrbix.setCustomAttributes().build());
+        event.put(KrawlEntities.ENTITY_ORBUX.get(), EntityOrbux.setCustomAttributes().build());
+        event.put(KrawlEntities.ENTITY_HEALING_SPORES.get(), EntityHealingSpore.setCustomAttributes().build());
+        event.put(KrawlEntities.ENTITY_SPAWNING_SPORE.get(), EntitySpawningSpore.setCustomAttributes().build());
+        event.put(KrawlEntities.ENTITY_OTORSO.get(), EntityOtorso.setCustomAttributes().build());
     }
 }

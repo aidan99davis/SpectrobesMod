@@ -4,42 +4,47 @@ import com.mojang.serialization.Codec;
 import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityXelles;
 import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesBlocks;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ISeedReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.Heightmap;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.NoFeatureConfig;
-import net.minecraft.world.server.ServerWorld;
-
-import java.util.Random;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
 import static com.spectrobes.spectrobesmod.common.world.WorldGenUtils.*;
 
-public class WorldGenKrawlNest extends Feature<NoFeatureConfig> {
+public class WorldGenKrawlNest extends Feature<NoneFeatureConfiguration> {
     private static final BlockState KRAWL_NEST_BLOCK = SpectrobesBlocks.krawl_nest.get().defaultBlockState();
     private static final BlockState KRAWL_NEST_BLOCK_2 = SpectrobesBlocks.krawl_mud.get().defaultBlockState();
 
-    public WorldGenKrawlNest(Codec<NoFeatureConfig> pCodec) {
+    public WorldGenKrawlNest(Codec<NoneFeatureConfiguration> pCodec) {
         super(pCodec);
     }
 
-    public void placeSmallGen(ISeedReader worldIn, Random rand, BlockPos pos) {
+    @Override
+    public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> pContext) {
+        return place(pContext.config(), pContext.level(), pContext.chunkGenerator(), pContext.random(), pContext.origin());
+    }
+
+    public void placeSmallGen(WorldGenLevel worldIn, RandomSource rand, BlockPos pos) {
         generateNestRoom(worldIn, rand, pos);
     }
 
     @Override
-    public boolean place(ISeedReader world, ChunkGenerator p_230362_3_, Random rand, BlockPos position, NoFeatureConfig p_230362_6_) {
-        generateNestRoom(world, rand, position);
-        return false;
+    public boolean place(NoneFeatureConfiguration pConfig, WorldGenLevel pLevel, ChunkGenerator pChunkGenerator, RandomSource pRandom, BlockPos pOrigin) {
+        generateNestRoom(pLevel, pRandom, pOrigin);
+
+        return super.place(pConfig, pLevel, pChunkGenerator, pRandom, pOrigin);
     }
 
-    public void generateNestRoom(ISeedReader world, Random rand, BlockPos position) {
+    public void generateNestRoom(WorldGenLevel world, RandomSource rand, BlockPos position) {
         generateSphere(world, rand, position, 25, 10, KRAWL_NEST_BLOCK, KRAWL_NEST_BLOCK_2);
         generateSphere(world, rand, position, 22, 7, Blocks.AIR.defaultBlockState());
         Direction direction = Direction.getRandom(rand);
@@ -49,15 +54,15 @@ public class WorldGenKrawlNest extends Feature<NoFeatureConfig> {
         world.setBlock(new BlockPos(position.below(6).getX(), position.below(6).getY(), position.below(6).getZ()), SpectrobesBlocks.krawl_stone.get().defaultBlockState(), 11);
         if(!world.isClientSide()) {
             EntityXelles xelles = (EntityXelles) KrawlEntities.ENTITY_XELLES.get()
-                    .spawn((ServerWorld)world, null, null, position.below(5), SpawnReason.MOB_SUMMONED, false, false);
+                    .spawn((ServerLevel) world, null, null, position.below(5), MobSpawnType.MOB_SUMMONED, false, false);
         }
 
     }
 
 
-    private void generateEntrance(IWorld world, Random rand, BlockPos position, int size, int height, Direction direction) {
+    private void generateEntrance(WorldGenLevel world, RandomSource rand, BlockPos position, int size, int height, Direction direction) {
         BlockPos up = position.above();
-        while (up.getY() < world.getHeight(Heightmap.Type.WORLD_SURFACE, up.getX(), up.getZ())) {
+        while (up.getY() < world.getHeight(Heightmap.Types.WORLD_SURFACE, up.getX(), up.getZ())) {
             generateCircleRespectSky(world, rand, up, size, height, direction, KRAWL_NEST_BLOCK, KRAWL_NEST_BLOCK_2);
             up = up.above().offset(direction.getNormal());
         }

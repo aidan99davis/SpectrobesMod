@@ -1,17 +1,20 @@
 package com.spectrobes.spectrobesmod.client.gui.prizmod;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.spectrobes.spectrobesmod.client.container.PrizmodContainer;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.Pages.LineUpPage;
 import com.spectrobes.spectrobesmod.client.gui.utils.GuiUtils;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.Pages.PrizmodPage;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class PrizmodScreen extends ContainerScreen<PrizmodContainer> {
+public class PrizmodScreen extends AbstractContainerScreen<PrizmodContainer> {
     public static final ResourceLocation texture = new ResourceLocation("spectrobesmod:textures/gui/prizmod_background.png");
     public static final ResourceLocation SPECTROBE_SLOT_TEXTURE = new ResourceLocation("spectrobesmod:textures/gui/spectrobe_slot.png");
     public static final ResourceLocation SPECTROBE_SLOT_SELECTED_TEXTURE = new ResourceLocation("spectrobesmod:textures/gui/spectrobe_slot_selected.png");
@@ -52,13 +55,13 @@ public class PrizmodScreen extends ContainerScreen<PrizmodContainer> {
 
 
     @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         super.render(stack, mouseX, mouseY,partialTicks);
         this.prizmodPage.render(stack, mouseX,mouseY,partialTicks);
     }
 
     @Override
-    protected void renderLabels(MatrixStack p_230451_1_, int p_230451_2_, int p_230451_3_) {
+    protected void renderLabels(PoseStack p_230451_1_, int p_230451_2_, int p_230451_3_) {
 //
 //        this.font.draw(pMatrixStack, this.title, (float)this.titleLabelX, (float)this.titleLabelY, 4210752);
 //        this.font.draw(pMatrixStack, this.inventory.getDisplayName(), (float)this.inventoryLabelX, (float)this.inventoryLabelY, 4210752);
@@ -72,8 +75,8 @@ public class PrizmodScreen extends ContainerScreen<PrizmodContainer> {
      * @param mouseY
      */
     @Override
-    protected void renderBg(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
-        getMinecraft().getTextureManager().bind(texture);
+    protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
+        getMinecraft().getTextureManager().bindForSetup(texture);
 
         GuiUtils.blit(0, 0,0,0,0,
                 (width),

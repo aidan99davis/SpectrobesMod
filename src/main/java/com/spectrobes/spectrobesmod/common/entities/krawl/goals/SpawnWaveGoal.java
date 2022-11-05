@@ -8,11 +8,11 @@ import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.save_data.KrawlNest;
 import com.spectrobes.spectrobesmod.common.save_data.SpectrobesWorldSaveData;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.goal.TargetGoal;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.target.TargetGoal;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.Random;
 
@@ -20,7 +20,7 @@ public class SpawnWaveGoal extends TargetGoal {
     SpectrobeProperties.Nature vortexNature;
 
 
-    public SpawnWaveGoal(MobEntity mobIn) {
+    public SpawnWaveGoal(Mob mobIn) {
         super(mobIn, true, false);
     }
 
@@ -69,7 +69,7 @@ public class SpawnWaveGoal extends TargetGoal {
         final int[] levelToSpawnAt = {1};
 
         if(!mob.level.isClientSide()) {
-            SpectrobesWorldSaveData spectrobesWorldSaveData = SpectrobesWorldSaveData.getWorldData((ServerWorld) mob.level);
+            SpectrobesWorldSaveData spectrobesWorldSaveData = SpectrobesWorldSaveData.getWorldData((ServerLevel) mob.level);
 
             KrawlNest nest = spectrobesWorldSaveData.getNest(mob.blockPosition());
 
@@ -84,7 +84,7 @@ public class SpawnWaveGoal extends TargetGoal {
             }
 
             //check if player average spectrobes level is higher
-            if(mob.getTarget() instanceof PlayerEntity) {
+            if(mob.getTarget() instanceof Player) {
                 mob.getTarget().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(playerSpectrobeMaster -> {
                     if(playerSpectrobeMaster.getLevel() > levelToSpawnAt[0]) {
                         levelToSpawnAt[0] = playerSpectrobeMaster.getLevel();
@@ -97,7 +97,7 @@ public class SpawnWaveGoal extends TargetGoal {
                         if(playerSpectrobeMaster.getLevel() > levelToSpawnAt[0]) levelToSpawnAt[0] = playerSpectrobeMaster.getLevel();
                     });
                 } else {
-                    if(((EntitySpectrobe)mob.getTarget()).getLevel() > levelToSpawnAt[0]) levelToSpawnAt[0] = ((EntitySpectrobe)mob).getLevel();
+                    if(((EntitySpectrobe)mob.getTarget()).getSpectrobeLevel() > levelToSpawnAt[0]) levelToSpawnAt[0] = ((EntitySpectrobe)mob).getSpectrobeLevel();
                 }
             }
 

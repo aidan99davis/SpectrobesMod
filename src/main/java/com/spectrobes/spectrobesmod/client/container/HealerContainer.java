@@ -2,7 +2,7 @@ package com.spectrobes.spectrobesmod.client.container;
 
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
-import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
+import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesToolsRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -30,7 +30,7 @@ public class HealerContainer extends AbstractContainerMenu {
      */
     @Override
     public boolean stillValid(Player playerIn) {
-        return playerIn.getInventory().contains(SpectrobesItems.prizmod_item.getDefaultInstance());
+        return playerIn.getInventory().contains(SpectrobesToolsRegistry.prizmod_item.get().getDefaultInstance());
     }
 
     public int getCurrentGuraBalance() {

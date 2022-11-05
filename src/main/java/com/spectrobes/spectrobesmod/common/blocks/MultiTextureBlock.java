@@ -2,7 +2,8 @@ package com.spectrobes.spectrobesmod.common.blocks;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.CrossCollisionBlock;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -44,7 +45,7 @@ public class MultiTextureBlock extends SpectrobesBlock
 		return getUpdatedBlockState(pState, pLevel, pCurrentPos);
 	}
 	
-	protected BlockState getUpdatedBlockState (BlockState pState, IWorld pLevel, BlockPos pCurrentPos)
+	protected BlockState getUpdatedBlockState (BlockState pState, Level pLevel, BlockPos pCurrentPos)
 	{
 		return pState.setValue(NORTH, pLevel.getBlockState(pCurrentPos.north()).is(this))
 				.setValue(EAST, pLevel.getBlockState(pCurrentPos.east()).is(this))
@@ -54,7 +55,7 @@ public class MultiTextureBlock extends SpectrobesBlock
 				.setValue(DOWN, pLevel.getBlockState(pCurrentPos.below()).is(this));
 	}
 	
-	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> pBuilder) 
+	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> pBuilder)
 	{
 		pBuilder.add(UP, DOWN, NORTH, EAST, SOUTH, WEST);
 	}

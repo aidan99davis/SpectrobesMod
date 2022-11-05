@@ -8,17 +8,17 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 public class KomainuFossilModel extends AnimatedGeoModel<KomainuFossilBlockTileEntity> {
 
     @Override
-    public ResourceLocation getModelLocation(KomainuFossilBlockTileEntity fossil) {
+    public ResourceLocation getModelResource(KomainuFossilBlockTileEntity fossil) {
         return new ResourceLocation(SpectrobesInfo.MOD_ID, "geo/blocks/komainu.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureLocation(KomainuFossilBlockTileEntity fossil) {
+    public ResourceLocation getTextureResource(KomainuFossilBlockTileEntity fossil) {
         return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/blocks/fossil.png");
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(KomainuFossilBlockTileEntity fossil) {
+    public ResourceLocation getAnimationResource(KomainuFossilBlockTileEntity fossil) {
         return null;
     }
 }

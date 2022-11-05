@@ -10,6 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.navigation.AmphibiousPathNavigation;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
@@ -43,7 +44,7 @@ public class FollowMasterGoal extends Goal {
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
         if (!(entity.getNavigation() instanceof GroundPathNavigation)
                 && !(entity.getNavigation() instanceof FlyingPathNavigation)
-                && !(entity.getNavigation() instanceof SwimmerPathNavigator)) {
+                && !(entity.getNavigation() instanceof AmphibiousPathNavigation)) {
             throw new IllegalArgumentException("Unsupported navigation type for FollowMasterGoal");
         }
     }

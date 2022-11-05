@@ -24,7 +24,9 @@ import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.registry.items.*;
 import com.spectrobes.spectrobesmod.common.world.SpectrobesEntitySpawns;
 import com.spectrobes.spectrobesmod.common.world.SpectrobesOreGen;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.common.MinecraftForge;
@@ -35,6 +37,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.*;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import software.bernie.geckolib3.GeckoLib;
+
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(SpectrobesInfo.MOD_ID)
@@ -53,6 +56,11 @@ public class SpectrobesMod
         modEventBus.addListener(this::setup);
         modEventBus.addListener(this::doClientStuff);
         modEventBus.addListener(SpectrobesEntities::registerEntityAttributes);
+        modEventBus.addListener(KrawlEntities::registerEntityAttributes);
+        modEventBus.addListener(BlockRendererManager::registerTileEntityRenderers);
+        modEventBus.addListener(SpectrobeRendererManager::registerEntityRenderers);
+        modEventBus.addListener(KrawlRendererManager::registerEntityRenderers);
+        modEventBus.addListener(AttackRendererManager::registerEntityRenderers);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
@@ -82,7 +90,7 @@ public class SpectrobesMod
         MinecraftForge.EVENT_BUS.register(PlayerEvents.instance);
         IconRegistry.init();
         SpectrobesEntities.populateMap();
-        KrawlEntities.init();
+        KrawlEntities.populateMaps();
 
         event.enqueueWork(() -> SpawnPlacements.register(KrawlEntities.ENTITY_VORTEX.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpectrobesEntitySpawns.MONSTER));
 
@@ -92,14 +100,14 @@ public class SpectrobesMod
     @SubscribeEvent
     public void doClientStuff(final FMLClientSetupEvent event)
     {
-        MenuScreens.register(PrizmodContainer.PRIZMOD.get(), PrizmodScreen::new);
+        MenuScreens.register(PrizmodContainer.PRIZMOD.get(), MenuScreens.getScreenFactory(PrizmodScreen::new,
+                Minecraft.getInstance(),
+                0,
+                Component.empty()));
         MenuScreens.register(HealerContainer.HEALER.get(), HealerScreen::new);
         MenuScreens.register(SpectrobeDetailsContainer.SPECTROBE_DETAILS.get(), SpectrobeDetailsScreen::new);
-        SpectrobeRendererManager.init();
         //force load the serializer to prevent clients crashing
         BlockRendererManager.init();
-        KrawlRendererManager.init();
-        AttackRendererManager.init();
         ArmourRendererRegisterer.registerRenderers();
         MineralRegistry.init();
         SpectrobesKeybindings.initKeybinds();

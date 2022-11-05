@@ -1,6 +1,6 @@
 package com.spectrobes.spectrobesmod.common.items.minerals;
 
-import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
+import com.spectrobes.spectrobesmod.common.items.SpectrobesItemGroups;
 import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesMineralsRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 
@@ -13,11 +13,11 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 
 public class MineralItem extends Item {
-    public Mineral mineral = null;
+    public Mineral mineral;
 
     public MineralItem(Mineral mineral) {
         super(new Item.Properties()
-                .tab(SpectrobesItems.SpectrobesMineralItemGroup.Instance));
+                .tab(SpectrobesItemGroups.SpectrobesMineralItemGroup.Instance));
         this.mineral = mineral;
 
         List<Item> list = SpectrobesMineralsRegistry.all_minerals.get(mineral.rarity);

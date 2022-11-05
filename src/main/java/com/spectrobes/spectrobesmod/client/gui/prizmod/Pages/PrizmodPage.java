@@ -1,15 +1,14 @@
 package com.spectrobes.spectrobesmod.client.gui.prizmod.Pages;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.components.Widget;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class PrizmodPage extends Widget {
+public abstract class PrizmodPage implements Widget {
 
     public PrizmodScreen parent;
     protected PlayerSpectrobeMaster playerData;
@@ -22,7 +21,7 @@ public abstract class PrizmodPage extends Widget {
     }
 
     @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
     }
 
     public List<Widget> getButtons() {
