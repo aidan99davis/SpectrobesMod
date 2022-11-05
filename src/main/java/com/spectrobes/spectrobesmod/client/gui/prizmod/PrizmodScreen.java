@@ -7,11 +7,18 @@ import com.spectrobes.spectrobesmod.client.gui.utils.GuiUtils;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.Pages.PrizmodPage;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
 public class PrizmodScreen extends AbstractContainerScreen<PrizmodContainer> {
@@ -19,12 +26,12 @@ public class PrizmodScreen extends AbstractContainerScreen<PrizmodContainer> {
     public static final ResourceLocation SPECTROBE_SLOT_TEXTURE = new ResourceLocation("spectrobesmod:textures/gui/spectrobe_slot.png");
     public static final ResourceLocation SPECTROBE_SLOT_SELECTED_TEXTURE = new ResourceLocation("spectrobesmod:textures/gui/spectrobe_slot_selected.png");
 
-    public PlayerEntity player;
+    public Player player;
     public int pageX = imageWidth / 3;
     public int pageY = (int) (imageHeight * 0.65);
     private PrizmodPage prizmodPage;
 
-    public PrizmodScreen(PrizmodContainer container, PlayerInventory playerInv, ITextComponent text) {
+    public PrizmodScreen(PrizmodContainer container, Inventory playerInv, Component text) {
         super(container, playerInv, text);
         this.player = playerInv.player;
         this.imageWidth = Minecraft.getInstance().getWindow().getScreenWidth();
@@ -50,7 +57,7 @@ public class PrizmodScreen extends AbstractContainerScreen<PrizmodContainer> {
         this.prizmodPage = new LineUpPage(this);
         this.prizmodPage.init();
         this.prizmodPage.changeFocus(true);
-        this.addButton(this.prizmodPage);
+        this.addRenderableWidget(this.prizmodPage);
     }
 
 
@@ -85,32 +92,30 @@ public class PrizmodScreen extends AbstractContainerScreen<PrizmodContainer> {
     }
 
     public void setMenuPage(PrizmodPage prizmodPage) {
-        this.buttons.clear();
+        this.clearWidgets();
         this.prizmodPage = prizmodPage;
         this.prizmodPage.init();
         this.prizmodPage.changeFocus(true);
-        this.addButton(this.prizmodPage);
+        this.addRenderableWidget(this.prizmodPage);
     }
 
-    @Override public void tick() {
+    @Override
+    public void containerTick() {
         this.prizmodPage.tick();
         this.getMenu().tick();
     }
 
-    public void addButtons(List<Widget> buttonList) {
+    public void addButtons(List<AbstractWidget> buttonList) {
         buttonList.forEach(b -> {
-            b.visible = true;
-            b.active = true;
-            this.addButton(b);
+            this.addRenderableWidget(b);
         });
     }
 
-    public void removeButtons(List<Widget> buttonList) {
+    public void removeButtons(List<AbstractWidget> buttonList) {
         buttonList.forEach(b -> {
             b.visible = false;
             b.active = false;
-            this.buttons.remove(b);
-            this.children.remove(b);
+            this.removeWidget(b);
         });
     }
 }

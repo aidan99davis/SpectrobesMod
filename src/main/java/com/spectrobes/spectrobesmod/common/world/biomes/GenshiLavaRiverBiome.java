@@ -2,25 +2,19 @@ package com.spectrobes.spectrobesmod.common.world.biomes;
 
 import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
 import com.spectrobes.spectrobesmod.common.world.biomes.surfacebuilders.SpectrobesConfiguredSurfaceBuilders;
-import com.spectrobes.spectrobesmod.common.world.features.SpectrobesConfiguredFeatures;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntityType;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.biome.*;
-import net.minecraft.world.gen.GenerationStage;
-import net.minecraft.world.gen.feature.Features;
-import net.minecraft.world.gen.feature.structure.StructureFeatures;
-import net.minecraft.world.gen.surfacebuilders.ConfiguredSurfaceBuilders;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeGenerationSettings;
 
 public class GenshiLavaRiverBiome extends SpectrobeBiome {
 
     @Override
-    void configureBiome(Biome.Builder builder) {
+    void configureBiome(Biome.BiomeBuilder builder) {
         builder.precipitation(Biome.RainType.RAIN).biomeCategory(Biome.Category.NETHER).depth(4.5F).scale(0.0F).temperature(0.95F).downfall(0.3F);
         builder.specialEffects((new BiomeAmbience.Builder())
                 .fogColor(0x7F7F7F)
-                .skyColor(MathHelper.color(235, 192, 52)) //201, 164, 42 <- darker yellow
+                .skyColor(Mth.color(235, 192, 52)) //201, 164, 42 <- darker yellow
                 .grassColorOverride(0x4A703B)
                 .waterColor(4159204)
                 .waterFogColor(329011)

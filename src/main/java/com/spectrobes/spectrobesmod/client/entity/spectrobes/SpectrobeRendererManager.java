@@ -4,9 +4,11 @@ import com.spectrobes.spectrobesmod.client.entity.spectrobes.renderer.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @OnlyIn(Dist.CLIENT)
 public class SpectrobeRendererManager {
+    @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(SpectrobesEntities.ENTITY_KOMAINU.get(), KomainuRenderer::new);
         event.registerEntityRenderer(SpectrobesEntities.ENTITY_KOMANOTO.get(), KomanotoRenderer::new);

@@ -13,9 +13,9 @@ import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSyncSpectrobeMasterPacket;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import com.spectrobes.spectrobesmod.util.DamageUtils;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -29,21 +29,15 @@ public class ServerEvents {
 
     @SubscribeEvent
     public static void OnPlayerJoin(PlayerEvent.PlayerLoggedInEvent evt) {
-        if(!evt.getPlayer().level.isClientSide()) {
-            evt.getPlayer().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
+        if(!evt.getEntity().level.isClientSide()) {
+            evt.getEntity().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
                 .ifPresent(sm -> {
                     int currentHealth = sm.getCurrentHealth();
                     sm.setMaxHealth(200);
-//                    evt.getPlayer().getArmorSlots().forEach(armourItem -> {
-//                        if(armourItem.getItem() instanceof ISpectrobeArmour) {
-//                            ISpectrobeArmour specArmourItem = (ISpectrobeArmour) armourItem.getItem();
-//                            sm.setMaxHealth(sm.getMaxHealth() + specArmourItem.GetHealthBonus());
-//                        }
-//                    });
                     sm.setCurrentHealth(currentHealth);
 
                     SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(sm),
-                        (ServerPlayerEntity) evt.getPlayer());
+                        (ServerPlayer) evt.getEntity());
                 });
 
         }
@@ -57,8 +51,8 @@ public class ServerEvents {
                 EntitySpectrobe spectrobe = (EntitySpectrobe) event.getEntityLiving().getKillCredit();
                 spectrobe.awardKillStats(krawlProperties);
             }
-            if(event.getEntityLiving().getKillCredit() instanceof ServerPlayerEntity) {
-                ServerPlayerEntity player = (ServerPlayerEntity)event.getEntityLiving().getKillCredit();
+            if(event.getEntityLiving().getKillCredit() instanceof ServerPlayer) {
+                ServerPlayer player = (ServerPlayer)event.getEntityLiving().getKillCredit();
 
                 player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
                     sm.addXp(krawlProperties.getXpWorth());
@@ -71,7 +65,7 @@ public class ServerEvents {
 
     @SubscribeEvent
     public static void OnLivingEntityUpdate(LivingEvent.LivingUpdateEvent event) {
-        if(event.getEntityLiving() instanceof PlayerEntity) {
+        if(event.getEntityLiving() instanceof Player) {
             if(event.getEntityLiving().getY() > 150) {
                 //give aurora damage effect.
             }
@@ -80,7 +74,7 @@ public class ServerEvents {
 
     @SubscribeEvent
     public static void OnLivingEntityUpdate(LivingHurtEvent event) {
-        if(event.getEntityLiving() instanceof PlayerEntity) {
+        if(event.getEntityLiving() instanceof Player) {
             if(event.getSource().getDirectEntity() instanceof EntityKrawl) {
                 int beneficialArmours = 0;
                 int detrimentalArmours = 0;

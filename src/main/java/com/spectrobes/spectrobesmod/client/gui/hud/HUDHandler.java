@@ -1,23 +1,25 @@
 package com.spectrobes.spectrobesmod.client.gui.hud;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.gui.utils.GuiUtils;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
-import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
+import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesToolsRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeIconInfo;
-import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGuiOverlayEvent;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import software.bernie.geckolib3.core.util.Color;
 
-import java.awt.*;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -29,30 +31,30 @@ public class HUDHandler {
 
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
-    public static void onDraw(RenderGameOverlayEvent.Post event) {
-        if (event.getType() == RenderGameOverlayEvent.ElementType.HOTBAR) {
-            MainWindow resolution = event.getWindow();
-            float partialTicks = event.getPartialTicks();
-            drawSpectrobeTeamBar(event.getMatrixStack(), resolution, partialTicks);
+    public static void onDraw(RenderGuiOverlayEvent.Post event) {
+        if (event.getOverlay().overlay().equals(VanillaGuiOverlay.HOTBAR)) {
+            Window resolution = event.getWindow();
+            float partialTicks = event.getPartialTick();
+            drawSpectrobeTeamBar(event.getPoseStack(), resolution, partialTicks);
 
-            int finalWidth = drawSpectrobeMasterHealthBar(event.getMatrixStack(), resolution);
+            int finalWidth = drawSpectrobeMasterHealthBar(event.getPoseStack(), resolution);
 
-            drawSpectrobeMasterXpBar(event.getMatrixStack(), resolution, finalWidth);
+            drawSpectrobeMasterXpBar(event.getPoseStack(), resolution, finalWidth);
         }
     }
 
     @OnlyIn(Dist.CLIENT)
-    private static void drawSpectrobeTeamBar(MatrixStack ms, MainWindow res, float partialTicks) {
+    private static void drawSpectrobeTeamBar(PoseStack ms, Window res, float partialTicks) {
         Minecraft mc = Minecraft.getInstance();
-        if (!mc.player.inventory
-                .contains(SpectrobesItems.prizmod_item.getDefaultInstance())) {
+        if (!mc.player.getInventory()
+                .contains(SpectrobesToolsRegistry.prizmod_item.get().getDefaultInstance())) {
             return;
         }
 
         mc.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
                 .ifPresent(sm -> {
                     ms.pushPose();
-                    RenderSystem.enableAlphaTest();
+                    RenderSystem.enableBlend();
 
                     boolean right = true;
 
@@ -123,20 +125,20 @@ public class HUDHandler {
                             }
                         }
                     });
-                    RenderSystem.disableAlphaTest();
+                    RenderSystem.disableBlend();
                     ms.popPose();
                 });
     }
 
     @OnlyIn(Dist.CLIENT)
-    private static int drawSpectrobeMasterHealthBar(MatrixStack ms, MainWindow res) {
+    private static int drawSpectrobeMasterHealthBar(PoseStack ms, Window res) {
         Minecraft mc = Minecraft.getInstance();
         AtomicInteger finalWidth = new AtomicInteger(0);
 
         mc.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
             .ifPresent(sm -> {
                 ms.pushPose();
-                RenderSystem.enableAlphaTest();
+                RenderSystem.enableBlend();
 
                 int pad = 5;
                 int width = 10;
@@ -156,7 +158,7 @@ public class HUDHandler {
                 GuiUtils.drawColour(33, 252, 13, 100, finalX, y + (height-Math.round(heightScaled)), width, Math.round(heightScaled), 28);
                 mc.font.draw(ms, "HP", finalX, y - 10, Color.BLACK.hashCode());
                 mc.font.draw(ms, healthText, x, y + height + 10, Color.BLACK.hashCode());
-                RenderSystem.disableAlphaTest();
+                RenderSystem.disableBlend();
                 ms.popPose();
                 int completeWidth = finalX + Minecraft.getInstance().font.width(healthText);
                 finalWidth.set(completeWidth);
@@ -166,13 +168,13 @@ public class HUDHandler {
     }
 
     @OnlyIn(Dist.CLIENT)
-    private static void drawSpectrobeMasterXpBar(MatrixStack ms, MainWindow res, int basePadding) {
+    private static void drawSpectrobeMasterXpBar(PoseStack ms, Window res, int basePadding) {
         Minecraft mc = Minecraft.getInstance();
 
         mc.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
             .ifPresent(sm -> {
                 ms.pushPose();
-                RenderSystem.enableAlphaTest();
+                RenderSystem.enableBlend();
 
                 int pad = 10 + basePadding;
                 int width = 10;
@@ -193,7 +195,7 @@ public class HUDHandler {
                 GuiUtils.drawColour(0, 255, 255, 100, finalX, y + (height-Math.round(heightScaled)), width, Math.round(heightScaled), 28);
                 mc.font.draw(ms, lvlText, finalX - (Minecraft.getInstance().font.width(lvlText) / 2) + (width/2), y - 10, Color.BLACK.hashCode());
                 mc.font.draw(ms, xpText, x, y + height + 10, Color.BLACK.hashCode());
-                RenderSystem.disableAlphaTest();
+                RenderSystem.disableBlend();
                 ms.popPose();
             });
     }

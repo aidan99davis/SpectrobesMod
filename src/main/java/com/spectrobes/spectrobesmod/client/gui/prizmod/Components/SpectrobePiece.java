@@ -6,14 +6,15 @@ import com.spectrobes.spectrobesmod.client.gui.utils.GuiUtils;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeIconInfo;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class SpectrobePiece extends AbstractGui {
+public class SpectrobePiece extends AbstractWidget {
 
     private static ResourceLocation DELETE_BACKGROUND = new ResourceLocation("spectrobesmod:textures/gui/spectrobe_slot_delete.png");
 
@@ -25,6 +26,7 @@ public class SpectrobePiece extends AbstractGui {
     public boolean current;
 
     public SpectrobePiece(Spectrobe spell, int x ,int y) {
+        super(x, y, 32, 32, Component.empty());
         this.spectrobe = spell;
         this.x = x;
         this.y = y;
@@ -43,7 +45,7 @@ public class SpectrobePiece extends AbstractGui {
     }
 
     public String getSortingName() {
-        return new TranslationTextComponent(getUnlocalizedName()).getString();
+        return getUnlocalizedName();
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -89,7 +91,7 @@ public class SpectrobePiece extends AbstractGui {
                     ? ((32 - iconInfo.getHeight())/2)
                     : 0;
 
-            RenderSystem.enableAlphaTest();
+            RenderSystem.enableBlend();
             GuiUtils.drawTexture(iconInfo.icon(), posX + marginleft, posY + margintop, iconInfo.getWidth() * scalex, iconInfo.getHeight() * scaley, 26);
 
             //draw red health bar.
@@ -113,12 +115,17 @@ public class SpectrobePiece extends AbstractGui {
             float scalex = 32 / iconInfo.getWidth();
             float scaley = 32 / iconInfo.getHeight();
 
-            RenderSystem.enableAlphaTest();
+            RenderSystem.enableBlend();
             GuiUtils.drawTexture(iconInfo.icon(), mouseX, mouseY, iconInfo.getWidth() * scalex, iconInfo.getHeight() * scaley, 100);
         }
     }
 
     public void setSelected(boolean selected) {
         this.selected = selected;
+    }
+
+    @Override
+    public void updateNarration(NarrationElementOutput pNarrationElementOutput) {
+
     }
 }

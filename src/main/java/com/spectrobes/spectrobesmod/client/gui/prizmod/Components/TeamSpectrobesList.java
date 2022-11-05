@@ -4,14 +4,15 @@ import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.Pages.PrizmodPage;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TeamSpectrobesList extends Widget {
+public class TeamSpectrobesList extends AbstractWidget {
 
     public static final int GRID_SIZE = 7;
 
@@ -20,7 +21,7 @@ public class TeamSpectrobesList extends Widget {
     private final PrizmodPage parent;
 
     public TeamSpectrobesList(PrizmodPage parent) {
-        super(parent.x, parent.y, 64, 128,  new StringTextComponent(""));
+        super(parent.x, parent.y, 64, 128,  Component.literal(""));
         this.parent = parent;
         gridData = new SpectrobePiece[GRID_SIZE];
         gridData[0] = new SpectrobePiece(null, 6, 0);
@@ -85,5 +86,10 @@ public class TeamSpectrobesList extends Widget {
 
     public void setSlotCurrent(int i) {
         gridData[i].toggleCurrent();
+    }
+
+    @Override
+    public void updateNarration(NarrationElementOutput pNarrationElementOutput) {
+
     }
 }
