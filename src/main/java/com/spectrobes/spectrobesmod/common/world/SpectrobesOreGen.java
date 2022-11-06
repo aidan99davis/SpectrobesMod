@@ -82,15 +82,15 @@ public class SpectrobesOreGen {
             () -> new PlacedFeature(FOSSIL_ORES.getHolder().get(),
                     commonOrePlacement(3, //veins per chunk
                             HeightRangePlacement
-                                    .triangle(VerticalAnchor.aboveBottom(-80),
-                                            VerticalAnchor.aboveBottom(180)))));
+                                    .triangle(VerticalAnchor.aboveBottom(10),
+                                            VerticalAnchor.belowTop(50)))));
     public static final RegistryObject<PlacedFeature> MINERAL_ORE_PLACED
             = PLACED_FEATURES.register("mineral_ore_placed",
             () -> new PlacedFeature(MINERAL_ORES.getHolder().get(),
                     commonOrePlacement(7, //veins per chunk
                             HeightRangePlacement
-                                    .triangle(VerticalAnchor.aboveBottom(-80),
-                                            VerticalAnchor.aboveBottom(180)))));
+                                    .triangle(VerticalAnchor.aboveBottom(10),
+                                            VerticalAnchor.belowTop(50)))));
     public static final RegistryObject<PlacedFeature> METALIUM_ORE_PLACED
             = PLACED_FEATURES.register("metalium_ore_placed",
             () -> new PlacedFeature(METALIUM_ORES.getHolder().get(),

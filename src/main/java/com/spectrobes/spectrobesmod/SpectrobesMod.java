@@ -74,6 +74,7 @@ public class SpectrobesMod
         DataSerializerRegistry.SERIALIZERS.register(modEventBus);
         SpectrobesTileRegistry.TILES.register(modEventBus);
         SpectrobesBlocks.BLOCKS.register(modEventBus);
+        SpectrobesBlockItemsRegistry.ITEMS.register(modEventBus);
         Containers.CONTAINERS.register(modEventBus);
         SpectrobesOreGen.CONFIGURED_FEATURES.register(modEventBus);
         SpectrobesOreGen.PLACED_FEATURES.register(modEventBus);

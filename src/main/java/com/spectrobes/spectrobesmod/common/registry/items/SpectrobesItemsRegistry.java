@@ -25,11 +25,4 @@ public class SpectrobesItemsRegistry {
     		ITEMS.register("marble",
     				() -> new Item(new Item.Properties().tab(SpectrobesItemGroups.SpectrobesMineralItemGroup.Instance)));
 
-
-    @SuppressWarnings("unused")
-    public static final RegistryObject<BlockItem> xelles_trophy_item =
-            ITEMS.register("xelles_trophy_item",
-                    () -> new XellesTrophyItem(SpectrobesBlocks.xelles_trophy.get(),
-                            new Item.Properties().tab(SpectrobesItemGroups.SpectrobesBlocksItemGroup.Instance)));
-
 }
