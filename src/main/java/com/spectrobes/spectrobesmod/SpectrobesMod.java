@@ -13,7 +13,6 @@ import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobeRendererMa
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.client.gui.healer.HealerScreen;
 import com.spectrobes.spectrobesmod.client.gui.spectrobes_details.SpectrobeDetailsScreen;
-import com.spectrobes.spectrobesmod.client.keybindings.SpectrobesKeybindings;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.registry.*;
 import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesBlocks;
@@ -59,8 +58,6 @@ public class SpectrobesMod
         modEventBus.addListener(KrawlRendererManager::registerEntityRenderers);
         modEventBus.addListener(AttackRendererManager::registerEntityRenderers);
         modEventBus.addListener(ArmourRendererRegisterer::registerRenderers);
-//        modEventBus.addListener(SpectrobesKeybindings.KeybindingModBusEvents::onKeyRegister);
-//        modEventBus.addListener(SpectrobesKeybindings.KeybindingForgeEvents::handleKeys);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
