@@ -3,6 +3,7 @@ package com.spectrobes.spectrobesmod.client.blocks;
 import com.spectrobes.spectrobesmod.client.blocks.renderer.*;
 import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesBlocks;
 import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesTileRegistry;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -41,6 +42,6 @@ public class BlockRendererManager {
         event.registerBlockEntityRenderer(SpectrobesTileRegistry.XELLES_TROPHY_TILE.get(), pContext -> new XellesTrophyRenderer(pContext));
     }
     public static void init() {
-        RenderTypeLookup.setRenderLayer(SpectrobesBlocks.krawl_vine.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(SpectrobesBlocks.krawl_vine.get(), RenderType.cutout());
     }
 }

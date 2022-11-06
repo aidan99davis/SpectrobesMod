@@ -10,6 +10,7 @@ import com.spectrobes.spectrobesmod.common.registry.KrawlRegistry;
 import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesMineralsRegistry;
 import com.spectrobes.spectrobesmod.common.save_data.SpectrobesWorldSaveData;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
+import net.minecraft.data.worldgen.features.VegetationFeatures;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -133,41 +134,27 @@ public class EntityVortex extends EntityKrawl {
     }
 
     private void setNatureByBiome() {
-        SpectrobeProperties.Nature nature = SpectrobeProperties.Nature.OTHER;
+        List<SpectrobeProperties.Nature> possibleNatures = new ArrayList<>();
+        Biome biome = level.getBiome(blockPosition()).value();
 
-        Biome cat = level.getBiome(blockPosition()).value();
-
-        switch (cat) {
-            //FLASH
-            case TAIGA:
-            case OCEAN:
-            case ICY:
-            case BEACH:
-            case RIVER:
-            case SWAMP:
-                nature = SpectrobeProperties.Nature.FLASH;
-                break;
-            //CORONA
-            case MESA:
-            case DESERT:
-            case NETHER:
-            case SAVANNA:
-                nature = SpectrobeProperties.Nature.CORONA;
-                break;
-            //AURORA
-            case FOREST:
-            case JUNGLE:
-            case PLAINS:
-            case MUSHROOM:
-            case EXTREME_HILLS:
-                nature = SpectrobeProperties.Nature.AURORA;
-                break;
-            //OTHER
-            case THEEND:
-            case NONE:
-                nature = SpectrobeProperties.Nature.OTHER;
-                break;
+        if(biome.getPrecipitation().equals(Biome.Precipitation.RAIN)
+                || biome.getPrecipitation().equals(Biome.Precipitation.SNOW)) {
+            possibleNatures.add(SpectrobeProperties.Nature.FLASH);
         }
+        if(biome.getBaseTemperature() >= 0.5f
+                || biome.getPrecipitation().equals(Biome.Precipitation.NONE)
+                || biome.warmEnoughToRain(getOnPos())
+                || biome.shouldSnowGolemBurn(getOnPos())) {
+            possibleNatures.add(SpectrobeProperties.Nature.CORONA);
+        }
+        if(biome.getGenerationSettings().getFlowerFeatures().size() > 0) {
+            possibleNatures.add(SpectrobeProperties.Nature.AURORA);
+        }
+
+        possibleNatures.add(SpectrobeProperties.Nature.OTHER);
+
+        SpectrobeProperties.Nature nature = possibleNatures.get(random.nextInt(possibleNatures.size()));
+        //TODO: MAKE SURE THIS STILL WORKS
 
         krawlProperties.setNature(nature);
     }

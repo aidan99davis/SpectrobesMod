@@ -2,12 +2,16 @@ package com.spectrobes.spectrobesmod.common.blocks;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+
+import javax.annotation.Nullable;
 
 public class MultiTextureBlock extends SpectrobesBlock
 {
@@ -28,10 +32,35 @@ public class MultiTextureBlock extends SpectrobesBlock
 				.setValue(UP, false)
 				.setValue(DOWN, false));
 	}
-	
-	public BlockState getStateForPlacement(BlockItemUseContext pContext) 
+
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
 	{
-		return getUpdatedBlockState(this.defaultBlockState(), pContext.getLevel(), pContext.getClickedPos());
+		builder.add(UP);
+		builder.add(DOWN);
+		builder.add(NORTH);
+		builder.add(EAST);
+		builder.add(SOUTH);
+		builder.add(WEST);
+	}
+
+	@Nullable
+	public BlockState getStateForPlacement(BlockPlaceContext context)
+	{
+		switch(context.getNearestLookingDirection().getOpposite()) {
+			case UP:
+				return this.defaultBlockState().setValue(UP, true);
+			case DOWN:
+				return this.defaultBlockState().setValue(DOWN, true);
+			case NORTH:
+				return this.defaultBlockState().setValue(NORTH, true);
+			case EAST:
+				return this.defaultBlockState().setValue(EAST, true);
+			case SOUTH:
+				return this.defaultBlockState().setValue(SOUTH, true);
+			case WEST:
+				return this.defaultBlockState().setValue(WEST, true);
+			default: return this.defaultBlockState().setValue(UP, true);
+		}
 	}
 	
 	/**
@@ -40,7 +69,7 @@ public class MultiTextureBlock extends SpectrobesBlock
 	* returns its solidified counterpart.
 	* Note that this method should ideally consider only the specific face passed in.
 	*/
-	public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, IWorld pLevel, BlockPos pCurrentPos, BlockPos pFacingPos)
+	public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, Level pLevel, BlockPos pCurrentPos, BlockPos pFacingPos)
 	{
 		return getUpdatedBlockState(pState, pLevel, pCurrentPos);
 	}
@@ -53,10 +82,5 @@ public class MultiTextureBlock extends SpectrobesBlock
 				.setValue(WEST, pLevel.getBlockState(pCurrentPos.west()).is(this))
 				.setValue(UP, pLevel.getBlockState(pCurrentPos.above()).is(this))
 				.setValue(DOWN, pLevel.getBlockState(pCurrentPos.below()).is(this));
-	}
-	
-	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> pBuilder)
-	{
-		pBuilder.add(UP, DOWN, NORTH, EAST, SOUTH, WEST);
 	}
 }

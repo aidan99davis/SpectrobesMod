@@ -1,7 +1,7 @@
 package com.spectrobes.spectrobesmod.common.blocks;
 
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.SChangeDimensionPacket;
+//import com.spectrobes.spectrobesmod.common.packets.networking.packets.SChangeDimensionPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -27,7 +27,7 @@ public class PlanetaryTeleporterBlock extends MultiTextureBlock {
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if(pLevel.isClientSide) {
             if(!pPlayer.isShiftKeyDown())
-                SpectrobesNetwork.sendToServer(new SChangeDimensionPacket());
+//                SpectrobesNetwork.sendToServer(new SChangeDimensionPacket());
             return InteractionResult.SUCCESS;
         }
         return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);

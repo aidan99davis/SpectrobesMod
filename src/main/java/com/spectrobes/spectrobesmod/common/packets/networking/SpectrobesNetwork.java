@@ -31,11 +31,11 @@ public class SpectrobesNetwork {
                 .consumerMainThread(SSyncSpectrobeMasterPacket::handle)
                 .add();
 
-        INSTANCE.messageBuilder(SChangeDimensionPacket.class, nextID())
-                .encoder(SChangeDimensionPacket::toBytes)
-                .decoder(SChangeDimensionPacket::fromBytes)
-                .consumerMainThread(SChangeDimensionPacket::handle)
-                .add();
+//        INSTANCE.messageBuilder(SChangeDimensionPacket.class, nextID())
+//                .encoder(SChangeDimensionPacket::toBytes)
+//                .decoder(SChangeDimensionPacket::fromBytes)
+//                .consumerMainThread(SChangeDimensionPacket::handle)
+//                .add();
 
         INSTANCE.messageBuilder(CSyncSpectrobeMasterPacket.class, nextID())
                 .encoder(CSyncSpectrobeMasterPacket::toBytes)

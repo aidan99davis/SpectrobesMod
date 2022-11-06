@@ -11,11 +11,11 @@ import net.minecraft.world.level.Level;
 import static net.minecraft.world.BossEvent.BossBarOverlay.PROGRESS;
 
 public abstract class EntityBossKrawl extends EntityKrawl {
-    private final BossEvent bossEvent;
+    private final ServerBossEvent bossEvent;
 
     public EntityBossKrawl(EntityType<? extends Monster> type, Level worldIn) {
         super(type, worldIn);
-        this.bossEvent = (new ServerBossEvent(this.getDisplayName(), getBossNameColour(), PROGRESS)).setDarkenScreen(false);
+        this.bossEvent = ((ServerBossEvent)new ServerBossEvent(this.getDisplayName(), getBossNameColour(), PROGRESS).setDarkenScreen(false));
     }
 
     public abstract BossEvent.BossBarColor getBossNameColour();
@@ -26,7 +26,6 @@ public abstract class EntityBossKrawl extends EntityKrawl {
         if (this.hasCustomName()) {
             this.bossEvent.setName(this.getDisplayName());
         }
-
     }
 
     @Override

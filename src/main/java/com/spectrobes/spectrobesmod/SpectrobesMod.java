@@ -19,18 +19,15 @@ import com.spectrobes.spectrobesmod.common.registry.*;
 import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesBlocks;
 import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesTileRegistry;
 import com.spectrobes.spectrobesmod.common.capability.PlayerEvents;
-import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.registry.items.*;
 import com.spectrobes.spectrobesmod.common.world.SpectrobesEntitySpawns;
 import com.spectrobes.spectrobesmod.common.world.SpectrobesOreGen;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -61,10 +58,12 @@ public class SpectrobesMod
         modEventBus.addListener(SpectrobeRendererManager::registerEntityRenderers);
         modEventBus.addListener(KrawlRendererManager::registerEntityRenderers);
         modEventBus.addListener(AttackRendererManager::registerEntityRenderers);
+        modEventBus.addListener(ArmourRendererRegisterer::registerRenderers);
+//        modEventBus.addListener(SpectrobesKeybindings.KeybindingModBusEvents::onKeyRegister);
+//        modEventBus.addListener(SpectrobesKeybindings.KeybindingForgeEvents::handleKeys);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(new SpectrobesOreGen());
         MinecraftForge.EVENT_BUS.register(new SpectrobesEntitySpawns());
         SpectrobesEntities.ENTITY_TYPES.register(modEventBus);
         AttackEntities.ENTITY_TYPES.register(modEventBus);
@@ -79,38 +78,32 @@ public class SpectrobesMod
         SpectrobesTileRegistry.TILES.register(modEventBus);
         SpectrobesBlocks.BLOCKS.register(modEventBus);
         Containers.CONTAINERS.register(modEventBus);
+        SpectrobesOreGen.CONFIGURED_FEATURES.register(modEventBus);
+        SpectrobesOreGen.PLACED_FEATURES.register(modEventBus);
         Containers.init();
+
         SpectrobesNetwork.init();
         Instance = this;
     }
 
     private void setup(final FMLCommonSetupEvent event)
     {
-        event.enqueueWork(SpectrobesOreGen::registerOres);
         MinecraftForge.EVENT_BUS.register(PlayerEvents.instance);
         IconRegistry.init();
         SpectrobesEntities.populateMap();
         KrawlEntities.populateMaps();
 
-        event.enqueueWork(() -> SpawnPlacements.register(KrawlEntities.ENTITY_VORTEX.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SpectrobesEntitySpawns.MONSTER));
-
-        CapabilityManager.INSTANCE.register(PlayerSpectrobeMaster.class);
+        event.enqueueWork(() -> SpawnPlacements.register(KrawlEntities.ENTITY_VORTEX.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Monster::checkMonsterSpawnRules));
     }
 
     @SubscribeEvent
     public void doClientStuff(final FMLClientSetupEvent event)
     {
-        MenuScreens.register(PrizmodContainer.PRIZMOD.get(), MenuScreens.getScreenFactory(PrizmodScreen::new,
-                Minecraft.getInstance(),
-                0,
-                Component.empty()));
+        MenuScreens.register(PrizmodContainer.PRIZMOD.get(), PrizmodScreen::new);
         MenuScreens.register(HealerContainer.HEALER.get(), HealerScreen::new);
         MenuScreens.register(SpectrobeDetailsContainer.SPECTROBE_DETAILS.get(), SpectrobeDetailsScreen::new);
-        //force load the serializer to prevent clients crashing
         BlockRendererManager.init();
-        ArmourRendererRegisterer.registerRenderers();
         MineralRegistry.init();
-        SpectrobesKeybindings.initKeybinds();
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call

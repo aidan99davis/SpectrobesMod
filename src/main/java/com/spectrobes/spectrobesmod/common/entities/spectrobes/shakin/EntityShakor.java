@@ -40,6 +40,11 @@ public class EntityShakor extends EntityAquaticSpectrobe {
     }
 
     @Override
+    protected boolean isShallowSwimmer() {
+        return false;
+    }
+
+    @Override
     protected int getMaxLitterSize() {
         return 4;
     }

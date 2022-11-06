@@ -1,22 +1,22 @@
 package com.spectrobes.spectrobesmod.common.blocks;
 
 import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesFossilsRegistry;
-import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesItemsRegistry;
-import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesTileRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class FossilBlock extends SpectrobesBlock {
     private static final Properties props = Properties.of(Material.STONE)
@@ -27,49 +27,45 @@ public class FossilBlock extends SpectrobesBlock {
         super(props);
     }
 
-    @Nullable
-    @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state)
-    {
-        return SpectrobesTileRegistry.FOSSIL_TILE.get().create(pos, state);
-    }
+
+//    @Nullable
+//    @Override
+//    public BlockEntity newBlockEntity(BlockPos pos, BlockState state)
+//    {
+//        return SpectrobesTileRegistry.FOSSIL_TILE.get().create(pos, state);
+//    }
 
     @SuppressWarnings({"deprecation"})
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-        Vec3 vec = builder.getParameter(LootParameters.ORIGIN);
-        Level level = builder.getParameter(LootParameters.BLOCK_ENTITY).getLevel();
+        Vec3 vec = builder.getParameter(LootContextParams.ORIGIN);
+        Level level = builder.getParameter(LootContextParams.BLOCK_ENTITY).getLevel();
 
         assert level != null;
-        Biome biome = level.getBiome(new BlockPos(vec.x, vec.y, vec.z));
+        BlockPos blockPos = new BlockPos(vec.x, vec.y, vec.z);
+        Biome biome = level.getBiome(blockPos).get();
 
-        ItemStack fossilItem;
-        switch (biome.getBiomeCategory()) {
-            case OCEAN:
-            case BEACH:
-            case RIVER:
-            case SWAMP:
-            case ICY:
-                fossilItem = SpectrobesFossilsRegistry.getRandomFossil(SpectrobeProperties.Nature.FLASH);
-                break;
-            case DESERT:
-            case MESA:
-            case SAVANNA:
-            case EXTREME_HILLS:
-                fossilItem = SpectrobesFossilsRegistry.getRandomFossil(SpectrobeProperties.Nature.CORONA);
-                break;
-            case FOREST:
-            case PLAINS:
-            case TAIGA:
-            case MUSHROOM:
-            case JUNGLE:
-                fossilItem = SpectrobesFossilsRegistry.getRandomFossil(SpectrobeProperties.Nature.AURORA);
-                break;
-            default:
-                fossilItem = SpectrobesFossilsRegistry.getRandomFossil();
-                break;
+        List<SpectrobeProperties.Nature> possibleNatures = new ArrayList<>();
+        if(biome.getPrecipitation().equals(Biome.Precipitation.RAIN)
+                || biome.getPrecipitation().equals(Biome.Precipitation.SNOW)) {
+            possibleNatures.add(SpectrobeProperties.Nature.FLASH);
+        }
+        if(biome.getBaseTemperature() >= 0.5f
+                || biome.getPrecipitation().equals(Biome.Precipitation.NONE)
+                || biome.warmEnoughToRain(blockPos)
+                || biome.shouldSnowGolemBurn(blockPos)) {
+            possibleNatures.add(SpectrobeProperties.Nature.CORONA);
+        }
+        if(biome.getGenerationSettings().getFlowerFeatures().size() > 0) {
+            possibleNatures.add(SpectrobeProperties.Nature.AURORA);
         }
 
+        possibleNatures.add(SpectrobeProperties.Nature.OTHER);
+
+        SpectrobeProperties.Nature nature = possibleNatures.get(new Random().nextInt(possibleNatures.size()));
+        //TODO: MAKE SURE THIS STILL WORKS
+
+        ItemStack fossilItem = SpectrobesFossilsRegistry.getRandomFossil(nature);
         ArrayList<ItemStack> fossil = new ArrayList<>();
         fossil.add(fossilItem);
 

@@ -2,6 +2,7 @@ package com.spectrobes.spectrobesmod.common.blocks.fossils;
 
 import com.spectrobes.spectrobesmod.common.blocks.DirectionalBlock;
 import com.spectrobes.spectrobesmod.common.blocks.tile.AoiFossilBlockTileEntity;
+import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesFossilsRegistry;
 import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
@@ -21,7 +22,7 @@ public class AoiFossilBlock extends DirectionalBlock {
 
     @Override
     public List<ItemStack> getDrops(BlockState pState, LootContext.Builder pBuilder) {
-        ItemStack stack = new ItemStack(SpectrobesItemsRegistry.aoi_fossil_item.get());
+        ItemStack stack = new ItemStack(SpectrobesFossilsRegistry.aoi_fossil_item.get());
         List<ItemStack> stackList = new ArrayList<>();
         stackList.add(stack);
 

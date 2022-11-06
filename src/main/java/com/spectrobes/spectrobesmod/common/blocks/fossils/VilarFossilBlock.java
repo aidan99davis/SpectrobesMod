@@ -2,6 +2,7 @@ package com.spectrobes.spectrobesmod.common.blocks.fossils;
 
 import com.spectrobes.spectrobesmod.common.blocks.DirectionalBlock;
 import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesTileRegistry;
+import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesFossilsRegistry;
 import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
@@ -21,7 +22,7 @@ public class VilarFossilBlock extends DirectionalBlock {
 
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-        ItemStack stack = new ItemStack(SpectrobesItemsRegistry.vilar_fossil_item.get());
+        ItemStack stack = new ItemStack(SpectrobesFossilsRegistry.vilar_fossil_item.get());
         List<ItemStack> stackList = new ArrayList<>();
         stackList.add(stack);
 
