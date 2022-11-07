@@ -36,7 +36,7 @@ public class LineUpPage extends PrizmodPage {
     public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         super.render(stack, mouseX, mouseY, partialTicks);
         if(selectedButton != null) {
-            selectedButton.piece.drawAdditionalAtCursor(mouseX, mouseY);
+            selectedButton.piece.drawAdditionalAtCursor(stack, mouseX, mouseY);
         }
     }
 

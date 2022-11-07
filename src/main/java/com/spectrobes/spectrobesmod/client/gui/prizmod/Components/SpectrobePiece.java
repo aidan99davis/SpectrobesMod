@@ -1,11 +1,13 @@
 package com.spectrobes.spectrobesmod.client.gui.prizmod.Components;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.gui.utils.GuiUtils;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeIconInfo;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
@@ -49,27 +51,41 @@ public class SpectrobePiece extends AbstractWidget {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public void draw(boolean withAdditional) {
-        drawBackground();
+    public void draw(PoseStack stack, boolean withAdditional) {
+        drawBackground(stack);
         if(withAdditional)
-            drawAdditional();
+            drawAdditional(stack);
     }
 
     /**
      * Draws this piece's background.
      */
     @OnlyIn(Dist.CLIENT)
-    public void drawBackground() {
+    public void drawBackground(PoseStack stack) {
         ResourceLocation bg;
+        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+
         if(Screen.hasAltDown()) {
-            GuiUtils.drawTexture(DELETE_BACKGROUND, posX, posY, 32, 32, 28);
+            bg = DELETE_BACKGROUND;
+//            GuiUtils.drawTexture(, posX, posY, 32, 32, 28);
         } else if(!current) {
             bg = selected? PrizmodScreen.SPECTROBE_SLOT_SELECTED_TEXTURE : PrizmodScreen.SPECTROBE_SLOT_TEXTURE;
-            GuiUtils.drawTexture(bg, posX, posY, 32, 32,0);
+//            GuiUtils.drawTexture(bg, posX, posY, 32, 32,0);
         } else {
             bg = PrizmodScreen.SPECTROBE_SLOT_SELECTED_TEXTURE;
-            GuiUtils.drawTexture(bg, posX - 2, posY - 2, 36, 36,1);
+//            GuiUtils.drawTexture(bg, posX - 2, posY - 2, 36, 36,1);
         }
+        RenderSystem.setShaderTexture(0, bg);
+
+        blit(stack,
+                posX,
+                posY,
+                0,
+                0,
+                32,
+                32,
+                32,
+                32);
 
     }
 
@@ -77,12 +93,12 @@ public class SpectrobePiece extends AbstractWidget {
      * Draws any additional stuff for this piece. Used for the spectrobes icon
      */
     @OnlyIn(Dist.CLIENT)
-    public void drawAdditional() {
+    public void drawAdditional(PoseStack stack) {
         if(spectrobe != null) {
             SpectrobeIconInfo iconInfo = spectrobe.getIcon();
 
-            float scalex = 32 / iconInfo.getWidth();
-            float scaley = 32 / iconInfo.getHeight();
+            float scalex = 32f / iconInfo.getWidth();
+            float scaley = 32f / iconInfo.getHeight();
 
             int marginleft = iconInfo.getWidth() < 31
                     ? ((32 - iconInfo.getWidth())/2)
@@ -92,7 +108,18 @@ public class SpectrobePiece extends AbstractWidget {
                     : 0;
 
             RenderSystem.enableBlend();
-            GuiUtils.drawTexture(iconInfo.icon(), posX + marginleft, posY + margintop, iconInfo.getWidth() * scalex, iconInfo.getHeight() * scaley, 26);
+            RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+            RenderSystem.setShaderTexture(0, iconInfo.icon());
+
+            blit(stack,
+                    posX + marginleft,
+                    posY + margintop,
+                    0,
+                    0,
+                    Float.valueOf(iconInfo.getWidth() * scalex).intValue(),
+                    Float.valueOf(iconInfo.getHeight() * scaley).intValue(),
+                    32,
+                    32);
 
             //draw red health bar.
             GuiUtils.drawColour(245, 66, 66, 100, posX + 1, posY + 30, 30, 2, 27);
@@ -108,15 +135,27 @@ public class SpectrobePiece extends AbstractWidget {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public void drawAdditionalAtCursor(int mouseX, int mouseY) {
+    public void drawAdditionalAtCursor(PoseStack stack, int mouseX, int mouseY) {
         if(spectrobe != null) {
             SpectrobeIconInfo iconInfo = spectrobe.getIcon();
 
-            float scalex = 32 / iconInfo.getWidth();
-            float scaley = 32 / iconInfo.getHeight();
+            float scalex = 32f / iconInfo.getWidth();
+            float scaley = 32f / iconInfo.getHeight();
 
             RenderSystem.enableBlend();
-            GuiUtils.drawTexture(iconInfo.icon(), mouseX, mouseY, iconInfo.getWidth() * scalex, iconInfo.getHeight() * scaley, 100);
+            RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+            RenderSystem.setShaderTexture(0, iconInfo.icon());
+
+            blit(stack,
+                    mouseX - (iconInfo.getWidth() / 2),
+                    mouseY - (iconInfo.getHeight() / 2),
+                    0,
+                    0,
+                    Float.valueOf(iconInfo.getWidth() * scalex).intValue(),
+                    Float.valueOf(iconInfo.getHeight() * scaley).intValue(),
+                    32,
+                    32);
+//            GuiUtils.drawTexture(iconInfo.icon(), mouseX, mouseY, iconInfo.getWidth() * scalex, iconInfo.getHeight() * scaley, 100);
         }
     }
 

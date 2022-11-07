@@ -28,12 +28,9 @@ public class SpectrobeDetailsScreen extends AbstractContainerScreen<SpectrobeDet
 
     @Override
     protected void renderBg(PoseStack pMatrixStack, float pPartialTicks, int pX, int pY) {
-        getMinecraft().getTextureManager().bindForSetup(PrizmodScreen.texture);
-
-        GuiUtils.blit(0, 0,0,0,0,
-                (width),
-                (height),
-                height, width);
+        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+        RenderSystem.setShaderTexture(0, PrizmodScreen.texture);
+        blit(pMatrixStack, 0, 0, 0, 0, 600, 400, imageWidth, imageHeight);
     }
 
     @Override
@@ -44,7 +41,9 @@ public class SpectrobeDetailsScreen extends AbstractContainerScreen<SpectrobeDet
         int iconWidth = 64;
         int iconX = width / 2 - (iconWidth / 2);
         int iconY = height / 5;
-        GuiUtils.drawTexture(PrizmodScreen.SPECTROBE_SLOT_TEXTURE, iconX, iconY, iconWidth, iconWidth,0);
+        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+        RenderSystem.setShaderTexture(0, PrizmodScreen.SPECTROBE_SLOT_TEXTURE);
+        blit(pMatrixStack, iconX, iconY, 0, 0, 32, 32);
 
         //draw spectrobe into slot.
         if(menu.getSpectrobe() != null) {
@@ -59,7 +58,15 @@ public class SpectrobeDetailsScreen extends AbstractContainerScreen<SpectrobeDet
                     : 0;
 
             RenderSystem.enableBlend();
-            GuiUtils.drawTexture(iconInfo.icon(), iconX + marginleft, iconY + margintop, iconInfo.getWidth() * scalex, iconInfo.getHeight() * scaley, 26);
+            RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+            RenderSystem.setShaderTexture(0, iconInfo.icon());
+            blit(pMatrixStack,
+                iconX + marginleft,
+                iconY + margintop,
+                0,
+                0,
+                Float.valueOf(iconInfo.getWidth() * scalex).intValue(),
+                Float.valueOf(iconInfo.getHeight() * scaley).intValue());
         }
 
         //draw hp, hp bar, lvl and xp bar

@@ -24,7 +24,7 @@ public class SpectrobeButton extends Button {
 
     @Override
     public void renderButton(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-        piece.draw(!selected);
+        piece.draw(stack, !selected);
         if(this.isHovered) {
 //            piece.drawInfo(); Name/Custom name? or a stat sheet?
         }

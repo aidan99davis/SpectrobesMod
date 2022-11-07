@@ -1,16 +1,14 @@
 package com.spectrobes.spectrobesmod.client.gui.prizmod;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.spectrobes.spectrobesmod.client.container.PrizmodContainer;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.Pages.LineUpPage;
-import com.spectrobes.spectrobesmod.client.gui.utils.GuiUtils;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.Pages.PrizmodPage;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -34,15 +32,15 @@ public class PrizmodScreen extends AbstractContainerScreen<PrizmodContainer> {
     public PrizmodScreen(PrizmodContainer container, Inventory playerInv, Component text) {
         super(container, playerInv, text);
         this.player = playerInv.player;
-        this.imageWidth = Minecraft.getInstance().getWindow().getScreenWidth();
-        this.imageHeight = Minecraft.getInstance().getWindow().getScreenHeight();
+        this.imageWidth = Minecraft.getInstance().getWindow().getGuiScaledWidth();
+        this.imageHeight = Minecraft.getInstance().getWindow().getGuiScaledHeight();
     }
 
     @Override
     public void resize(Minecraft mc, int p_resize_2_, int p_resize_3_) {
         super.resize(mc, p_resize_2_, p_resize_3_);
-        this.imageWidth = mc.getWindow().getScreenWidth();
-        this.imageHeight = mc.getWindow().getScreenHeight();
+        this.imageWidth = mc.getWindow().getGuiScaledWidth();
+        this.imageHeight = mc.getWindow().getGuiScaledHeight();
     }
 
     @Override
@@ -83,12 +81,9 @@ public class PrizmodScreen extends AbstractContainerScreen<PrizmodContainer> {
      */
     @Override
     protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
-        getMinecraft().getTextureManager().bindForSetup(texture);
-
-        GuiUtils.blit(0, 0,0,0,0,
-                (width),
-                (height),
-                height, width);
+        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+        RenderSystem.setShaderTexture(0, texture);
+        blit(stack, 0, 0, 0, 0, 600, 400, imageWidth, imageHeight);
     }
 
     public void setMenuPage(PrizmodPage prizmodPage) {
