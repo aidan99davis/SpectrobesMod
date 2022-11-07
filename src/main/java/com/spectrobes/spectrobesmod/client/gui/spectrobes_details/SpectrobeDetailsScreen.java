@@ -5,7 +5,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.spectrobes.spectrobesmod.client.container.SpectrobeDetailsContainer;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
-import com.spectrobes.spectrobesmod.client.gui.utils.GuiUtils;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeIconInfo;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeStats;
@@ -136,11 +135,11 @@ public class SpectrobeDetailsScreen extends AbstractContainerScreen<SpectrobeDet
         int finalX = x + (Minecraft.getInstance().font.width(healthText) / 2) - (barWidth / 2);
 
         //draw red health bar.
-        GuiUtils.drawColour(107, 0, 0, 100, finalX, y, barWidth, barHeight, 27);
+//        GuiUtils.drawColour(107, 0, 0, 100, finalX, y, barWidth, barHeight, 27);
 
         //draw green for health bar, only fill a % of 30 pixels based on the % of health remaining.
         float heightScaled = ((float)sm.currentHealth / (float)sm.stats.getHpLevel()) * barHeight;
-        GuiUtils.drawColour(33, 252, 13, 100, finalX, y + (barHeight-Math.round(heightScaled)), barWidth, Math.round(heightScaled), 28);
+//        GuiUtils.drawColour(33, 252, 13, 100, finalX, y + (barHeight-Math.round(heightScaled)), barWidth, Math.round(heightScaled), 28);
         mc.font.draw(pMatrixStack, "HP", finalX, y - 10, Color.BLACK.hashCode());
         mc.font.draw(pMatrixStack, healthText, x, y + barHeight + 10, Color.BLACK.hashCode());
     }
@@ -157,11 +156,11 @@ public class SpectrobeDetailsScreen extends AbstractContainerScreen<SpectrobeDet
         int finalX = x + (Minecraft.getInstance().font.width(xpText) / 2) - (barWidth / 2);
 
         //draw red health bar.
-        GuiUtils.drawColour(0, 128, 129, 100, finalX, y, barWidth, barHeight, 27);
+//        GuiUtils.drawColour(0, 128, 129, 100, finalX, y, barWidth, barHeight, 27);
 
         //draw green for health bar, only fill a % of 30 pixels based on the % of health remaining.
         float heightScaled = ((float)sm.stats.getXp() / (float)sm.stats.getXp_required()) * barHeight;
-        GuiUtils.drawColour(0, 255, 255, 100, finalX, y + (barHeight-Math.round(heightScaled)), barWidth, Math.round(heightScaled), 28);
+//        GuiUtils.drawColour(0, 255, 255, 100, finalX, y + (barHeight-Math.round(heightScaled)), barWidth, Math.round(heightScaled), 28);
         mc.font.draw(pMatrixStack, "Lvl: " + sm.stats.getLevel(), finalX - (barWidth/2), y - 10, Color.BLACK.hashCode());
         mc.font.draw(pMatrixStack, xpText, x, y + barHeight + 10, Color.BLACK.hashCode());
     }

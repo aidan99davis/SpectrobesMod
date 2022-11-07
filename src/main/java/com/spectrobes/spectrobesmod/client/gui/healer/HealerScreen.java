@@ -2,7 +2,6 @@ package com.spectrobes.spectrobesmod.client.gui.healer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.spectrobes.spectrobesmod.client.container.HealerContainer;
-import com.spectrobes.spectrobesmod.client.gui.utils.GuiUtils;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -41,7 +40,8 @@ public class HealerScreen extends AbstractContainerScreen<HealerContainer> {
     protected void renderBg(PoseStack pMatrixStack, float pPartialTicks, int pX, int pY) {
         int guraBalance = getMenu().getCurrentGuraBalance();
         String text = "Gura Balance: " + guraBalance;
-        GuiUtils.drawTexture(HEALER_GUI_BACKGROUND, 0, 0, width, height, 1);
+
+//        GuiUtils.drawTexture(HEALER_GUI_BACKGROUND, 0, 0, width, height, 1);
         this.font.draw(pMatrixStack, text, width / 2 - (this.font.width(text) / 2), height / 5, FastColor.ARGB32.color(255, 0, 0, 0));
     }
 }
