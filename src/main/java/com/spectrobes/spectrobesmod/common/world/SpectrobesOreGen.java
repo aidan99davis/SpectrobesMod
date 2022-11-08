@@ -62,56 +62,51 @@ public class SpectrobesOreGen {
                     SpectrobesBlocks.marble_ore.get().defaultBlockState()))); //TODO Add DeepSlate marble ore block variant
 
     public static final RegistryObject<ConfiguredFeature<?,?>> FOSSIL_ORES = CONFIGURED_FEATURES.register("fossil_ore",
-            () -> new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(OWERWORLD_FOSSIL_ORES.get(), 2)));
+            () -> new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(OWERWORLD_FOSSIL_ORES.get(), 3)));
 
     public static final RegistryObject<ConfiguredFeature<?,?>> MINERAL_ORES = CONFIGURED_FEATURES.register("mineral_ore",
-            () -> new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(OWERWORLD_MINERAL_ORES.get(), 8)));
+            () -> new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(OWERWORLD_MINERAL_ORES.get(), 12)));
 
     public static final RegistryObject<ConfiguredFeature<?,?>> METALIUM_ORES = CONFIGURED_FEATURES.register("metalium_ore",
-            () -> new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(OWERWORLD_METALIUM_ORES.get(), 2, 0.5f)));
+            () -> new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(OWERWORLD_METALIUM_ORES.get(), 3, 0.5f)));
 
     public static final RegistryObject<ConfiguredFeature<?,?>> TITANIUM_ORES = CONFIGURED_FEATURES.register("titanium_ore",
-            () -> new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(OWERWORLD_TITANIUM_ORES.get(), 2, 0.5f)));
+            () -> new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(OWERWORLD_TITANIUM_ORES.get(), 3, 0.5f)));
 
     public static final RegistryObject<ConfiguredFeature<?,?>> MARBLE_ORES = CONFIGURED_FEATURES.register("marble_ore",
-            () -> new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(OWERWORLD_MARBLE_ORES.get(), 2, 0.5f)));
+            () -> new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(OWERWORLD_MARBLE_ORES.get(), 3, 0.5f)));
 
     //Placed Features
     public static final RegistryObject<PlacedFeature> FOSSIL_ORE_PLACED
             = PLACED_FEATURES.register("fossil_ore_placed",
             () -> new PlacedFeature(FOSSIL_ORES.getHolder().get(),
-                    commonOrePlacement(3, //veins per chunk
-                            HeightRangePlacement
-                                    .triangle(VerticalAnchor.aboveBottom(10),
-                                            VerticalAnchor.belowTop(50)))));
+                    commonOrePlacement(8,
+                            HeightRangePlacement.triangle(VerticalAnchor.absolute(-16),
+                                    VerticalAnchor.absolute(112)))));
     public static final RegistryObject<PlacedFeature> MINERAL_ORE_PLACED
             = PLACED_FEATURES.register("mineral_ore_placed",
             () -> new PlacedFeature(MINERAL_ORES.getHolder().get(),
-                    commonOrePlacement(7, //veins per chunk
-                            HeightRangePlacement
-                                    .triangle(VerticalAnchor.aboveBottom(10),
-                                            VerticalAnchor.belowTop(50)))));
+                    commonOrePlacement(16,
+                            HeightRangePlacement.triangle(VerticalAnchor.absolute(-16),
+                                    VerticalAnchor.absolute(112)))));
     public static final RegistryObject<PlacedFeature> METALIUM_ORE_PLACED
             = PLACED_FEATURES.register("metalium_ore_placed",
             () -> new PlacedFeature(METALIUM_ORES.getHolder().get(),
-                    commonOrePlacement(1, //veins per chunk
-                            HeightRangePlacement
-                                    .triangle(VerticalAnchor.aboveBottom(10),
-                                            VerticalAnchor.aboveBottom(100)))));
+                    commonOrePlacement(2,
+                            HeightRangePlacement.triangle(VerticalAnchor.absolute(-32),
+                                    VerticalAnchor.absolute(32)))));
     public static final RegistryObject<PlacedFeature> TITANIUM_ORE_PLACED
             = PLACED_FEATURES.register("titanium_ore_placed",
             () -> new PlacedFeature(TITANIUM_ORES.getHolder().get(),
-                    commonOrePlacement(1, //veins per chunk
-                            HeightRangePlacement
-                                    .triangle(VerticalAnchor.aboveBottom(10),
-                                            VerticalAnchor.aboveBottom(100)))));
+                    commonOrePlacement(2,
+                            HeightRangePlacement.triangle(VerticalAnchor.absolute(-32),
+                                    VerticalAnchor.absolute(32)))));
     public static final RegistryObject<PlacedFeature> MARBLE_ORE_PLACED
             = PLACED_FEATURES.register("marble_ore_placed",
             () -> new PlacedFeature(MARBLE_ORES.getHolder().get(),
-                    commonOrePlacement(1, //veins per chunk
-                            HeightRangePlacement
-                                    .triangle(VerticalAnchor.aboveBottom(10),
-                                            VerticalAnchor.aboveBottom(100)))));
+                    commonOrePlacement(2,
+                            HeightRangePlacement.triangle(VerticalAnchor.absolute(-32),
+                                    VerticalAnchor.absolute(32)))));
 
     private static List<PlacementModifier> orePlacement(PlacementModifier p_195347_, PlacementModifier p_195348_) {
         return Arrays.asList(p_195347_, InSquarePlacement.spread(), p_195348_, BiomeFilter.biome());

@@ -152,12 +152,10 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAd
                     printSpectrobeToChat(player);
                 }
 
-            } else if (itemstack.getItem() instanceof MineralItem){
-                MineralItem mineralItem = (MineralItem)itemstack.getItem();
+            } else if (itemstack.getItem() instanceof MineralItem mineralItem){
                 applyMineral(mineralItem);
                 itemstack.shrink(1);
-            } else if (itemstack.getItem() instanceof SpecialMineralItem){
-                SpecialMineralItem mineralItem = (SpecialMineralItem)itemstack.getItem();
+            } else if (itemstack.getItem() instanceof SpecialMineralItem mineralItem){
                 applySpecialMineral(mineralItem);
                 itemstack.shrink(1);
             } else if(itemstack.getItem() instanceof PrizmodItem) {
@@ -614,7 +612,7 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAd
             Spectrobe spectrobeInstance = getSpectrobeData();
             player.sendSystemMessage(Component.literal("Name: " + spectrobeInstance.name));
             player.sendSystemMessage(Component.literal("Health: " + spectrobeInstance.currentHealth + "/" + spectrobeInstance.stats.getHpLevel()));
-            player.sendSystemMessage(Component.literal("Level: " + getLevel()));
+            player.sendSystemMessage(Component.literal("Level: " + getSpectrobeLevel()));
             player.sendSystemMessage(Component.literal(""));
             player.sendSystemMessage(Component.literal("Nature: " + getNature()));
             player.sendSystemMessage(Component.literal("Stage: " + getStage()));

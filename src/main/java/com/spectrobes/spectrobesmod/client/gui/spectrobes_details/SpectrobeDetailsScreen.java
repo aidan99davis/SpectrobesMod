@@ -21,8 +21,15 @@ public class SpectrobeDetailsScreen extends AbstractContainerScreen<SpectrobeDet
 
     public SpectrobeDetailsScreen(SpectrobeDetailsContainer pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
-        this.imageWidth = Minecraft.getInstance().getWindow().getScreenWidth();
-        this.imageHeight = Minecraft.getInstance().getWindow().getScreenHeight();
+        this.imageWidth = Minecraft.getInstance().getWindow().getGuiScaledWidth();
+        this.imageHeight = Minecraft.getInstance().getWindow().getGuiScaledHeight();
+    }
+
+    @Override
+    public void resize(Minecraft pMinecraft, int pWidth, int pHeight) {
+        super.resize(pMinecraft, pWidth, pHeight);
+        this.imageWidth = Minecraft.getInstance().getWindow().getGuiScaledWidth();
+        this.imageHeight = Minecraft.getInstance().getWindow().getGuiScaledHeight();
     }
 
     @Override
@@ -42,28 +49,24 @@ public class SpectrobeDetailsScreen extends AbstractContainerScreen<SpectrobeDet
         int iconY = height / 5;
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         RenderSystem.setShaderTexture(0, PrizmodScreen.SPECTROBE_SLOT_TEXTURE);
-        blit(pMatrixStack, iconX, iconY, 0, 0, 32, 32);
+        blit(pMatrixStack, iconX, iconY, 0, 0, 64, 64, 64, 64);
 
         //draw spectrobe into slot.
         if(menu.getSpectrobe() != null) {
             SpectrobeIconInfo iconInfo = menu.getSpectrobe().getIcon();
-            float scalex = 64 / iconInfo.getWidth();
-            float scaley = 64 / iconInfo.getHeight();
-            int marginleft = iconInfo.getWidth() < 31
-                    ? ((32 - iconInfo.getWidth())/2)
-                    : 0;
-            int margintop = iconInfo.getHeight() < 31
-                    ? ((32 - iconInfo.getHeight())/2)
-                    : 0;
+            float scalex = 64f / iconInfo.getWidth();
+            float scaley = 64f / iconInfo.getHeight();
 
             RenderSystem.enableBlend();
             RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
             RenderSystem.setShaderTexture(0, iconInfo.icon());
             blit(pMatrixStack,
-                iconX + marginleft,
-                iconY + margintop,
+                iconX,
+                iconY,
                 0,
                 0,
+                Float.valueOf(iconInfo.getWidth() * scalex).intValue(),
+                Float.valueOf(iconInfo.getHeight() * scaley).intValue(),
                 Float.valueOf(iconInfo.getWidth() * scalex).intValue(),
                 Float.valueOf(iconInfo.getHeight() * scaley).intValue());
         }
@@ -135,11 +138,11 @@ public class SpectrobeDetailsScreen extends AbstractContainerScreen<SpectrobeDet
         int finalX = x + (Minecraft.getInstance().font.width(healthText) / 2) - (barWidth / 2);
 
         //draw red health bar.
-//        GuiUtils.drawColour(107, 0, 0, 100, finalX, y, barWidth, barHeight, 27);
+        fill(pMatrixStack, finalX, y, finalX+barWidth, y+barHeight, Color.RED.hashCode());
 
         //draw green for health bar, only fill a % of 30 pixels based on the % of health remaining.
         float heightScaled = ((float)sm.currentHealth / (float)sm.stats.getHpLevel()) * barHeight;
-//        GuiUtils.drawColour(33, 252, 13, 100, finalX, y + (barHeight-Math.round(heightScaled)), barWidth, Math.round(heightScaled), 28);
+        fill(pMatrixStack, finalX, y + (barHeight-Math.round(heightScaled)), finalX+barWidth, y+barHeight, Color.GREEN.hashCode());
         mc.font.draw(pMatrixStack, "HP", finalX, y - 10, Color.BLACK.hashCode());
         mc.font.draw(pMatrixStack, healthText, x, y + barHeight + 10, Color.BLACK.hashCode());
     }
@@ -156,11 +159,12 @@ public class SpectrobeDetailsScreen extends AbstractContainerScreen<SpectrobeDet
         int finalX = x + (Minecraft.getInstance().font.width(xpText) / 2) - (barWidth / 2);
 
         //draw red health bar.
-//        GuiUtils.drawColour(0, 128, 129, 100, finalX, y, barWidth, barHeight, 27);
+        fill(pMatrixStack, finalX, y, finalX+barWidth, y+barHeight, Color.BLUE.hashCode());
 
         //draw green for health bar, only fill a % of 30 pixels based on the % of health remaining.
         float heightScaled = ((float)sm.stats.getXp() / (float)sm.stats.getXp_required()) * barHeight;
-//        GuiUtils.drawColour(0, 255, 255, 100, finalX, y + (barHeight-Math.round(heightScaled)), barWidth, Math.round(heightScaled), 28);
+        fill(pMatrixStack, finalX, y + (barHeight-Math.round(heightScaled)), finalX+barWidth, y+barHeight, Color.CYAN.hashCode());
+
         mc.font.draw(pMatrixStack, "Lvl: " + sm.stats.getLevel(), finalX - (barWidth/2), y - 10, Color.BLACK.hashCode());
         mc.font.draw(pMatrixStack, xpText, x, y + barHeight + 10, Color.BLACK.hashCode());
     }

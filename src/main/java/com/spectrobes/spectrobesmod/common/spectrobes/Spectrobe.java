@@ -92,6 +92,7 @@ public class Spectrobe {
         this.name = evolution.name;
         this.properties = evolution.properties;
         this.stats.setStatsOrBase(evolution.stats);
+        this.stats.resetMineralsEaten();
         this.evolutionRequirements = evolution.evolutionRequirements;
         this.currentHealth = this.stats.getHpLevel();
     }
