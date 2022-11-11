@@ -1,7 +1,6 @@
 package com.spectrobes.spectrobesmod.common.entities.spectrobes;
 
 import com.spectrobes.spectrobesmod.client.container.SpectrobeDetailsContainer;
-import com.spectrobes.spectrobesmod.client.gui.spectrobes_details.SpectrobeDetailsScreen;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.entities.IHasNature;
@@ -32,6 +31,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
@@ -161,15 +161,10 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAd
             } else if(itemstack.getItem() instanceof PrizmodItem) {
                 if(player == getOwner()) {
                     if(player.isShiftKeyDown()) {
-                        if(player.level.isClientSide())
-                            Minecraft.getInstance()
-                                    .setScreen(
-                                    new SpectrobeDetailsScreen(
-                                            new SpectrobeDetailsContainer(
-                                                    0,
-                                                    getSpectrobeData()),
-                                            player.getInventory(),
-                                            Component.literal("")));
+                        if(!player.level.isClientSide())
+                            NetworkHooks.openScreen((ServerPlayer) player, new SimpleMenuProvider(
+                                            (id, pPlayer, stack) -> new SpectrobeDetailsContainer(id, getSpectrobeData()),
+                                            Component.empty()));
                     }
                 }
             }
@@ -622,20 +617,22 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAd
             player.sendSystemMessage(Component.literal("Atk: " + spectrobeInstance.stats.getAtkLevel()));
             player.sendSystemMessage(Component.literal("Def: " + spectrobeInstance.stats.getDefLevel()));
             String status;
-            switch (entityData.get(STATE)) {
-                case 0:
-                    status = "Following";
-                    break;
-                case 1:
-                    status = "Sitting";
-                    break;
-                case 2:
-                    status = "Searching";
-                    break;
-                default:
-                    status = "Unknown.";
+            if(player.getUUID() == getOwner().getUUID()) {
+                switch (entityData.get(STATE)) {
+                    case 0:
+                        status = "Following";
+                        break;
+                    case 1:
+                        status = "Sitting";
+                        break;
+                    case 2:
+                        status = "Searching";
+                        break;
+                    default:
+                        status = "Unknown.";
+                }
+                player.sendSystemMessage(Component.literal("Status: " + status));
             }
-            player.sendSystemMessage(Component.literal("Status: " + status));
         }
     }
 

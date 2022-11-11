@@ -11,6 +11,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.builder.ILoopType;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
@@ -55,11 +56,11 @@ public class EntityKuganon extends EntityMammalSpectrobe {
         moveAnimationController.transitionLengthTicks = 2;
         if(event.isMoving())
         {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.kuganon.walk", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.kuganon.walk", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         } else {
             if(this.IsAttacking()) {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.kuganon.attack", true));
+                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.kuganon.attack", ILoopType.EDefaultLoopTypes.LOOP));
                 return PlayState.CONTINUE;
             }
         }

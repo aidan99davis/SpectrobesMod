@@ -13,7 +13,6 @@ import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 import javax.annotation.Nullable;
 
-@OnlyIn(Dist.CLIENT)
 public class MossariRenderer extends GeoEntityRenderer<EntityMossari> {
 
     public MossariRenderer(EntityRendererProvider.Context renderManagerIn) {

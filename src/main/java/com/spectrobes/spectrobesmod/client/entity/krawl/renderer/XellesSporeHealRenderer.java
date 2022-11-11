@@ -9,7 +9,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
-@OnlyIn(Dist.CLIENT)
 public class XellesSporeHealRenderer extends GeoEntityRenderer<EntityHealingSpore> {
 
     public XellesSporeHealRenderer(EntityRendererProvider.Context renderManagerIn) {

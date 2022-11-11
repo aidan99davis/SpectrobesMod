@@ -67,8 +67,8 @@ public class SpectrobesBlocks {
     		() -> new SpectrobesBlock(BlockBehaviour.Properties.of(Material.STONE).strength(10f).sound(SoundType.STONE)));
     public static final RegistryObject<SpectrobesBlock> krawl_stone = BLOCKS.register("krawl_stone",
     		() -> new MultiTextureBlock(BlockBehaviour.Properties.of(Material.STONE).strength(10f).sound(SoundType.STONE)));
-    public static final RegistryObject<PlanetaryTeleporterBlock> planetary_teleporter = BLOCKS.register("planetary_teleporter",
-            PlanetaryTeleporterBlock::new);
+//    public static final RegistryObject<PlanetaryTeleporterBlock> planetary_teleporter = BLOCKS.register("planetary_teleporter",
+//            PlanetaryTeleporterBlock::new);
     public static final RegistryObject<Block> krawl_vine = BLOCKS.register("krawl_vine",
     		() -> new VineBlock(BlockBehaviour.Properties.of(Material.REPLACEABLE_PLANT).noOcclusion().strength(0.2F).sound(SoundType.VINE)));
     public static final RegistryObject<SpectrobesBlock> krawl_mycelium = BLOCKS.register("krawl_mycelium",

@@ -13,7 +13,6 @@ import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 import javax.annotation.Nullable;
 
-@OnlyIn(Dist.CLIENT)
 public class GejioRenderer extends GeoEntityRenderer<EntityGejio> {
 
     public GejioRenderer(EntityRendererProvider.Context renderManagerIn) {

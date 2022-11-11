@@ -77,9 +77,9 @@ public class SpectrobesBlockItemsRegistry {
             () -> new BlockItem(SpectrobesBlocks.krawl_stone.get(),
                     new Item.Properties().tab(SpectrobesItemGroups.SpectrobesBlocksItemGroup.Instance)));
 
-    public static final RegistryObject<BlockItem> planetary_teleporter = ITEMS.register("planetary_teleporter",
-            () -> new BlockItem(SpectrobesBlocks.planetary_teleporter.get(),
-                    new Item.Properties().tab(SpectrobesItemGroups.SpectrobesBlocksItemGroup.Instance)));
+//    public static final RegistryObject<BlockItem> planetary_teleporter = ITEMS.register("planetary_teleporter",
+//            () -> new BlockItem(SpectrobesBlocks.planetary_teleporter.get(),
+//                    new Item.Properties().tab(SpectrobesItemGroups.SpectrobesBlocksItemGroup.Instance)));
 
     public static final RegistryObject<BlockItem> krawl_vine = ITEMS.register("krawl_vine",
             () -> new BlockItem(SpectrobesBlocks.krawl_vine.get(),

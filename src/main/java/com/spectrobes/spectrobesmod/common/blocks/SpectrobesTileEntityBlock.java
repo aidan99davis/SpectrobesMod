@@ -12,8 +12,6 @@ public abstract class SpectrobesTileEntityBlock extends BaseEntityBlock {
             .strength(0f)
             .sound(SoundType.STONE);
 
-    public static final DirectionProperty FACING = net.minecraft.world.level.block.DirectionalBlock.FACING;
-
     public SpectrobesTileEntityBlock() { super(props); }
 
     protected SpectrobesTileEntityBlock(Properties pProperties) {

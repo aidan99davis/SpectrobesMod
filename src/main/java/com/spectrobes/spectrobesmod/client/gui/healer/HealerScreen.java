@@ -11,7 +11,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 public class HealerScreen extends AbstractContainerScreen<HealerContainer> {
 
     private static final ResourceLocation HEALER_GUI_BACKGROUND = new ResourceLocation("spectrobesmod:textures/gui/prizmod_background.png");

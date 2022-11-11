@@ -11,7 +11,6 @@ import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 import javax.annotation.Nullable;
 
-@OnlyIn(Dist.CLIENT)
 public class SeguRenderer extends GeoEntityRenderer<EntitySegu> {
 
     public SeguRenderer(EntityRendererProvider.Context renderManagerIn) {

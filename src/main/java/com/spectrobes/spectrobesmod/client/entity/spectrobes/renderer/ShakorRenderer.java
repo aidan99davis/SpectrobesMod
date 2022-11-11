@@ -11,7 +11,6 @@ import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 import javax.annotation.Nullable;
 
-@OnlyIn(Dist.CLIENT)
 public class ShakorRenderer extends GeoEntityRenderer<EntityShakor> {
 
     public ShakorRenderer(EntityRendererProvider.Context renderManagerIn) {

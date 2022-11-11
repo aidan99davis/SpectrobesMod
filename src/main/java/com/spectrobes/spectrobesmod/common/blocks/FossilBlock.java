@@ -13,13 +13,13 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class FossilBlock extends SpectrobesBlock {
     private static final Properties props = Properties.of(Material.STONE)
+            .requiresCorrectToolForDrops()
             .strength(1.5f)
             .sound(SoundType.STONE);
 
@@ -27,19 +27,11 @@ public class FossilBlock extends SpectrobesBlock {
         super(props);
     }
 
-
-//    @Nullable
-//    @Override
-//    public BlockEntity newBlockEntity(BlockPos pos, BlockState state)
-//    {
-//        return SpectrobesTileRegistry.FOSSIL_TILE.get().create(pos, state);
-//    }
-
     @SuppressWarnings({"deprecation"})
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         Vec3 vec = builder.getParameter(LootContextParams.ORIGIN);
-        Level level = builder.getParameter(LootContextParams.BLOCK_ENTITY).getLevel();
+        Level level = builder.getParameter(LootContextParams.THIS_ENTITY).getLevel();
 
         assert level != null;
         BlockPos blockPos = new BlockPos(vec.x, vec.y, vec.z);
@@ -63,7 +55,6 @@ public class FossilBlock extends SpectrobesBlock {
         possibleNatures.add(SpectrobeProperties.Nature.OTHER);
 
         SpectrobeProperties.Nature nature = possibleNatures.get(new Random().nextInt(possibleNatures.size()));
-        //TODO: MAKE SURE THIS STILL WORKS
 
         ItemStack fossilItem = SpectrobesFossilsRegistry.getRandomFossil(nature);
         ArrayList<ItemStack> fossil = new ArrayList<>();

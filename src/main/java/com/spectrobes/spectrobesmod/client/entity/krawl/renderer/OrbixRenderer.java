@@ -9,7 +9,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
-@OnlyIn(Dist.CLIENT)
 public class OrbixRenderer extends GeoEntityRenderer<EntityOrbix> {
 
     public OrbixRenderer(EntityRendererProvider.Context renderManagerIn) {

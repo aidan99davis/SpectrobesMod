@@ -13,7 +13,6 @@ import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 import javax.annotation.Nullable;
 
-@OnlyIn(Dist.CLIENT)
 public class GrildenRenderer extends GeoEntityRenderer<EntityGrilden> {
 
     public GrildenRenderer(EntityRendererProvider.Context renderManagerIn) {

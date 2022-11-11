@@ -9,7 +9,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import software.bernie.geckolib3.renderers.geo.GeoProjectilesRenderer;
 
-@OnlyIn(Dist.CLIENT)
 public class EnergyBoltRenderer extends GeoProjectilesRenderer<EnergyBoltEntity> {
 
     public EnergyBoltRenderer(EntityRendererProvider.Context renderManagerIn) {

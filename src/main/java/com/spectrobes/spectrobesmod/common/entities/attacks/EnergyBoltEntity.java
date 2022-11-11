@@ -12,12 +12,13 @@ import net.minecraftforge.network.NetworkHooks;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 public class EnergyBoltEntity extends ThrowableProjectile implements IHasNature, IAnimatable {
     public int AtkDamage;
     public SpectrobeProperties.Nature Nature;
 
-    public AnimationFactory factory = new AnimationFactory(this);
+    public AnimationFactory factory = GeckoLibUtil.createFactory(this);
     private int life = 0;
 
     public EnergyBoltEntity(EntityType<? extends ThrowableProjectile> type, Level worldIn) {

@@ -16,7 +16,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import software.bernie.geckolib3.core.util.Color;
 
-@OnlyIn(Dist.CLIENT)
 public class SpectrobeDetailsScreen extends AbstractContainerScreen<SpectrobeDetailsContainer> {
 
     public SpectrobeDetailsScreen(SpectrobeDetailsContainer pMenu, Inventory pPlayerInventory, Component pTitle) {

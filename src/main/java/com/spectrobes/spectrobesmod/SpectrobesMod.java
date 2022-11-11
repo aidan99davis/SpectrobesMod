@@ -1,19 +1,8 @@
 package com.spectrobes.spectrobesmod;
 
-import com.spectrobes.spectrobesmod.client.armour.ArmourRendererRegisterer;
-import com.spectrobes.spectrobesmod.client.blocks.BlockRendererManager;
-import com.spectrobes.spectrobesmod.client.container.HealerContainer;
-import com.spectrobes.spectrobesmod.client.container.PrizmodContainer;
-import com.spectrobes.spectrobesmod.client.container.SpectrobeDetailsContainer;
 import com.spectrobes.spectrobesmod.client.entity.attacks.AttackEntities;
-import com.spectrobes.spectrobesmod.client.entity.attacks.AttackRendererManager;
 import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
-import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlRendererManager;
-import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobeRendererManager;
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
-import com.spectrobes.spectrobesmod.client.gui.healer.HealerScreen;
-import com.spectrobes.spectrobesmod.client.gui.spectrobes_details.SpectrobeDetailsScreen;
-import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.registry.*;
 import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesBlocks;
 import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesTileRegistry;
@@ -22,6 +11,7 @@ import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.registry.items.*;
 import com.spectrobes.spectrobesmod.common.world.SpectrobesEntitySpawns;
 import com.spectrobes.spectrobesmod.common.world.SpectrobesOreGen;
+import com.spectrobes.spectrobesmod.events.ClientEvents;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.monster.Monster;
@@ -46,21 +36,19 @@ public class SpectrobesMod
     public SpectrobesMod() {
         GeckoLib.initialize();
         SpectrobesMineralsRegistry.init();
+
         modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         //register listeners to the event bus
         modEventBus.addListener(this::setup);
-        modEventBus.addListener(this::doClientStuff);
+        modEventBus.addListener(this::onClientStarting);
+        modEventBus.addListener(this::onLoaded);
         modEventBus.addListener(SpectrobesEntities::registerEntityAttributes);
         modEventBus.addListener(KrawlEntities::registerEntityAttributes);
-        modEventBus.addListener(BlockRendererManager::registerTileEntityRenderers);
-        modEventBus.addListener(SpectrobeRendererManager::registerEntityRenderers);
-        modEventBus.addListener(KrawlRendererManager::registerEntityRenderers);
-        modEventBus.addListener(AttackRendererManager::registerEntityRenderers);
-        modEventBus.addListener(ArmourRendererRegisterer::registerRenderers);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(new ClientEvents());
         MinecraftForge.EVENT_BUS.register(new SpectrobesEntitySpawns());
         SpectrobesEntities.ENTITY_TYPES.register(modEventBus);
         AttackEntities.ENTITY_TYPES.register(modEventBus);
@@ -88,20 +76,19 @@ public class SpectrobesMod
     {
         MinecraftForge.EVENT_BUS.register(PlayerEvents.instance);
         IconRegistry.init();
-        SpectrobesEntities.populateMap();
-        KrawlEntities.populateMaps();
-
         event.enqueueWork(() -> SpawnPlacements.register(KrawlEntities.ENTITY_VORTEX.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Monster::checkMonsterSpawnRules));
     }
 
     @SubscribeEvent
-    public void doClientStuff(final FMLClientSetupEvent event)
+    public void onClientStarting(final FMLClientSetupEvent event)
     {
-        MenuScreens.register(PrizmodContainer.PRIZMOD.get(), PrizmodScreen::new);
-        MenuScreens.register(HealerContainer.HEALER.get(), HealerScreen::new);
-        MenuScreens.register(SpectrobeDetailsContainer.SPECTROBE_DETAILS.get(), SpectrobeDetailsScreen::new);
-        BlockRendererManager.init();
-        MineralRegistry.init();
+        ClientEvents.doClientStuff();
+    }
+
+    @SubscribeEvent
+    public void onLoaded(final FMLLoadCompleteEvent event) {
+        SpectrobesEntities.populateMap();
+        KrawlEntities.populateMaps();
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call

@@ -28,7 +28,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
@@ -165,10 +164,9 @@ public class EntityXelles extends EntityBossKrawl {
         }
     }
 
-    @Nullable
     @Override
-    public Component getCustomName() {
-        return Component.literal(super.getDisplayName().getString() + " - Stage: " + getStage());
+    public Component getName() {
+        return Component.literal(super.getName().getString() + " - Stage: " + getStage());
     }
 
 

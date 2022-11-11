@@ -31,7 +31,6 @@ public class HUDHandler {
     public static final ResourceLocation SPECTROBE_SLOT_CURRENT_TEXTURE = new ResourceLocation("spectrobesmod:textures/gui/spectrobe_slot_selected.png");
 
     @SubscribeEvent
-    @OnlyIn(Dist.CLIENT)
     public static void onDraw(RenderGuiOverlayEvent.Pre event) {
         if (event.getOverlay().id().equals(VanillaGuiOverlay.EXPERIENCE_BAR.id())) {
             Window resolution = event.getWindow();
@@ -44,7 +43,6 @@ public class HUDHandler {
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
     private static void drawSpectrobeTeamBar(PoseStack ms, Window res, float partialTicks) {
         Minecraft mc = Minecraft.getInstance();
         if (!mc.player.getInventory()
@@ -168,7 +166,6 @@ public class HUDHandler {
                 });
     }
 
-    @OnlyIn(Dist.CLIENT)
     private static int drawSpectrobeMasterHealthBar(PoseStack ms, Window res) {
         Minecraft mc = Minecraft.getInstance();
         AtomicInteger finalWidth = new AtomicInteger(0);
@@ -208,7 +205,6 @@ public class HUDHandler {
         return finalWidth.get();
     }
 
-    @OnlyIn(Dist.CLIENT)
     private static void drawSpectrobeMasterXpBar(PoseStack ms, Window res, int basePadding) {
         Minecraft mc = Minecraft.getInstance();
 

@@ -1,6 +1,5 @@
 package com.spectrobes.spectrobesmod.common.entities.krawl.goals;
 
-import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityVortex;
 import com.spectrobes.spectrobesmod.common.save_data.KrawlNest;
 import com.spectrobes.spectrobesmod.common.save_data.SpectrobesWorldSaveData;
@@ -15,7 +14,6 @@ import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConf
 
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 public class KrawlVortexFormXellesGoal extends Goal {
@@ -60,8 +58,6 @@ public class KrawlVortexFormXellesGoal extends Goal {
                         SpectrobesWorldSaveData data = SpectrobesWorldSaveData.getWorldData((ServerLevel) level);
 
                         //create xelle mob.
-                        SpectrobesInfo.LOGGER.debug("SPAWNING XELLES AT: " + vortexPos.getX() + ", " + vortexPos.getY() + ", " + vortexPos.getZ());
-
                         data.addNest(new KrawlNest(vortexPos, level.dimension().toString()));
                         data.getNest(vortexPos).absorbVortexes(extraVortexes);
                         data.setDirty();

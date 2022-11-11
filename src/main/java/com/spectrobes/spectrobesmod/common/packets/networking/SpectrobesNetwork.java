@@ -78,6 +78,18 @@ public class SpectrobesNetwork {
                 .decoder(CSpectrobeAttackPacket::fromBytes)
                 .consumerMainThread(CSpectrobeAttackPacket::handle)
                 .add();
+
+        INSTANCE.messageBuilder(SOpenPrizmodPacket.class, nextID())
+                .encoder(SOpenPrizmodPacket::toBytes)
+                .decoder(SOpenPrizmodPacket::fromBytes)
+                .consumerMainThread(SOpenPrizmodPacket::handle)
+                .add();
+
+        INSTANCE.messageBuilder(SOpenSpectrobeDetailsScreenPacket.class, nextID())
+                .encoder(SOpenSpectrobeDetailsScreenPacket::toBytes)
+                .decoder(SOpenSpectrobeDetailsScreenPacket::fromBytes)
+                .consumerMainThread(SOpenSpectrobeDetailsScreenPacket::handle)
+                .add();
     }
 
     public static void sendToClient(Object packet, ServerPlayer player) {

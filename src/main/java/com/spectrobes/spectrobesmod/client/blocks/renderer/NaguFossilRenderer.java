@@ -7,7 +7,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 
-@OnlyIn(Dist.CLIENT)
 public class NaguFossilRenderer extends GeoBlockRenderer<NaguFossilBlockTileEntity> {
     public NaguFossilRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
         super(rendererDispatcherIn, new NaguFossilModel());

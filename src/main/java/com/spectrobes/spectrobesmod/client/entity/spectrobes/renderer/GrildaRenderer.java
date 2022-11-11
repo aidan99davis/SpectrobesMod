@@ -14,7 +14,6 @@ import software.bernie.geckolib3.resource.GeckoLibCache;
 
 import javax.annotation.Nullable;
 
-@OnlyIn(Dist.CLIENT)
 public class GrildaRenderer extends GeoEntityRenderer<EntityGrilda> {
 
     public GrildaRenderer(EntityRendererProvider.Context renderManagerIn) {

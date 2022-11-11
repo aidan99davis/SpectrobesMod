@@ -97,7 +97,7 @@ public class SpawnWaveGoal extends TargetGoal {
                         if(playerSpectrobeMaster.getLevel() > levelToSpawnAt[0]) levelToSpawnAt[0] = playerSpectrobeMaster.getLevel();
                     });
                 } else {
-                    if(((EntitySpectrobe)mob.getTarget()).getSpectrobeLevel() > levelToSpawnAt[0]) levelToSpawnAt[0] = ((EntitySpectrobe)mob).getSpectrobeLevel();
+                    if(((EntitySpectrobe)mob.getTarget()).getSpectrobeLevel() > levelToSpawnAt[0]) levelToSpawnAt[0] = ((EntitySpectrobe)mob.getTarget()).getSpectrobeLevel();
                 }
             }
 

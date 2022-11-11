@@ -47,11 +47,10 @@ public class ServerEvents {
     public static void OnLivingEntityDeath(LivingDeathEvent event) {
         if(event.getEntity() instanceof EntityKrawl) {
             KrawlProperties krawlProperties = ((EntityKrawl)event.getEntity()).krawlProperties;
-            if(event.getEntity().getKillCredit() instanceof EntitySpectrobe) {
-                EntitySpectrobe spectrobe = (EntitySpectrobe) event.getEntity().getKillCredit();
+            if(event.getEntity().getKillCredit() instanceof EntitySpectrobe spectrobe) {
                 spectrobe.awardKillStats(krawlProperties);
             }
-            if(event.getEntity().getKillCredit() instanceof ServerPlayer) {
+            if(event.getEntity().getKillCredit() instanceof Player) {
                 ServerPlayer player = (ServerPlayer)event.getEntity().getKillCredit();
 
                 player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {

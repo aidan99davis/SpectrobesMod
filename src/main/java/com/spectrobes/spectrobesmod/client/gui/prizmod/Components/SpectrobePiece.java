@@ -50,7 +50,6 @@ public class SpectrobePiece extends AbstractWidget {
         return getUnlocalizedName();
     }
 
-    @OnlyIn(Dist.CLIENT)
     public void draw(PoseStack stack, boolean withAdditional) {
         drawBackground(stack);
         if(withAdditional)
@@ -60,7 +59,6 @@ public class SpectrobePiece extends AbstractWidget {
     /**
      * Draws this piece's background.
      */
-    @OnlyIn(Dist.CLIENT)
     public void drawBackground(PoseStack stack) {
         ResourceLocation bg;
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
@@ -89,7 +87,6 @@ public class SpectrobePiece extends AbstractWidget {
     /**
      * Draws any additional stuff for this piece. Used for the spectrobes icon
      */
-    @OnlyIn(Dist.CLIENT)
     public void drawAdditional(PoseStack stack) {
         if(spectrobe != null) {
             SpectrobeIconInfo iconInfo = spectrobe.getIcon();
@@ -127,7 +124,6 @@ public class SpectrobePiece extends AbstractWidget {
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
     public void drawAdditionalAtCursor(PoseStack stack, int mouseX, int mouseY) {
         if(spectrobe != null) {
             SpectrobeIconInfo iconInfo = spectrobe.getIcon();

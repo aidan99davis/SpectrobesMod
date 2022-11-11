@@ -32,7 +32,7 @@ public abstract class FossilBlockItem extends BlockItem implements IAnimatable {
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         if(pPlayer.isShiftKeyDown()) {
-            pPlayer.getItemInHand(pUsedHand).shrink(1);
+            pPlayer.getItemInHand(pUsedHand).setCount(pPlayer.getItemInHand(pUsedHand).getCount() - 1);
             if(!pLevel.isClientSide) {
                 Spectrobe spectrobe = getSpectrobeInstance();
                 pPlayer.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(playerCap -> {
@@ -54,7 +54,7 @@ public abstract class FossilBlockItem extends BlockItem implements IAnimatable {
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
         super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
-        pTooltip.add(Component.literal("Shift right click a block to awaken this fossil."));
+        pTooltip.add(Component.literal("Shift right click air to awaken this fossil."));
     }
 
     @Override

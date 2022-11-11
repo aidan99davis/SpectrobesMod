@@ -20,7 +20,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.behavior.Swim;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
@@ -32,12 +31,13 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import static com.spectrobes.spectrobesmod.util.DamageUtils.getTypeBonus;
 
 public abstract class EntityKrawl extends Monster implements IAnimatable, IHasNature {
     public KrawlProperties krawlProperties;
-    public AnimationFactory animationControllers = new AnimationFactory(this);
+    public AnimationFactory animationControllers = GeckoLibUtil.createFactory(this);
     protected AnimationController moveController = new AnimationController(this, "moveAnimationController", 10F, this::moveController);
 
     private static final EntityDataAccessor<Boolean> IS_ATTACKING =

@@ -341,7 +341,7 @@ public class PlayerSpectrobeMaster {
     public void addXp(int currentXp) {
         this.currentXp = this.currentXp + currentXp;
 
-        if(this.currentXp >= getXp_required()) {
+        while(this.currentXp >= getXp_required()) {
             this.currentXp = this.currentXp - getXp_required();
             this.level++;
             this.setXp_required(new Double(getXp_required() * 1.2).intValue());

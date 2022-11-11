@@ -47,6 +47,6 @@ public class MineralBlock extends SpectrobesBlock {
         ArrayList<ItemStack> minerals = new ArrayList<>();
         minerals.add(mineralItem);
 
-        return  minerals;
+        return minerals;
     }
 }

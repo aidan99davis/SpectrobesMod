@@ -34,7 +34,7 @@ public class GenshiTeleporter implements ITeleporter {
             destPos = destPos.above(2);
         }
         if(destWorld.getBlockStates(entity.getBoundingBox().inflate(10, 10, 10)).noneMatch(blockState -> blockState.getBlock() instanceof PlanetaryTeleporterBlock)) {
-            destWorld.setBlock(destPos.above(3), SpectrobesBlocks.planetary_teleporter.get().defaultBlockState(), 1);
+//            destWorld.setBlock(destPos.above(3), SpectrobesBlocks.planetary_teleporter.get().defaultBlockState(), 1);
         }
         for (BlockPos checkPos : BlockPos.betweenClosed(destPos.below(10).west(10), destPos.above(10).east(10))) {
             if (destWorld.getBlockState(checkPos).getBlock() instanceof AirBlock
