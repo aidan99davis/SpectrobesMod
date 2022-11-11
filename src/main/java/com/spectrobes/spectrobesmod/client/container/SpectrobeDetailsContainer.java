@@ -27,7 +27,7 @@ public class SpectrobeDetailsContainer extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player playerIn) {
-        return playerIn.getInventory().contains(SpectrobesToolsRegistry.prizmod_item.get().getDefaultInstance());
+        return spectrobe != null && playerIn.getInventory().contains(SpectrobesToolsRegistry.prizmod_item.get().getDefaultInstance());
     }
 
     public Spectrobe getSpectrobe() {

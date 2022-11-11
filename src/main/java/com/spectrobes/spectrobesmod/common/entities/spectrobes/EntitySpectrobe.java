@@ -1,6 +1,9 @@
 package com.spectrobes.spectrobesmod.common.entities.spectrobes;
 
+import com.spectrobes.spectrobesmod.client.container.PrizmodContainer;
 import com.spectrobes.spectrobesmod.client.container.SpectrobeDetailsContainer;
+import com.spectrobes.spectrobesmod.client.gui.SpectrobeGuiHandler;
+import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.entities.IHasNature;
@@ -11,7 +14,9 @@ import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
 import com.spectrobes.spectrobesmod.common.items.minerals.SpecialMineralItem;
 import com.spectrobes.spectrobesmod.common.items.tools.PrizmodItem;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
+import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobePacketHandler;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.SOpenSpectrobeDetailsScreenPacket;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSyncSpectrobeMasterPacket;
 import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
@@ -56,6 +61,7 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.function.Predicate;
@@ -89,9 +95,8 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAd
             SynchedEntityData.defineId(EntitySpectrobe.class,
                     Spectrobe.SpectrobeSerializer);
 
-    public AnimationFactory animationControllers = new AnimationFactory(this);
+    public AnimationFactory animationControllers = GeckoLibUtil.createFactory(this);
     protected AnimationController moveAnimationController = new AnimationController(this, "moveAnimationController", 10F, this::moveController);
-
 
     public EntitySpectrobe(EntityType<? extends EntitySpectrobe> entityTypeIn,
                            Level worldIn) {
@@ -110,7 +115,7 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAd
         this.goalSelector.addGoal(4, new LeapAtTargetGoal(this, 0.4f));
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 0.5f, true));
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
-        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(8, new SpectrobeRandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(2, new MasterHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new MasterHurtTargetGoal(this));
@@ -159,12 +164,9 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAd
                 applySpecialMineral(mineralItem);
                 itemstack.shrink(1);
             } else if(itemstack.getItem() instanceof PrizmodItem) {
-                if(player == getOwner()) {
-                    if(player.isShiftKeyDown()) {
-                        if(!player.level.isClientSide())
-                            NetworkHooks.openScreen((ServerPlayer) player, new SimpleMenuProvider(
-                                            (id, pPlayer, stack) -> new SpectrobeDetailsContainer(id, getSpectrobeData()),
-                                            Component.empty()));
+                if(player.isShiftKeyDown()) {
+                    if(player.level.isClientSide()) {
+                        SpectrobeGuiHandler.openDetails(getSpectrobeData());
                     }
                 }
             }
@@ -187,16 +189,10 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAd
 
         entityData.set(STATE, newstate);
         if(level.isClientSide()) {
-            switch(newstate) {
-                case 0:
-                    player.sendSystemMessage(Component.literal("Your spectrobe is now following."));
-                    break;
-                case 1:
-                    player.sendSystemMessage(Component.literal("Your spectrobe is now sitting."));
-                    break;
-                case 2:
-                    player.sendSystemMessage(Component.literal("Your spectrobe is now searching."));
-                    break;
+            switch (newstate) {
+                case 0 -> player.sendSystemMessage(Component.literal("Your spectrobe is now following."));
+                case 1 -> player.sendSystemMessage(Component.literal("Your spectrobe is now sitting."));
+                case 2 -> player.sendSystemMessage(Component.literal("Your spectrobe is now searching."));
             }
         }
     }
@@ -485,7 +481,6 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAd
             updatedSpectrobe.damage(Math.round(scaledAmount));
             setSpectrobeData(updatedSpectrobe);
 
-
             super.actuallyHurt(damageSrc, scaledAmount);
         } else {
             Spectrobe updatedSpectrobe = this.getSpectrobeData().copy(true);
@@ -617,7 +612,7 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAd
             player.sendSystemMessage(Component.literal("Atk: " + spectrobeInstance.stats.getAtkLevel()));
             player.sendSystemMessage(Component.literal("Def: " + spectrobeInstance.stats.getDefLevel()));
             String status;
-            if(player.getUUID() == getOwner().getUUID()) {
+            if(getOwner() != null) {
                 switch (entityData.get(STATE)) {
                     case 0:
                         status = "Following";

@@ -34,10 +34,8 @@ public class PlayerEvents {
     @SubscribeEvent
     public void onPlayerCloned(PlayerEvent.Clone event) {
         event.getOriginal().reviveCaps();
-//        if (event.isWasDeath()) {
         if(!event.getOriginal().level.isClientSide()) {
             event.getOriginal().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(oldStore -> {
-
                 event.getEntity().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(newStore -> {
                     newStore.copyFrom(oldStore);
                     newStore.setCurrentHealth(newStore.getMaxHealth());
@@ -47,7 +45,6 @@ public class PlayerEvents {
             });
         }
         event.getOriginal().invalidateCaps();
-//        }
     }
 
     private void despawnSpectrobes(PlayerEvent.Clone event, PlayerSpectrobeMaster newStore) {

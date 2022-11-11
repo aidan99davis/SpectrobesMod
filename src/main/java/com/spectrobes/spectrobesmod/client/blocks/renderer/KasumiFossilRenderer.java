@@ -15,6 +15,7 @@ public class KasumiFossilRenderer extends GeoBlockRenderer<KasumiFossilBlockTile
 
     @Override
     public void render(KasumiFossilBlockTileEntity tile, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+        poseStack.scale(0.3f, 0.3f, 0.3f);
         super.render(tile, partialTick, poseStack, bufferSource, packedLight);
     }
 }

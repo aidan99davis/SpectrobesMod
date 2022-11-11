@@ -32,7 +32,8 @@ public abstract class FossilBlockItem extends BlockItem implements IAnimatable {
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         if(pPlayer.isShiftKeyDown()) {
-            pPlayer.getItemInHand(pUsedHand).setCount(pPlayer.getItemInHand(pUsedHand).getCount() - 1);
+            ItemStack fossilStack = pPlayer.getItemInHand(pUsedHand);
+            fossilStack.shrink(1);
             if(!pLevel.isClientSide) {
                 Spectrobe spectrobe = getSpectrobeInstance();
                 pPlayer.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(playerCap -> {
@@ -43,7 +44,7 @@ public abstract class FossilBlockItem extends BlockItem implements IAnimatable {
             } else {
                 pPlayer.sendSystemMessage(Component.literal("A new spectrobe has been sent to your prizmod."));
             }
-            return InteractionResultHolder.consume(this.getDefaultInstance());
+            return InteractionResultHolder.consume(fossilStack);
         } else {
             return super.use(pLevel, pPlayer, pUsedHand);
         }

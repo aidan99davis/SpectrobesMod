@@ -1,8 +1,9 @@
 package com.spectrobes.spectrobesmod.common.entities.spectrobes;
 
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.SpectrobeRandomStrollGoal;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.SpectrobeWaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.level.Level;
 
 import java.util.List;
@@ -16,9 +17,10 @@ public abstract class EntityMammalSpectrobe extends EntitySpectrobe {
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(2, new RandomStrollGoal(this, 0.2d));
+        this.goalSelector.addGoal(0, new FloatGoal(this));
+        this.goalSelector.addGoal(2, new SpectrobeRandomStrollGoal(this, 0.2d));
 //        this.goalSelector.addGoal(2, new SwimGoal(this));
-        this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 0.5d));
+        this.goalSelector.addGoal(6, new SpectrobeWaterAvoidingRandomStrollGoal(this, 0.5d));
     }
 
     public abstract int getLitterSize();

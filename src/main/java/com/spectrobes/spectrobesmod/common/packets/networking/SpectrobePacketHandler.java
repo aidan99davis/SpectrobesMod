@@ -10,6 +10,7 @@ import com.spectrobes.spectrobesmod.common.packets.networking.packets.CUpdateSpe
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SOpenPrizmodPacket;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SOpenSpectrobeDetailsScreenPacket;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSyncSpectrobeMasterPacket;
+import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;

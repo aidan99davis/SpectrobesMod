@@ -9,6 +9,7 @@ import com.spectrobes.spectrobesmod.common.items.minerals.Mineral;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesBlocks;
 import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesMineralsRegistry;
+import com.spectrobes.spectrobesmod.common.save_data.KrawlNest;
 import com.spectrobes.spectrobesmod.common.save_data.SpectrobesWorldSaveData;
 import com.spectrobes.spectrobesmod.util.KrawlPropertiesBuilder;
 import net.minecraft.nbt.CompoundTag;
@@ -18,16 +19,20 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.BossEvent;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
@@ -81,6 +86,17 @@ public class EntityXelles extends EntityBossKrawl {
         this.goalSelector.addGoal(1, new XellesSpawnKrawlGroupGoal(this));
         this.goalSelector.addGoal(1, new XellesSpawnKrawlBossGoal(this));
         this.goalSelector.addGoal(1, new AbsorbKrawlGoal(this));
+    }
+
+    @Nullable
+    @Override
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
+        if(pReason.equals(MobSpawnType.COMMAND)) {
+            SpectrobesWorldSaveData worldData = SpectrobesWorldSaveData.getWorldData((ServerLevel) pLevel);
+
+            worldData.addNest(new KrawlNest(getOnPos(), level.dimension().toString()));
+        }
+        return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
     }
 
     @Override
@@ -148,7 +164,7 @@ public class EntityXelles extends EntityBossKrawl {
             SpectrobesWorldSaveData worldData = SpectrobesWorldSaveData.getWorldData((ServerLevel) level);
             entityData.set(STAGE, worldData.getNest(blockPosition()).stage);
 
-            if(getStage() == 1 && (worldData.getNest(blockPosition()).vortex_absorbed > 5)) {
+            if(getStage() == 1 && (worldData.getNest(blockPosition()).vortex_absorbed > 5 || getAge() >=5)) {
                 worldData.getNest(blockPosition()).stage = 2;
                 worldData.setDirty();
             }

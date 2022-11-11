@@ -1,5 +1,7 @@
 package com.spectrobes.spectrobesmod.common.entities.spectrobes;
 
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.SpectrobeWaterAvoidingRandomFlyingGoal;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.SpectrobeWaterAvoidingRandomStrollGoal;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -45,8 +47,8 @@ public abstract class EntityAvianSpectrobe extends EntitySpectrobe implements Fl
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(6, new WaterAvoidingRandomFlyingGoal(this, 1.2));
-        this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 1.2));
+        this.goalSelector.addGoal(6, new SpectrobeWaterAvoidingRandomFlyingGoal(this, 1.2));
+        this.goalSelector.addGoal(7, new SpectrobeWaterAvoidingRandomStrollGoal(this, 1.2));
     }
 
     @Override

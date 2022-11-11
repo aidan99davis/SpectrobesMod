@@ -2,22 +2,17 @@ package com.spectrobes.spectrobesmod.common.entities.spectrobes;
 
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.AquaticJumpGoal;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.SpectrobeFindWaterGoal;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.SpectrobeRandomSwimmingGoal;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.control.SmoothSwimmingLookControl;
-import net.minecraft.world.entity.ai.control.SmoothSwimmingMoveControl;
-import net.minecraft.world.entity.ai.goal.RandomSwimmingGoal;
 import net.minecraft.world.entity.ai.navigation.AmphibiousPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraft.world.entity.ai.navigation.WaterBoundPathNavigation;
-import net.minecraft.world.entity.animal.Turtle;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.pathfinder.AmphibiousNodeEvaluator;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
-import net.minecraft.world.level.pathfinder.PathFinder;
 
 import java.util.List;
 import java.util.Random;
@@ -56,7 +51,7 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
     protected void registerGoals() {
         super.registerGoals();
 //        this.goalSelector.addGoal(0, new SwimWithPlayerGoal(this, 1.0D));
-        this.goalSelector.addGoal(8, new RandomSwimmingGoal(this, 1D, 10));
+        this.goalSelector.addGoal(8, new SpectrobeRandomSwimmingGoal(this, 1D, 10));
         this.goalSelector.addGoal(4, new SpectrobeFindWaterGoal(this));
         this.goalSelector.addGoal(5, new AquaticJumpGoal(this, 10));
     }

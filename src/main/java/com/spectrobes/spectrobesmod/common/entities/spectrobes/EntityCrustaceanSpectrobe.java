@@ -1,15 +1,14 @@
 package com.spectrobes.spectrobesmod.common.entities.spectrobes;
 
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.SpectrobeFindWaterGoal;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.SpectrobeRandomStrollGoal;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.LookControl;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.RandomSwimmingGoal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
@@ -47,7 +46,7 @@ public abstract class EntityCrustaceanSpectrobe extends EntitySpectrobe {
         super.registerGoals();
         this.goalSelector.addGoal(2, new SpectrobeFindWaterGoal(this));
         this.goalSelector.addGoal(9, new RandomLookAroundGoal(this));
-        this.goalSelector.addGoal(7, new RandomStrollGoal(this, 1));
+        this.goalSelector.addGoal(7, new SpectrobeRandomStrollGoal(this, 1));
         this.goalSelector.addGoal(7, new RandomSwimmingGoal(this, 1, 10));
     }
 
