@@ -1,9 +1,6 @@
 package com.spectrobes.spectrobesmod.common.entities.spectrobes;
 
-import com.spectrobes.spectrobesmod.client.container.PrizmodContainer;
-import com.spectrobes.spectrobesmod.client.container.SpectrobeDetailsContainer;
 import com.spectrobes.spectrobesmod.client.gui.SpectrobeGuiHandler;
-import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.entities.IHasNature;
