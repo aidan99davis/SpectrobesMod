@@ -1,8 +1,10 @@
 package com.spectrobes.spectrobesmod.common.registry.items;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
+import com.spectrobes.spectrobesmod.client.items.healing.renderer.SerumItemRenderer;
 import com.spectrobes.spectrobesmod.common.items.SpectrobesItemGroups;
 import com.spectrobes.spectrobesmod.common.items.tools.PrizmodItem;
+import com.spectrobes.spectrobesmod.common.items.tools.healing.SpectrobeSerumHealingItem;
 import com.spectrobes.spectrobesmod.common.items.weapons.*;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.DeferredRegister;
@@ -31,5 +33,10 @@ public class SpectrobesToolsRegistry {
             ITEMS.register("basic_glove_item",
                     () -> new BasicGloveItem(new Item.Properties()
                             .tab(SpectrobesItemGroups.SpectrobesWeaponsItemGroup.Instance)));
+
+    public static final RegistryObject<SpectrobeSerumHealingItem> basic_serum =
+            ITEMS.register("basic_serum",
+                    () -> new SpectrobeSerumHealingItem(50, 500, 1, new Item.Properties()
+                            .tab(SpectrobesItemGroups.SpectrobesToolsItemGroup.Instance)));
 
 }

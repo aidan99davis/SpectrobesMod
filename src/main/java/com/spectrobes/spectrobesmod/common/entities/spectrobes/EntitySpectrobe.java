@@ -10,10 +10,10 @@ import com.spectrobes.spectrobesmod.common.items.fossils.FossilBlockItem;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
 import com.spectrobes.spectrobesmod.common.items.minerals.SpecialMineralItem;
 import com.spectrobes.spectrobesmod.common.items.tools.PrizmodItem;
+import com.spectrobes.spectrobesmod.common.items.tools.healing.SpectrobeSerumHealingItem;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
-import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobePacketHandler;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.SOpenSpectrobeDetailsScreenPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.CSyncSpectrobeMasterPacket;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSyncSpectrobeMasterPacket;
 import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
@@ -33,7 +33,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
@@ -44,7 +43,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.LeapAtTargetGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -154,6 +152,9 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAd
                     printSpectrobeToChat(player);
                 }
 
+            } else if (itemstack.getItem() instanceof SpectrobeSerumHealingItem serum){
+                healSpectrobe(serum.getSpectrobeHealAmount());
+                itemstack.shrink(1);
             } else if (itemstack.getItem() instanceof MineralItem mineralItem){
                 applyMineral(mineralItem);
                 itemstack.shrink(1);
@@ -172,6 +173,20 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAd
         recentInteract = true;
         ticksTillInteract = 15;
         return super.mobInteract(player, hand);
+    }
+
+    private void healSpectrobe(int spectrobeHealAmount) {
+        if(level.isClientSide()) {
+            if(getOwner() != null) {
+                getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
+                    Spectrobe specData = getSpectrobeData();
+                    specData.addHealth(spectrobeHealAmount);
+                    sm.updateSpectrobe(specData);
+                    SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket(sm));
+                    getOwner().sendSystemMessage(Component.literal("Your spectrobe has been healed: " + spectrobeHealAmount + " HP Points."));
+                });
+            }
+        }
     }
 
     private void cycleState(Player player) {
