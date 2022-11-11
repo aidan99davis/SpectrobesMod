@@ -2,25 +2,22 @@ package com.spectrobes.spectrobesmod.common.entities.spectrobes.aoi;
 
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityAvianSpectrobe;
-import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityMammalSpectrobe;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.items.fossils.FossilBlockItem;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
-import com.spectrobes.spectrobesmod.common.registry.SpectrobesItemsRegistry;
-import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
+import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesFossilsRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
-import net.minecraft.entity.EntityType;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.Level;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
+import software.bernie.geckolib3.core.builder.ILoopType;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 public class EntityAoi extends EntityAvianSpectrobe {
 
-    public EntityAoi(EntityType<EntityAoi> entityTypeIn, World worldIn) {
+    public EntityAoi(EntityType<EntityAoi> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
     }
 
@@ -59,11 +56,11 @@ public class EntityAoi extends EntityAvianSpectrobe {
         if(event.getAnimatable().isOrderedToSit())
         {
             event.getController().setAnimationSpeed(2);
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.aoi.sit", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.aoi.sit", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         } else {
             event.getController().setAnimationSpeed(5);
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.aoi.idle", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.aoi.idle", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         }
 
@@ -71,7 +68,7 @@ public class EntityAoi extends EntityAvianSpectrobe {
 
     @Override
     protected FossilBlockItem getFossil() {
-        return (FossilBlockItem) SpectrobesItemsRegistry.aoi_fossil_item.get();
+        return (FossilBlockItem) SpectrobesFossilsRegistry.aoi_fossil_item.get();
     }
 
     @Override

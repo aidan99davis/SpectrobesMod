@@ -7,25 +7,25 @@ package com.spectrobes.spectrobesmod.client.entity.krawl.model;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityHealingSpore;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityXelles;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
 public class XellesSporeHealModel extends AnimatedGeoModel<EntityHealingSpore> {
 
 	@Override
-	public ResourceLocation getModelLocation(EntityHealingSpore object)
+	public ResourceLocation getModelResource(EntityHealingSpore object)
 	{
 		return new ResourceLocation(SpectrobesInfo.MOD_ID, "geo/xelles_spore_heal.geo.json");
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(EntityHealingSpore object)
+	public ResourceLocation getTextureResource(EntityHealingSpore object)
 	{
 		return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/krawl/xelles_spore_heal.png");
 	}
 
 	@Override
-	public ResourceLocation getAnimationFileLocation(EntityHealingSpore object)
+	public ResourceLocation getAnimationResource(EntityHealingSpore object)
 	{
 		return new ResourceLocation(SpectrobesInfo.MOD_ID, "animations/krawl/xelles_spore_heal.json");
 	}

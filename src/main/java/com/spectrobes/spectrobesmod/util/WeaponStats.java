@@ -8,7 +8,7 @@ public class WeaponStats {
     public int Tier;
     public boolean IsBlaster;
     public boolean IsGlove;
-    public SpectrobeProperties.Nature Nature = SpectrobeProperties.Nature.OTHER;
+    public SpectrobeProperties.Nature Nature;
 
     public WeaponStats(int atkDamage, int speed, int tier, boolean isBlaster, boolean isGlove, SpectrobeProperties.Nature nature) {
         this.AtkDamage = atkDamage;

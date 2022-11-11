@@ -1,22 +1,21 @@
 package com.spectrobes.spectrobesmod.client.entity.spectrobes.renderer;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.model.InkanaModel;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.inkana.EntityInkana;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 import javax.annotation.Nullable;
 
-@OnlyIn(Dist.CLIENT)
 public class InkanaRenderer extends GeoEntityRenderer<EntityInkana> {
 
-    public InkanaRenderer(EntityRendererManager renderManagerIn) {
+    public InkanaRenderer(EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new InkanaModel());
     }
 
@@ -38,8 +37,8 @@ public class InkanaRenderer extends GeoEntityRenderer<EntityInkana> {
     }
 
     @Override
-    public void render(EntityInkana entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
-        matrixStackIn.scale(0.5f, 0.5f, 0.5f);
-        super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
+    public void render(EntityInkana animatable, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+        poseStack.scale(0.5f, 0.5f, 0.5f);
+        super.render(animatable, entityYaw, partialTick, poseStack, bufferSource, packedLight);
     }
 }

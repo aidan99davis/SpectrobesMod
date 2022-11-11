@@ -1,28 +1,24 @@
 package com.spectrobes.spectrobesmod.common.items.minerals;
 
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-import net.minecraft.item.Item.Properties;
-
 public abstract class SpecialMineralItem extends Item {
 
-    public SpecialMineralItem(Properties properties, String registryName) {
+    public SpecialMineralItem(Properties properties) {
         super(properties);
-        setRegistryName(registryName);
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flag) {
 
-        tooltip.add(new StringTextComponent("Effect: " + getMineralEffectDescription()));
+        tooltip.add(Component.literal("Effect: " + getMineralEffectDescription()));
     }
 
     protected abstract String getMineralEffectDescription();

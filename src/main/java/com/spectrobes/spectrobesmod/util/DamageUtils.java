@@ -1,11 +1,10 @@
 package com.spectrobes.spectrobesmod.util;
 
-import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 
 public class DamageUtils {
 
-    public static float getTypeBonus(int advantage, int atkPower) {
+    public static float getTypeBonus(int advantage) {
         float typeBonus;
 
         switch (advantage) {

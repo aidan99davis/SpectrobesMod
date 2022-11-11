@@ -1,17 +1,15 @@
 package com.spectrobes.spectrobesmod.client.items.healing.renderer;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.spectrobes.spectrobesmod.client.items.healing.model.BasicSerumItemModel;
 import com.spectrobes.spectrobesmod.common.items.tools.healing.SpectrobeSerumHealingItem;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import software.bernie.geckolib3.renderers.geo.GeoItemRenderer;
-
-import javax.annotation.Nullable;
 
 @OnlyIn(Dist.CLIENT)
 public class SerumItemRenderer extends GeoItemRenderer<SpectrobeSerumHealingItem> {
@@ -21,8 +19,7 @@ public class SerumItemRenderer extends GeoItemRenderer<SpectrobeSerumHealingItem
     }
 
     @Override
-    public RenderType getRenderType(SpectrobeSerumHealingItem animatable, float partialTicks, MatrixStack stack, @Nullable IRenderTypeBuffer renderTypeBuffer, @Nullable IVertexBuilder vertexBuilder, int packedLightIn, ResourceLocation textureLocation) {
-        return RenderType.entityTranslucent(textureLocation);
-//        return super.getRenderType(animatable, partialTicks, stack, renderTypeBuffer, vertexBuilder, packedLightIn, textureLocation);
+    public RenderType getRenderType(SpectrobeSerumHealingItem animatable, float partialTick, PoseStack poseStack, @org.jetbrains.annotations.Nullable MultiBufferSource bufferSource, @org.jetbrains.annotations.Nullable VertexConsumer buffer, int packedLight, ResourceLocation texture) {
+        return RenderType.entityTranslucent(texture);
     }
 }

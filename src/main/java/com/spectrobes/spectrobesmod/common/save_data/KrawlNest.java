@@ -1,8 +1,8 @@
 package com.spectrobes.spectrobesmod.common.save_data;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraftforge.common.util.INBTSerializable;
 
 public class KrawlNest implements INBTSerializable {
@@ -35,8 +35,8 @@ public class KrawlNest implements INBTSerializable {
     }
 
     @Override
-    public INBT serializeNBT() {
-        CompoundNBT nbtObj = new CompoundNBT();
+    public Tag serializeNBT() {
+        CompoundTag nbtObj = new CompoundTag();
         nbtObj.putString("dimension", dimension);
         nbtObj.putInt("stage", stage);
         nbtObj.putInt("position_x", position.getX());
@@ -48,14 +48,14 @@ public class KrawlNest implements INBTSerializable {
     }
 
     @Override
-    public void deserializeNBT(INBT nbt) {
-        dimension = ((CompoundNBT)nbt).getString("dimension");
-        stage = ((CompoundNBT)nbt).getInt("stage");
-        vortex_absorbed = ((CompoundNBT)nbt).getInt("vortex_absorbed");
-        alive = ((CompoundNBT)nbt).getBoolean("alive");
-        int position_x = ((CompoundNBT)nbt).getInt("position_x");
-        int position_y = ((CompoundNBT)nbt).getInt("position_y");
-        int position_z = ((CompoundNBT)nbt).getInt("position_z");
+    public void deserializeNBT(Tag nbt) {
+        dimension = ((CompoundTag)nbt).getString("dimension");
+        stage = ((CompoundTag)nbt).getInt("stage");
+        vortex_absorbed = ((CompoundTag)nbt).getInt("vortex_absorbed");
+        alive = ((CompoundTag)nbt).getBoolean("alive");
+        int position_x = ((CompoundTag)nbt).getInt("position_x");
+        int position_y = ((CompoundTag)nbt).getInt("position_y");
+        int position_z = ((CompoundTag)nbt).getInt("position_z");
         position = new BlockPos(position_x, position_y, position_z);
     }
 

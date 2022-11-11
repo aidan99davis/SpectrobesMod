@@ -4,30 +4,32 @@ import com.spectrobes.spectrobesmod.common.entities.krawl.goals.AttackSpectrobeG
 import com.spectrobes.spectrobesmod.common.entities.krawl.goals.AttackSpectrobeMasterGoal;
 import com.spectrobes.spectrobesmod.common.entities.krawl.goals.KrawlVortexFormXellesGoal;
 import com.spectrobes.spectrobesmod.common.entities.krawl.goals.SpawnWaveGoal;
-import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
 import com.spectrobes.spectrobesmod.common.items.minerals.Mineral;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import com.spectrobes.spectrobesmod.common.registry.KrawlRegistry;
+import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesMineralsRegistry;
 import com.spectrobes.spectrobesmod.common.save_data.SpectrobesWorldSaveData;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ILivingEntityData;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.goal.FleeSunGoal;
-import net.minecraft.entity.ai.goal.RandomWalkingGoal;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
+import net.minecraft.data.worldgen.features.VegetationFeatures;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.IServerWorld;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.ai.goal.FleeSunGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biomes;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
@@ -39,17 +41,17 @@ import java.util.List;
 import java.util.Random;
 
 public class EntityVortex extends EntityKrawl {
-    private static final DataParameter<Integer> WAVES_REMAINING =
-            EntityDataManager.defineId(EntityKrawl.class,
-                    DataSerializers.INT);
+    private static final EntityDataAccessor<Integer> WAVES_REMAINING =
+            SynchedEntityData.defineId(EntityKrawl.class,
+                    EntityDataSerializers.INT);
 
-    private static final DataParameter<Integer> AGE_IN_TICKS =
-            EntityDataManager.defineId(EntityKrawl.class,
-                    DataSerializers.INT);
+    private static final EntityDataAccessor<Integer> AGE_IN_TICKS =
+            SynchedEntityData.defineId(EntityKrawl.class,
+                    EntityDataSerializers.INT);
 
     private final List<EntityKrawl> children;
 
-    public EntityVortex(EntityType<? extends MonsterEntity> type, World worldIn) {
+    public EntityVortex(EntityType<? extends Monster> type, Level worldIn) {
         super(type, worldIn);
         children = new ArrayList<>();
     }
@@ -60,7 +62,7 @@ public class EntityVortex extends EntityKrawl {
         this.goalSelector.addGoal(0, new AttackSpectrobeGoal(this, true, true));
         this.goalSelector.addGoal(1, new SpawnWaveGoal(this));
         this.goalSelector.addGoal(1, new KrawlVortexFormXellesGoal(this));
-        this.goalSelector.addGoal(2, new RandomWalkingGoal(this, 0.5d));
+        this.goalSelector.addGoal(2, new RandomStrollGoal(this, 0.5d));
         this.goalSelector.addGoal(3, new FleeSunGoal(this, 1.0D));
     }
 
@@ -74,7 +76,7 @@ public class EntityVortex extends EntityKrawl {
     @Override
     public boolean isPersistenceRequired() {
         if(!level.isClientSide()) {
-            SpectrobesWorldSaveData worldData = (SpectrobesWorldSaveData.getWorldData((ServerWorld) level));
+            SpectrobesWorldSaveData worldData = (SpectrobesWorldSaveData.getWorldData((ServerLevel) level));
             return worldData.canSpawnNest(blockPosition());
         }
         return super.isPersistenceRequired();
@@ -89,7 +91,7 @@ public class EntityVortex extends EntityKrawl {
     public void tick() {
         super.tick();
 
-        if(this.isOnFire()) this.remove();
+        if(this.isOnFire()) this.remove(RemovalReason.KILLED);
 
         entityData.set(AGE_IN_TICKS, entityData.get(AGE_IN_TICKS) + 1);
     }
@@ -121,50 +123,38 @@ public class EntityVortex extends EntityKrawl {
         return true;
     }
 
+
+
     @Nullable
     @Override
-    public ILivingEntityData finalizeSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
         calculateKrawlWaves();
         setNatureByBiome();
         return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
 
     private void setNatureByBiome() {
-        SpectrobeProperties.Nature nature = SpectrobeProperties.Nature.OTHER;
+        List<SpectrobeProperties.Nature> possibleNatures = new ArrayList<>();
+        Biome biome = level.getBiome(blockPosition()).value();
 
-        Biome.Category cat = level.getBiome(blockPosition()).getBiomeCategory();
-
-        switch (cat) {
-            //FLASH
-            case TAIGA:
-            case OCEAN:
-            case ICY:
-            case BEACH:
-            case RIVER:
-            case SWAMP:
-                nature = SpectrobeProperties.Nature.FLASH;
-                break;
-            //CORONA
-            case MESA:
-            case DESERT:
-            case NETHER:
-            case SAVANNA:
-                nature = SpectrobeProperties.Nature.CORONA;
-                break;
-            //AURORA
-            case FOREST:
-            case JUNGLE:
-            case PLAINS:
-            case MUSHROOM:
-            case EXTREME_HILLS:
-                nature = SpectrobeProperties.Nature.AURORA;
-                break;
-            //OTHER
-            case THEEND:
-            case NONE:
-                nature = SpectrobeProperties.Nature.OTHER;
-                break;
+        if(biome.getPrecipitation().equals(Biome.Precipitation.RAIN)
+                || biome.getPrecipitation().equals(Biome.Precipitation.SNOW)) {
+            possibleNatures.add(SpectrobeProperties.Nature.FLASH);
         }
+        if(biome.getBaseTemperature() >= 0.5f
+                || biome.getPrecipitation().equals(Biome.Precipitation.NONE)
+                || biome.warmEnoughToRain(getOnPos())
+                || biome.shouldSnowGolemBurn(getOnPos())) {
+            possibleNatures.add(SpectrobeProperties.Nature.CORONA);
+        }
+        if(biome.getGenerationSettings().getFlowerFeatures().size() > 0) {
+            possibleNatures.add(SpectrobeProperties.Nature.AURORA);
+        }
+
+        possibleNatures.add(SpectrobeProperties.Nature.OTHER);
+
+        SpectrobeProperties.Nature nature = possibleNatures.get(random.nextInt(possibleNatures.size()));
+        //TODO: MAKE SURE THIS STILL WORKS
 
         krawlProperties.setNature(nature);
     }
@@ -214,7 +204,7 @@ public class EntityVortex extends EntityKrawl {
                 break;
         }
 
-        ItemStack mineralStack = SpectrobesItems.getRandomMineral(rarity);
+        ItemStack mineralStack = SpectrobesMineralsRegistry.getRandomMineral(rarity);
         if(rarity != Mineral.MineralRarity.Rare) {
             int mineralCount = random.nextInt(3);
             mineralStack.grow(mineralCount);

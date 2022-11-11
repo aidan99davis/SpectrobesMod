@@ -5,19 +5,19 @@ import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityMammalSpect
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.items.fossils.FossilBlockItem;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
-import com.spectrobes.spectrobesmod.common.registry.SpectrobesItemsRegistry;
-import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
+import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesFossilsRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
-import net.minecraft.entity.EntityType;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.Level;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.builder.ILoopType;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 public class EntityMasetto extends EntityMammalSpectrobe {
 
-    public EntityMasetto(EntityType<EntityMasetto> entityTypeIn, World worldIn) {
+    public EntityMasetto(EntityType<EntityMasetto> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
     }
 
@@ -49,16 +49,16 @@ public class EntityMasetto extends EntityMammalSpectrobe {
     public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event) {
         if(event.isMoving())
         {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.Masetto.walk", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.Masetto.walk", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         }
         else if(event.getAnimatable().isOrderedToSit()) {
             event.getController().setAnimation(new AnimationBuilder()
-                    .addAnimation("animation.Masetto.sitting", false)
-                    .addAnimation("animation.Masetto.sit", true));
+                    .addAnimation("animation.Masetto.sitting")
+                    .addAnimation("animation.Masetto.sit", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         } else {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.Masetto.idle", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.Masetto.idle", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         }
     }
@@ -71,7 +71,7 @@ public class EntityMasetto extends EntityMammalSpectrobe {
 
     @Override
     protected FossilBlockItem getFossil() {
-        return (FossilBlockItem) SpectrobesItemsRegistry.masetto_fossil_item.get().getItem();
+        return (FossilBlockItem) SpectrobesFossilsRegistry.masetto_fossil_item.get();
     }
 
     @Override

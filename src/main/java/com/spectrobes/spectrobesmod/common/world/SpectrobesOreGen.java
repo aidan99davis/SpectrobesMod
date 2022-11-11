@@ -1,78 +1,122 @@
 package com.spectrobes.spectrobesmod.common.world;
 
+import com.google.common.base.Suppliers;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.common.registry.SpectrobesBlocks;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.WorldGenRegistries;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.GenerationStage;
-import net.minecraft.world.gen.feature.*;
-import net.minecraftforge.common.world.BiomeGenerationSettingsBuilder;
-import net.minecraftforge.event.world.BiomeLoadingEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesBlocks;
+import net.minecraft.core.Registry;
+import net.minecraft.data.worldgen.features.OreFeatures;
+import net.minecraft.world.level.levelgen.VerticalAnchor;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
+import net.minecraft.world.level.levelgen.placement.*;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
 
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(modid = SpectrobesInfo.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class SpectrobesOreGen {
+    public static final DeferredRegister<ConfiguredFeature<?,?>> CONFIGURED_FEATURES
+            = DeferredRegister.create(Registry.CONFIGURED_FEATURE_REGISTRY, SpectrobesInfo.MOD_ID);
+    public static final DeferredRegister<PlacedFeature> PLACED_FEATURES
+            = DeferredRegister.create(Registry.PLACED_FEATURE_REGISTRY, SpectrobesInfo.MOD_ID);
 
-    static Registry<ConfiguredFeature<?, ?>> registry = WorldGenRegistries.CONFIGURED_FEATURE;
-    private static final ArrayList<ConfiguredFeature<?, ?>> overworldOres = new ArrayList<>();
-    private static final ArrayList<ConfiguredFeature<?, ?>> netherOres = new ArrayList<>();
-    private static final ArrayList<ConfiguredFeature<?, ?>> endOres = new ArrayList<>();
+    //Configured Features
+    public static final Supplier<List<OreConfiguration.TargetBlockState>> OWERWORLD_FOSSIL_ORES
+            = Suppliers.memoize(() -> Arrays.asList(
+                    OreConfiguration.target(OreFeatures.STONE_ORE_REPLACEABLES,
+                            SpectrobesBlocks.fossil_block.get().defaultBlockState()),
+                    OreConfiguration.target(OreFeatures.DEEPSLATE_ORE_REPLACEABLES,
+                            SpectrobesBlocks.fossil_block.get().defaultBlockState()))); //TODO Add DeepSlate fossil block variant
 
-    public static void registerOres(){
-        //Overworld Ore Register
-        overworldOres.add(register("mineral_ore", Feature.ORE.configured(new OreFeatureConfig(
-                OreFeatureConfig.FillerBlockType.NATURAL_STONE, SpectrobesBlocks.mineral_block.get().defaultBlockState(), 5))
-                .range(180).squared()
-                .count(128)));
+    public static final Supplier<List<OreConfiguration.TargetBlockState>> OWERWORLD_MINERAL_ORES
+            = Suppliers.memoize(() -> Arrays.asList(
+            OreConfiguration.target(OreFeatures.STONE_ORE_REPLACEABLES,
+                    SpectrobesBlocks.mineral_block.get().defaultBlockState()),
+            OreConfiguration.target(OreFeatures.DEEPSLATE_ORE_REPLACEABLES,
+                    SpectrobesBlocks.mineral_block.get().defaultBlockState()))); //TODO Add DeepSlate mineral block variant
 
-        overworldOres.add(register("fossil_ore", Feature.ORE.configured(new OreFeatureConfig(
-                OreFeatureConfig.FillerBlockType.NATURAL_STONE, SpectrobesBlocks.fossil_block.get().defaultBlockState(), 3)) //Vein Size
-                .range(180).squared()
-                .count(128)));
-        
-        overworldOres.add(register("metalium_ore", Feature.ORE.configured(new OreFeatureConfig(
-        		OreFeatureConfig.FillerBlockType.NATURAL_STONE, SpectrobesBlocks.metalium_ore.get().defaultBlockState(), 4))
-                .range(16)
-                .squared()).count(2));
-        
-        overworldOres.add(register("titanium_ore", Feature.ORE.configured(new OreFeatureConfig(
-        		OreFeatureConfig.FillerBlockType.NATURAL_STONE, SpectrobesBlocks.titanium_ore.get().defaultBlockState(), 4))
-                .range(16)
-                .squared()).count(2));
-        
-        overworldOres.add(register("marble_ore", Feature.ORE.configured(new OreFeatureConfig(
-        		OreFeatureConfig.FillerBlockType.NATURAL_STONE, SpectrobesBlocks.marble_ore.get().defaultBlockState(), 4))
-                .range(16)
-                .squared()).count(2));
+    public static final Supplier<List<OreConfiguration.TargetBlockState>> OWERWORLD_METALIUM_ORES
+            = Suppliers.memoize(() -> Arrays.asList(
+            OreConfiguration.target(OreFeatures.STONE_ORE_REPLACEABLES,
+                    SpectrobesBlocks.metalium_ore.get().defaultBlockState()),
+            OreConfiguration.target(OreFeatures.DEEPSLATE_ORE_REPLACEABLES,
+                    SpectrobesBlocks.metalium_ore.get().defaultBlockState()))); //TODO Add DeepSlate metalium ore block variant
 
+    public static final Supplier<List<OreConfiguration.TargetBlockState>> OWERWORLD_TITANIUM_ORES
+            = Suppliers.memoize(() -> Arrays.asList(
+            OreConfiguration.target(OreFeatures.STONE_ORE_REPLACEABLES,
+                    SpectrobesBlocks.titanium_ore.get().defaultBlockState()),
+            OreConfiguration.target(OreFeatures.DEEPSLATE_ORE_REPLACEABLES,
+                    SpectrobesBlocks.titanium_ore.get().defaultBlockState()))); //TODO Add DeepSlate titanium ore block variant
+
+    public static final Supplier<List<OreConfiguration.TargetBlockState>> OWERWORLD_MARBLE_ORES
+            = Suppliers.memoize(() -> Arrays.asList(
+            OreConfiguration.target(OreFeatures.STONE_ORE_REPLACEABLES,
+                    SpectrobesBlocks.marble_ore.get().defaultBlockState()),
+            OreConfiguration.target(OreFeatures.DEEPSLATE_ORE_REPLACEABLES,
+                    SpectrobesBlocks.marble_ore.get().defaultBlockState()))); //TODO Add DeepSlate marble ore block variant
+
+    public static final RegistryObject<ConfiguredFeature<?,?>> FOSSIL_ORES = CONFIGURED_FEATURES.register("fossil_ore",
+            () -> new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(OWERWORLD_FOSSIL_ORES.get(), 3)));
+
+    public static final RegistryObject<ConfiguredFeature<?,?>> MINERAL_ORES = CONFIGURED_FEATURES.register("mineral_ore",
+            () -> new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(OWERWORLD_MINERAL_ORES.get(), 12)));
+
+    public static final RegistryObject<ConfiguredFeature<?,?>> METALIUM_ORES = CONFIGURED_FEATURES.register("metalium_ore",
+            () -> new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(OWERWORLD_METALIUM_ORES.get(), 3, 0.5f)));
+
+    public static final RegistryObject<ConfiguredFeature<?,?>> TITANIUM_ORES = CONFIGURED_FEATURES.register("titanium_ore",
+            () -> new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(OWERWORLD_TITANIUM_ORES.get(), 3, 0.5f)));
+
+    public static final RegistryObject<ConfiguredFeature<?,?>> MARBLE_ORES = CONFIGURED_FEATURES.register("marble_ore",
+            () -> new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(OWERWORLD_MARBLE_ORES.get(), 3, 0.5f)));
+
+    //Placed Features
+    public static final RegistryObject<PlacedFeature> FOSSIL_ORE_PLACED
+            = PLACED_FEATURES.register("fossil_ore_placed",
+            () -> new PlacedFeature(FOSSIL_ORES.getHolder().get(),
+                    commonOrePlacement(8,
+                            HeightRangePlacement.triangle(VerticalAnchor.absolute(-16),
+                                    VerticalAnchor.absolute(112)))));
+    public static final RegistryObject<PlacedFeature> MINERAL_ORE_PLACED
+            = PLACED_FEATURES.register("mineral_ore_placed",
+            () -> new PlacedFeature(MINERAL_ORES.getHolder().get(),
+                    commonOrePlacement(16,
+                            HeightRangePlacement.triangle(VerticalAnchor.absolute(-16),
+                                    VerticalAnchor.absolute(112)))));
+    public static final RegistryObject<PlacedFeature> METALIUM_ORE_PLACED
+            = PLACED_FEATURES.register("metalium_ore_placed",
+            () -> new PlacedFeature(METALIUM_ORES.getHolder().get(),
+                    commonOrePlacement(2,
+                            HeightRangePlacement.triangle(VerticalAnchor.absolute(-32),
+                                    VerticalAnchor.absolute(32)))));
+    public static final RegistryObject<PlacedFeature> TITANIUM_ORE_PLACED
+            = PLACED_FEATURES.register("titanium_ore_placed",
+            () -> new PlacedFeature(TITANIUM_ORES.getHolder().get(),
+                    commonOrePlacement(2,
+                            HeightRangePlacement.triangle(VerticalAnchor.absolute(-32),
+                                    VerticalAnchor.absolute(32)))));
+    public static final RegistryObject<PlacedFeature> MARBLE_ORE_PLACED
+            = PLACED_FEATURES.register("marble_ore_placed",
+            () -> new PlacedFeature(MARBLE_ORES.getHolder().get(),
+                    commonOrePlacement(2,
+                            HeightRangePlacement.triangle(VerticalAnchor.absolute(-32),
+                                    VerticalAnchor.absolute(32)))));
+
+    private static List<PlacementModifier> orePlacement(PlacementModifier p_195347_, PlacementModifier p_195348_) {
+        return Arrays.asList(p_195347_, InSquarePlacement.spread(), p_195348_, BiomeFilter.biome());
     }
 
-    @SubscribeEvent
-    public void gen(BiomeLoadingEvent event) {
-        BiomeGenerationSettingsBuilder generation = event.getGeneration();
-        if(event.getCategory().equals(Biome.Category.NETHER)){
-            for(ConfiguredFeature<?, ?> ore : netherOres){
-                if (ore != null) generation.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, ore);
-            }
-        } else if(event.getCategory().equals(Biome.Category.THEEND)){
-            for(ConfiguredFeature<?, ?> ore : endOres){
-                if (ore != null) generation.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, ore);
-            }
-        } else {
-            for(ConfiguredFeature<?, ?> ore : overworldOres){
-                if (ore != null) {
-                    generation.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, ore);
-                }
-            }
-        }
+    private static List<PlacementModifier> commonOrePlacement(int pCount, PlacementModifier pHeightRange) {
+        return orePlacement(CountPlacement.of(pCount), pHeightRange);
     }
 
-    private static <FC extends IFeatureConfig> ConfiguredFeature<FC, ?> register(String name, ConfiguredFeature<FC, ?> configuredFeature) {
-        return Registry.register(registry, SpectrobesInfo.MOD_ID + ":" + name, configuredFeature);
+    private static List<PlacementModifier> rareOrePlacement(int pChance, PlacementModifier pHeightRange) {
+        return orePlacement(RarityFilter.onAverageOnceEvery(pChance), pHeightRange);
     }
-
 }

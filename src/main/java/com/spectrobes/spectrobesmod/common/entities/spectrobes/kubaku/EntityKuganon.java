@@ -5,19 +5,19 @@ import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityMammalSpect
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.items.fossils.FossilBlockItem;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
-import com.spectrobes.spectrobesmod.common.registry.SpectrobesItemsRegistry;
-import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
+import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesFossilsRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
-import net.minecraft.entity.EntityType;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.Level;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.builder.ILoopType;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 public class EntityKuganon extends EntityMammalSpectrobe {
 
-    public EntityKuganon(EntityType<EntityKuganon> entityTypeIn, World worldIn) {
+    public EntityKuganon(EntityType<EntityKuganon> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
     }
 
@@ -56,11 +56,11 @@ public class EntityKuganon extends EntityMammalSpectrobe {
         moveAnimationController.transitionLengthTicks = 2;
         if(event.isMoving())
         {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.kuganon.walk", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.kuganon.walk", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         } else {
             if(this.IsAttacking()) {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.kuganon.attack", true));
+                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.kuganon.attack", ILoopType.EDefaultLoopTypes.LOOP));
                 return PlayState.CONTINUE;
             }
         }
@@ -69,7 +69,7 @@ public class EntityKuganon extends EntityMammalSpectrobe {
 
     @Override
     protected FossilBlockItem getFossil() {
-        return (FossilBlockItem) SpectrobesItemsRegistry.kubaku_fossil_item.get().getItem();
+        return (FossilBlockItem) SpectrobesFossilsRegistry.kubaku_fossil_item.get();
     }
 
     @Override

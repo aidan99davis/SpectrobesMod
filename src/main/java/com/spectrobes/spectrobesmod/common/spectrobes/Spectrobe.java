@@ -5,10 +5,10 @@ import com.spectrobes.spectrobesmod.common.entities.IHasNature;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralProperties;
 import com.spectrobes.spectrobesmod.common.registry.IconRegistry;
 import com.spectrobes.spectrobesmod.util.SpectrobeBuilder;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.IDataSerializer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.syncher.EntityDataSerializer;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import org.apache.logging.log4j.core.config.plugins.validation.constraints.Required;
 import org.apache.logging.log4j.core.util.UuidUtil;
 
@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
 import java.util.UUID;
 
 public class Spectrobe {
-    public static final IDataSerializer<Spectrobe> SpectrobeSerializer = new SpectrobeSerializer().init();
+    public static final EntityDataSerializer<Spectrobe> SpectrobeSerializer = new SpectrobeSerializer().init();
     @Nullable
     public UUID MasterUUID;
 
@@ -99,6 +99,7 @@ public class Spectrobe {
         this.name = evolution.name;
         this.properties = evolution.properties;
         this.stats.setStatsOrBase(evolution.stats);
+        this.stats.resetMineralsEaten();
         this.evolutionRequirements = evolution.evolutionRequirements;
         this.currentHealth = this.stats.getHpLevel();
     }
@@ -108,8 +109,8 @@ public class Spectrobe {
         this.setCurrentHealth(currentHealth + properties.getHpOffset());
     }
 
-    public CompoundNBT write() {
-        CompoundNBT compoundnbt = new CompoundNBT();
+    public CompoundTag write() {
+        CompoundTag compoundnbt = new CompoundTag();
         compoundnbt.putString("name", name);
         compoundnbt.putString("custom_name", custom_name);
         compoundnbt.putInt("currentHealth", currentHealth);
@@ -126,7 +127,7 @@ public class Spectrobe {
 
         return compoundnbt;
     }
-    public static Spectrobe read(CompoundNBT nbtData) {
+    public static Spectrobe read(CompoundTag nbtData) {
         Spectrobe s = new Spectrobe();
         try {
             s.SpectrobeUUID = nbtData.getUUID("SpectrobeUUID");
@@ -152,10 +153,10 @@ public class Spectrobe {
         }
 
         s.active = nbtData.getBoolean("active");
-        s.properties = SpectrobeProperties.read(((CompoundNBT) nbtData.get("SpectrobeProperties")));
+        s.properties = SpectrobeProperties.read(((CompoundTag) nbtData.get("SpectrobeProperties")));
 
-        s.stats = SpectrobeStats.read((CompoundNBT) nbtData.get("SpectrobeStats"));
-        s.evolutionRequirements = EvolutionRequirements.read((CompoundNBT) nbtData.get("EvolutionRequirements"));
+        s.stats = SpectrobeStats.read((CompoundTag) nbtData.get("SpectrobeStats"));
+        s.evolutionRequirements = EvolutionRequirements.read((CompoundTag) nbtData.get("EvolutionRequirements"));
         try {
             s.currentHealth = nbtData.getInt("currentHealth");
         } catch(NullPointerException ex) {
@@ -237,15 +238,15 @@ public class Spectrobe {
         }
     }
 
-    public static class SpectrobeSerializer implements IDataSerializer<Spectrobe> {
+    public static class SpectrobeSerializer implements EntityDataSerializer<Spectrobe> {
 
         @Override
-        public void write(PacketBuffer buf, Spectrobe value) {
+        public void write(FriendlyByteBuf buf, Spectrobe value) {
             buf.writeNbt(value.write());
         }
 
         @Override
-        public Spectrobe read(PacketBuffer buf) {
+        public Spectrobe read(FriendlyByteBuf buf) {
             return Spectrobe.read(buf.readNbt());
         }
 
@@ -254,10 +255,10 @@ public class Spectrobe {
             return value.copy(true);
         }
 
-        public IDataSerializer<Spectrobe> init() {
-            if(DataSerializers.getSerializer(DataSerializers.getSerializedId(this)) == null) {
+        public EntityDataSerializer<Spectrobe> init() {
+            if(EntityDataSerializers.getSerializer(EntityDataSerializers.getSerializedId(this)) == null) {
                 SpectrobesInfo.LOGGER.info("Registering serializer");
-                DataSerializers.registerSerializer(this);
+                EntityDataSerializers.registerSerializer(this);
             }
             return this;
         }

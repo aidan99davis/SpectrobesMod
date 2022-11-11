@@ -3,8 +3,8 @@ package com.spectrobes.spectrobesmod.common.entities.krawl.goals;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.goal.TargetGoal;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ public class AttackSpectrobeGoal extends TargetGoal {
     boolean tryKill;
 
 
-    public AttackSpectrobeGoal(MobEntity mobIn, boolean checkSight, boolean toKill) {
+    public AttackSpectrobeGoal(Mob mobIn, boolean checkSight, boolean toKill) {
         super(mobIn, checkSight, false);
         tryKill = toKill;
     }

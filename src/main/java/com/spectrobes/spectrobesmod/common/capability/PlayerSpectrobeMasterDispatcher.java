@@ -1,7 +1,7 @@
 package com.spectrobes.spectrobesmod.common.capability;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
@@ -9,7 +9,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class PlayerSpectrobeMasterDispatcher implements ICapabilitySerializable<CompoundNBT> {
+public class PlayerSpectrobeMasterDispatcher implements ICapabilitySerializable<CompoundTag> {
 
     private final PlayerSpectrobeMaster playerSpectrobeMaster = new PlayerSpectrobeMaster();
 
@@ -23,12 +23,12 @@ public class PlayerSpectrobeMasterDispatcher implements ICapabilitySerializable<
     }
 
     @Override
-    public CompoundNBT serializeNBT() {
+    public CompoundTag serializeNBT() {
         return playerSpectrobeMaster.serializeNBT();
     }
 
     @Override
-    public void deserializeNBT(CompoundNBT nbt) {
+    public void deserializeNBT(CompoundTag nbt) {
         playerSpectrobeMaster.deserializeNBT(nbt);
     }
 }

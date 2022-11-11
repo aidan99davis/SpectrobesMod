@@ -1,25 +1,24 @@
 package com.spectrobes.spectrobesmod.client.items.model;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.common.items.fossils.KubakuFossilItem;
 import com.spectrobes.spectrobesmod.common.items.fossils.NaguFossilItem;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
 public class NaguFossilItemModel extends AnimatedGeoModel<NaguFossilItem> {
 
     @Override
-    public ResourceLocation getModelLocation(NaguFossilItem grildaFossilBlock) {
+    public ResourceLocation getModelResource(NaguFossilItem grildaFossilBlock) {
         return new ResourceLocation(SpectrobesInfo.MOD_ID, "geo/blocks/nagu.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureLocation(NaguFossilItem grildaFossilBlock) {
+    public ResourceLocation getTextureResource(NaguFossilItem grildaFossilBlock) {
         return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/blocks/fossil.png");
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(NaguFossilItem grildaFossilBlock) {
+    public ResourceLocation getAnimationResource(NaguFossilItem grildaFossilBlock) {
         return null;
     }
 }

@@ -1,87 +1,62 @@
 package com.spectrobes.spectrobesmod.common.blocks;
 
-import com.spectrobes.spectrobesmod.common.registry.SpectrobesItemsRegistry;
-import com.spectrobes.spectrobesmod.common.registry.SpectrobesTileRegistry;
+import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesFossilsRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.Vec3;
 
-import net.minecraft.loot.LootParameters;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraftforge.common.ToolType;
-
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class FossilBlock extends SpectrobesBlock {
     private static final Properties props = Properties.of(Material.STONE)
-            .harvestTool(ToolType.PICKAXE)
+            .requiresCorrectToolForDrops()
             .strength(1.5f)
-            .sound(SoundType.STONE)
-            .harvestLevel(2);
+            .sound(SoundType.STONE);
 
     public FossilBlock() {
         super(props);
     }
 
-    @Override
-    public boolean hasTileEntity(BlockState state)
-    {
-        return true;
-    }
-
-    @Nullable
-    @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world)
-    {
-        return SpectrobesTileRegistry.FOSSIL_TILE.get().create();
-    }
-
     @SuppressWarnings({"deprecation"})
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-        Vector3d vec = builder.getParameter(LootParameters.ORIGIN);
-        World level = builder.getParameter(LootParameters.BLOCK_ENTITY).getLevel();
+        Vec3 vec = builder.getParameter(LootContextParams.ORIGIN);
+        Level level = builder.getParameter(LootContextParams.THIS_ENTITY).getLevel();
 
         assert level != null;
-        Biome biome = level.getBiome(new BlockPos(vec.x, vec.y, vec.z));
+        BlockPos blockPos = new BlockPos(vec.x, vec.y, vec.z);
+        Biome biome = level.getBiome(blockPos).get();
 
-        ItemStack fossilItem;
-        switch (biome.getBiomeCategory()) {
-            case OCEAN:
-            case BEACH:
-            case RIVER:
-            case SWAMP:
-            case ICY:
-                fossilItem = SpectrobesItemsRegistry.getRandomFossil(SpectrobeProperties.Nature.FLASH);
-                break;
-            case DESERT:
-            case MESA:
-            case SAVANNA:
-            case EXTREME_HILLS:
-                fossilItem = SpectrobesItemsRegistry.getRandomFossil(SpectrobeProperties.Nature.CORONA);
-                break;
-            case FOREST:
-            case PLAINS:
-            case TAIGA:
-            case MUSHROOM:
-            case JUNGLE:
-                fossilItem = SpectrobesItemsRegistry.getRandomFossil(SpectrobeProperties.Nature.AURORA);
-                break;
-            default:
-                fossilItem = SpectrobesItemsRegistry.getRandomFossil();
-                break;
+        List<SpectrobeProperties.Nature> possibleNatures = new ArrayList<>();
+        if(biome.getPrecipitation().equals(Biome.Precipitation.RAIN)
+                || biome.getPrecipitation().equals(Biome.Precipitation.SNOW)) {
+            possibleNatures.add(SpectrobeProperties.Nature.FLASH);
+        }
+        if(biome.getBaseTemperature() >= 0.5f
+                || biome.getPrecipitation().equals(Biome.Precipitation.NONE)
+                || biome.warmEnoughToRain(blockPos)
+                || biome.shouldSnowGolemBurn(blockPos)) {
+            possibleNatures.add(SpectrobeProperties.Nature.CORONA);
+        }
+        if(biome.getGenerationSettings().getFlowerFeatures().size() > 0) {
+            possibleNatures.add(SpectrobeProperties.Nature.AURORA);
         }
 
+        possibleNatures.add(SpectrobeProperties.Nature.OTHER);
+
+        SpectrobeProperties.Nature nature = possibleNatures.get(new Random().nextInt(possibleNatures.size()));
+
+        ItemStack fossilItem = SpectrobesFossilsRegistry.getRandomFossil(nature);
         ArrayList<ItemStack> fossil = new ArrayList<>();
         fossil.add(fossilItem);
 

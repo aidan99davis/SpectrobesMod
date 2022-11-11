@@ -2,9 +2,9 @@ package com.spectrobes.spectrobesmod.common.entities.spectrobes.goals;
 
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
-import net.minecraft.block.Block;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.level.block.Block;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,11 +41,11 @@ public class ChildFormSearchGoal extends Goal {
 
         blocks.forEach((pos) -> {
             Block block = entity.level.getBlockState(pos).getBlock();
-            if(block.getRegistryName().toString().contains("mineral_block")
-                    || block.getRegistryName().toString().contains("fossil_block")
-                    || block.getRegistryName().toString().contains("marble_ore")
-                    || block.getRegistryName().toString().contains("metalium_ore")
-                    || block.getRegistryName().toString().contains("titanium_ore")) {
+            if(block.getName().toString().contains("mineral_block")
+                    || block.getName().toString().contains("fossil_block")
+                    || block.getName().toString().contains("marble_ore")
+                    || block.getName().toString().contains("metalium_ore")
+                    || block.getName().toString().contains("titanium_ore")) {
                 mineralBlocks.add(pos.immutable());
             }
         });

@@ -1,19 +1,19 @@
 package com.spectrobes.spectrobesmod.common.entities.krawl.goals;
 
-import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityVortex;
 import com.spectrobes.spectrobesmod.common.save_data.KrawlNest;
 import com.spectrobes.spectrobesmod.common.save_data.SpectrobesWorldSaveData;
 import com.spectrobes.spectrobesmod.common.world.structures.krawl_nest.WorldGenKrawlNest;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.gen.feature.NoFeatureConfig;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.levelgen.LegacyRandomSource;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 public class KrawlVortexFormXellesGoal extends Goal {
@@ -26,7 +26,7 @@ public class KrawlVortexFormXellesGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        SpectrobesWorldSaveData worldData = (SpectrobesWorldSaveData.getWorldData((ServerWorld) vortex.level));
+        SpectrobesWorldSaveData worldData = (SpectrobesWorldSaveData.getWorldData((ServerLevel) vortex.level));
 
         return vortex.getAge() >= 1 //TODO: Make this configurable
                 && ((worldData.canSpawnNest((vortex.blockPosition()))
@@ -46,21 +46,19 @@ public class KrawlVortexFormXellesGoal extends Goal {
                 int extraVortexes = nestingVortexes.size() - 3;
                 //delete the vortexes.
                 BlockPos vortexPos = vortex.blockPosition();
-                IWorld level = vortex.level;
-                WorldGenKrawlNest nestGen = new WorldGenKrawlNest(NoFeatureConfig.CODEC);
-                if (!level.isClientSide() && level instanceof ServerWorld) {
-                    if(SpectrobesWorldSaveData.getWorldData((ServerWorld) level).canSpawnNest((vortexPos))) {
+                Level level = vortex.level;
+                WorldGenKrawlNest nestGen = new WorldGenKrawlNest(NoneFeatureConfiguration.CODEC);
+                if (!level.isClientSide() && level instanceof ServerLevel) {
+                    if(SpectrobesWorldSaveData.getWorldData((ServerLevel) level).canSpawnNest((vortexPos))) {
 
-                        nestingVortexes.forEach(entityVortex -> entityVortex.remove());
+                        nestingVortexes.forEach(entityVortex -> entityVortex.remove(Entity.RemovalReason.DISCARDED));
                         if(vortexPos.getY() < 10) vortexPos.offset(0, 10 - vortexPos.getY(), 0);
-                        nestGen.placeSmallGen((ServerWorld) level, new Random(), vortexPos);
+                        nestGen.placeSmallGen((ServerLevel) level, new LegacyRandomSource(224752345), vortexPos);
 
-                        SpectrobesWorldSaveData data = SpectrobesWorldSaveData.getWorldData((ServerWorld) level);
+                        SpectrobesWorldSaveData data = SpectrobesWorldSaveData.getWorldData((ServerLevel) level);
 
                         //create xelle mob.
-                        SpectrobesInfo.LOGGER.debug("SPAWNING XELLES AT: " + vortexPos.getX() + ", " + vortexPos.getY() + ", " + vortexPos.getZ());
-
-                        data.addNest(new KrawlNest(vortexPos, ((ServerWorld) level).dimension().getRegistryName().toString()));
+                        data.addNest(new KrawlNest(vortexPos, level.dimension().toString()));
                         data.getNest(vortexPos).absorbVortexes(extraVortexes);
                         data.setDirty();
                     }

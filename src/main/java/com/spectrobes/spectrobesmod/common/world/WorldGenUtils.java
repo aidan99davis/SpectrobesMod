@@ -1,11 +1,12 @@
 package com.spectrobes.spectrobesmod.common.world;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.IWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
 
 public class WorldGenUtils {
 
-    public static void generateSphere(IWorld world, Random rand, BlockPos position, int size, int height, BlockState fill) {
+    public static void generateSphere(WorldGenLevel world, RandomSource rand, BlockPos position, int size, int height, BlockState fill) {
         int i2 = size;
         int ySize = rand.nextInt(2);
         int j = i2 + rand.nextInt(2);
@@ -28,7 +29,7 @@ public class WorldGenUtils {
         }
     }
 
-    public static void generateSphere(IWorld world, Random rand, BlockPos position, int size, int height, BlockState fill, BlockState fill2) {
+    public static void generateSphere(WorldGenLevel world, RandomSource rand, BlockPos position, int size, int height, BlockState fill, BlockState fill2) {
         int i2 = size;
         int ySize = rand.nextInt(2);
         int j = i2 + rand.nextInt(2);
@@ -42,7 +43,7 @@ public class WorldGenUtils {
         }
     }
 
-    public static void generateSphereRespectAir(IWorld world, Random rand, BlockPos position, int size, int height, BlockState fill, BlockState fill2) {
+    public static void generateSphereRespectAir(WorldGenLevel world, RandomSource rand, BlockPos position, int size, int height, BlockState fill, BlockState fill2) {
         int i2 = size;
         int ySize = rand.nextInt(2);
         int j = i2 + rand.nextInt(2);
@@ -50,14 +51,14 @@ public class WorldGenUtils {
         int l = i2 + rand.nextInt(2);
         float f = (j + k + l) * 0.333F;
         for (BlockPos blockpos : BlockPos.betweenClosedStream(position.offset(-j, -k, -l), position.offset(j, k, l)).map(BlockPos::immutable).collect(Collectors.toSet())) {
-            if (blockpos.distSqr(position) <= f * f * MathHelper.clamp(rand.nextFloat(), 0.75F, 1.0F)
+            if (blockpos.distSqr(position) <= f * f * Mth.clamp(rand.nextFloat(), 0.75F, 1.0F)
                     && !world.getBlockState(blockpos).isAir()) {
                 world.setBlock(blockpos, rand.nextInt(3) == 0 ? fill2 : fill, 2);
             }
         }
     }
 
-    public static void generateCircle(IWorld world, BlockPos position, int radius, int height, BlockState block) {
+    public static void generateCircle(WorldGenLevel world, BlockPos position, int radius, int height, BlockState block) {
         List<BlockPos> affectedBlocks = new ArrayList<>(radius * radius * 2 * 4);
         final int maxDis = radius * radius;
         // check 3-layer circle around this entity (disc, not sphere)
@@ -88,13 +89,13 @@ public class WorldGenUtils {
 //        }
     }
 
-    public static void generateCircleRespectSky(IWorld world, Random rand, BlockPos position, int size, int height, Direction direction, BlockState block1, BlockState block2) {
+    public static void generateCircleRespectSky(WorldGenLevel world, RandomSource rand, BlockPos position, int size, int height, Direction direction, BlockState block1, BlockState block2) {
         int radius = size + 2;
         {
             for (float i = 0; i < radius; i += 0.5) {
                 for (float j = 0; j < 2 * Math.PI * i; j += 0.5) {
-                    int x = (int) Math.floor(MathHelper.sin(j) * i);
-                    int z = (int) Math.floor(MathHelper.cos(j) * i);
+                    int x = (int) Math.floor(Mth.sin(j) * i);
+                    int z = (int) Math.floor(Mth.cos(j) * i);
                     if (direction == Direction.WEST || direction == Direction.EAST) {
                         if (!world.canSeeSky(position.offset(0, x, z))) {
                             world.setBlock(position.offset(0, x, z), rand.nextInt(3) == 0 ? block1 : block2, 3);
@@ -112,8 +113,8 @@ public class WorldGenUtils {
         {
             for (float i = 0; i < radius; i += 0.5) {
                 for (float j = 0; j < 2 * Math.PI * i; j += 0.5) {
-                    int x = (int) Math.floor(MathHelper.sin(j) * i * MathHelper.clamp(rand.nextFloat(), 0.5F, 1.0F));
-                    int z = (int) Math.floor(MathHelper.cos(j) * i * MathHelper.clamp(rand.nextFloat(), 0.5F, 1.0F));
+                    int x = (int) Math.floor(Mth.sin(j) * i * Mth.clamp(rand.nextFloat(), 0.5F, 1.0F));
+                    int z = (int) Math.floor(Mth.cos(j) * i * Mth.clamp(rand.nextFloat(), 0.5F, 1.0F));
                     if (direction == Direction.WEST || direction == Direction.EAST) {
                         world.setBlock(position.offset(0, x, z), Blocks.AIR.defaultBlockState(), 3);
                     } else {

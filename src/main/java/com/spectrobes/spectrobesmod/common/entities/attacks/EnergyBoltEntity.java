@@ -2,25 +2,26 @@ package com.spectrobes.spectrobesmod.common.entities.attacks;
 
 import com.spectrobes.spectrobesmod.common.entities.IHasNature;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.projectile.ThrowableEntity;
-import net.minecraft.network.IPacket;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.projectile.ThrowableProjectile;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraftforge.network.NetworkHooks;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
-public class EnergyBoltEntity extends ThrowableEntity implements IHasNature, IAnimatable {
+public class EnergyBoltEntity extends ThrowableProjectile implements IHasNature, IAnimatable {
     public int AtkDamage;
     public SpectrobeProperties.Nature Nature;
 
-    public AnimationFactory factory = new AnimationFactory(this);
+    public AnimationFactory factory = GeckoLibUtil.createFactory(this);
     private int life = 0;
 
-    public EnergyBoltEntity(EntityType<? extends ThrowableEntity> type, World worldIn) {
+    public EnergyBoltEntity(EntityType<? extends ThrowableProjectile> type, Level worldIn) {
         super(type, worldIn);
     }
 
@@ -38,7 +39,7 @@ public class EnergyBoltEntity extends ThrowableEntity implements IHasNature, IAn
     protected void tickDespawn() {
         ++this.life;
         if (this.life >= 120) {
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
         }
 
     }
@@ -63,13 +64,14 @@ public class EnergyBoltEntity extends ThrowableEntity implements IHasNature, IAn
     }
 
     @Override
-    protected void onHitEntity(EntityRayTraceResult pResult) {
+    protected void onHitEntity(EntityHitResult pResult) {
         super.onHitEntity(pResult);
         pResult.getEntity().hurt(DamageSource.thrown(this, this.getOwner()), AtkDamage);
     }
 
+
     @Override
-    public IPacket<?> getAddEntityPacket() {
+    public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 }

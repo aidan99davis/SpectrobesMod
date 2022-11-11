@@ -1,17 +1,16 @@
 package com.spectrobes.spectrobesmod.client.gui.prizmod.Pages;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.spectrobes.spectrobesmod.SpectrobesInfo;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.Components.*;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSpawnSpectrobePacket;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 
 import java.util.Map;
 import java.util.UUID;
@@ -34,10 +33,10 @@ public class LineUpPage extends PrizmodPage {
     }
 
     @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         super.render(stack, mouseX, mouseY, partialTicks);
         if(selectedButton != null) {
-            selectedButton.piece.drawAdditionalAtCursor(mouseX, mouseY);
+            selectedButton.piece.drawAdditionalAtCursor(stack, mouseX, mouseY);
         }
     }
 
@@ -48,14 +47,14 @@ public class LineUpPage extends PrizmodPage {
 //            parent.setMenuPage(new MenuPage(parent));
 //        }));
 
-        this.addButton(new Button(parent.width / 2 - 60, 45, 60, 20, new StringTextComponent("Prev"), button -> {
+        this.addButton(new Button(parent.width / 2 - 60, 45, 60, 20, Component.literal("Prev"), button -> {
             this.AllSpectrobesGrid.previousPage();
             this.parent.removeButtons(getButtons());
             this.init();
             this.changeFocus(true);
         }));
 
-        this.addButton(new Button(parent.width / 2, 45, 60, 20, new StringTextComponent("Next"), button -> {
+        this.addButton(new Button(parent.width / 2, 45, 60, 20, Component.literal("Next"), button -> {
             this.AllSpectrobesGrid.nextPage();
             this.parent.removeButtons(getButtons());
             this.init();
@@ -159,7 +158,7 @@ public class LineUpPage extends PrizmodPage {
 
     }
 
-    private void removeButton(Widget b) {
+    private void removeButton(AbstractWidget b) {
         this.buttons.remove(b);
     }
 

@@ -1,24 +1,27 @@
 package com.spectrobes.spectrobesmod.common.blocks.tile;
 
-import com.spectrobes.spectrobesmod.common.registry.SpectrobesTileRegistry;
-import net.minecraft.tileentity.TileEntity;
+import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesTileRegistry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
-public class ZozaFossilBlockTileEntity extends TileEntity implements IAnimatable {
-    private final AnimationFactory factory = new AnimationFactory(this);
+public class ZozaFossilBlockTileEntity extends BlockEntity implements IAnimatable {
+    private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
-    private <E extends TileEntity & IAnimatable> PlayState predicate(AnimationEvent<E> event)
+    private <E extends BlockEntity & IAnimatable> PlayState predicate(AnimationEvent<E> event)
     {
         return PlayState.STOP;
     }
 
-    public ZozaFossilBlockTileEntity() {
-        super(SpectrobesTileRegistry.ZOZA_FOSSIL_TILE.get());
+    public ZozaFossilBlockTileEntity(BlockPos pos, BlockState state) {
+        super(SpectrobesTileRegistry.ZOZA_FOSSIL_TILE.get(), pos, state);
     }
 
     @Override

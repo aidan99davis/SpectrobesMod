@@ -2,11 +2,11 @@ package com.spectrobes.spectrobesmod.common.entities.spectrobes.goals;
 
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
-import net.minecraft.entity.ai.goal.OwnerHurtTargetGoal;
-import net.minecraft.entity.passive.TameableEntity;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
 
 public class MasterHurtTargetGoal extends OwnerHurtTargetGoal {
-    public MasterHurtTargetGoal(TameableEntity entity) {
+    public MasterHurtTargetGoal(TamableAnimal entity) {
         super(entity);
     }
 

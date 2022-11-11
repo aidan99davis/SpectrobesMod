@@ -1,6 +1,6 @@
 package com.spectrobes.spectrobesmod.common.spectrobes;
 
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
 
 public class Stat {
     private int baseValue;
@@ -45,8 +45,8 @@ public class Stat {
     }
 
 
-    public CompoundNBT write() {
-        CompoundNBT statsNbt = new CompoundNBT();
+    public CompoundTag write() {
+        CompoundTag statsNbt = new CompoundTag();
 
         statsNbt.putInt("base", baseValue);
         statsNbt.putInt("increment", increment);
@@ -56,7 +56,7 @@ public class Stat {
         return statsNbt;
     }
 
-    public static Stat read(CompoundNBT statsNbt) {
+    public static Stat read(CompoundTag statsNbt) {
         int baseVal = statsNbt.getInt("base");
         int inc = statsNbt.getInt("increment");
         int max = statsNbt.getInt("max");

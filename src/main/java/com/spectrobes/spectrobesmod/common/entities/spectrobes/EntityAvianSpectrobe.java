@@ -1,36 +1,39 @@
 package com.spectrobes.spectrobesmod.common.entities.spectrobes;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.controller.FlyingMovementController;
-import net.minecraft.entity.ai.goal.SwimGoal;
-import net.minecraft.entity.ai.goal.WaterAvoidingRandomFlyingGoal;
-import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
-import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.passive.IFlyingAnimal;
-import net.minecraft.pathfinding.PathNodeType;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.SpectrobeWaterAvoidingRandomFlyingGoal;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.SpectrobeWaterAvoidingRandomStrollGoal;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.control.FlyingMoveControl;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomFlyingGoal;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.animal.FlyingAnimal;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 import java.util.Random;
 
-public abstract class EntityAvianSpectrobe extends EntitySpectrobe implements IFlyingAnimal {
+public abstract class EntityAvianSpectrobe extends EntitySpectrobe implements FlyingAnimal {
     public float flap;
     public float flapSpeed;
     public float oFlapSpeed;
     public float oFlap;
     private float flapping = 1.0F;
 
-    public EntityAvianSpectrobe(EntityType<? extends EntitySpectrobe> entityTypeIn, World worldIn) {
+    public EntityAvianSpectrobe(EntityType<? extends EntitySpectrobe> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
-        this.moveControl = new FlyingMovementController(this, 10, true);
-        this.setPathfindingMalus(PathNodeType.OPEN, 0.0F);
+        this.moveControl = new FlyingMoveControl(this, 10, true);
+        this.setPathfindingMalus(BlockPathTypes.DANGER_FIRE, -1.0F);
+        this.setPathfindingMalus(BlockPathTypes.DAMAGE_FIRE, -1.0F);
+        this.setPathfindingMalus(BlockPathTypes.COCOA, -1.0F);
     }
 
-    public static AttributeModifierMap.MutableAttribute setCustomAttributes() {
+    public static AttributeSupplier.Builder setCustomAttributes() {
         return EntitySpectrobe.setCustomAttributes().add(Attributes.FLYING_SPEED, 1);
     }
 
@@ -43,9 +46,9 @@ public abstract class EntityAvianSpectrobe extends EntitySpectrobe implements IF
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(0, new SwimGoal(this));
-        this.goalSelector.addGoal(6, new WaterAvoidingRandomFlyingGoal(this, 1.2));
-        this.goalSelector.addGoal(7, new WaterAvoidingRandomWalkingGoal(this, 1.2));
+        this.goalSelector.addGoal(0, new FloatGoal(this));
+        this.goalSelector.addGoal(6, new SpectrobeWaterAvoidingRandomFlyingGoal(this, 1.2));
+        this.goalSelector.addGoal(7, new SpectrobeWaterAvoidingRandomStrollGoal(this, 1.2));
     }
 
     @Override
@@ -95,13 +98,13 @@ public abstract class EntityAvianSpectrobe extends EntitySpectrobe implements IF
         this.oFlap = this.flap;
         this.oFlapSpeed = this.flapSpeed;
         this.flapSpeed = (float)((double)this.flapSpeed + (double)(!this.onGround && !this.isPassenger() ? 4 : -1) * 0.3D);
-        this.flapSpeed = MathHelper.clamp(this.flapSpeed, 0.0F, 1.0F);
+        this.flapSpeed = Mth.clamp(this.flapSpeed, 0.0F, 1.0F);
         if (!this.onGround && this.flapping < 1.0F) {
             this.flapping = 1.0F;
         }
 
         this.flapping = (float)((double)this.flapping * 0.9D);
-        Vector3d vec3d = this.getDeltaMovement();
+        Vec3 vec3d = this.getDeltaMovement();
         if (!this.onGround && vec3d.y < 0.0D) {
             this.setDeltaMovement(vec3d.multiply(1.0D, 0.6D, 1.0D));
         }
@@ -112,5 +115,10 @@ public abstract class EntityAvianSpectrobe extends EntitySpectrobe implements IF
     @Override
     public boolean canFly() {
         return true;
+    }
+
+    @Override
+    public boolean isFlying() {
+        return !this.onGround;
     }
 }

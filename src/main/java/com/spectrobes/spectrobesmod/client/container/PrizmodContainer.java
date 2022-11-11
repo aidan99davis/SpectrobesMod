@@ -2,28 +2,29 @@ package com.spectrobes.spectrobesmod.client.container;
 
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
-import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.*;
+import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesToolsRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.*;
 
 
-public class PrizmodContainer extends Container {
+public class PrizmodContainer extends AbstractContainerMenu {
 
-    private PlayerEntity player;
+    private Player player;
     private PlayerSpectrobeMaster capability;
     private boolean needsSync = true;
 
-    public static RegistryObject<ContainerType<PrizmodContainer>> PRIZMOD = null;
+    public static RegistryObject<MenuType<PrizmodContainer>> PRIZMOD = null;
 
-    public PrizmodContainer(int id, PlayerEntity player) {
+    public PrizmodContainer(int id, Player player) {
         super(PRIZMOD.get(), id);
         this.player = player;
         capability = this.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
@@ -35,13 +36,18 @@ public class PrizmodContainer extends Container {
         if(needsSync) {
             if(!player.level.isClientSide()) {
                 SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(capability),
-                        (ServerPlayerEntity) player);
+                        (ServerPlayer) player);
             } else {
                 SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket(capability));
             }
             needsSync = false;
         }
 //        super.detectAndSendChanges();
+    }
+
+    @Override
+    public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
+        return null;
     }
 
     public void tick() {
@@ -58,8 +64,8 @@ public class PrizmodContainer extends Container {
      * @param playerIn
      */
     @Override
-    public boolean stillValid(PlayerEntity playerIn) {
-        return playerIn.inventory.contains(SpectrobesItems.prizmod_item.getDefaultInstance());
+    public boolean stillValid(Player playerIn) {
+        return playerIn.getInventory().contains(SpectrobesToolsRegistry.prizmod_item.get().getDefaultInstance());
     }
 
     public void markDirty() {

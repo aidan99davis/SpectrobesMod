@@ -1,14 +1,13 @@
 package com.spectrobes.spectrobesmod.common.world.teleporters;
 
-import com.spectrobes.spectrobesmod.common.blocks.FossilBlock;
 import com.spectrobes.spectrobesmod.common.blocks.PlanetaryTeleporterBlock;
-import com.spectrobes.spectrobesmod.common.registry.SpectrobesBlocks;
-import net.minecraft.block.AirBlock;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.server.ServerWorld;
+import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesBlocks;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.block.AirBlock;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.common.util.ITeleporter;
 
 import java.util.function.Function;
@@ -23,7 +22,7 @@ public class GenshiTeleporter implements ITeleporter {
     }
 
     @Override
-    public Entity placeEntity(Entity entity, ServerWorld currentWorld, ServerWorld destWorld, float yaw, Function<Boolean, Entity> repositionEntity) {
+    public Entity placeEntity(Entity entity, ServerLevel currentWorld, ServerLevel destWorld, float yaw, Function<Boolean, Entity> repositionEntity) {
         entity = repositionEntity.apply(false);
         double y = 61;
         if (!thisIsToDaylightDim) {
@@ -35,7 +34,7 @@ public class GenshiTeleporter implements ITeleporter {
             destPos = destPos.above(2);
         }
         if(destWorld.getBlockStates(entity.getBoundingBox().inflate(10, 10, 10)).noneMatch(blockState -> blockState.getBlock() instanceof PlanetaryTeleporterBlock)) {
-            destWorld.setBlock(destPos.above(3), SpectrobesBlocks.planetary_teleporter.get().defaultBlockState(), 1);
+//            destWorld.setBlock(destPos.above(3), SpectrobesBlocks.planetary_teleporter.get().defaultBlockState(), 1);
         }
         for (BlockPos checkPos : BlockPos.betweenClosed(destPos.below(10).west(10), destPos.above(10).east(10))) {
             if (destWorld.getBlockState(checkPos).getBlock() instanceof AirBlock

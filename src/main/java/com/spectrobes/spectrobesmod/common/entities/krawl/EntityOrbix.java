@@ -1,52 +1,37 @@
 package com.spectrobes.spectrobesmod.common.entities.krawl;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
-import com.spectrobes.spectrobesmod.common.entities.krawl.goals.AbsorbKrawlGoal;
 import com.spectrobes.spectrobesmod.common.entities.krawl.goals.AttackSpectrobeGoal;
 import com.spectrobes.spectrobesmod.common.entities.krawl.goals.AttackSpectrobeMasterGoal;
-import com.spectrobes.spectrobesmod.common.entities.krawl.goals.HealKrawlGoal;
-import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
-import com.spectrobes.spectrobesmod.common.items.minerals.Mineral;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import com.spectrobes.spectrobesmod.common.registry.KrawlRegistry;
-import com.spectrobes.spectrobesmod.common.registry.SpectrobesBlocks;
-import com.spectrobes.spectrobesmod.common.save_data.SpectrobesWorldSaveData;
-import com.spectrobes.spectrobesmod.util.KrawlPropertiesBuilder;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.BossInfo;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.BossEvent;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.level.Level;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.List;
 
 public class EntityOrbix extends EntityBossKrawl {
 
-    private static final DataParameter<Integer> LAST_HURT_TICKS =
-            EntityDataManager.defineId(EntityOrbix.class,
-                    DataSerializers.INT);
+    private static final EntityDataAccessor<Integer> LAST_HURT_TICKS =
+            SynchedEntityData.defineId(EntityOrbix.class,
+                    EntityDataSerializers.INT);
 
-    private static final DataParameter<Boolean> IS_ATTACKING =
-            EntityDataManager.defineId(EntityOrbix.class,
-                    DataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> IS_ATTACKING =
+            SynchedEntityData.defineId(EntityOrbix.class,
+                    EntityDataSerializers.BOOLEAN);
 
-    public EntityOrbix(EntityType<? extends MonsterEntity> type, World worldIn) {
+    public EntityOrbix(EntityType<? extends Monster> type, Level worldIn) {
         super(type, worldIn);
         setPersistenceRequired();
     }
@@ -67,13 +52,13 @@ public class EntityOrbix extends EntityBossKrawl {
 
     @Override
     @ParametersAreNonnullByDefault
-    public void addAdditionalSaveData(CompoundNBT pCompound) {
+    public void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
         pCompound.putInt("LAST_HURT_TICKS", entityData.get(LAST_HURT_TICKS));
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT pCompound) {
+    public void readAdditionalSaveData(CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
         entityData.set(LAST_HURT_TICKS, pCompound.getInt("LAST_HURT_TICKS"));
     }
@@ -96,8 +81,8 @@ public class EntityOrbix extends EntityBossKrawl {
     public boolean isAttacking() {return entityData.get(IS_ATTACKING); }
 
     @Override
-    public BossInfo.Color getBossNameColour() {
-        return BossInfo.Color.GREEN;
+    public BossEvent.BossBarColor getBossNameColour() {
+        return BossEvent.BossBarColor.GREEN;
     }
 
     @Override

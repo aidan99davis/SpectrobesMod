@@ -1,33 +1,29 @@
 package com.spectrobes.spectrobesmod.common.blocks;
 
-import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
 import com.spectrobes.spectrobesmod.common.items.minerals.Mineral;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
-import net.minecraftforge.common.ToolType;
+import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesMineralsRegistry;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.storage.loot.LootContext;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.block.AbstractBlock;
-
 public class MineralBlock extends SpectrobesBlock {
-    private static final AbstractBlock.Properties props = AbstractBlock.Properties.of(Material.STONE)
-            .harvestTool(ToolType.PICKAXE)
+    private static final Properties props = Properties.of(Material.STONE)
+            .requiresCorrectToolForDrops()
             .strength(1.5f)
-            .sound(SoundType.STONE)
-            .harvestLevel(2);
+            .sound(SoundType.STONE);
 
     public MineralBlock() {
         super(props);
     }
 
     @Override
-    @SuppressWarnings({"NullableProblems", "deprecation"})
+    @SuppressWarnings({"deprecation"})
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         Random random = new Random();
 
@@ -47,10 +43,10 @@ public class MineralBlock extends SpectrobesBlock {
                 rarity = Mineral.MineralRarity.Common;
                 break;
         }
-        ItemStack mineralItem = SpectrobesItems.getRandomMineral(rarity);
+        ItemStack mineralItem = SpectrobesMineralsRegistry.getRandomMineral(rarity);
         ArrayList<ItemStack> minerals = new ArrayList<>();
         minerals.add(mineralItem);
 
-        return  minerals;
+        return minerals;
     }
 }

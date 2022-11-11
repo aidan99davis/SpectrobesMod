@@ -1,49 +1,47 @@
 package com.spectrobes.spectrobesmod.common.entities.krawl;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.BossInfo;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerBossInfo;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerBossEvent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.BossEvent;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.level.Level;
 
-import javax.annotation.Nullable;
+import static net.minecraft.world.BossEvent.BossBarOverlay.PROGRESS;
 
 public abstract class EntityBossKrawl extends EntityKrawl {
-    private final ServerBossInfo bossEvent;
+    private final ServerBossEvent bossEvent;
 
-    public EntityBossKrawl(EntityType<? extends MonsterEntity> type, World worldIn) {
+    public EntityBossKrawl(EntityType<? extends Monster> type, Level worldIn) {
         super(type, worldIn);
-        this.bossEvent = (ServerBossInfo)(new ServerBossInfo(this.getDisplayName(), getBossNameColour(), BossInfo.Overlay.PROGRESS)).setDarkenScreen(false);
+        this.bossEvent = ((ServerBossEvent)new ServerBossEvent(this.getDisplayName(), getBossNameColour(), PROGRESS).setDarkenScreen(false));
     }
 
-    public abstract BossInfo.Color getBossNameColour();
+    public abstract BossEvent.BossBarColor getBossNameColour();
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT pCompound) {
+    public void readAdditionalSaveData(CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
         if (this.hasCustomName()) {
             this.bossEvent.setName(this.getDisplayName());
         }
-
     }
 
     @Override
-    public void setCustomName(@Nullable ITextComponent pName) {
+    public void setCustomName(@org.jetbrains.annotations.Nullable net.minecraft.network.chat.Component pName) {
         super.setCustomName(pName);
         this.bossEvent.setName(this.getDisplayName());
     }
 
     @Override
-    public void startSeenByPlayer(ServerPlayerEntity pServerPlayer) {
+    public void startSeenByPlayer(ServerPlayer pServerPlayer) {
         super.startSeenByPlayer(pServerPlayer);
         this.bossEvent.addPlayer(pServerPlayer);
     }
 
     @Override
-    public void stopSeenByPlayer(ServerPlayerEntity pServerPlayer) {
+    public void stopSeenByPlayer(ServerPlayer pServerPlayer) {
         super.stopSeenByPlayer(pServerPlayer);
         this.bossEvent.removePlayer(pServerPlayer);
     }
@@ -51,6 +49,6 @@ public abstract class EntityBossKrawl extends EntityKrawl {
     @Override
     public void tick() {
         super.tick();
-        this.bossEvent.setPercent(this.getHealth() / this.getMaxHealth());
+        this.bossEvent.setProgress(this.getHealth() / this.getMaxHealth());
     }
 }

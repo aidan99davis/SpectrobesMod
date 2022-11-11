@@ -1,12 +1,11 @@
 package com.spectrobes.spectrobesmod.common.packets.networking.packets;
 
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraftforge.network.NetworkEvent;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -21,7 +20,7 @@ public class SDespawnSpectrobePacket {
         this.playerPos = player;
     }
 
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         if(playerPos != null) {
             buf.writeInt(playerPos.getX());
             buf.writeInt(playerPos.getY());
@@ -29,7 +28,7 @@ public class SDespawnSpectrobePacket {
         }
     }
 
-    public static SDespawnSpectrobePacket fromBytes(PacketBuffer buf) {
+    public static SDespawnSpectrobePacket fromBytes(FriendlyByteBuf buf) {
         int x = buf.readInt();
         int y = buf.readInt();
         int z = buf.readInt();
@@ -38,13 +37,10 @@ public class SDespawnSpectrobePacket {
 
     public boolean handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            World world = ctx.get().getSender().level;
-
-            MutableBoundingBox boundingBox = MutableBoundingBox.createProper(playerPos.getX(), playerPos.getY(), playerPos.getZ(), playerPos.getX(), playerPos.getY(), playerPos.getZ());
-            AxisAlignedBB axisAlignedBB = AxisAlignedBB.of(boundingBox);
+            Level world = ctx.get().getSender().level;
 
             List<EntitySpectrobe> spectrobes = world
-                    .getEntitiesOfClass(EntitySpectrobe.class, axisAlignedBB.inflate(30, 30, 30));
+                    .getEntitiesOfClass(EntitySpectrobe.class, ctx.get().getSender().getBoundingBox().inflate(30, 30, 30));
             for(EntitySpectrobe spectrobe : spectrobes) {
                 if(spectrobe.getOwner() != null && spectrobe.getOwnerUUID()
                         .equals(ctx.get().getSender().getUUID())) {

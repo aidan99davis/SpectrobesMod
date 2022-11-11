@@ -1,29 +1,29 @@
 package com.spectrobes.spectrobesmod.common.save_data;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.storage.WorldSavedData;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.saveddata.SavedData;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class SpectrobesWorldSaveData extends WorldSavedData {
+public class SpectrobesWorldSaveData extends SavedData {
 
     public static final String name = SpectrobesInfo.MOD_ID + "_data";
 
     private final List<KrawlNest> nests = new ArrayList<>();
 
-    public SpectrobesWorldSaveData() { super(name); }
+    public SpectrobesWorldSaveData() { super(); }
 
     //remember to call data.setDirty() so it knows to update and sync.
-    public static SpectrobesWorldSaveData getWorldData(ServerWorld world) {
-        return world.getDataStorage().computeIfAbsent(SpectrobesWorldSaveData::new, SpectrobesWorldSaveData.name);
+    public static SpectrobesWorldSaveData getWorldData(ServerLevel world) {
+        return world.getDataStorage().computeIfAbsent(SpectrobesWorldSaveData::load, SpectrobesWorldSaveData::new, SpectrobesWorldSaveData.name);
     }
 
     public void addNest(KrawlNest nest) {
@@ -53,19 +53,20 @@ public class SpectrobesWorldSaveData extends WorldSavedData {
         return null;
     }
 
-    @Override
-    public void load(CompoundNBT nbt) {
-        ListNBT nbtNestList = ((ListNBT) Objects.requireNonNull(nbt.get("nests")));
-        for (INBT inbt : nbtNestList) {
+    public static SpectrobesWorldSaveData load(CompoundTag nbt) {
+        SpectrobesWorldSaveData data = new SpectrobesWorldSaveData();
+        ListTag nbtNestList = ((ListTag) Objects.requireNonNull(nbt.get("nests")));
+        for (Tag inbt : nbtNestList) {
             KrawlNest nest = new KrawlNest();
             nest.deserializeNBT(inbt);
-            nests.add(nest);
+            data.addNest(nest);
         }
+        return data;
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT nbt) {
-        ListNBT nbtList = new ListNBT();
+    public CompoundTag save(CompoundTag nbt) {
+        ListTag nbtList = new ListTag();
         nests.forEach(krawlNest -> nbtList.add(krawlNest.serializeNBT()));
         nbt.put("nests", nbtList);
         return nbt;

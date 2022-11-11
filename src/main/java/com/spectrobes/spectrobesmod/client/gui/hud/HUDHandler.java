@@ -1,26 +1,29 @@
 package com.spectrobes.spectrobesmod.client.gui.hud;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.client.gui.utils.GuiUtils;
 import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
-import com.spectrobes.spectrobesmod.common.items.SpectrobesItems;
+import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesToolsRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeIconInfo;
-import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGuiOverlayEvent;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import software.bernie.geckolib3.core.util.Color;
 
-import java.awt.*;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static net.minecraft.client.gui.GuiComponent.fill;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = SpectrobesInfo.MOD_ID)
 public class HUDHandler {
@@ -28,31 +31,29 @@ public class HUDHandler {
     public static final ResourceLocation SPECTROBE_SLOT_CURRENT_TEXTURE = new ResourceLocation("spectrobesmod:textures/gui/spectrobe_slot_selected.png");
 
     @SubscribeEvent
-    @OnlyIn(Dist.CLIENT)
-    public static void onDraw(RenderGameOverlayEvent.Post event) {
-        if (event.getType() == RenderGameOverlayEvent.ElementType.HOTBAR) {
-            MainWindow resolution = event.getWindow();
-            float partialTicks = event.getPartialTicks();
-            drawSpectrobeTeamBar(event.getMatrixStack(), resolution, partialTicks);
+    public static void onDraw(RenderGuiOverlayEvent.Pre event) {
+        if (event.getOverlay().id().equals(VanillaGuiOverlay.EXPERIENCE_BAR.id())) {
+            Window resolution = event.getWindow();
+            float partialTicks = event.getPartialTick();
+            drawSpectrobeTeamBar(event.getPoseStack(), resolution, partialTicks);
 
-            int finalWidth = drawSpectrobeMasterHealthBar(event.getMatrixStack(), resolution);
+            int finalWidth = drawSpectrobeMasterHealthBar(event.getPoseStack(), resolution);
 
-            drawSpectrobeMasterXpBar(event.getMatrixStack(), resolution, finalWidth);
+            drawSpectrobeMasterXpBar(event.getPoseStack(), resolution, finalWidth);
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
-    private static void drawSpectrobeTeamBar(MatrixStack ms, MainWindow res, float partialTicks) {
+    private static void drawSpectrobeTeamBar(PoseStack ms, Window res, float partialTicks) {
         Minecraft mc = Minecraft.getInstance();
-        if (!mc.player.inventory
-                .contains(SpectrobesItems.prizmod_item.getDefaultInstance())) {
+        if (!mc.player.getInventory()
+                .contains(SpectrobesToolsRegistry.prizmod_item.get().getDefaultInstance())) {
             return;
         }
 
         mc.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
                 .ifPresent(sm -> {
                     ms.pushPose();
-                    RenderSystem.enableAlphaTest();
+                    RenderSystem.enableBlend();
 
                     boolean right = true;
 
@@ -80,11 +81,30 @@ public class HUDHandler {
                             slotBackground = SPECTROBE_SLOT_TEXTURE;
                         }
 
+                        RenderSystem.setShaderTexture(0, slotBackground);
                         if(integer.intValue() == 6) {
-                            GuiUtils.drawTexture(slotBackground, finalX + 16, y + 96, 32, 32, 26);
+
+                            GuiComponent.blit(ms,
+                                    finalX + 16,
+                                    y + 96,
+                                    0,
+                                    0,
+                                    0,
+                                    32,
+                                    32,
+                                    32,
+                                    32);
                         } else {
-                            GuiUtils.drawTexture(slotBackground, finalX + (leftHandColumn? 0 : 32),
-                                    y + (32 * row), 32, 32, 26);
+                            GuiComponent.blit(ms,
+                                    finalX + (leftHandColumn? 0 : 32),
+                                    y + (32 * row),
+                                    0,
+                                    0,
+                                    0,
+                                    32,
+                                    32,
+                                    32,
+                                    32);
                         }
 
                         //draw spectrobes into the slots.
@@ -101,42 +121,59 @@ public class HUDHandler {
                                     ? ((32 - iconInfo.getHeight())/2)
                                     : 0;
                             if(integer.intValue() == 6) {
-                                GuiUtils.drawTexture(iconInfo.icon(), finalX + marginleft + 16, y + margintop + 96, iconInfo.getWidth() * scalex, iconInfo.getHeight() * scaley, 26);
+                                RenderSystem.setShaderTexture(0, iconInfo.icon());
+
+                                GuiComponent.blit(ms,
+                                        finalX + marginleft + 16,
+                                        y + margintop + 96,
+                                        0,
+                                        0,
+                                        Math.round(iconInfo.getWidth() * scalex),
+                                        Math.round(iconInfo.getHeight() * scaley),
+                                        Math.round(iconInfo.getWidth() * scalex),
+                                        Math.round(iconInfo.getHeight() * scaley));
                                 //draw red health bar.
-                                GuiUtils.drawColour(245, 66, 66, 100, finalX + 17, y + 126, 30, 2, 27);
+                                fill(ms,finalX + 17,y + 126,finalX + 47,y + 128, Color.RED.hashCode());
 
                                 //draw green for health bar, only fill a % of 30 pixels based on the % of health remaining.
                                 float widthScaled = ((float)spectrobe.currentHealth / (float)spectrobe.stats.getHpLevel()) * 30f;
-                                GuiUtils.drawColour(55, 179, 41, 100, finalX + 17, y + 126, Math.round(widthScaled), 2, 28);
+                                fill(ms,finalX + 17,y + 126,finalX + 17 + Math.round(widthScaled),y + 128, Color.GREEN.hashCode());
 
                             } else {
-                                GuiUtils.drawTexture(iconInfo.icon(),
+                                RenderSystem.setShaderTexture(0, iconInfo.icon());
+
+                                GuiComponent.blit(ms,
                                         finalX + marginleft + (leftHandColumn? 0 : 32),
-                                        y + margintop + (row * 32), iconInfo.getWidth() * scalex, iconInfo.getHeight() * scaley, 26);
+                                        y + margintop + (row * 32),
+                                        0,
+                                        0,
+                                        Math.round(iconInfo.getWidth() * scalex),
+                                        Math.round(iconInfo.getHeight() * scaley),
+                                        Math.round(iconInfo.getWidth() * scalex),
+                                        Math.round(iconInfo.getHeight() * scaley));
                                 //draw red health bar.
-                                GuiUtils.drawColour(245, 66, 66, 100, finalX + (leftHandColumn? 0 : 32), y + (row * 32) + 30, 30, 2, 27);
+                                fill(ms,finalX + (leftHandColumn? 0 : 32),y + (row * 32) + 30,finalX + (leftHandColumn? 0 : 32) + 30,y + (row * 32) + 32, Color.RED.hashCode());
 
                                 //draw green for health bar, only fill a % of 30 pixels based on the % of health remaining.
                                 float widthScaled = ((float)spectrobe.currentHealth / (float)spectrobe.stats.getHpLevel()) * 30f;
-                                GuiUtils.drawColour(55, 179, 41, 100, finalX + (leftHandColumn? 0 : 32), y + (row * 32) + 30, Math.round(widthScaled), 2, 28);
+                                fill(ms,finalX + (leftHandColumn? 0 : 32),y + (row * 32) + 30,finalX + (leftHandColumn? 0 : 32) + Math.round(widthScaled),y + (row * 32) + 32, Color.GREEN.hashCode());
 
                             }
                         }
                     });
-                    RenderSystem.disableAlphaTest();
+                    RenderSystem.disableBlend();
                     ms.popPose();
                 });
     }
 
-    @OnlyIn(Dist.CLIENT)
-    private static int drawSpectrobeMasterHealthBar(MatrixStack ms, MainWindow res) {
+    private static int drawSpectrobeMasterHealthBar(PoseStack ms, Window res) {
         Minecraft mc = Minecraft.getInstance();
         AtomicInteger finalWidth = new AtomicInteger(0);
 
         mc.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
             .ifPresent(sm -> {
                 ms.pushPose();
-                RenderSystem.enableAlphaTest();
+                RenderSystem.enableBlend();
 
                 int pad = 5;
                 int width = 10;
@@ -149,14 +186,17 @@ public class HUDHandler {
                 int finalX = x + (Minecraft.getInstance().font.width(healthText) / 2) - (width / 2);
 
                 //draw red health bar.
-                GuiUtils.drawColour(107, 0, 0, 100, finalX, y, width, height, 27);
+                fill(ms, finalX, y, finalX+width, y+height, Color.RED.hashCode());
+//                GuiUtils.drawColour(107, 0, 0, 100, finalX, y, width, height, 27);
 
                 //draw green for health bar, only fill a % of 30 pixels based on the % of health remaining.
                 float heightScaled = ((float)sm.getCurrentHealth() / (float)sm.getMaxHealth()) * height;
-                GuiUtils.drawColour(33, 252, 13, 100, finalX, y + (height-Math.round(heightScaled)), width, Math.round(heightScaled), 28);
+                fill(ms, finalX, y + (height-Math.round(heightScaled)), finalX+width, y+height, Color.GREEN.hashCode());
+
                 mc.font.draw(ms, "HP", finalX, y - 10, Color.BLACK.hashCode());
                 mc.font.draw(ms, healthText, x, y + height + 10, Color.BLACK.hashCode());
-                RenderSystem.disableAlphaTest();
+
+                RenderSystem.disableBlend();
                 ms.popPose();
                 int completeWidth = finalX + Minecraft.getInstance().font.width(healthText);
                 finalWidth.set(completeWidth);
@@ -165,14 +205,13 @@ public class HUDHandler {
         return finalWidth.get();
     }
 
-    @OnlyIn(Dist.CLIENT)
-    private static void drawSpectrobeMasterXpBar(MatrixStack ms, MainWindow res, int basePadding) {
+    private static void drawSpectrobeMasterXpBar(PoseStack ms, Window res, int basePadding) {
         Minecraft mc = Minecraft.getInstance();
 
         mc.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
             .ifPresent(sm -> {
                 ms.pushPose();
-                RenderSystem.enableAlphaTest();
+                RenderSystem.enableBlend();
 
                 int pad = 10 + basePadding;
                 int width = 10;
@@ -186,14 +225,14 @@ public class HUDHandler {
                 int finalX = x + (Minecraft.getInstance().font.width(xpText) / 2) - (width / 2);
 
                 //draw red health bar.
-                GuiUtils.drawColour(0, 128, 129, 100, finalX, y, width, height, 27);
+                fill(ms, finalX, y, finalX+width, y+height, Color.BLUE.hashCode());
 
                 //draw green for health bar, only fill a % of 30 pixels based on the % of health remaining.
                 float heightScaled = ((float)sm.getCurrentXp() / (float)sm.getXp_required()) * height;
-                GuiUtils.drawColour(0, 255, 255, 100, finalX, y + (height-Math.round(heightScaled)), width, Math.round(heightScaled), 28);
+                fill(ms, finalX, y + (height-Math.round(heightScaled)), finalX+width, y+height, Color.CYAN.hashCode());
                 mc.font.draw(ms, lvlText, finalX - (Minecraft.getInstance().font.width(lvlText) / 2) + (width/2), y - 10, Color.BLACK.hashCode());
                 mc.font.draw(ms, xpText, x, y + height + 10, Color.BLACK.hashCode());
-                RenderSystem.disableAlphaTest();
+                RenderSystem.disableBlend();
                 ms.popPose();
             });
     }

@@ -1,13 +1,33 @@
 package com.spectrobes.spectrobesmod.common.items.weapons;
 
+import com.spectrobes.spectrobesmod.client.items.renderer.XellesTrophyItemRenderer;
+import com.spectrobes.spectrobesmod.client.items.weapons.renderer.BasicSwordItemRenderer;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import com.spectrobes.spectrobesmod.util.WeaponStats;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.minecraftforge.common.util.NonNullLazy;
 import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.manager.AnimationData;
+
+import java.util.function.Consumer;
 
 public class BasicSwordItem extends SpectrobesWeapon {
     public BasicSwordItem(Properties pProperties) {
         super(pProperties);
+    }
+
+    @Override
+    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+        consumer.accept(new IClientItemExtensions()
+        {
+            private final NonNullLazy<BlockEntityWithoutLevelRenderer> ister = NonNullLazy.of(() -> new BasicSwordItemRenderer());
+
+            @Override
+            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                return ister.get();
+            }
+        });
     }
 
     @Override

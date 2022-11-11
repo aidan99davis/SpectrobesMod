@@ -1,31 +1,31 @@
 package com.spectrobes.spectrobesmod.client.gui.prizmod.Components;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.Component;
 
 public class SpectrobeButton extends Button {
     public SpectrobePiece piece;
     final PrizmodScreen gui;
     private boolean selected;
 
-    public SpectrobeButton(PrizmodScreen gui, SpectrobePiece piece, IPressable pressable) {
-        super(piece.posX, piece.posY, 32, 32, new StringTextComponent(""), pressable);
+    public SpectrobeButton(PrizmodScreen gui, SpectrobePiece piece, Button.OnPress pressable) {
+        super(piece.posX, piece.posY, 32, 32, Component.literal(""), pressable);
         this.gui = gui;
         this.piece = piece;
     }
 
     @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         super.render(stack, mouseX, mouseY, partialTicks);
 //        this.renderButton(stack, mouseX, mouseY, partialTicks);
     }
 
     @Override
-    public void renderButton(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
-        piece.draw(!selected);
-        if(this.isHovered()) {
+    public void renderButton(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+        piece.draw(stack, !selected);
+        if(this.isHovered) {
 //            piece.drawInfo(); Name/Custom name? or a stat sheet?
         }
     }

@@ -1,6 +1,6 @@
 package com.spectrobes.spectrobesmod.common.spectrobes;
 
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
 
 public class EvolutionRequirements {
     private int level_required;
@@ -32,8 +32,8 @@ public class EvolutionRequirements {
         return true;
     }
 
-    public CompoundNBT write() {
-        CompoundNBT statsNbt = new CompoundNBT();
+    public CompoundTag write() {
+        CompoundTag statsNbt = new CompoundTag();
 
         statsNbt.putInt("level_required", level_required);
         statsNbt.putInt("minerals_eaten", minerals_eaten);
@@ -42,7 +42,7 @@ public class EvolutionRequirements {
         return statsNbt;
     }
 
-    public static EvolutionRequirements read(CompoundNBT statsNbt) {
+    public static EvolutionRequirements read(CompoundTag statsNbt) {
         int level_required = statsNbt.getInt("level_required");
         int minerals_eaten = statsNbt.getInt("minerals_eaten");
         int battles_fought = statsNbt.getInt("battles_fought");

@@ -3,9 +3,8 @@ package com.spectrobes.spectrobesmod.common.spectrobes;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralProperties;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import software.bernie.shadowed.eliotlash.mclib.math.functions.limit.Min;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 
 public class SpectrobeStats {
     private Stat health;
@@ -42,7 +41,7 @@ public class SpectrobeStats {
         this.level = level;
     }
     //returns true if levelled up.
-    boolean addXp(int xp_to_add) {
+    void addXp(int xp_to_add) {
         xp += xp_to_add;
         boolean levelledUp = false;
         while(xp > xp_required) {
@@ -54,7 +53,6 @@ public class SpectrobeStats {
             defence.levelUp();
             levelledUp = true;
         }
-        return levelledUp;
     }
 
     public void applyMineral(MineralProperties properties) {
@@ -68,7 +66,7 @@ public class SpectrobeStats {
             mineralsEaten++;
         } else {
             if(Minecraft.getInstance().level.isClientSide()) {
-                Minecraft.getInstance().player.chat("Your spectrobe cannot eat this mineral");
+                Minecraft.getInstance().player.chatSigned("Your spectrobe cannot eat this mineral", Component.empty());
             }
         }
 
@@ -106,8 +104,8 @@ public class SpectrobeStats {
         return xp;
     }
 
-    public CompoundNBT write() {
-        CompoundNBT statsNbt = new CompoundNBT();
+    public CompoundTag write() {
+        CompoundTag statsNbt = new CompoundTag();
 
         statsNbt.put("attack", attack.write());
         statsNbt.put("defence", defence.write());
@@ -121,7 +119,7 @@ public class SpectrobeStats {
         return statsNbt;
     }
 
-    public static SpectrobeStats read(CompoundNBT statsNbt) {
+    public static SpectrobeStats read(CompoundTag statsNbt) {
         SpectrobeStats stats = new SpectrobeStats();
         stats.attack = Stat.read(statsNbt.getCompound("attack"));
         stats.defence = Stat.read(statsNbt.getCompound("defence"));
@@ -158,5 +156,9 @@ public class SpectrobeStats {
         this.health.set(stats.health);
         this.attack.set(stats.attack);
         this.defence.set(stats.defence);
+    }
+
+    public void resetMineralsEaten() {
+        this.mineralsEaten = 0;
     }
 }
