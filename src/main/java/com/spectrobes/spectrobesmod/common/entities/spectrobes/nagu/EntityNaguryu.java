@@ -11,6 +11,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.builder.ILoopType;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
@@ -58,10 +59,10 @@ public class EntityNaguryu extends EntityMammalSpectrobe {
             return PlayState.CONTINUE;
         } else if(event.getAnimatable().isAttacking()) {
             event.getController().setAnimation(new AnimationBuilder()
-                    .addAnimation("animation.Naguryu.game_1_attack", true));
+                    .addAnimation("animation.Naguryu.game_1_attack", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         } else {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.Naguryu.idle", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.Naguryu.idle", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         }
     }

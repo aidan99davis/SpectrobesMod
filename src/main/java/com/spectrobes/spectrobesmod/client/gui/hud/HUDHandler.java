@@ -4,7 +4,7 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
+import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesToolsRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeIconInfo;
@@ -12,7 +12,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -50,7 +49,7 @@ public class HUDHandler {
             return;
         }
 
-        mc.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
+        mc.player.getCapability(SpectrobeMaster.INSTANCE)
                 .ifPresent(sm -> {
                     ms.pushPose();
                     RenderSystem.enableBlend();
@@ -170,7 +169,7 @@ public class HUDHandler {
         Minecraft mc = Minecraft.getInstance();
         AtomicInteger finalWidth = new AtomicInteger(0);
 
-        mc.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
+        mc.player.getCapability(SpectrobeMaster.INSTANCE)
             .ifPresent(sm -> {
                 ms.pushPose();
                 RenderSystem.enableBlend();
@@ -208,7 +207,7 @@ public class HUDHandler {
     private static void drawSpectrobeMasterXpBar(PoseStack ms, Window res, int basePadding) {
         Minecraft mc = Minecraft.getInstance();
 
-        mc.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
+        mc.player.getCapability(SpectrobeMaster.INSTANCE)
             .ifPresent(sm -> {
                 ms.pushPose();
                 RenderSystem.enableBlend();

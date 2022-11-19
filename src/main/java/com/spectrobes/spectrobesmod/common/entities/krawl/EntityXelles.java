@@ -35,6 +35,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.builder.ILoopType;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
@@ -315,16 +316,16 @@ public class EntityXelles extends EntityBossKrawl {
     @Override
     public <ENTITY extends EntityKrawl> PlayState moveController(AnimationEvent<ENTITY> event) {
         if(event.getAnimatable().isDeadOrDying()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.xelles.death", false));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.xelles.death", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
             return PlayState.CONTINUE;
         } else if(((EntityXelles)event.getAnimatable()).isSpawningSpores()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.xelles.spawning", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.xelles.spawning", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         } else if(((EntityXelles)event.getAnimatable()).lastHurtTicksAgo() == 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.xelles.hurt", false));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.xelles.hurt", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
             return PlayState.CONTINUE;
         }
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.xelles.idle", true));
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.xelles.idle", ILoopType.EDefaultLoopTypes.LOOP));
         return PlayState.CONTINUE;
     }
 

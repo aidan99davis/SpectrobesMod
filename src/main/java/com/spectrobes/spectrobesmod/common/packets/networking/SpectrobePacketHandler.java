@@ -4,13 +4,12 @@ import com.spectrobes.spectrobesmod.client.container.PrizmodContainer;
 import com.spectrobes.spectrobesmod.client.container.SpectrobeDetailsContainer;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.client.gui.spectrobes_details.SpectrobeDetailsScreen;
-import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
+import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.CUpdateSpectrobeSlotPacket;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SOpenPrizmodPacket;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SOpenSpectrobeDetailsScreenPacket;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSyncSpectrobeMasterPacket;
-import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -54,8 +53,8 @@ public class SpectrobePacketHandler {
     public static boolean handlePacket(SSyncSpectrobeMasterPacket packet, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             Player player = Minecraft.getInstance().player;
-            PlayerSpectrobeMaster clientCap = player
-                    .getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
+            PlayerSpectrobeMaster clientCap = (PlayerSpectrobeMaster) player
+                    .getCapability(SpectrobeMaster.INSTANCE)
                     .orElseThrow(IllegalStateException::new);
             clientCap.deserializeNBT(packet.capability.serializeNBT());
 
@@ -66,8 +65,8 @@ public class SpectrobePacketHandler {
     public static boolean handlePacket(CUpdateSpectrobeSlotPacket packet, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             Player player = Minecraft.getInstance().player;
-            PlayerSpectrobeMaster clientCap = player
-                    .getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
+            PlayerSpectrobeMaster clientCap = (PlayerSpectrobeMaster) player
+                    .getCapability(SpectrobeMaster.INSTANCE)
                     .orElseThrow(IllegalStateException::new);
             clientCap.setTeamMember(packet.slot, packet.spectrobeUUID);
 

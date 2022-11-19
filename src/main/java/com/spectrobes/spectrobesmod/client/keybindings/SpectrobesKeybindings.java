@@ -3,7 +3,8 @@ package com.spectrobes.spectrobesmod.client.keybindings;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.container.PrizmodContainer;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
-import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
+import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
+import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
@@ -92,7 +93,7 @@ public class SpectrobesKeybindings {
                         if (result.getEntity() != null) {
                             if (result.getEntity() instanceof EntityKrawl) {
                                 EntityKrawl krawl = (EntityKrawl) result.getEntity();
-                                mc.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
+                                mc.player.getCapability(SpectrobeMaster.INSTANCE).ifPresent(sm -> {
                                     if (sm.getCurrentTeamMember() != null && sm.getCurrentTeamMember().active && sm.getCurrentTeamMember().properties.getStage() != SpectrobeProperties.Stage.CHILD) {
                                         List<EntitySpectrobe> spectrobes = mc.player.level
                                                 .getEntitiesOfClass(EntitySpectrobe.class, mc.player.getBoundingBox().inflate(30, 30, 30));
@@ -124,7 +125,7 @@ public class SpectrobesKeybindings {
 
                 if (CYCLE_TOOL_MENU_LEFT_KEYBIND.consumeClick())
                 {
-                    mc.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
+                    mc.player.getCapability(SpectrobeMaster.INSTANCE)
                             .ifPresent(sm -> {
                                 Spectrobe currentMember = sm.getCurrentTeamMember();
 
@@ -137,13 +138,13 @@ public class SpectrobesKeybindings {
                                     sm.spawnCurrent();
                                     SpectrobesNetwork.sendToServer(new SSpawnSpectrobePacket(sm.getCurrentTeamMember()));
                                 }
-                                SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket(sm));
+                                SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket((PlayerSpectrobeMaster) sm));
                             });
                 }
 
                 if (CYCLE_TOOL_MENU_RIGHT_KEYBIND.consumeClick())
                 {
-                    mc.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
+                    mc.player.getCapability(SpectrobeMaster.INSTANCE)
                             .ifPresent(sm -> {
                                 Spectrobe currentMember = sm.getCurrentTeamMember();
 
@@ -158,7 +159,7 @@ public class SpectrobesKeybindings {
                                     sm.spawnCurrent();
                                     SpectrobesNetwork.sendToServer(new SSpawnSpectrobePacket(sm.getCurrentTeamMember()));
                                 }
-                                SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket(sm));
+                                SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket((PlayerSpectrobeMaster) sm));
 
                             });
                 }

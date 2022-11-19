@@ -1,13 +1,9 @@
 package com.spectrobes.spectrobesmod.events;
 
-import com.spectrobes.spectrobesmod.client.armour.ArmourRendererRegisterer;
 import com.spectrobes.spectrobesmod.client.blocks.BlockRendererManager;
 import com.spectrobes.spectrobesmod.client.container.HealerContainer;
 import com.spectrobes.spectrobesmod.client.container.PrizmodContainer;
 import com.spectrobes.spectrobesmod.client.container.SpectrobeDetailsContainer;
-import com.spectrobes.spectrobesmod.client.entity.attacks.AttackRendererManager;
-import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlRendererManager;
-import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobeRendererManager;
 import com.spectrobes.spectrobesmod.client.gui.healer.HealerScreen;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.client.gui.spectrobes_details.SpectrobeDetailsScreen;

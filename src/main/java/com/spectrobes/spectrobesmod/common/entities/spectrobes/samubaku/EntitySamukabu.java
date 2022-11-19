@@ -11,6 +11,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.builder.ILoopType;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
@@ -54,11 +55,11 @@ public class EntitySamukabu extends EntityMammalSpectrobe {
         event.getController().transitionLengthTicks = 2;
         if(event.isMoving())
         {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.samukabu.walk", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.samukabu.walk", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         }
         else if(event.getAnimatable().isOrderedToSit()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.samukabu.sitting", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.samukabu.sitting", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;

@@ -6,11 +6,12 @@ import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class PlayerSpectrobeMaster {
+public class PlayerSpectrobeMaster implements IPlayerSpectrobeMaster {
 
     //index 0 & 1 : current fighting spectrobes
     //index 2-5 : 4 back up fighting spectrobes
@@ -318,8 +319,7 @@ public class PlayerSpectrobeMaster {
     }
 
     public void setMaxHealth(int maxHealth) {
-        boolean scaleHealth = false;
-        if(this.currentHealth == this.maxHealth) scaleHealth = true;
+        boolean scaleHealth = this.currentHealth == this.maxHealth;
         this.maxHealth = maxHealth;
         if(currentHealth > maxHealth) currentHealth = maxHealth;
         if(scaleHealth) this.currentHealth = (this.currentHealth / this.maxHealth);
@@ -344,7 +344,7 @@ public class PlayerSpectrobeMaster {
         while(this.currentXp >= getXp_required()) {
             this.currentXp = this.currentXp - getXp_required();
             this.level++;
-            this.setXp_required(new Double(getXp_required() * 1.2).intValue());
+            this.setXp_required(Math.round(getXp_required() * 1.2f));
         }
     }
 

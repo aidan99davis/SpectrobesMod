@@ -21,10 +21,12 @@ import net.minecraftforge.network.NetworkHooks;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.builder.ILoopType;
 import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 public class EntitySpawningSpore extends Monster implements IAnimatable, FlyingAnimal {
     protected static final EntityDataAccessor<Boolean> BOSS_SPORE =
@@ -34,7 +36,7 @@ public class EntitySpawningSpore extends Monster implements IAnimatable, FlyingA
             SynchedEntityData.defineId(EntitySpawningSpore.class,
                     EntityDataSerializers.INT);
 
-    public AnimationFactory animationControllers = new AnimationFactory(this);
+    public AnimationFactory animationControllers = GeckoLibUtil.createFactory(this);
     protected AnimationController moveController = new AnimationController(this, "moveAnimationController", 10F, this::moveController);
 
     public EntitySpawningSpore(EntityType<? extends Monster> type, Level worldIn) {
@@ -129,7 +131,7 @@ public class EntitySpawningSpore extends Monster implements IAnimatable, FlyingA
 
     //Animation
     public <ENTITY extends EntityKrawl> PlayState moveController(AnimationEvent<ENTITY> event) {
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.xelles_spore_spawn.idle", true));
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.xelles_spore_spawn.idle", ILoopType.EDefaultLoopTypes.LOOP));
         return PlayState.CONTINUE;
     }
     @Override

@@ -3,7 +3,7 @@ package com.spectrobes.spectrobesmod.common.packets.networking.packets;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
-import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
+import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
@@ -42,8 +42,8 @@ public class SReleaseSpectrobePacket {
         ctx.get().enqueueWork(() -> {
             Player player = ctx.get().getSender();
 
-            PlayerSpectrobeMaster serverCap = player
-                    .getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
+            PlayerSpectrobeMaster serverCap = (PlayerSpectrobeMaster) player
+                    .getCapability(SpectrobeMaster.INSTANCE)
                     .orElseThrow(IllegalStateException::new);
 
             EntitySpectrobe spectrobe1 = null;

@@ -30,7 +30,7 @@ import java.util.function.Predicate;
 
 public abstract class SpectrobesRangedWeapon extends BowItem implements IAnimatable, ISyncable, ISpectrobeWeapon {
     private static final int ANIM_OPEN = 0;
-    public AnimationFactory factory = new AnimationFactory(this);
+    public AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     public SpectrobesRangedWeapon(Item.Properties pProperties) {
         super(pProperties);

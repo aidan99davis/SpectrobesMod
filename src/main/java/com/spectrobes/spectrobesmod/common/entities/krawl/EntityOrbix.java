@@ -16,6 +16,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.builder.ILoopType;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
@@ -98,9 +99,9 @@ public class EntityOrbix extends EntityBossKrawl {
     @Override
     public <ENTITY extends EntityKrawl> PlayState moveController(AnimationEvent<ENTITY> event) {
         if(this.isAttacking()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.orbix.idle", true).addAnimation("animation.orbix.attack"));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.orbix.idle", ILoopType.EDefaultLoopTypes.LOOP).addAnimation("animation.orbix.attack"));
         } else {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.orbix.idle", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.orbix.idle", ILoopType.EDefaultLoopTypes.LOOP));
         }
         return PlayState.CONTINUE;
     }

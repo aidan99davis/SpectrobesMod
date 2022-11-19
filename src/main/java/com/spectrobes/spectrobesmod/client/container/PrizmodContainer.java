@@ -1,6 +1,6 @@
 package com.spectrobes.spectrobesmod.client.container;
 
-import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
+import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.*;
@@ -27,7 +27,7 @@ public class PrizmodContainer extends AbstractContainerMenu {
     public PrizmodContainer(int id, Player player) {
         super(PRIZMOD.get(), id);
         this.player = player;
-        capability = this.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
+        capability = (PlayerSpectrobeMaster) this.player.getCapability(SpectrobeMaster.INSTANCE)
                 .orElseThrow(IllegalStateException::new);
     }
 

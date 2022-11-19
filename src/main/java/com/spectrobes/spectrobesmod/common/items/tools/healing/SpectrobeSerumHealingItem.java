@@ -8,6 +8,7 @@ import net.minecraftforge.common.util.NonNullLazy;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.builder.ILoopType;
 import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
@@ -61,7 +62,7 @@ public class SpectrobeSerumHealingItem extends Item implements IAnimatable {
     }
 
     private PlayState controller(AnimationEvent animationEvent) {
-        animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.serum.particle", true));
+        animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.serum.particle", ILoopType.EDefaultLoopTypes.LOOP));
         return PlayState.CONTINUE;
     }
 

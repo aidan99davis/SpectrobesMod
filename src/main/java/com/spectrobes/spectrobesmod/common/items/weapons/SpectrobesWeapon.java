@@ -21,7 +21,7 @@ import java.util.List;
 
 public abstract class SpectrobesWeapon extends TieredItem implements IAnimatable, ISyncable, ISpectrobeWeapon {
     private static final int ANIM_OPEN = 0;
-    public AnimationFactory factory = new AnimationFactory(this);
+    public AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     public SpectrobesWeapon(Properties pProperties) {
         super(Tiers.DIAMOND, pProperties);

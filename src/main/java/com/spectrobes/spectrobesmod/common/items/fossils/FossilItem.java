@@ -1,6 +1,6 @@
 package com.spectrobes.spectrobesmod.common.items.fossils;
 
-import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
+import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSyncSpectrobeMasterPacket;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
@@ -27,7 +27,7 @@ public abstract class FossilItem extends Item {
         itemStack.shrink(1);
         if(!worldIn.isClientSide) {
             Spectrobe spectrobe = getSpectrobeInstance();
-            playerIn.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(playerCap -> {
+            playerIn.getCapability(SpectrobeMaster.INSTANCE).ifPresent(playerCap -> {
                 playerCap.addSpectrobe(spectrobe);
                 SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(playerCap),
                         (ServerPlayer) playerIn);

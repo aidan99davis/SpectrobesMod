@@ -98,8 +98,7 @@ public abstract class EntityKrawl extends Monster implements IAnimatable, IHasNa
 
             super.actuallyHurt(damageSrc, scaledAmount);
         }
-        else if(damageSrc.getDirectEntity() instanceof Player) {
-            Player playerEntity = (Player) damageSrc.getDirectEntity();
+        else if(damageSrc.getDirectEntity() instanceof Player playerEntity) {
             if(playerEntity.getMainHandItem().getItem() != null
                     && playerEntity.getMainHandItem().getItem() instanceof SpectrobesWeapon) {
                 ISpectrobeWeapon weapon = (ISpectrobeWeapon) playerEntity.getMainHandItem().getItem();
@@ -139,7 +138,7 @@ public abstract class EntityKrawl extends Monster implements IAnimatable, IHasNa
         if(this.isSunBurnTick()) {
             this.setSecondsOnFire(8);
         }
-        if((getLastHurtByMobTimestamp() - this.tickCount) > 200) this.setHealth(getHealth() + (getHealth() / 100));
+        if((getLastHurtByMobTimestamp() - this.tickCount) > 2000) this.setHealth(getHealth() + (getHealth() / 100));
     }
 
     @Override

@@ -61,7 +61,7 @@ public abstract class EntityCrustaceanSpectrobe extends EntitySpectrobe {
                 = level.getEntitiesOfClass(getSpectrobeClass(),
                 this.getBoundingBox()
                         .inflate(10, 10, 10));
-        if(mates.isEmpty()) {
+        if(mates.isEmpty() || mates.size() == 1) {
             this.setTicksTillMate(16000);
             return;
         }
@@ -94,6 +94,11 @@ public abstract class EntityCrustaceanSpectrobe extends EntitySpectrobe {
             spectrobe.teleportTo(getX(), getY(), getZ());
         }
         //todo: aquatic breeding. eggs? livebirth? - livebirth for now, with a litter size.
+    }
+
+    @Override
+    protected int getMaxSchoolSize() {
+        return 5;
     }
 
     protected abstract int getMaxLitterSize();

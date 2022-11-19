@@ -18,6 +18,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.builder.ILoopType;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
@@ -115,10 +116,10 @@ public class EntityOtorso extends EntityBossKrawl {
     @Override
     public <ENTITY extends EntityKrawl> PlayState moveController(AnimationEvent<ENTITY> event) {
         if(event.getAnimatable().getDeltaMovement() != Vec3.ZERO) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.otorso.walk", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.otorso.walk", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         } else if(((EntityOtorso)event.getAnimatable()).isAttacking()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.otorso.attack", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.otorso.attack", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;

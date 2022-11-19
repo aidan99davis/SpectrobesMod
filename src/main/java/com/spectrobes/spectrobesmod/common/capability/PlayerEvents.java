@@ -1,17 +1,11 @@
 package com.spectrobes.spectrobesmod.common.capability;
 
-import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSyncSpectrobeMasterPacket;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -21,25 +15,45 @@ import java.util.UUID;
 public class PlayerEvents {
     public static PlayerEvents instance = new PlayerEvents();
 
-    @SubscribeEvent
-    public void onEntityConstructing(AttachCapabilitiesEvent<Entity> event){
-        if (event.getObject() instanceof Player) {
-            if (!event.getObject().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).isPresent()) {
-                event.addCapability(new ResourceLocation(SpectrobesInfo.MOD_ID, "spectrobesmasters"),
-                        new PlayerSpectrobeMasterDispatcher());
-            }
-        }
-    }
+//    @SubscribeEvent
+//    public void onEntityConstructing(AttachCapabilitiesEvent<Entity> event){
+//        if (event.getObject() instanceof Player) {
+//            if (!event.getObject().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).isPresent()) {
+//                event.addCapability(new ResourceLocation(SpectrobesInfo.MOD_ID, "spectrobesmasters"),
+//                        new PlayerSpectrobeMasterDispatcher());
+//            }
+//        }
+//    }
+
+//    @SubscribeEvent
+//    public static void OnPlayerClone(PlayerEvent.Clone event) {
+//        SpectrobesInfo.LOGGER.info("Clone event");
+//        if (event.getEntity() instanceof ServerPlayer serverPlayerNew && event.getOriginal() instanceof ServerPlayer serverPlayerOld) {
+//            SpectrobesInfo.LOGGER.info("Players are server based");
+//            serverPlayerOld.reviveCaps();
+//            SpectrobesInfo.LOGGER.info("capability revived");
+//            serverPlayerOld.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(capOld -> {
+//                SpectrobesInfo.LOGGER.info("old capability exists");
+//                serverPlayerNew.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(capNew -> {
+//                    SpectrobesInfo.LOGGER.info("new capability exists");
+//                    capNew.copyFrom(capOld);
+//                    SpectrobesInfo.LOGGER.info("new capability copied from old one");
+//                });
+//            });
+//            serverPlayerOld.invalidateCaps();
+//            SpectrobesInfo.LOGGER.info("invalidated capability");
+//        }
+//    }
 
     @SubscribeEvent
     public void onPlayerCloned(PlayerEvent.Clone event) {
         event.getOriginal().reviveCaps();
         if(!event.getOriginal().level.isClientSide()) {
-            event.getOriginal().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(oldStore -> {
-                event.getEntity().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(newStore -> {
-                    newStore.copyFrom(oldStore);
+            event.getOriginal().getCapability(SpectrobeMaster.INSTANCE).ifPresent(oldStore -> {
+                event.getEntity().getCapability(SpectrobeMaster.INSTANCE).ifPresent(newStore -> {
+                    newStore.copyFrom((PlayerSpectrobeMaster) oldStore);
                     newStore.setCurrentHealth(newStore.getMaxHealth());
-                    despawnSpectrobes(event, newStore);
+                    despawnSpectrobes(event, (PlayerSpectrobeMaster) newStore);
                     SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(newStore), (ServerPlayer) event.getEntity());
                 });
             });
@@ -70,13 +84,19 @@ public class PlayerEvents {
 
     @SubscribeEvent
     public void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
-        event.getEntity().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(newStore -> {
+        event.getEntity().getCapability(SpectrobeMaster.INSTANCE).ifPresent(newStore -> {
+            SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(newStore), (ServerPlayer) event.getEntity());
+        });
+    }
+    @SubscribeEvent
+    public void onPlayerChangeDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
+        event.getEntity().getCapability(SpectrobeMaster.INSTANCE).ifPresent(newStore -> {
             SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(newStore), (ServerPlayer) event.getEntity());
         });
     }
 
-    @SubscribeEvent
-    public void onRegisterCapabilities(RegisterCapabilitiesEvent event) {
-        event.register(PlayerSpectrobeMaster.class);
-    }
+//    @SubscribeEvent
+//    public void onRegisterCapabilities(RegisterCapabilitiesEvent event) {
+//        event.register(PlayerSpectrobeMaster.class);
+//    }
 }
