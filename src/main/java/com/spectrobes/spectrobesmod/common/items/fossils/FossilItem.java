@@ -26,7 +26,7 @@ public abstract class FossilItem extends Item {
         ItemStack itemStack = playerIn.getItemInHand(handIn);
         itemStack.shrink(1);
         if(!worldIn.isClientSide) {
-            Spectrobe spectrobe = getSpectrobeInstance();
+            Spectrobe spectrobe = getSpectrobeInstance().copy(false);
             playerIn.getCapability(SpectrobeMaster.INSTANCE).ifPresent(playerCap -> {
                 playerCap.addSpectrobe(spectrobe);
                 SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(playerCap),

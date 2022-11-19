@@ -15,6 +15,7 @@ import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
@@ -86,7 +87,7 @@ public class SpectrobesKeybindings {
 
                     EntityHitResult result = ProjectileUtil.getEntityHitResult(mc.player,
                             vector3d, vector3d2, axisalignedbb,
-                            entity -> entity instanceof EntityKrawl,
+                            entity -> entity instanceof LivingEntity,
                             d1);
 
                     if (result != null) {
@@ -102,10 +103,29 @@ public class SpectrobesKeybindings {
                                             if (spectrobe.getSpectrobeData().SpectrobeUUID.equals(sm.getCurrentTeamMember().SpectrobeUUID)) {
                                                 SpectrobesNetwork.sendToServer(new CSpectrobeAttackPacket(spectrobe.getId(), krawl.getId()));
                                                 spectrobe.setTarget(krawl);
+                                                spectrobe.getNavigation().moveTo(krawl, 1);
                                             }
                                         }
                                     }
                                 });
+                            } else if (result.getEntity() instanceof EntitySpectrobe) {
+                                EntitySpectrobe spectrobe = (EntitySpectrobe) result.getEntity();
+                                if(spectrobe.getOwner() == null && spectrobe.getStage() != SpectrobeProperties.Stage.CHILD) {
+                                    mc.player.getCapability(SpectrobeMaster.INSTANCE).ifPresent(sm -> {
+                                        if (sm.getCurrentTeamMember() != null && sm.getCurrentTeamMember().active && sm.getCurrentTeamMember().properties.getStage() != SpectrobeProperties.Stage.CHILD) {
+                                            List<EntitySpectrobe> spectrobes = mc.player.level
+                                                    .getEntitiesOfClass(EntitySpectrobe.class, mc.player.getBoundingBox().inflate(16, 16, 16));
+                                            for (EntitySpectrobe spec :
+                                                    spectrobes) {
+                                                if (spec.getSpectrobeData().SpectrobeUUID.equals(sm.getCurrentTeamMember().SpectrobeUUID)) {
+                                                    SpectrobesNetwork.sendToServer(new CSpectrobeAttackPacket(spec.getId(), spectrobe.getId()));
+                                                    spec.setTarget(spectrobe);
+                                                    spec.getNavigation().moveTo(spectrobe, 1);
+                                                }
+                                            }
+                                        }
+                                    });
+                                }
                             }
                         }
                     }
