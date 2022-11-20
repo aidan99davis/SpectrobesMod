@@ -152,6 +152,8 @@ public class LineUpPage extends PrizmodPage {
                         button.piece.spectrobe)) {
 
                     populateGrid();
+                    selectedButton = null;
+                    return;
                 }
             }
         }

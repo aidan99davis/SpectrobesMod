@@ -18,6 +18,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
@@ -211,4 +212,8 @@ public abstract class EntityKrawl extends Monster implements IAnimatable, IHasNa
         return krawlProperties.getNature();
     }
 
+    public void setGlowing(boolean glowing) {
+//        this.setGlowingTag(glowing);
+        this.setSharedFlag(6, glowing);
+    }
 }

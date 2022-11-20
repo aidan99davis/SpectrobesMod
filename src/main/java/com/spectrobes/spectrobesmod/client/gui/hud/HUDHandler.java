@@ -3,16 +3,22 @@ package com.spectrobes.spectrobesmod.client.gui.hud;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
+import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesToolsRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeIconInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
+import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -41,6 +47,22 @@ public class HUDHandler {
             drawSpectrobeMasterXpBar(event.getPoseStack(), resolution, finalWidth);
         }
     }
+//
+//    @SubscribeEvent
+//    public static void onRenderEntity(RenderLivingEvent.Pre event) {
+//        SpectrobesInfo.LOGGER.info("RENDER ENTITY CALL");
+//        SpectrobesInfo.LOGGER.info("RENDER ENTITY CALL: " + event.getEntity().getClass());
+//        if(event.getEntity() instanceof EntityKrawl
+//                || event.getEntity() instanceof EntitySpectrobe) {
+//            SpectrobesInfo.LOGGER.info("RENDER ENTITY CALL - IS SPECTROBE OR KRAWL");
+//            VertexConsumer consumer = event.getMultiBufferSource()
+//                    .getBuffer(RenderType.outline(
+//                            event.getRenderer().getTextureLocation(
+//                                    event.getEntity())));
+//
+//            event.getRenderer().getModel().renderToBuffer(event.getPoseStack(), consumer, 15728880, LivingEntityRenderer.getOverlayCoords(event.getEntity(), 0.0F), 1.0F, 1.0F, 1.0F, 1.0F);
+//        }
+//    }
 
     private static void drawSpectrobeTeamBar(PoseStack ms, Window res, float partialTicks) {
         Minecraft mc = Minecraft.getInstance();

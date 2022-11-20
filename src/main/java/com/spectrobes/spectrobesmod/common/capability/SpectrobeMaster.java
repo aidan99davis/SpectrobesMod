@@ -10,7 +10,6 @@ public class SpectrobeMaster {
     public static final Capability<PlayerSpectrobeMaster> INSTANCE = CapabilityManager.get(new CapabilityToken<>() {});
 
     public static void register(RegisterCapabilitiesEvent event) {
-        SpectrobesInfo.LOGGER.info("Registering capability");
         event.register(PlayerSpectrobeMaster.class);
     }
 }

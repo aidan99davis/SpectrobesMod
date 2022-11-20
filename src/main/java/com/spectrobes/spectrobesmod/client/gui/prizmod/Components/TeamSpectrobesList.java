@@ -51,7 +51,6 @@ public class TeamSpectrobesList extends AbstractWidget {
             parent.parent.getMenu().setTeamMember(index, piece.SpectrobeUUID);
             return true;
         } else {
-            SpectrobesInfo.LOGGER.info("unknown index, wtf?" + index);
             return false;
         }
     }

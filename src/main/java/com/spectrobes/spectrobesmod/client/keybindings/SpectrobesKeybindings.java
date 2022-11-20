@@ -6,6 +6,7 @@ import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
+import com.spectrobes.spectrobesmod.common.entities.krawl.EntityVortex;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.*;
@@ -52,6 +53,8 @@ public class SpectrobesKeybindings {
                     GLFW.GLFW_KEY_F,
                     "key.prizmod.category");
 
+    private static LivingEntity Last_Attack_Target = null;
+
     private static void SummonPlayerSpectrobe(Minecraft mc, Spectrobe currentMember, UUID oldUUID, List<EntitySpectrobe> spectrobes) {
         if(oldUUID != null) {
             for(EntitySpectrobe spectrobe : spectrobes) {
@@ -92,7 +95,7 @@ public class SpectrobesKeybindings {
 
                     if (result != null) {
                         if (result.getEntity() != null) {
-                            if (result.getEntity() instanceof EntityKrawl) {
+                            if (result.getEntity() instanceof EntityKrawl && !(result.getEntity() instanceof EntityVortex)) {
                                 EntityKrawl krawl = (EntityKrawl) result.getEntity();
                                 mc.player.getCapability(SpectrobeMaster.INSTANCE).ifPresent(sm -> {
                                     if (sm.getCurrentTeamMember() != null && sm.getCurrentTeamMember().active && sm.getCurrentTeamMember().properties.getStage() != SpectrobeProperties.Stage.CHILD) {
@@ -102,8 +105,15 @@ public class SpectrobesKeybindings {
                                                 spectrobes) {
                                             if (spectrobe.getSpectrobeData().SpectrobeUUID.equals(sm.getCurrentTeamMember().SpectrobeUUID)) {
                                                 SpectrobesNetwork.sendToServer(new CSpectrobeAttackPacket(spectrobe.getId(), krawl.getId()));
+                                                if(Last_Attack_Target != null && Last_Attack_Target.isAlive()) {
+                                                    if(spectrobe.getTarget() instanceof EntityKrawl krawl1) krawl1.setGlowing(false);
+                                                    if(spectrobe.getTarget() instanceof EntitySpectrobe spec1) spec1.setGlowing(false);
+//                                                    spectrobe.setTarget(null);
+                                                }
                                                 spectrobe.setTarget(krawl);
+                                                Last_Attack_Target = krawl;
                                                 spectrobe.getNavigation().moveTo(krawl, 1);
+                                                krawl.setGlowing(true);
                                             }
                                         }
                                     }
@@ -119,8 +129,17 @@ public class SpectrobesKeybindings {
                                                     spectrobes) {
                                                 if (spec.getSpectrobeData().SpectrobeUUID.equals(sm.getCurrentTeamMember().SpectrobeUUID)) {
                                                     SpectrobesNetwork.sendToServer(new CSpectrobeAttackPacket(spec.getId(), spectrobe.getId()));
+                                                    if(Last_Attack_Target != null && Last_Attack_Target.isAlive()) {
+                                                        if(spec.getTarget() instanceof EntityKrawl krawl1) krawl1.setGlowing(false);
+                                                        if(spec.getTarget() instanceof EntitySpectrobe spec1) spec1.setGlowing(false);
+//                                                        spec.setTarget(null);
+                                                    }
+                                                    Last_Attack_Target = spectrobe;
+
                                                     spec.setTarget(spectrobe);
                                                     spec.getNavigation().moveTo(spectrobe, 1);
+                                                    spectrobe.setGlowing(true);
+
                                                 }
                                             }
                                         }

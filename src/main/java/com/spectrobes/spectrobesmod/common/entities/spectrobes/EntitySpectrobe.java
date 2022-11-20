@@ -36,10 +36,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.LeapAtTargetGoal;
@@ -488,6 +485,11 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAd
         }
     }
 
+    public void setGlowing(boolean glowing) {
+//        this.setGlowingTag(glowing);
+        this.setSharedFlag(6, glowing); //we dont want all players to see
+    }
+
     @Override
     protected void actuallyHurt(DamageSource damageSrc, float damageAmount) {
         if(getOwner() != null && getSpectrobeData().properties.getStage() == Stage.CHILD) {
@@ -522,6 +524,20 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAd
                 SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(sm), (ServerPlayer) getOwner());
             });
         }
+    }
+
+    @Override
+    public void setTarget(@org.jetbrains.annotations.Nullable LivingEntity pTarget) {
+        if(getTarget() != null) {
+            if(getTarget() instanceof EntityKrawl krawl1) krawl1.setGlowing(false);
+            if(getTarget() instanceof EntitySpectrobe spec1) spec1.setGlowing(false);
+        }
+        if(pTarget != null) {
+            if(pTarget instanceof EntityKrawl krawl1) krawl1.setGlowing(true);
+            if(pTarget instanceof EntitySpectrobe spec1) spec1.setGlowing(true);
+        }
+        super.setTarget(pTarget);
+
     }
 
     @Override
