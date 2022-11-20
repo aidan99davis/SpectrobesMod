@@ -95,7 +95,7 @@ public class PlayerSpectrobeMaster implements IPlayerSpectrobeMaster {
     }
 
     public void removeTeamMember(int index) {
-        currentTeam.remove(index);
+        currentTeam.replace(index, null);
     }
 
     public List<Spectrobe> getOwnedSpectrobes() {

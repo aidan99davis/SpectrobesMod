@@ -2,6 +2,9 @@ package com.spectrobes.spectrobesmod.common.entities.spectrobes;
 
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.SpectrobeFindWaterGoal;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.SpectrobeRandomStrollGoal;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobType;
@@ -11,7 +14,9 @@ import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.RandomSwimmingGoal;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.List;
 import java.util.Random;
@@ -121,18 +126,31 @@ public abstract class EntityCrustaceanSpectrobe extends EntitySpectrobe {
                 this.fish.setDeltaMovement(this.fish.getDeltaMovement().add(0.0D, 0.005D, 0.0D));
             }
 
-//            if (this.action == Action.MOVE_TO && !this.fish.getNavigator().noPath()) {
-                float lvt_1_1_ = (float)this.wantedX - (float)this.fish.getX();
-                float lvt_3_1_ = (float)this.wantedY - (float)this.fish.getY();
-                float lvt_5_1_ = (float)this.wantedZ - (float)this.fish.getZ();
-                float lvt_7_1_ = Mth.sqrt(lvt_1_1_ * lvt_1_1_ + lvt_3_1_ * lvt_3_1_ + lvt_5_1_ * lvt_5_1_);
-                lvt_3_1_ /= lvt_7_1_;
-                float lvt_9_1_ = (float)(Mth.atan2(lvt_5_1_, lvt_1_1_) * 57.2957763671875D) - 90.0F;
-                this.fish.yRotO = this.rotlerp(this.fish.yRotO, lvt_9_1_, 90.0F);
-                this.fish.yBodyRot = this.fish.yRotO;
-                float lvt_10_1_ = (float)(this.speedModifier * this.fish.getAttribute(Attributes.MOVEMENT_SPEED).getValue());
+            if (this.operation == MoveControl.Operation.MOVE_TO && !this.fish.getNavigation().isDone()) {
+                float d0 = (float) this.wantedX - (float) this.fish.getX();
+                float d1 = (float) this.wantedY - (float) this.fish.getY();
+                float d2 = (float) this.wantedZ - (float) this.fish.getZ();
+                float lvt_7_1_ = Mth.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
+                BlockPos blockpos = this.mob.blockPosition();
+                BlockState blockstate = this.mob.level.getBlockState(blockpos);
+                VoxelShape voxelshape = blockstate.getCollisionShape(this.mob.level, blockpos);
+                if (d1 > (double)this.mob.getStepHeight() && d0 * d0 + d2 * d2 < (double)Math.max(1.0F, this.mob.getBbWidth()) || !voxelshape.isEmpty() && this.mob.getY() < voxelshape.max(Direction.Axis.Y) + (double)blockpos.getY() && !blockstate.is(BlockTags.DOORS) && !blockstate.is(BlockTags.FENCES)) {
+                    this.mob.getJumpControl().jump();
+                    this.operation = MoveControl.Operation.JUMPING;
+                }
+                d1 /= lvt_7_1_;
+                float lvt_9_1_ = (float) (Mth.atan2(d2, d0) * 57.2957763671875D) - 90.0F;
+                this.fish.setYRot(this.rotlerp(this.fish.yRotO, lvt_9_1_, 90.0F));
+                this.fish.yBodyRot = this.fish.getYRot();
+                float lvt_10_1_ = (float) (this.speedModifier * this.fish.getAttribute(Attributes.MOVEMENT_SPEED).getValue());
                 this.fish.setSpeed(Mth.lerp(0.125F, this.fish.getSpeed(), lvt_10_1_));
-                this.fish.setDeltaMovement(this.fish.getDeltaMovement().add(0.0D, (double)this.fish.getSpeed() * lvt_3_1_ * 0.1D, 0.0D));
+                this.fish.setDeltaMovement(this.fish.getDeltaMovement().add(0.0D, (double) this.fish.getSpeed() * d1 * 0.1D, 0.0D));
+            } else if (this.operation == MoveControl.Operation.JUMPING) {
+                this.mob.setSpeed((float)(this.speedModifier * this.mob.getAttributeValue(Attributes.MOVEMENT_SPEED)));
+                if (this.mob.isOnGround()) {
+                    this.operation = MoveControl.Operation.WAIT;
+                }
+            }
         }
     }
 

@@ -1,8 +1,8 @@
 package com.spectrobes.spectrobesmod.common.packets.networking.packets;
 
-
 import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
+import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
@@ -48,7 +48,7 @@ public class SUpdateSpectrobeSlotPacket {
                     .getCapability(SpectrobeMaster.INSTANCE)
                     .orElseThrow(IllegalStateException::new);
             serverCap.setTeamMember(slot, spectrobeUUID);
-
+//            SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(serverCap), player);
         });
         return true;
     }

@@ -41,12 +41,12 @@ public class TeamSpectrobesList extends AbstractWidget {
 
         if(index  >= 0
                 && index < 6
-                && piece.properties.getStage()
-                    != SpectrobeProperties.Stage.CHILD) {
+                && (piece == null || piece.properties.getStage()
+                    != SpectrobeProperties.Stage.CHILD)) {
             gridData[index].spectrobe = piece;
-            parent.parent.getMenu().setTeamMember(index, piece.SpectrobeUUID);
+            parent.parent.getMenu().setTeamMember(index, piece == null? null : piece.SpectrobeUUID);
             return true;
-        } else if(index == 6 && piece.properties.getStage() == SpectrobeProperties.Stage.CHILD) {
+        } else if(index == 6 && piece != null && piece.properties.getStage() == SpectrobeProperties.Stage.CHILD) {
             gridData[index].spectrobe = piece;
             parent.parent.getMenu().setTeamMember(index, piece.SpectrobeUUID);
             return true;
