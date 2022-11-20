@@ -11,7 +11,7 @@ import java.util.List;
 
 public class ChildFormSearchGoal extends Goal {
 
-    private EntitySpectrobe entity;
+    private final EntitySpectrobe entity;
     private BlockPos target;
 
     public ChildFormSearchGoal(EntitySpectrobe spectrobe) {
@@ -19,11 +19,13 @@ public class ChildFormSearchGoal extends Goal {
     }
 
     public boolean canUse() {
-        if(entity.getStage() == SpectrobeProperties.Stage.CHILD && entity.isSearching()) {
+        if (entity.getStage() != SpectrobeProperties.Stage.CHILD || !entity.isSearching()) {
+            entity.setState(0);
+            return false;
+        } else {
             List<BlockPos> blocks = getMineralBlocksInArea();
             return !blocks.isEmpty();
         }
-        return false;
     }
 
     public void start() {
@@ -32,6 +34,7 @@ public class ChildFormSearchGoal extends Goal {
             target = getClosestMineral(blocks);
             this.entity.getMoveControl().setWantedPosition(target.getX(), target.getY(), target.getZ(), 1.0D);
         }
+        entity.setState(0);
     }
 
     private List<BlockPos> getMineralBlocksInArea() {
@@ -67,7 +70,7 @@ public class ChildFormSearchGoal extends Goal {
     @Override
     public boolean canContinueToUse() {
         if(target != null) {
-            if(this.entity.distanceToSqr((double)target.getX(), (double)target.getY(), (double)target.getZ()) < 2) {
+            if(this.entity.distanceToSqr(target.getX(), target.getY(), target.getZ()) < 2) {
                 target = null;
                 entity.setState(1);
                 return false;

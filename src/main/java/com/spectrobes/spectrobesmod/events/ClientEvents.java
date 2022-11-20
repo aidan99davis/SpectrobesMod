@@ -25,6 +25,5 @@ public class ClientEvents {
         MenuScreens.register(PrizmodContainer.PRIZMOD.get(), PrizmodScreen::new);
         MenuScreens.register(HealerContainer.HEALER.get(), HealerScreen::new);
         MenuScreens.register(SpectrobeDetailsContainer.SPECTROBE_DETAILS.get(), SpectrobeDetailsScreen::new);
-        BlockRendererManager.init();
     }
 }

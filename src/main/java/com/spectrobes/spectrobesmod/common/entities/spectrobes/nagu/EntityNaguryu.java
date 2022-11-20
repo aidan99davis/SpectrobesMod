@@ -49,13 +49,13 @@ public class EntityNaguryu extends EntityMammalSpectrobe {
     public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event) {
         if(event.isMoving())
         {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.Naguryu.walk", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.Naguryu.walk", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         }
         else if(event.getAnimatable().isOrderedToSit()) {
             event.getController().setAnimation(new AnimationBuilder()
-                    .addAnimation("animation.Naguryu.sitting", false)
-                    .addAnimation("animation.Naguryu.sit", true));
+                    .addAnimation("animation.Naguryu.sitting", ILoopType.EDefaultLoopTypes.PLAY_ONCE)
+                    .addAnimation("animation.Naguryu.sit", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         } else if(event.getAnimatable().isAttacking()) {
             event.getController().setAnimation(new AnimationBuilder()

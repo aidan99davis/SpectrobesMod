@@ -7,8 +7,6 @@ import com.spectrobes.spectrobesmod.common.entities.spectrobes.grilda.EntityGril
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 import software.bernie.geckolib3.resource.GeckoLibCache;
 
@@ -18,7 +16,7 @@ public class GrildaRenderer extends GeoEntityRenderer<EntityGrilda> {
 
     public GrildaRenderer(EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new GrildaModel());
-        GeckoLibCache.getInstance().parser.setValue("anim_speed", 0.5);
+        GeckoLibCache.getInstance().parser.setValue("anim_speed", () -> 0.5d);
     }
 
     @Nullable

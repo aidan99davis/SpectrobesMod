@@ -14,6 +14,6 @@ import software.bernie.geckolib3.renderers.geo.GeoArmorRenderer;
 public class ArmourRendererRegisterer {
     @SubscribeEvent
     public static void registerRenderers(final EntityRenderersEvent.AddLayers event) {
-        GeoArmorRenderer.registerArmorRenderer(BasicNppArmourItem.class, new BasicNppArmourRenderer());
+        GeoArmorRenderer.registerArmorRenderer(BasicNppArmourItem.class, BasicNppArmourRenderer::new);
     }
 }

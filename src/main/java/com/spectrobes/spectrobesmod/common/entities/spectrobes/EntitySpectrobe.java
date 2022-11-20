@@ -1,6 +1,5 @@
 package com.spectrobes.spectrobesmod.common.entities.spectrobes;
 
-import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.gui.SpectrobeGuiHandler;
 import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
@@ -95,7 +94,7 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAd
                     Spectrobe.SpectrobeSerializer);
 
     public AnimationFactory animationControllers = GeckoLibUtil.createFactory(this);
-    protected AnimationController moveAnimationController = new AnimationController(this, "moveAnimationController", 10F, this::moveController);
+    protected AnimationController<EntitySpectrobe> moveAnimationController = new AnimationController<>(this, "moveAnimationController", 10F, this::moveController);
 
     public EntitySpectrobe(EntityType<? extends EntitySpectrobe> entityTypeIn,
                            Level worldIn) {

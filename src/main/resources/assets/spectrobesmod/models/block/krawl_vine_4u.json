@@ -1,5 +1,6 @@
 {
     "ambientocclusion": false,
+    "render_type": "cutout",
     "textures": {
         "particle": "spectrobesmod:blocks/krawl_vine",
         "vine": "spectrobesmod:blocks/krawl_vine"
