@@ -94,7 +94,7 @@ public class PrizmodContainer extends AbstractContainerMenu {
         capability.setTeamMember(index, spectrobeUUID);
         if(player.level.isClientSide()) {
             SpectrobesNetwork.sendToServer(new SUpdateSpectrobeSlotPacket(index, spectrobeUUID));
-//            markDirty();
+            markDirty();
         }
 
     }

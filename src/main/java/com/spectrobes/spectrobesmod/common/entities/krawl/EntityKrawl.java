@@ -18,7 +18,6 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
@@ -39,7 +38,7 @@ import static com.spectrobes.spectrobesmod.util.DamageUtils.getTypeBonus;
 public abstract class EntityKrawl extends Monster implements IAnimatable, IHasNature {
     public KrawlProperties krawlProperties;
     public AnimationFactory animationControllers = GeckoLibUtil.createFactory(this);
-    protected AnimationController moveController = new AnimationController(this, "moveAnimationController", 10F, this::moveController);
+    protected AnimationController<EntityKrawl> moveController = new AnimationController<>(this, "moveAnimationController", 10F, this::moveController);
 
     private static final EntityDataAccessor<Boolean> IS_ATTACKING =
             SynchedEntityData.defineId(EntityKrawl.class,
@@ -81,8 +80,7 @@ public abstract class EntityKrawl extends Monster implements IAnimatable, IHasNa
 
     @Override
     protected void actuallyHurt(DamageSource damageSrc, float damageAmount) {
-        if (damageSrc.getDirectEntity() instanceof IHasNature) {
-            IHasNature attacker = (IHasNature) damageSrc.getDirectEntity();
+        if (damageSrc.getDirectEntity() instanceof IHasNature attacker) {
             int advantage = Spectrobe.hasTypeAdvantage(attacker, this);
 
             int atkPower = 0;
@@ -146,7 +144,6 @@ public abstract class EntityKrawl extends Monster implements IAnimatable, IHasNa
     protected void registerGoals()
     {
 //        this.goalSelector.addGoal(5, new BreedGoal(this,10)); todo: Make krawl eat mass and duplicate?
-//        this.goalSelector.addGoal(7, new SwimGoal(1f));
         this.goalSelector.addGoal(1, new AttackSpectrobeGoal(this, true, true));
         this.goalSelector.addGoal(2, new RestrictSunGoal(this));
         this.goalSelector.addGoal(3, new FleeSunGoal(this, 1.0D));
@@ -204,7 +201,7 @@ public abstract class EntityKrawl extends Monster implements IAnimatable, IHasNa
     @Override
     public void registerControllers(AnimationData data)
     {
-        data.addAnimationController(new AnimationController(this, "controller", 0, this::moveController));
+        data.addAnimationController(new AnimationController<>(this, "controller", 0, this::moveController));
     }
 
     @Override
@@ -213,7 +210,7 @@ public abstract class EntityKrawl extends Monster implements IAnimatable, IHasNa
     }
 
     public void setGlowing(boolean glowing) {
-//        this.setGlowingTag(glowing);
-        this.setSharedFlag(6, glowing);
+        this.setGlowingTag(glowing);
+//        this.setSharedFlag(6, glowing);
     }
 }

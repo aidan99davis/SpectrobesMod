@@ -6,7 +6,6 @@ import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSpawnSpectrobePacket;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -16,8 +15,8 @@ import java.util.UUID;
 
 public class LineUpPage extends PrizmodPage {
 
-    private AllSpectrobesList AllSpectrobesGrid;
-    private TeamSpectrobesList TeamSpectrobesGrid;
+    private final AllSpectrobesList AllSpectrobesGrid;
+    private final TeamSpectrobesList TeamSpectrobesGrid;
     private SpectrobeButton selectedButton;
 
     public LineUpPage(PrizmodScreen parent) {
@@ -95,10 +94,10 @@ public class LineUpPage extends PrizmodPage {
     }
 
     private SpectrobeButton addSpectrobeButton(SpectrobePiece sp, boolean teamSpectrobe) {
-        SpectrobeButton button = new SpectrobeButton(this.parent, sp,
+        return new SpectrobeButton(this.parent, sp,
                 onClick -> {
                     if(Screen.hasShiftDown() && !teamSpectrobe) {
-                        if(sp.spectrobe != null && sp.spectrobe.active == false) {
+                        if(sp.spectrobe != null && !sp.spectrobe.active) {
                             if(parent.player.level.isClientSide()) {
                                 Spectrobe spectrobe = sp.spectrobe;
                                 SpectrobesNetwork.sendToServer(new SSpawnSpectrobePacket(spectrobe));
@@ -118,7 +117,6 @@ public class LineUpPage extends PrizmodPage {
                     }
 
                 });
-        return button;
     }
 
     private void setSelectedSpectrobe(SpectrobeButton button) {
@@ -163,10 +161,6 @@ public class LineUpPage extends PrizmodPage {
             return;
         }
         selectedButton = null;
-    }
-
-    private void removeButton(AbstractWidget b) {
-        this.buttons.remove(b);
     }
 
     @Override

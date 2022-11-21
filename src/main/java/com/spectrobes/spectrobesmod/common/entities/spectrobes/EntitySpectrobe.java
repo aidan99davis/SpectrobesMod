@@ -485,8 +485,8 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAd
     }
 
     public void setGlowing(boolean glowing) {
-//        this.setGlowingTag(glowing);
-        this.setSharedFlag(6, glowing); //we dont want all players to see
+        this.setGlowingTag(glowing);
+//        this.setSharedFlag(6, glowing); //we dont want all players to see
     }
 
     @Override
@@ -527,11 +527,11 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAd
 
     @Override
     public void setTarget(@org.jetbrains.annotations.Nullable LivingEntity pTarget) {
-        if(getTarget() != null) {
+        if(getOwner() != null && getTarget() != null) {
             if(getTarget() instanceof EntityKrawl krawl1) krawl1.setGlowing(false);
             if(getTarget() instanceof EntitySpectrobe spec1) spec1.setGlowing(false);
         }
-        if(pTarget != null) {
+        if(getOwner() != null && pTarget != null) {
             if(pTarget instanceof EntityKrawl krawl1) krawl1.setGlowing(true);
             if(pTarget instanceof EntitySpectrobe spec1) spec1.setGlowing(true);
         }

@@ -125,9 +125,9 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
         }
 
         private void updateSpeed() {
-            if (this.spectrobe.isInWater()) {
-                this.spectrobe.setDeltaMovement(this.spectrobe.getDeltaMovement().add(0.0D, 0.005D, 0.0D));
-            }
+//            if (this.spectrobe.isInWater()) {
+//                this.spectrobe.setDeltaMovement(this.spectrobe.getDeltaMovement().add(0.0D, 0.005D, 0.0D));
+//            }
         }
 
         public void tick() {
