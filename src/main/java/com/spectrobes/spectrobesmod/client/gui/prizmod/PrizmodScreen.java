@@ -61,6 +61,7 @@ public class PrizmodScreen extends AbstractContainerScreen<PrizmodContainer> {
     @Override
     public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         super.render(stack, mouseX, mouseY,partialTicks);
+        drawCenteredString(stack, font, "Gura Balance: " + getMenu().getGuraBalance(), this.width / 2, height / 10, 10526880);
         this.prizmodPage.render(stack, mouseX,mouseY,partialTicks);
     }
 

@@ -1,7 +1,7 @@
 package com.spectrobes.spectrobesmod.client.blocks.model;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.common.blocks.tile.HarumiFossilBlockTileEntity;
+import com.spectrobes.spectrobesmod.common.blocks.fossils.tile.HarumiFossilBlockTileEntity;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 

@@ -1,9 +1,11 @@
 package com.spectrobes.spectrobesmod.events;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
+import com.spectrobes.spectrobesmod.client.container.CyrusShopContainer;
 import com.spectrobes.spectrobesmod.client.container.HealerContainer;
 import com.spectrobes.spectrobesmod.client.container.PrizmodContainer;
 import com.spectrobes.spectrobesmod.client.container.SpectrobeDetailsContainer;
+import com.spectrobes.spectrobesmod.client.gui.cyrus_shop.CyrusShopScreen;
 import com.spectrobes.spectrobesmod.client.gui.healer.HealerScreen;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.client.gui.spectrobes_details.SpectrobeDetailsScreen;
@@ -17,6 +19,7 @@ public class ClientEvents {
     {
         MenuScreens.register(PrizmodContainer.PRIZMOD.get(), PrizmodScreen::new);
         MenuScreens.register(HealerContainer.HEALER.get(), HealerScreen::new);
+        MenuScreens.register(CyrusShopContainer.CYRUS_SHOP.get(), CyrusShopScreen::new);
         MenuScreens.register(SpectrobeDetailsContainer.SPECTROBE_DETAILS.get(), SpectrobeDetailsScreen::new);
     }
 }

@@ -90,6 +90,24 @@ public class SpectrobesNetwork {
                 .decoder(SOpenSpectrobeDetailsScreenPacket::fromBytes)
                 .consumerMainThread(SOpenSpectrobeDetailsScreenPacket::handle)
                 .add();
+
+        INSTANCE.messageBuilder(SGiveMineralPacket.class, nextID())
+                .encoder(SGiveMineralPacket::toBytes)
+                .decoder(SGiveMineralPacket::fromBytes)
+                .consumerMainThread(SGiveMineralPacket::handle)
+                .add();
+
+        INSTANCE.messageBuilder(SSpawnDroppedMineralPacket.class, nextID())
+                .encoder(SSpawnDroppedMineralPacket::toBytes)
+                .decoder(SSpawnDroppedMineralPacket::fromBytes)
+                .consumerMainThread(SSpawnDroppedMineralPacket::handle)
+                .add();
+
+        INSTANCE.messageBuilder(SConsumeMineralPacket.class, nextID())
+                .encoder(SConsumeMineralPacket::toBytes)
+                .decoder(SConsumeMineralPacket::fromBytes)
+                .consumerMainThread(SConsumeMineralPacket::handle)
+                .add();
     }
 
     public static void sendToClient(Object packet, ServerPlayer player) {

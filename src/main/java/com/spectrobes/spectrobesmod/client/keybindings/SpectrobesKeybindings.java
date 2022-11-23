@@ -1,7 +1,9 @@
 package com.spectrobes.spectrobesmod.client.keybindings;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
+import com.spectrobes.spectrobesmod.client.container.CyrusShopContainer;
 import com.spectrobes.spectrobesmod.client.container.PrizmodContainer;
+import com.spectrobes.spectrobesmod.client.gui.cyrus_shop.CyrusShopScreen;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
@@ -51,6 +53,11 @@ public class SpectrobesKeybindings {
     public static KeyMapping ATTACK_KEYBIND =
             new KeyMapping("key.prizmod.attack",
                     GLFW.GLFW_KEY_F,
+                    "key.prizmod.category");
+
+    public static KeyMapping OPEN_SHOP_KEYBIND =
+            new KeyMapping("key.prizmod.open_shop",
+                    GLFW.GLFW_KEY_G,
                     "key.prizmod.category");
 
     private static LivingEntity Last_Attack_Target = null;
@@ -156,6 +163,18 @@ public class SpectrobesKeybindings {
                     {
                         mc.setScreen(new PrizmodScreen(
                                 PrizmodContainer.PRIZMOD.get()
+                                        .create(0, mc.player.getInventory()),
+                                mc.player.getInventory(), Component.empty()));
+
+                    }
+                }
+
+                if (OPEN_SHOP_KEYBIND.consumeClick())
+                {
+                    if (mc.screen == null)
+                    {
+                        mc.setScreen(new CyrusShopScreen(
+                                CyrusShopContainer.CYRUS_SHOP.get()
                                         .create(0, mc.player.getInventory()),
                                 mc.player.getInventory(), Component.empty()));
 

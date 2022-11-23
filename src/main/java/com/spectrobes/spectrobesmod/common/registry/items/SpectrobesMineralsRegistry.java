@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import static com.spectrobes.spectrobesmod.common.registry.MineralRegistry.*;
 
@@ -187,6 +188,30 @@ public class SpectrobesMineralsRegistry {
         all_minerals.put(Mineral.MineralRarity.Common, new ArrayList<>());
         all_minerals.put(Mineral.MineralRarity.Uncommon, new ArrayList<>());
         all_minerals.put(Mineral.MineralRarity.Rare, new ArrayList<>());
+    }
+
+    public static ItemStack getMineralByRegistryName(String name) {
+        List<Item> allMinerals = new ArrayList<>();
+
+        if(name.contains("chroma")) {
+            if(name.endsWith("zero")) {
+                return chroma_mineral_item_zero.get().getDefaultInstance();
+            } else if(name.endsWith("one")) {
+                return chroma_mineral_item_one.get().getDefaultInstance();
+            } else if(name.endsWith("two")) {
+                return chroma_mineral_item_two.get().getDefaultInstance();
+            }
+        }
+
+        all_minerals.values().forEach(allMinerals::addAll);
+
+        return allMinerals.stream().filter(item ->
+                ((MineralItem)item.asItem()).mineral.name.equals(name))
+                .collect(Collectors.toList())
+                .stream()
+                .findFirst()
+                .get()
+                .getDefaultInstance();
     }
 
     public static ItemStack getRandomMineral(Mineral.MineralRarity rarity) {

@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 
-public class MineralItem extends Item {
+public class MineralItem extends Item implements IWorthGura {
     public Mineral mineral;
 
     public MineralItem(Mineral mineral) {
@@ -23,6 +23,15 @@ public class MineralItem extends Item {
         List<Item> list = SpectrobesMineralsRegistry.all_minerals.get(mineral.rarity);
         list.add(this);
         SpectrobesMineralsRegistry.all_minerals.put(mineral.rarity, list);
+    }
+
+    public int getGuraWorth() {
+        return mineral.properties.getGuraWorth();
+    }
+
+    @Override
+    public String getName() {
+        return mineral.name;
     }
 
     @Override

@@ -116,4 +116,8 @@ public class PrizmodContainer extends AbstractContainerMenu {
             markDirty();
         }
     }
+
+    public int getGuraBalance() {
+        return capability.getCurrentGuraBalance();
+    }
 }

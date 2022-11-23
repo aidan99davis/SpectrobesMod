@@ -1,6 +1,7 @@
 package com.spectrobes.spectrobesmod.common.registry;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
+import com.spectrobes.spectrobesmod.client.container.CyrusShopContainer;
 import com.spectrobes.spectrobesmod.client.container.HealerContainer;
 import com.spectrobes.spectrobesmod.client.container.PrizmodContainer;
 import com.spectrobes.spectrobesmod.client.container.SpectrobeDetailsContainer;
@@ -20,5 +21,7 @@ public class Containers {
                 () -> IForgeMenuType.create((windowId, inv, data) -> new SpectrobeDetailsContainer(windowId, null)));
         HealerContainer.HEALER = CONTAINERS.register("healer",
                 () -> IForgeMenuType.create((windowId, inv, data) -> new HealerContainer(windowId, inv.player)));
+        CyrusShopContainer.CYRUS_SHOP = CONTAINERS.register("cyrusshop",
+                () -> IForgeMenuType.create((windowId, inv, data) -> new CyrusShopContainer(windowId, inv.player)));
     }
 }
