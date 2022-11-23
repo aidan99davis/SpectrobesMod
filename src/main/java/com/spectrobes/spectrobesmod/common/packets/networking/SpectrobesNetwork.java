@@ -108,6 +108,12 @@ public class SpectrobesNetwork {
                 .decoder(SConsumeMineralPacket::fromBytes)
                 .consumerMainThread(SConsumeMineralPacket::handle)
                 .add();
+
+        INSTANCE.messageBuilder(SOpenCyrusShopPacket.class, nextID())
+                .encoder(SOpenCyrusShopPacket::toBytes)
+                .decoder(SOpenCyrusShopPacket::fromBytes)
+                .consumerMainThread(SOpenCyrusShopPacket::handle)
+                .add();
     }
 
     public static void sendToClient(Object packet, ServerPlayer player) {

@@ -3,12 +3,12 @@ package com.spectrobes.spectrobesmod.client.gui.cyrus_shop;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.spectrobes.spectrobesmod.client.container.CyrusShopContainer;
-import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
 import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesMineralsRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.Item;
 
@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CyrusShopScreen extends AbstractContainerScreen<CyrusShopContainer> {
+    public static final ResourceLocation background_texture = new ResourceLocation("spectrobesmod:textures/gui/cyrus_shop_background.png");
     ShopScrollList shopScrollList;
 
     public CyrusShopScreen(CyrusShopContainer pMenu, Inventory pPlayerInventory, Component pTitle) {
@@ -46,9 +47,7 @@ public class CyrusShopScreen extends AbstractContainerScreen<CyrusShopContainer>
                 return 0;
             }
         }).collect(Collectors.toList());
-        listSorted.forEach(mineral -> {
-            shopScrollList.addMineralToSell(mineral);
-        });
+        listSorted.forEach(mineral -> shopScrollList.addMineralToSell(mineral));
 
         shopScrollList.addMineralToSell(SpectrobesMineralsRegistry.chroma_mineral_item_zero.get());
         shopScrollList.addMineralToSell(SpectrobesMineralsRegistry.chroma_mineral_item_one.get());
@@ -72,7 +71,7 @@ public class CyrusShopScreen extends AbstractContainerScreen<CyrusShopContainer>
     @Override
     protected void renderBg(PoseStack pMatrixStack, float pPartialTicks, int pX, int pY) {
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-        RenderSystem.setShaderTexture(0, PrizmodScreen.texture);
+        RenderSystem.setShaderTexture(0, background_texture);
         blit(pMatrixStack, 0, 0, 0, 0, 600, 400, imageWidth, imageHeight);
     }
 

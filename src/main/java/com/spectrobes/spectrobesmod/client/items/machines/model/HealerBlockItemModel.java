@@ -1,4 +1,4 @@
-package com.spectrobes.spectrobesmod.client.items.model;
+package com.spectrobes.spectrobesmod.client.items.machines.model;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.items.machines.HealerBlockItem;

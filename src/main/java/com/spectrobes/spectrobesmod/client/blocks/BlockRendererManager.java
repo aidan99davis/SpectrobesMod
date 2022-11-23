@@ -35,6 +35,7 @@ public class BlockRendererManager {
         event.registerBlockEntityRenderer(SpectrobesTileRegistry.TENKRO_FOSSIL_TILE.get(), TenkroFossilRenderer::new);
         event.registerBlockEntityRenderer(SpectrobesTileRegistry.KASUMI_FOSSIL_TILE.get(), KasumiFossilRenderer::new);
         event.registerBlockEntityRenderer(SpectrobesTileRegistry.HEALER_TILE.get(), HealerBlockRenderer::new);
+        event.registerBlockEntityRenderer(SpectrobesTileRegistry.CYRUS_SHOP_TILE.get(), CyrusShopRenderer::new);
         event.registerBlockEntityRenderer(SpectrobesTileRegistry.XELLES_TROPHY_TILE.get(), XellesTrophyRenderer::new);
     }
 }

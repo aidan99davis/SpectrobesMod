@@ -41,7 +41,7 @@ public class SpectrobesBlocks {
     public static final RegistryObject<TenkroFossilBlock> tenkro_fossil = BLOCKS.register("tenkro_fossil", TenkroFossilBlock::new);
     public static final RegistryObject<KasumiFossilBlock> kasumi_fossil = BLOCKS.register("kasumi_fossil", KasumiFossilBlock::new);
     public static final RegistryObject<HealerBlock> healer_block = BLOCKS.register("healer_block", HealerBlock::new);
-    public static final RegistryObject<CyrusShopBlock> cyrus_shop_block = BLOCKS.register("cyrus_shop_block", CyrusShopBlock::new);
+    public static final RegistryObject<CyrusShopBlock> cyrus_shop_block = BLOCKS.register("cyrus_shop", CyrusShopBlock::new);
     public static final RegistryObject<XellesTrophyBlock> xelles_trophy = BLOCKS.register("xelles_trophy", XellesTrophyBlock::new);
 
     public static final RegistryObject<Block> mineral_block = BLOCKS.register("mineral_block", MineralBlock::new);

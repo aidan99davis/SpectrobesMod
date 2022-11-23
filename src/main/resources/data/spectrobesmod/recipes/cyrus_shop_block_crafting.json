@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    "yyy",
+    "zxz",
+    "zyz"
+  ],
+  "key":
+  {
+    "x":
+    {
+      "item": "spectrobesmod:metalium"
+    },
+    "y":
+    {
+      "tag": "forge:glass_panes"
+    },
+    "z":
+    {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result":
+  {
+    "item": "spectrobesmod:cyrus_shop_block_item",
+    "count": 1
+  }
+}
