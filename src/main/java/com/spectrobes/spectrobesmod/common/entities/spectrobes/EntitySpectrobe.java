@@ -179,7 +179,7 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAd
         return super.mobInteract(player, hand);
     }
 
-    private void healSpectrobe(int spectrobeHealAmount) {
+    public void healSpectrobe(int spectrobeHealAmount) {
         if(getOwner() != null) {
             if(level.isClientSide()) {
                 getOwner().getCapability(SpectrobeMaster.INSTANCE).ifPresent(sm -> {

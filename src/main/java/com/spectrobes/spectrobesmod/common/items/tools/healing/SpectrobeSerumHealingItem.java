@@ -1,6 +1,7 @@
 package com.spectrobes.spectrobesmod.common.items.tools.healing;
 
 import com.spectrobes.spectrobesmod.client.items.healing.renderer.SerumItemRenderer;
+import com.spectrobes.spectrobesmod.common.items.minerals.IWorthGura;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
@@ -17,7 +18,7 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import java.util.function.Consumer;
 
-public class SpectrobeSerumHealingItem extends Item implements IAnimatable {
+public class SpectrobeSerumHealingItem extends Item implements IAnimatable, IWorthGura {
     public AnimationFactory animationControllers = GeckoLibUtil.createFactory(this);
 
     private int healAmount;
@@ -30,6 +31,13 @@ public class SpectrobeSerumHealingItem extends Item implements IAnimatable {
 
     public int getGuraWorth() {
         return guraWorth;
+    }
+
+    @Override
+    public String getName() {
+        return switch (getTier()) {
+            default -> "basic_antidote";
+        };
     }
 
     public int getTier() {
