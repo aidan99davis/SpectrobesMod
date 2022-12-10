@@ -1,12 +1,15 @@
 package com.spectrobes.spectrobesmod.common.blocks;
 
+import com.spectrobes.spectrobesmod.common.blocks.fossils.tile.FossilBlockTileEntity;
 import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesFossilsRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -17,8 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class FossilBlock extends SpectrobesBlock {
+public class FossilBlock extends SpectrobesTileEntityBlock {
     private static final Properties props = Properties.of(Material.STONE)
+            .noOcclusion()
             .requiresCorrectToolForDrops()
             .strength(1.5f)
             .sound(SoundType.STONE);
@@ -31,7 +35,7 @@ public class FossilBlock extends SpectrobesBlock {
     @Override
     public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
         Vec3 vec = builder.getParameter(LootContextParams.ORIGIN);
-        Level level = builder.getParameter(LootContextParams.THIS_ENTITY).getLevel();
+        Level level = builder.getParameter(LootContextParams.BLOCK_ENTITY).getLevel();
 
         assert level != null;
         BlockPos blockPos = new BlockPos(vec.x, vec.y, vec.z);
@@ -63,4 +67,13 @@ public class FossilBlock extends SpectrobesBlock {
         return fossil;
     }
 
+    @Override
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
+    }
+
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
+        return new FossilBlockTileEntity(pPos, pState);
+    }
 }

@@ -133,6 +133,13 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAd
     }
 
     @Override
+    public void move(MoverType pType, Vec3 pPos) {
+        if(!isOrderedToSit()) {
+            super.move(pType, pPos);
+        }
+    }
+
+    @Override
     public boolean isOrderedToSit() {
         return entityData.get(STATE) == 1;
     }

@@ -3,14 +3,11 @@ package com.spectrobes.spectrobesmod.common.entities.krawl.goals;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityVortex;
 import com.spectrobes.spectrobesmod.common.save_data.KrawlNest;
 import com.spectrobes.spectrobesmod.common.save_data.SpectrobesWorldSaveData;
-import com.spectrobes.spectrobesmod.common.world.structures.krawl_nest.WorldGenKrawlNest;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.levelgen.LegacyRandomSource;
-import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -47,13 +44,11 @@ public class KrawlVortexFormXellesGoal extends Goal {
                 //delete the vortexes.
                 BlockPos vortexPos = vortex.blockPosition();
                 Level level = vortex.level;
-                WorldGenKrawlNest nestGen = new WorldGenKrawlNest(NoneFeatureConfiguration.CODEC);
                 if (!level.isClientSide() && level instanceof ServerLevel) {
                     if(SpectrobesWorldSaveData.getWorldData((ServerLevel) level).canSpawnNest((vortexPos))) {
 
                         nestingVortexes.forEach(entityVortex -> entityVortex.remove(Entity.RemovalReason.DISCARDED));
                         if(vortexPos.getY() < 10) vortexPos.offset(0, 10 - vortexPos.getY(), 0);
-                        nestGen.placeSmallGen((ServerLevel) level, new LegacyRandomSource(224752345), vortexPos);
 
                         SpectrobesWorldSaveData data = SpectrobesWorldSaveData.getWorldData((ServerLevel) level);
 

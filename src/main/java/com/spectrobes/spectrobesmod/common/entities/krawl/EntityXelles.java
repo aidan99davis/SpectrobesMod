@@ -12,6 +12,7 @@ import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesMineralsRegi
 import com.spectrobes.spectrobesmod.common.save_data.KrawlNest;
 import com.spectrobes.spectrobesmod.common.save_data.SpectrobesWorldSaveData;
 import com.spectrobes.spectrobesmod.util.KrawlPropertiesBuilder;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -97,7 +98,24 @@ public class EntityXelles extends EntityBossKrawl {
 
             worldData.addNest(new KrawlNest(getOnPos(), level.dimension().toString()));
         }
+
+        spawnMiniXelles(pLevel);
+
         return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
+    }
+
+    private void spawnMiniXelles(ServerLevelAccessor pLevel) {
+        int xellesToCreate = getRandom().nextIntBetweenInclusive(2,4);
+        for (Direction direction :
+                Direction.allShuffled(getRandom())) {
+            if(direction != Direction.UP && direction != Direction.DOWN) {
+                if(xellesToCreate > 0) {
+                    pLevel.setBlock(blockPosition().relative(direction, random.nextIntBetweenInclusive(6, 10)), SpectrobesBlocks.mini_xelles_block.get().defaultBlockState(), 3);
+                    xellesToCreate--;
+                }
+            }
+
+        }
     }
 
     @Override
