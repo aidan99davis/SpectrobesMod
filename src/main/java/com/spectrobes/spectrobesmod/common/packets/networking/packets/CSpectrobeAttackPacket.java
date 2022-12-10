@@ -1,18 +1,19 @@
 package com.spectrobes.spectrobesmod.common.packets.networking.packets;
 
-
+import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public class CSpectrobeAttackPacket {
 
-    private int spectrobeID;
-    private int krawlID;
+    private final int spectrobeID;
+    private final int krawlID;
 
     public CSpectrobeAttackPacket(int spectrobeId, int krawlId) {
         this.spectrobeID = spectrobeId;
@@ -34,10 +35,15 @@ public class CSpectrobeAttackPacket {
     public boolean handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             ServerPlayer player = ctx.get().getSender();
-            EntityKrawl krawl = (EntityKrawl)player.level.getEntity(krawlID);
+            LivingEntity krawl = (LivingEntity) player.level.getEntity(krawlID);
             EntitySpectrobe spectrobe = (EntitySpectrobe) player.level.getEntity(spectrobeID);
-            spectrobe.setTarget(null);
+            if(spectrobe.getTarget() != null) {
+                if(spectrobe.getTarget() instanceof EntityKrawl krawl1) krawl1.setGlowing(false);
+                if(spectrobe.getTarget() instanceof EntitySpectrobe spec1) spec1.setGlowing(false);
+                spectrobe.setTarget(null);
+            }
             spectrobe.setTarget(krawl);
+            spectrobe.getNavigation().moveTo(krawl, 1);
         });
         ctx.get().setPacketHandled(true);
         return true;

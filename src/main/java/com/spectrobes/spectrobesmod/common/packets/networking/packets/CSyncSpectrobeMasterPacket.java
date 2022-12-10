@@ -1,7 +1,7 @@
 package com.spectrobes.spectrobesmod.common.packets.networking.packets;
 
 
-import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
+import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -34,7 +34,7 @@ public class CSyncSpectrobeMasterPacket {
         ctx.get().enqueueWork(() -> {
             ServerPlayer player = ctx.get().getSender();
 
-            player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
+            player.getCapability(SpectrobeMaster.INSTANCE)
                     .ifPresent(playerSpectrobeMaster ->
                             playerSpectrobeMaster.deserializeNBT(capability.serializeNBT()));
 

@@ -68,13 +68,13 @@ public class SpectrobesOreGen {
             () -> new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(OWERWORLD_MINERAL_ORES.get(), 12)));
 
     public static final RegistryObject<ConfiguredFeature<?,?>> METALIUM_ORES = CONFIGURED_FEATURES.register("metalium_ore",
-            () -> new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(OWERWORLD_METALIUM_ORES.get(), 3, 0.5f)));
+            () -> new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(OWERWORLD_METALIUM_ORES.get(), 3, 0.15f)));
 
     public static final RegistryObject<ConfiguredFeature<?,?>> TITANIUM_ORES = CONFIGURED_FEATURES.register("titanium_ore",
-            () -> new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(OWERWORLD_TITANIUM_ORES.get(), 3, 0.5f)));
+            () -> new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(OWERWORLD_TITANIUM_ORES.get(), 3, 0.15f)));
 
     public static final RegistryObject<ConfiguredFeature<?,?>> MARBLE_ORES = CONFIGURED_FEATURES.register("marble_ore",
-            () -> new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(OWERWORLD_MARBLE_ORES.get(), 3, 0.5f)));
+            () -> new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(OWERWORLD_MARBLE_ORES.get(), 3, 0.15f)));
 
     //Placed Features
     public static final RegistryObject<PlacedFeature> FOSSIL_ORE_PLACED
@@ -92,19 +92,19 @@ public class SpectrobesOreGen {
     public static final RegistryObject<PlacedFeature> METALIUM_ORE_PLACED
             = PLACED_FEATURES.register("metalium_ore_placed",
             () -> new PlacedFeature(METALIUM_ORES.getHolder().get(),
-                    commonOrePlacement(2,
+                    commonOrePlacement(4,
                             HeightRangePlacement.triangle(VerticalAnchor.absolute(-32),
                                     VerticalAnchor.absolute(32)))));
     public static final RegistryObject<PlacedFeature> TITANIUM_ORE_PLACED
             = PLACED_FEATURES.register("titanium_ore_placed",
             () -> new PlacedFeature(TITANIUM_ORES.getHolder().get(),
-                    commonOrePlacement(2,
+                    commonOrePlacement(4,
                             HeightRangePlacement.triangle(VerticalAnchor.absolute(-32),
                                     VerticalAnchor.absolute(32)))));
     public static final RegistryObject<PlacedFeature> MARBLE_ORE_PLACED
             = PLACED_FEATURES.register("marble_ore_placed",
             () -> new PlacedFeature(MARBLE_ORES.getHolder().get(),
-                    commonOrePlacement(2,
+                    commonOrePlacement(4,
                             HeightRangePlacement.triangle(VerticalAnchor.absolute(-32),
                                     VerticalAnchor.absolute(32)))));
 

@@ -22,7 +22,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'com.matthewprenger.cursegradle'
 apply plugin: 'java'
 
-version = '1.6.3'
+version = '1.6.6'
 group = 'com.aidan99davis.spectrobesmod' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'spectrobesmod'
 

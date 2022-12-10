@@ -8,8 +8,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomFlyingGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
@@ -57,7 +55,7 @@ public abstract class EntityAvianSpectrobe extends EntitySpectrobe implements Fl
                 = level.getEntitiesOfClass(getSpectrobeClass(),
                 this.getBoundingBox()
                         .inflate(10, 10, 10));
-        if(mates.isEmpty()) {
+        if(mates.isEmpty() || mates.size() == 1) {
             this.setTicksTillMate(16000);
             return;
         }
@@ -86,10 +84,16 @@ public abstract class EntityAvianSpectrobe extends EntitySpectrobe implements Fl
         for(int i = 0; i < litterSize; i++) {
             EntitySpectrobe spectrobe = getChildForLineage()
                     .create(level);
+            assert spectrobe != null;
             this.level.addFreshEntity(spectrobe);
             spectrobe.teleportTo(getX(), getY(), getZ());
         }
         //todo avian mating: eggs, clutch size, gestation time, requirements
+    }
+
+    @Override
+    protected int getMaxSchoolSize() {
+        return 5;
     }
 
     protected abstract int getMaxLitterSize();

@@ -2,6 +2,7 @@ package com.spectrobes.spectrobesmod.common.registry.items;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.items.SpectrobesItemGroups;
+import com.spectrobes.spectrobesmod.common.items.special.MiniXellesItem;
 import com.spectrobes.spectrobesmod.common.items.special.XellesTrophyItem;
 import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesBlocks;
 import net.minecraft.world.item.BlockItem;
@@ -85,6 +86,10 @@ public class SpectrobesBlockItemsRegistry {
             () -> new BlockItem(SpectrobesBlocks.krawl_vine.get(),
                     new Item.Properties().tab(SpectrobesItemGroups.SpectrobesBlocksItemGroup.Instance)));
 
+    public static final RegistryObject<BlockItem> krawl_fiber = ITEMS.register("krawl_fiber",
+            () -> new BlockItem(SpectrobesBlocks.krawl_fiber.get(),
+                    new Item.Properties().tab(SpectrobesItemGroups.SpectrobesBlocksItemGroup.Instance)));
+
     public static final RegistryObject<BlockItem> krawl_mycelium = ITEMS.register("krawl_mycelium",
             () -> new BlockItem(SpectrobesBlocks.krawl_mycelium.get(),
                     new Item.Properties().tab(SpectrobesItemGroups.SpectrobesBlocksItemGroup.Instance)));
@@ -109,5 +114,11 @@ public class SpectrobesBlockItemsRegistry {
     public static final RegistryObject<BlockItem> xelles_trophy_item =
             ITEMS.register("xelles_trophy_item",
                     () -> new XellesTrophyItem(SpectrobesBlocks.xelles_trophy.get(),
+                            new Item.Properties().tab(SpectrobesItemGroups.SpectrobesBlocksItemGroup.Instance)));
+
+    @SuppressWarnings("unused")
+    public static final RegistryObject<BlockItem> mini_xelles_item =
+            ITEMS.register("mini_xelles_item",
+                    () -> new MiniXellesItem(SpectrobesBlocks.mini_xelles_block.get(),
                             new Item.Properties().tab(SpectrobesItemGroups.SpectrobesBlocksItemGroup.Instance)));
 }

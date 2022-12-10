@@ -1,7 +1,7 @@
 package com.spectrobes.spectrobesmod.common.entities.krawl.goals;
 
 import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
-import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
+import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityVortex;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
@@ -85,7 +85,7 @@ public class SpawnWaveGoal extends TargetGoal {
 
             //check if player average spectrobes level is higher
             if(mob.getTarget() instanceof Player) {
-                mob.getTarget().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(playerSpectrobeMaster -> {
+                mob.getTarget().getCapability(SpectrobeMaster.INSTANCE).ifPresent(playerSpectrobeMaster -> {
                     if(playerSpectrobeMaster.getLevel() > levelToSpawnAt[0]) {
                         levelToSpawnAt[0] = playerSpectrobeMaster.getLevel();
                     }
@@ -93,7 +93,7 @@ public class SpawnWaveGoal extends TargetGoal {
             }
             if(mob.getTarget() instanceof EntitySpectrobe) {
                 if(((EntitySpectrobe)mob.getTarget()).getOwner() != null) {
-                    ((EntitySpectrobe)mob.getTarget()).getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(playerSpectrobeMaster -> {
+                    ((EntitySpectrobe)mob.getTarget()).getOwner().getCapability(SpectrobeMaster.INSTANCE).ifPresent(playerSpectrobeMaster -> {
                         if(playerSpectrobeMaster.getLevel() > levelToSpawnAt[0]) levelToSpawnAt[0] = playerSpectrobeMaster.getLevel();
                     });
                 } else {

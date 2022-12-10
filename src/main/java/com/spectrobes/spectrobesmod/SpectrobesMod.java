@@ -3,16 +3,17 @@ package com.spectrobes.spectrobesmod;
 import com.spectrobes.spectrobesmod.client.entity.attacks.AttackEntities;
 import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
+import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
+import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMasterDispatcher;
 import com.spectrobes.spectrobesmod.common.registry.*;
 import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesBlocks;
 import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesTileRegistry;
 import com.spectrobes.spectrobesmod.common.capability.PlayerEvents;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.registry.items.*;
-import com.spectrobes.spectrobesmod.common.world.SpectrobesEntitySpawns;
 import com.spectrobes.spectrobesmod.common.world.SpectrobesOreGen;
 import com.spectrobes.spectrobesmod.events.ClientEvents;
-import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -23,7 +24,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.*;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import software.bernie.geckolib3.GeckoLib;
-
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(SpectrobesInfo.MOD_ID)
@@ -38,18 +38,20 @@ public class SpectrobesMod
         SpectrobesMineralsRegistry.init();
 
         modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        IEventBus forgeBus = MinecraftForge.EVENT_BUS;
 
         //register listeners to the event bus
         modEventBus.addListener(this::setup);
         modEventBus.addListener(this::onClientStarting);
         modEventBus.addListener(this::onLoaded);
+        modEventBus.addListener(SpectrobeMaster::register);
+        forgeBus.addGenericListener(Entity.class, PlayerSpectrobeMasterDispatcher::attach);
         modEventBus.addListener(SpectrobesEntities::registerEntityAttributes);
         modEventBus.addListener(KrawlEntities::registerEntityAttributes);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(new ClientEvents());
-        MinecraftForge.EVENT_BUS.register(new SpectrobesEntitySpawns());
+        MinecraftForge.EVENT_BUS.register(ClientEvents.Instance);
         SpectrobesEntities.ENTITY_TYPES.register(modEventBus);
         AttackEntities.ENTITY_TYPES.register(modEventBus);
         KrawlEntities.ENTITY_TYPES.register(modEventBus);

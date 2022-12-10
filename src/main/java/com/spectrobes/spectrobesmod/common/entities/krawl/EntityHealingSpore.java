@@ -21,10 +21,12 @@ import net.minecraftforge.network.NetworkHooks;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.builder.ILoopType;
 import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.Random;
@@ -34,7 +36,7 @@ public class EntityHealingSpore extends Monster implements IAnimatable, FlyingAn
             SynchedEntityData.defineId(EntityHealingSpore.class,
                     EntityDataSerializers.INT);
 
-    public AnimationFactory animationControllers = new AnimationFactory(this);
+    public AnimationFactory animationControllers = GeckoLibUtil.createFactory(this);
     protected AnimationController moveController = new AnimationController(this, "moveAnimationController", 10F, this::moveController);
 
     public EntityHealingSpore(EntityType<? extends Monster> type, Level worldIn) {
@@ -108,7 +110,7 @@ public class EntityHealingSpore extends Monster implements IAnimatable, FlyingAn
 
     //Animation
     public <ENTITY extends EntityKrawl> PlayState moveController(AnimationEvent<ENTITY> event) {
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.xelles_spore.idle", true));
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.xelles_spore.idle", ILoopType.EDefaultLoopTypes.LOOP));
         return PlayState.CONTINUE;
     }
     @Override

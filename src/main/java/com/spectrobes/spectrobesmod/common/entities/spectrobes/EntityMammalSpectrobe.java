@@ -23,6 +23,11 @@ public abstract class EntityMammalSpectrobe extends EntitySpectrobe {
         this.goalSelector.addGoal(6, new SpectrobeWaterAvoidingRandomStrollGoal(this, 0.5d));
     }
 
+    @Override
+    protected int getMaxSchoolSize() {
+        return 8;
+    }
+
     public abstract int getLitterSize();
 
     @Override
@@ -31,7 +36,7 @@ public abstract class EntityMammalSpectrobe extends EntitySpectrobe {
                 = level.getEntitiesOfClass(getSpectrobeClass(),
                 this.getBoundingBox()
                         .inflate(10, 10, 10));
-        if(mates.isEmpty()) {
+        if(mates.isEmpty() || mates.size() == 1) {
             return;
         }
 

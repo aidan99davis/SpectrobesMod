@@ -7,9 +7,10 @@ import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.item.GeoArmorItem;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 public class BasicNppArmourItem extends GeoArmorItem implements IAnimatable, ISpectrobeArmour {
-    private AnimationFactory factory = new AnimationFactory(this);
+    private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
     private final SpectrobeProperties.Nature ArmourNature;
     private final int ArmourHealthBonus;
 

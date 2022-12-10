@@ -1,6 +1,6 @@
 package com.spectrobes.spectrobesmod.client.container;
 
-import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
+import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesToolsRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
@@ -19,7 +19,7 @@ public class HealerContainer extends AbstractContainerMenu {
     public HealerContainer(int pContainerId, Player player) {
         super(HEALER.get(), pContainerId);
         this.player = player;
-        this.capability = this.player.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
+        this.capability = (PlayerSpectrobeMaster) this.player.getCapability(SpectrobeMaster.INSTANCE)
                 .orElseThrow(IllegalStateException::new);
     }
 

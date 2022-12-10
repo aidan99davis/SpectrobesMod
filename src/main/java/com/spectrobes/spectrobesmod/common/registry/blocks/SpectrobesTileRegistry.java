@@ -1,7 +1,9 @@
 package com.spectrobes.spectrobesmod.common.registry.blocks;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.common.blocks.tile.*;
+import com.spectrobes.spectrobesmod.common.blocks.fossils.tile.*;
+import com.spectrobes.spectrobesmod.common.blocks.krawl.MiniXellesBlockEntity;
+import com.spectrobes.spectrobesmod.common.blocks.machines.entity.CyrusShopBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -34,5 +36,7 @@ public class SpectrobesTileRegistry {
         public static final RegistryObject<BlockEntityType<KasumiFossilBlockTileEntity>> KASUMI_FOSSIL_TILE = TILES.register("kasumifossiltile", () -> BlockEntityType.Builder.of(KasumiFossilBlockTileEntity::new, SpectrobesBlocks.kasumi_fossil.get()).build(null));
         public static final RegistryObject<BlockEntityType<FossilBlockTileEntity>> FOSSIL_TILE = TILES.register("fossiltile", () -> BlockEntityType.Builder.of(FossilBlockTileEntity::new, SpectrobesBlocks.fossil_block.get()).build(null));
         public static final RegistryObject<BlockEntityType<HealerBlockTileEntity>> HEALER_TILE = TILES.register("healertile", () -> BlockEntityType.Builder.of(HealerBlockTileEntity::new, SpectrobesBlocks.healer_block.get()).build(null));
+        public static final RegistryObject<BlockEntityType<CyrusShopBlockEntity>> CYRUS_SHOP_TILE = TILES.register("cyrusshoptile", () -> BlockEntityType.Builder.of(CyrusShopBlockEntity::new, SpectrobesBlocks.cyrus_shop_block.get()).build(null));
         public static final RegistryObject<BlockEntityType<XellesTrophyBlockTileEntity>> XELLES_TROPHY_TILE = TILES.register("xellestrophytile", () -> BlockEntityType.Builder.of(XellesTrophyBlockTileEntity::new, SpectrobesBlocks.xelles_trophy.get()).build(null));
+        public static final RegistryObject<BlockEntityType<MiniXellesBlockEntity>> MINI_XELLES_TILE = TILES.register("minixellestile", () -> BlockEntityType.Builder.of(MiniXellesBlockEntity::new, SpectrobesBlocks.mini_xelles_block.get()).build(null));
 }

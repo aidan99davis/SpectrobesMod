@@ -11,6 +11,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.builder.ILoopType;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
@@ -56,15 +57,15 @@ public class EntitySpikan extends EntityMammalSpectrobe {
         event.getController().transitionLengthTicks = 2;
         if(event.isMoving())
         {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.spikan.walk", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.spikan.walk", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         }
         else if(this.isOrderedToSit()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.spikan.sit", false));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.spikan.sit", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
             return PlayState.CONTINUE;
         } else {
             if(this.getKillCredit() != null) {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.spikan.walk", true));
+                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.spikan.walk", ILoopType.EDefaultLoopTypes.LOOP));
                 return PlayState.CONTINUE;
             }
         }

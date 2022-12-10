@@ -1,7 +1,7 @@
 package com.spectrobes.spectrobesmod.client.blocks.model;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.common.blocks.tile.VilarFossilBlockTileEntity;
+import com.spectrobes.spectrobesmod.common.blocks.fossils.tile.VilarFossilBlockTileEntity;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 

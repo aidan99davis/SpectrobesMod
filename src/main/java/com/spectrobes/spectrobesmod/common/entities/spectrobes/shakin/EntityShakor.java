@@ -11,6 +11,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.builder.ILoopType;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
@@ -59,18 +60,18 @@ public class EntityShakor extends EntityAquaticSpectrobe {
     {
         if(event.isMoving())
         {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.shakor.walk", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.shakor.walk", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         }
         else if(event.getAnimatable().isOrderedToSit()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.shakor.idle", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.shakor.idle", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         } else if(event.getAnimatable().isSwimming()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.shakor.walk", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.shakor.walk", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         } else {
             if(this.IsAttacking()) {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.shakor.attack", true));
+                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.shakor.attack", ILoopType.EDefaultLoopTypes.LOOP));
                 return PlayState.CONTINUE;
             }
         }

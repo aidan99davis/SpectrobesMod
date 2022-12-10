@@ -1,6 +1,6 @@
 package com.spectrobes.spectrobesmod.common.items.fossils;
 
-import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
+import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSyncSpectrobeMasterPacket;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
@@ -17,13 +17,14 @@ import net.minecraft.world.level.block.Block;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 public abstract class FossilBlockItem extends BlockItem implements IAnimatable {
 
-    public AnimationFactory factory = new AnimationFactory(this);
+    public AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     public FossilBlockItem(Block blockIn, Properties builder) {
         super(blockIn, builder);
@@ -36,7 +37,7 @@ public abstract class FossilBlockItem extends BlockItem implements IAnimatable {
             fossilStack.shrink(1);
             if(!pLevel.isClientSide) {
                 Spectrobe spectrobe = getSpectrobeInstance();
-                pPlayer.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(playerCap -> {
+                pPlayer.getCapability(SpectrobeMaster.INSTANCE).ifPresent(playerCap -> {
                     playerCap.addSpectrobe(spectrobe);
                     SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(playerCap),
                             (ServerPlayer) pPlayer);

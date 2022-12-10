@@ -1,6 +1,7 @@
 package com.spectrobes.spectrobesmod.common.items.tools.healing;
 
 import com.spectrobes.spectrobesmod.client.items.healing.renderer.SerumItemRenderer;
+import com.spectrobes.spectrobesmod.common.items.minerals.IWorthGura;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
@@ -8,6 +9,7 @@ import net.minecraftforge.common.util.NonNullLazy;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.builder.ILoopType;
 import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
@@ -16,7 +18,7 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import java.util.function.Consumer;
 
-public class SpectrobeSerumHealingItem extends Item implements IAnimatable {
+public class SpectrobeSerumHealingItem extends Item implements IAnimatable, IWorthGura {
     public AnimationFactory animationControllers = GeckoLibUtil.createFactory(this);
 
     private int healAmount;
@@ -29,6 +31,13 @@ public class SpectrobeSerumHealingItem extends Item implements IAnimatable {
 
     public int getGuraWorth() {
         return guraWorth;
+    }
+
+    @Override
+    public String getName() {
+        return switch (getTier()) {
+            default -> "basic_antidote";
+        };
     }
 
     public int getTier() {
@@ -61,7 +70,7 @@ public class SpectrobeSerumHealingItem extends Item implements IAnimatable {
     }
 
     private PlayState controller(AnimationEvent animationEvent) {
-        animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.serum.particle", true));
+        animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.serum.particle", ILoopType.EDefaultLoopTypes.LOOP));
         return PlayState.CONTINUE;
     }
 

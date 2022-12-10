@@ -6,7 +6,6 @@ import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.items.fossils.FossilBlockItem;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
 import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesFossilsRegistry;
-import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesItemsRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
@@ -50,13 +49,13 @@ public class EntityDongor extends EntityMammalSpectrobe {
     public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event) {
         if(event.isMoving())
         {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dongor.walk", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dongor.walk", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         }
         else if(event.getAnimatable().isOrderedToSit()) {
             event.getController().setAnimation(new AnimationBuilder()
-                    .addAnimation("animation.dongor.sitting", false)
-                    .addAnimation("animation.dongor.sit", true));
+                    .addAnimation("animation.dongor.sitting", ILoopType.EDefaultLoopTypes.PLAY_ONCE)
+                    .addAnimation("animation.dongor.sit", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         } else {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dongor.idle", ILoopType.EDefaultLoopTypes.LOOP));

@@ -12,6 +12,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.builder.ILoopType;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
@@ -55,19 +56,19 @@ public class EntitySpiko extends EntityMammalSpectrobe {
         event.getController().transitionLengthTicks = 2;
         if(!(animationSpeed > -0.15F && animationSpeed < 0.15F))
         {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.spiko.walk", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.spiko.walk", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         }
         if(this.isOrderedToSit()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.spiko.sit", false));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.spiko.sit", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
             return PlayState.CONTINUE;
         }
         else if(jumping) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.spiko.jump", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.spiko.jump", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         }
         else {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.spiko.idle", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.spiko.idle", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         }
     }

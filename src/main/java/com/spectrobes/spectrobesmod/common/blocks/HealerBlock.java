@@ -1,6 +1,6 @@
 package com.spectrobes.spectrobesmod.common.blocks;
 
-import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
+import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSyncSpectrobeMasterPacket;
@@ -43,7 +43,7 @@ public class HealerBlock extends SpectrobesTileEntityBlock {
     @Override
     public void entityInside(BlockState pState, Level pLevel, BlockPos pPos, Entity pEntity) {
         if(!pLevel.isClientSide && pEntity instanceof Player) {
-            PlayerSpectrobeMaster capability = pEntity.getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER)
+            PlayerSpectrobeMaster capability = (PlayerSpectrobeMaster) pEntity.getCapability(SpectrobeMaster.INSTANCE)
                     .orElseThrow(IllegalStateException::new);
             capability.setCurrentHealth(capability.getMaxHealth());
             capability.getCurrentTeamUuids().forEach((integer, uuid) -> {

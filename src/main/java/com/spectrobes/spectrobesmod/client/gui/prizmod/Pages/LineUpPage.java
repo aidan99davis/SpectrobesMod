@@ -6,9 +6,7 @@ import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSpawnSpectrobePacket;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
@@ -17,8 +15,8 @@ import java.util.UUID;
 
 public class LineUpPage extends PrizmodPage {
 
-    private AllSpectrobesList AllSpectrobesGrid;
-    private TeamSpectrobesList TeamSpectrobesGrid;
+    private final AllSpectrobesList AllSpectrobesGrid;
+    private final TeamSpectrobesList TeamSpectrobesGrid;
     private SpectrobeButton selectedButton;
 
     public LineUpPage(PrizmodScreen parent) {
@@ -96,17 +94,17 @@ public class LineUpPage extends PrizmodPage {
     }
 
     private SpectrobeButton addSpectrobeButton(SpectrobePiece sp, boolean teamSpectrobe) {
-        SpectrobeButton button = new SpectrobeButton(this.parent, sp,
+        return new SpectrobeButton(this.parent, sp,
                 onClick -> {
-                    if(Screen.hasShiftDown() && teamSpectrobe) {
-                        if(sp.spectrobe != null && sp.spectrobe.active == false) {
+                    if(Screen.hasShiftDown() && !teamSpectrobe) {
+                        if(sp.spectrobe != null && !sp.spectrobe.active) {
                             if(parent.player.level.isClientSide()) {
                                 Spectrobe spectrobe = sp.spectrobe;
                                 SpectrobesNetwork.sendToServer(new SSpawnSpectrobePacket(spectrobe));
                                 parent.getMenu().spawnSpectrobe(spectrobe);
                             }
                         }
-                    } else if (Screen.hasAltDown()) {
+                    } else if (Screen.hasAltDown() && !teamSpectrobe) {
                         if(sp.spectrobe != null) {
                             if(parent.player.level.isClientSide()) {
                                 Spectrobe spectrobe = sp.spectrobe;
@@ -119,7 +117,6 @@ public class LineUpPage extends PrizmodPage {
                     }
 
                 });
-        return button;
     }
 
     private void setSelectedSpectrobe(SpectrobeButton button) {
@@ -146,6 +143,16 @@ public class LineUpPage extends PrizmodPage {
 
                 selectedButton = null;
                 return;
+            } else if(TeamSpectrobesGrid.getAll().contains(selectedButton.piece)
+                        && AllSpectrobesGrid.getAll().contains(button.piece)) {
+                if(TeamSpectrobesGrid.addSpectrobe(
+                        TeamSpectrobesGrid.getAll().indexOf(selectedButton.piece),
+                        button.piece.spectrobe)) {
+
+                    populateGrid();
+                    selectedButton = null;
+                    return;
+                }
             }
         }
         if(button.piece.spectrobe != null) {
@@ -153,13 +160,7 @@ public class LineUpPage extends PrizmodPage {
             selectedButton.setSelected(true);
             return;
         }
-
         selectedButton = null;
-
-    }
-
-    private void removeButton(AbstractWidget b) {
-        this.buttons.remove(b);
     }
 
     @Override

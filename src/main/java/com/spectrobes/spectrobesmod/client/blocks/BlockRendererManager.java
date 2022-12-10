@@ -2,10 +2,7 @@ package com.spectrobes.spectrobesmod.client.blocks;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.blocks.renderer.*;
-import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesBlocks;
 import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesTileRegistry;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -25,22 +22,22 @@ public class BlockRendererManager {
         event.registerBlockEntityRenderer(SpectrobesTileRegistry.SHAKIN_FOSSIL_TILE.get(), ShakinFossilRenderer::new);
         event.registerBlockEntityRenderer(SpectrobesTileRegistry.SPIKO_FOSSIL_TILE.get(), SpikoFossilRenderer::new);
         event.registerBlockEntityRenderer(SpectrobesTileRegistry.VILAR_FOSSIL_TILE.get(), VilarFossilRenderer::new);
-        event.registerBlockEntityRenderer(SpectrobesTileRegistry.ZOZA_FOSSIL_TILE.get(), pContext -> new ZozaFossilRenderer(pContext));
-        event.registerBlockEntityRenderer(SpectrobesTileRegistry.MOSSARI_FOSSIL_TILE.get(), pContext -> new MossariFossilRenderer(pContext));
-        event.registerBlockEntityRenderer(SpectrobesTileRegistry.AOI_FOSSIL_TILE.get(), pContext -> new AoiFossilRenderer(pContext));
-        event.registerBlockEntityRenderer(SpectrobesTileRegistry.BARTOR_FOSSIL_TILE.get(), pContext -> new BartorFossilRenderer(pContext));
-        event.registerBlockEntityRenderer(SpectrobesTileRegistry.GEJIO_FOSSIL_TILE.get(), pContext -> new GejioFossilRenderer(pContext));
-        event.registerBlockEntityRenderer(SpectrobesTileRegistry.MESA_FOSSIL_TILE.get(), pContext -> new MesaFossilRenderer(pContext));
-        event.registerBlockEntityRenderer(SpectrobesTileRegistry.DONGOR_FOSSIL_TILE.get(), pContext -> new DongorFossilRenderer(pContext));
-        event.registerBlockEntityRenderer(SpectrobesTileRegistry.INKANA_FOSSIL_TILE.get(), pContext -> new InkanaFossilRenderer(pContext));
-        event.registerBlockEntityRenderer(SpectrobesTileRegistry.DANAWA_FOSSIL_TILE.get(), pContext -> new DanawaFossilRenderer(pContext));
-        event.registerBlockEntityRenderer(SpectrobesTileRegistry.MASETTO_FOSSIL_TILE.get(), pContext -> new MasettoFossilRenderer(pContext));
-        event.registerBlockEntityRenderer(SpectrobesTileRegistry.TENKRO_FOSSIL_TILE.get(), pContext -> new TenkroFossilRenderer(pContext));
-        event.registerBlockEntityRenderer(SpectrobesTileRegistry.KASUMI_FOSSIL_TILE.get(), pContext -> new KasumiFossilRenderer(pContext));
-        event.registerBlockEntityRenderer(SpectrobesTileRegistry.HEALER_TILE.get(), pContext -> new HealerBlockRenderer(pContext));
-        event.registerBlockEntityRenderer(SpectrobesTileRegistry.XELLES_TROPHY_TILE.get(), pContext -> new XellesTrophyRenderer(pContext));
-    }
-    public static void init() {
-        ItemBlockRenderTypes.setRenderLayer(SpectrobesBlocks.krawl_vine.get(), RenderType.cutout());
+        event.registerBlockEntityRenderer(SpectrobesTileRegistry.ZOZA_FOSSIL_TILE.get(), ZozaFossilRenderer::new);
+        event.registerBlockEntityRenderer(SpectrobesTileRegistry.MOSSARI_FOSSIL_TILE.get(), MossariFossilRenderer::new);
+        event.registerBlockEntityRenderer(SpectrobesTileRegistry.AOI_FOSSIL_TILE.get(), AoiFossilRenderer::new);
+        event.registerBlockEntityRenderer(SpectrobesTileRegistry.BARTOR_FOSSIL_TILE.get(), BartorFossilRenderer::new);
+        event.registerBlockEntityRenderer(SpectrobesTileRegistry.GEJIO_FOSSIL_TILE.get(), GejioFossilRenderer::new);
+        event.registerBlockEntityRenderer(SpectrobesTileRegistry.MESA_FOSSIL_TILE.get(), MesaFossilRenderer::new);
+        event.registerBlockEntityRenderer(SpectrobesTileRegistry.DONGOR_FOSSIL_TILE.get(), DongorFossilRenderer::new);
+        event.registerBlockEntityRenderer(SpectrobesTileRegistry.INKANA_FOSSIL_TILE.get(), InkanaFossilRenderer::new);
+        event.registerBlockEntityRenderer(SpectrobesTileRegistry.DANAWA_FOSSIL_TILE.get(), DanawaFossilRenderer::new);
+        event.registerBlockEntityRenderer(SpectrobesTileRegistry.MASETTO_FOSSIL_TILE.get(), MasettoFossilRenderer::new);
+        event.registerBlockEntityRenderer(SpectrobesTileRegistry.TENKRO_FOSSIL_TILE.get(), TenkroFossilRenderer::new);
+        event.registerBlockEntityRenderer(SpectrobesTileRegistry.KASUMI_FOSSIL_TILE.get(), KasumiFossilRenderer::new);
+        event.registerBlockEntityRenderer(SpectrobesTileRegistry.HEALER_TILE.get(), HealerBlockRenderer::new);
+        event.registerBlockEntityRenderer(SpectrobesTileRegistry.CYRUS_SHOP_TILE.get(), CyrusShopRenderer::new);
+        event.registerBlockEntityRenderer(SpectrobesTileRegistry.XELLES_TROPHY_TILE.get(), XellesTrophyRenderer::new);
+        event.registerBlockEntityRenderer(SpectrobesTileRegistry.MINI_XELLES_TILE.get(), MiniXellesRenderer::new);
+//        event.registerBlockEntityRenderer(SpectrobesTileRegistry.FOSSIL_TILE.get(), FossilTileRenderer::new);
     }
 }

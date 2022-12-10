@@ -3,8 +3,12 @@ package com.spectrobes.spectrobesmod.common.registry.blocks;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.blocks.*;
 import com.spectrobes.spectrobesmod.common.blocks.XellesTrophyBlock;
-import com.spectrobes.spectrobesmod.common.blocks.fossils.*;
 
+import com.spectrobes.spectrobesmod.common.blocks.fossils.blocks.*;
+import com.spectrobes.spectrobesmod.common.blocks.krawl.KrawlFiberBlock;
+import com.spectrobes.spectrobesmod.common.blocks.krawl.MiniXellesBlock;
+import com.spectrobes.spectrobesmod.common.blocks.krawl.SpreadingKrawlNestBlock;
+import com.spectrobes.spectrobesmod.common.blocks.machines.blocks.CyrusShopBlock;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -40,7 +44,9 @@ public class SpectrobesBlocks {
     public static final RegistryObject<TenkroFossilBlock> tenkro_fossil = BLOCKS.register("tenkro_fossil", TenkroFossilBlock::new);
     public static final RegistryObject<KasumiFossilBlock> kasumi_fossil = BLOCKS.register("kasumi_fossil", KasumiFossilBlock::new);
     public static final RegistryObject<HealerBlock> healer_block = BLOCKS.register("healer_block", HealerBlock::new);
+    public static final RegistryObject<CyrusShopBlock> cyrus_shop_block = BLOCKS.register("cyrus_shop", CyrusShopBlock::new);
     public static final RegistryObject<XellesTrophyBlock> xelles_trophy = BLOCKS.register("xelles_trophy", XellesTrophyBlock::new);
+    public static final RegistryObject<MiniXellesBlock> mini_xelles_block = BLOCKS.register("mini_xelles", MiniXellesBlock::new);
 
     public static final RegistryObject<Block> mineral_block = BLOCKS.register("mineral_block", MineralBlock::new);
     public static final RegistryObject<Block> fossil_block = BLOCKS.register("fossil_block", FossilBlock::new);
@@ -64,17 +70,19 @@ public class SpectrobesBlocks {
     public static final RegistryObject<Block> marble_block = BLOCKS.register("marble_block", 
     		() -> new Block(BlockBehaviour.Properties.of(Material.GLASS).strength(3f).sound(SoundType.GLASS)));
     public static final RegistryObject<SpectrobesBlock> krawl_nest = BLOCKS.register("krawl_nest",
-    		() -> new SpectrobesBlock(BlockBehaviour.Properties.of(Material.STONE).strength(10f).sound(SoundType.STONE)));
+    		() -> new SpreadingKrawlNestBlock(BlockBehaviour.Properties.of(Material.STONE).strength(10f).sound(SoundType.STONE)));
     public static final RegistryObject<SpectrobesBlock> krawl_stone = BLOCKS.register("krawl_stone",
     		() -> new MultiTextureBlock(BlockBehaviour.Properties.of(Material.STONE).strength(10f).sound(SoundType.STONE)));
 //    public static final RegistryObject<PlanetaryTeleporterBlock> planetary_teleporter = BLOCKS.register("planetary_teleporter",
 //            PlanetaryTeleporterBlock::new);
     public static final RegistryObject<Block> krawl_vine = BLOCKS.register("krawl_vine",
     		() -> new VineBlock(BlockBehaviour.Properties.of(Material.REPLACEABLE_PLANT).noOcclusion().strength(0.2F).sound(SoundType.VINE)));
+    public static final RegistryObject<Block> krawl_fiber = BLOCKS.register("krawl_fiber",
+            () -> new KrawlFiberBlock(BlockBehaviour.Properties.of(Material.REPLACEABLE_PLANT).noOcclusion().strength(0.2F).sound(SoundType.VINE)));
     public static final RegistryObject<SpectrobesBlock> krawl_mycelium = BLOCKS.register("krawl_mycelium",
     		() -> new MultiTextureBlock(BlockBehaviour.Properties.of(Material.DIRT).strength(1F).sound(SoundType.WET_GRASS)));
     public static final RegistryObject<SpectrobesBlock> krawl_mud = BLOCKS.register("krawl_mud",
-    		() -> new SpectrobesBlock(BlockBehaviour.Properties.of(Material.SNOW).strength(1F).sound(SoundType.SOUL_SAND)));
+    		() -> new SpreadingKrawlNestBlock(BlockBehaviour.Properties.of(Material.SNOW).strength(1F).sound(SoundType.SOUL_SAND)));
     public static final RegistryObject<Block> snag_log = BLOCKS.register("snag_log",
     		() -> new RotatedPillarBlock(BlockBehaviour.Properties.of(Material.WOOD, (p_235431_2_) -> p_235431_2_.getValue(RotatedPillarBlock.AXIS) == Direction.Axis.Y ? MaterialColor.WOOD : MaterialColor.COLOR_PURPLE).strength(2.0F).sound(SoundType.WOOD)));
     public static final RegistryObject<SpectrobesBlock> snag_planks = BLOCKS.register("snag_planks",

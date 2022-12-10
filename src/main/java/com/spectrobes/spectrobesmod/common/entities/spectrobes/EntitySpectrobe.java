@@ -1,7 +1,7 @@
 package com.spectrobes.spectrobesmod.common.entities.spectrobes;
 
 import com.spectrobes.spectrobesmod.client.gui.SpectrobeGuiHandler;
-import com.spectrobes.spectrobesmod.common.capability.PlayerProperties;
+import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.entities.IHasNature;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.*;
@@ -19,6 +19,7 @@ import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.util.DamageUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -34,10 +35,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.LeapAtTargetGoal;
@@ -46,6 +44,7 @@ import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.DirectionalPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
@@ -60,12 +59,16 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAdditionalSpawnData, IAnimatable, IHasNature {
     public static final Predicate<ItemEntity> MINERAL_SELECTOR = (itemEntity) -> !itemEntity.hasPickUpDelay() && itemEntity.isAlive() && itemEntity.getItem().getItem() instanceof MineralItem;
     private static final Predicate<EntityKrawl> TARGET_KRAWL = (entity) -> !(entity).isVortex();
     private boolean recentInteract = false;
     private int ticksTillInteract = 0;
+    @Nullable
+    private EntitySpectrobe leader;
+    private int schoolSize = 1;
 
     private static final EntityDataAccessor<Integer> TICKS_TILL_MATE =
             SynchedEntityData.defineId(EntitySpectrobe.class,
@@ -91,7 +94,7 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAd
                     Spectrobe.SpectrobeSerializer);
 
     public AnimationFactory animationControllers = GeckoLibUtil.createFactory(this);
-    protected AnimationController moveAnimationController = new AnimationController(this, "moveAnimationController", 10F, this::moveController);
+    protected AnimationController<EntitySpectrobe> moveAnimationController = new AnimationController<>(this, "moveAnimationController", 10F, this::moveController);
 
     public EntitySpectrobe(EntityType<? extends EntitySpectrobe> entityTypeIn,
                            Level worldIn) {
@@ -108,6 +111,7 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAd
         this.goalSelector.addGoal(1, new ChildFormSearchGoal(this));
         this.goalSelector.addGoal(3, new AvoidKrawlGoal(this, EntityKrawl.class, 10.0F, 0.5d, 0.75d));
         this.goalSelector.addGoal(4, new LeapAtTargetGoal(this, 0.4f));
+        this.goalSelector.addGoal(1, new SpectrobeFollowLeaderGoal(this));
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 0.5f, true));
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(8, new SpectrobeRandomLookAroundGoal(this));
@@ -126,6 +130,13 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAd
                 .add(Attributes.ATTACK_SPEED, 1f)
                 .add(Attributes.FOLLOW_RANGE, 10.0D)
                 .add(Attributes.ATTACK_KNOCKBACK, 1.0D);
+    }
+
+    @Override
+    public void move(MoverType pType, Vec3 pPos) {
+        if(!isOrderedToSit()) {
+            super.move(pType, pPos);
+        }
     }
 
     @Override
@@ -175,16 +186,22 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAd
         return super.mobInteract(player, hand);
     }
 
-    private void healSpectrobe(int spectrobeHealAmount) {
-        if(level.isClientSide()) {
-            if(getOwner() != null) {
-                getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
+    public void healSpectrobe(int spectrobeHealAmount) {
+        if(getOwner() != null) {
+            if(level.isClientSide()) {
+                getOwner().getCapability(SpectrobeMaster.INSTANCE).ifPresent(sm -> {
                     Spectrobe specData = getSpectrobeData();
                     specData.addHealth(spectrobeHealAmount);
                     sm.updateSpectrobe(specData);
-                    SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket(sm));
+                    SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket((PlayerSpectrobeMaster) sm));
                     getOwner().sendSystemMessage(Component.literal("Your spectrobe has been healed: " + spectrobeHealAmount + " HP Points."));
                 });
+            }
+        } else {
+            if(!level.isClientSide()) {
+                Spectrobe specData = getSpectrobeData();
+                specData.addHealth(spectrobeHealAmount);
+                setSpectrobeData(specData);
             }
         }
     }
@@ -218,7 +235,7 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAd
     public void despawn() {
         this.getSpectrobeData().setInactive();
         if(this.getOwner() != null) {
-            this.getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> sm.setSpectrobeInactive(this.getSpectrobeData()));
+            this.getOwner().getCapability(SpectrobeMaster.INSTANCE).ifPresent(sm -> sm.setSpectrobeInactive(this.getSpectrobeData()));
         }
         if(level.isClientSide()) {
             if (Minecraft.getInstance().level != null) {
@@ -338,7 +355,7 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAd
             ticksTillInteract--;
         if(ticksTillInteract == 0)
             recentInteract = false;
-        if(getOwner() == null && (getLastHurtByMobTimestamp() - this.tickCount) > 200) this.setHealth(getHealth() + (getHealth() / 100));
+        if(getOwner() == null && (getLastHurtByMobTimestamp() - this.tickCount) > 200) this.healSpectrobe(Math.round(getHealth() + (getHealth() / 100)));
         tryEvolve();
 
     }
@@ -425,7 +442,7 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAd
             updateEntityAttributes();
             if(getOwner() != null) {
                 evolution.setOwnerUUID(getOwnerUUID());
-                getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
+                getOwner().getCapability(SpectrobeMaster.INSTANCE).ifPresent(sm -> {
                     sm.updateSpectrobe(evolution.getSpectrobeData());
                     SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(sm), (ServerPlayer) getOwner());
                     evolution.despawn();
@@ -433,7 +450,7 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAd
             }
         } else {
             if(getOwner() != null) {
-                getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
+                getOwner().getCapability(SpectrobeMaster.INSTANCE).ifPresent(sm -> {
                     sm.updateSpectrobe(spectrobeInstance);
 //                    SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket(sm));
                     getOwner().sendSystemMessage(Component.literal("Your spectrobe has evolved and returned to the prizmod."));
@@ -455,7 +472,7 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAd
             Spectrobe spectrobeData = getSpectrobeData().copy(true);
             spectrobeData.setCurrentHealth(0);
             setSpectrobeData(spectrobeData);
-            getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
+            getOwner().getCapability(SpectrobeMaster.INSTANCE).ifPresent(sm -> {
                 sm.updateSpectrobe(this.getSpectrobeData());
                 if(!level.isClientSide()) {
                     SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(sm), (ServerPlayer) getOwner());
@@ -463,14 +480,20 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAd
             });
             despawn();
         } else {
-            ItemEntity fossilItem = new ItemEntity(level,
-                    this.getX() + 0.5D,
-                    (this.getY() + 1),
-                    this.getZ() + 0.5D, new ItemStack(getFossil()));
-            fossilItem.setDefaultPickUpDelay();
-            level.addFreshEntity(fossilItem);
+//            ItemEntity fossilItem = new ItemEntity(level,
+//                    this.getX() + 0.5D,
+//                    (this.getY() + 1),
+//                    this.getZ() + 0.5D, new ItemStack(getFossil()));
+            getFossil().place(new DirectionalPlaceContext(level, getOnPos(), Direction.UP, new ItemStack(getFossil()), Direction.UP));
+//            fossilItem.setDefaultPickUpDelay();
+//            level.addFreshEntity(fossilItem);
             super.die(cause);
         }
+    }
+
+    public void setGlowing(boolean glowing) {
+        this.setGlowingTag(glowing);
+//        this.setSharedFlag(6, glowing); //we dont want all players to see
     }
 
     @Override
@@ -502,11 +525,25 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAd
         }
         updateEntityAttributes();
         if(getOwner() != null) {
-            getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
+            getOwner().getCapability(SpectrobeMaster.INSTANCE).ifPresent(sm -> {
                 sm.updateSpectrobe(this.getSpectrobeData());
                 SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(sm), (ServerPlayer) getOwner());
             });
         }
+    }
+
+    @Override
+    public void setTarget(@org.jetbrains.annotations.Nullable LivingEntity pTarget) {
+        if(getOwner() != null && getTarget() != null) {
+            if(getTarget() instanceof EntityKrawl krawl1) krawl1.setGlowing(false);
+            if(getTarget() instanceof EntitySpectrobe spec1) spec1.setGlowing(false);
+        }
+        if(getOwner() != null && pTarget != null) {
+            if(pTarget instanceof EntityKrawl krawl1) krawl1.setGlowing(true);
+            if(pTarget instanceof EntitySpectrobe spec1) spec1.setGlowing(true);
+        }
+        super.setTarget(pTarget);
+
     }
 
     @Override
@@ -529,7 +566,7 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAd
             spectrobeInstance.stats.addStats(krawlProperties);
             updateEntityAttributes();
             if(getOwner() != null) {
-                getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
+                getOwner().getCapability(SpectrobeMaster.INSTANCE).ifPresent(sm -> {
                     sm.updateSpectrobe(spectrobeInstance);
                     sm.addXp(krawlProperties.getXpWorth());
                     sm.addGura(krawlProperties.getGuraWorth());
@@ -547,7 +584,7 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAd
         updateEntityAttributes();
 
         if(getOwner() != null) {
-            getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
+            getOwner().getCapability(SpectrobeMaster.INSTANCE).ifPresent(sm -> {
                 sm.updateSpectrobe(updatedData);
             });
         }
@@ -563,7 +600,7 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAd
             updateEntityAttributes();
 
             if(getOwner() != null) {
-                getOwner().getCapability(PlayerProperties.PLAYER_SPECTROBE_MASTER).ifPresent(sm -> {
+                getOwner().getCapability(SpectrobeMaster.INSTANCE).ifPresent(sm -> {
                     sm.updateSpectrobe(spectrobeInstance);
                 });
             }
@@ -642,6 +679,63 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAd
             }
         }
     }
+
+    public boolean hasFollowers() {
+        return this.schoolSize > 1;
+    }
+
+    public boolean inRangeOfLeader() {
+        return this.distanceToSqr(this.leader) <= 121.0D;
+    }
+
+    public void pathToLeader() {
+        if (this.isFollower()) {
+            if(distanceToSqr(this.leader) > 16) {
+                this.getNavigation().moveTo(this.leader, 1.0D);
+            } else {
+                this.navigation.stop();
+            }
+        }
+    }
+
+    public void addFollowers(Stream<? extends EntitySpectrobe> pFollowers) {
+        pFollowers.limit((long)(this.getMaxSchoolSize() - this.schoolSize)).filter((p_27538_) -> {
+            return p_27538_ != this;
+        }).forEach((p_27536_) -> {
+            p_27536_.startFollowing(this);
+        });
+    }
+
+    protected abstract int getMaxSchoolSize();
+
+
+    public boolean isFollower() {
+        return this.leader != null && this.leader.isAlive();
+    }
+
+    public EntitySpectrobe startFollowing(EntitySpectrobe pLeader) {
+        this.leader = pLeader;
+        pLeader.addFollower();
+        return pLeader;
+    }
+
+    public void stopFollowing() {
+        this.leader.removeFollower();
+        this.leader = null;
+    }
+
+    private void addFollower() {
+        ++this.schoolSize;
+    }
+
+    private void removeFollower() {
+        --this.schoolSize;
+    }
+
+    public boolean canBeFollowed() {
+        return this.schoolSize < this.getMaxSchoolSize();
+    }
+
 
     protected abstract FossilBlockItem getFossil();
     protected abstract EntityType<? extends EntitySpectrobe> getChildForLineage();

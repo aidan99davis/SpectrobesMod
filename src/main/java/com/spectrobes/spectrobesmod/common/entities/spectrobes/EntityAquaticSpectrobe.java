@@ -3,6 +3,9 @@ package com.spectrobes.spectrobesmod.common.entities.spectrobes;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.AquaticJumpGoal;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.SpectrobeFindWaterGoal;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.SpectrobeRandomSwimmingGoal;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobType;
@@ -12,7 +15,9 @@ import net.minecraft.world.entity.ai.control.SmoothSwimmingLookControl;
 import net.minecraft.world.entity.ai.navigation.AmphibiousPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.List;
 import java.util.Random;
@@ -67,7 +72,7 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
                     = level.getEntitiesOfClass(getSpectrobeClass(),
                         this.getBoundingBox()
                         .inflate(10, 10, 10));
-        if(mates.isEmpty()) {
+        if(mates.isEmpty() || mates.size() == 1) {
             this.setTicksTillMate(16000);
             return;
         }
@@ -102,6 +107,11 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
         //todo: aquatic breeding. eggs? livebirth? - livebirth for now, with a litter size.
     }
 
+    @Override
+    protected int getMaxSchoolSize() {
+        return 8;
+    }
+
     protected abstract int getMaxLitterSize();
 
 
@@ -111,12 +121,13 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
         AquaticSpectrobeMoveController(EntityAquaticSpectrobe pSpectrobe) {
             super(pSpectrobe);
             this.spectrobe = pSpectrobe;
+
         }
 
         private void updateSpeed() {
-            if (this.spectrobe.isInWater()) {
-                this.spectrobe.setDeltaMovement(this.spectrobe.getDeltaMovement().add(0.0D, 0.005D, 0.0D));
-            }
+//            if (this.spectrobe.isInWater()) {
+//                this.spectrobe.setDeltaMovement(this.spectrobe.getDeltaMovement().add(0.0D, 0.005D, 0.0D));
+//            }
         }
 
         public void tick() {
@@ -126,6 +137,13 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
                 double d1 = this.wantedY - this.spectrobe.getY();
                 double d2 = this.wantedZ - this.spectrobe.getZ();
                 double d3 = Math.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
+                BlockPos blockpos = this.mob.blockPosition();
+                BlockState blockstate = this.mob.level.getBlockState(blockpos);
+                VoxelShape voxelshape = blockstate.getCollisionShape(this.mob.level, blockpos);
+                if (d1 > (double)this.mob.getStepHeight() && d0 * d0 + d2 * d2 < (double)Math.max(1.0F, this.mob.getBbWidth()) || !voxelshape.isEmpty() && this.mob.getY() < voxelshape.max(Direction.Axis.Y) + (double)blockpos.getY() && !blockstate.is(BlockTags.DOORS) && !blockstate.is(BlockTags.FENCES)) {
+                    this.mob.getJumpControl().jump();
+                    this.operation = MoveControl.Operation.JUMPING;
+                }
                 d1 /= d3;
                 float f = (float)(Mth.atan2(d2, d0) * (double)(180F / (float)Math.PI)) - 90.0F;
                 this.spectrobe.setYRot(this.rotlerp(this.spectrobe.getYRot(), f, 90.0F));
@@ -133,6 +151,11 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
                 float f1 = (float)(this.speedModifier * this.spectrobe.getAttributeValue(Attributes.MOVEMENT_SPEED));
                 this.spectrobe.setSpeed(Mth.lerp(0.125F, this.spectrobe.getSpeed(), f1));
                 this.spectrobe.setDeltaMovement(this.spectrobe.getDeltaMovement().add(0.0D, (double)this.spectrobe.getSpeed() * d1 * 0.1D, 0.0D));
+            } else if (this.operation == MoveControl.Operation.JUMPING) {
+                this.mob.setSpeed((float)(this.speedModifier * this.mob.getAttributeValue(Attributes.MOVEMENT_SPEED)));
+                if (this.mob.isOnGround()) {
+                    this.operation = MoveControl.Operation.WAIT;
+                }
             } else {
                 this.spectrobe.setSpeed(0.0F);
             }

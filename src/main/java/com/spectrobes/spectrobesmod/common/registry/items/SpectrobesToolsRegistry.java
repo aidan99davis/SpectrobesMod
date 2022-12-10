@@ -4,6 +4,7 @@ import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.items.healing.renderer.SerumItemRenderer;
 import com.spectrobes.spectrobesmod.common.items.SpectrobesItemGroups;
 import com.spectrobes.spectrobesmod.common.items.tools.PrizmodItem;
+import com.spectrobes.spectrobesmod.common.items.tools.healing.SpectrobeAntidoteHealingItem;
 import com.spectrobes.spectrobesmod.common.items.tools.healing.SpectrobeSerumHealingItem;
 import com.spectrobes.spectrobesmod.common.items.weapons.*;
 import net.minecraft.world.item.Item;
@@ -37,6 +38,11 @@ public class SpectrobesToolsRegistry {
     public static final RegistryObject<SpectrobeSerumHealingItem> basic_serum =
             ITEMS.register("basic_serum",
                     () -> new SpectrobeSerumHealingItem(50, 500, 1, new Item.Properties()
+                            .tab(SpectrobesItemGroups.SpectrobesToolsItemGroup.Instance)));
+
+    public static final RegistryObject<SpectrobeAntidoteHealingItem> basic_antidote =
+            ITEMS.register("basic_antidote",
+                    () -> new SpectrobeAntidoteHealingItem(50, 2000, 1, new Item.Properties()
                             .tab(SpectrobesItemGroups.SpectrobesToolsItemGroup.Instance)));
 
 }
