@@ -96,10 +96,6 @@ public class MiniXellesBlockEntity extends BlockEntity implements GameEventListe
             }
 
             if (entity.isSteppingCarefully() && pGameEvent.is(GameEventTags.IGNORE_VIBRATIONS_SNEAKING)) {
-                if (this.canTriggerAvoidVibration() && entity instanceof ServerPlayer) {
-                    ServerPlayer serverplayer = (ServerPlayer)entity;
-                }
-
                 return false;
             }
 
@@ -171,18 +167,18 @@ public class MiniXellesBlockEntity extends BlockEntity implements GameEventListe
 
     public void onSignalReceive(ServerLevel pLevel, GameEventListener pListener, BlockPos pSourcePos, GameEvent pGameEvent, @Nullable Entity pSourceEntity, @Nullable Entity pProjectileOwner, float pDistance) {
         BlockState blockstate = this.getBlockState();
-        if (MiniXellesBlock.canActivate(blockstate) || blockstate.getValue(MiniXellesBlock.CAN_SUMMON)) {
+//        if (MiniXellesBlock.canActivate(blockstate) || blockstate.getValue(MiniXellesBlock.CAN_SUMMON)) {
             this.trySummon(pLevel, tryGetPlayer(pProjectileOwner != null ? pProjectileOwner : pSourceEntity));
             this.lastVibrationFrequency = MiniXellesBlock.VIBRATION_FREQUENCY_FOR_EVENT.getInt(pGameEvent);
             MiniXellesBlock.activate(pSourceEntity, pLevel, this.worldPosition, blockstate, SculkSensorBlockEntity.getRedstoneStrengthForDistance(pDistance, pListener.getListenerRadius()));
-        }
+//        }
 
     }
 
     public void trySummon(ServerLevel pLevel, @Nullable LivingEntity pPlayer) {
         if (pPlayer != null && !(pPlayer instanceof EntityKrawl)) {
             this.shriek(pLevel);
-            this.tryRespond(pLevel);
+            this.trySummonKrawl(pLevel);
         }
     }
 
@@ -199,7 +195,7 @@ public class MiniXellesBlockEntity extends BlockEntity implements GameEventListe
     }
 
     public void tryRespond(ServerLevel pLevel) {
-        if (!this.canRespond(pLevel)) {
+        if (this.canRespond(pLevel)) {
             if (!this.trySummonKrawl(pLevel)) {
 //                this.playWardenReplySound();
             }

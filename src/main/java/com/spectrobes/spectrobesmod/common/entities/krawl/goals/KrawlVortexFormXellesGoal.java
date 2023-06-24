@@ -1,13 +1,18 @@
 package com.spectrobes.spectrobesmod.common.entities.krawl.goals;
 
+import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityVortex;
 import com.spectrobes.spectrobesmod.common.save_data.KrawlNest;
 import com.spectrobes.spectrobesmod.common.save_data.SpectrobesWorldSaveData;
+import com.spectrobes.spectrobesmod.common.world.WorldGenUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -25,7 +30,7 @@ public class KrawlVortexFormXellesGoal extends Goal {
     public boolean canUse() {
         SpectrobesWorldSaveData worldData = (SpectrobesWorldSaveData.getWorldData((ServerLevel) vortex.level));
 
-        return vortex.getAge() >= 1 //TODO: Make this configurable
+        return vortex.getAge() >= 0 //TODO: Make this configurable
                 && ((worldData.canSpawnNest((vortex.blockPosition()))
                 || (worldData.getNest(vortex.blockPosition()) != null
                 && worldData.getNest(vortex.blockPosition()).stage == 1)));
@@ -48,11 +53,20 @@ public class KrawlVortexFormXellesGoal extends Goal {
                     if(SpectrobesWorldSaveData.getWorldData((ServerLevel) level).canSpawnNest((vortexPos))) {
 
                         nestingVortexes.forEach(entityVortex -> entityVortex.remove(Entity.RemovalReason.DISCARDED));
-                        if(vortexPos.getY() < 10) vortexPos.offset(0, 10 - vortexPos.getY(), 0);
+//                        if(vortexPos.getY() < 10) vortexPos.offset(0, 10 - vortexPos.getY(), 0);
 
                         SpectrobesWorldSaveData data = SpectrobesWorldSaveData.getWorldData((ServerLevel) level);
 
                         //create xelle mob.
+                        WorldGenUtils.generateDome(level, RandomSource.create(), vortexPos, 4, 7, Blocks.AIR.defaultBlockState());
+                        KrawlEntities.ENTITY_XELLES.get()
+                                .spawn((ServerLevel) level,
+                                        null,
+                                        null,
+                                        vortexPos,
+                                        MobSpawnType.MOB_SUMMONED,
+                                        false,
+                                        false);
                         data.addNest(new KrawlNest(vortexPos, level.dimension().toString()));
                         data.getNest(vortexPos).absorbVortexes(extraVortexes);
                         data.setDirty();

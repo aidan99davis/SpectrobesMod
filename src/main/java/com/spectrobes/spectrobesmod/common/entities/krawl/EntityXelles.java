@@ -111,6 +111,14 @@ public class EntityXelles extends EntityBossKrawl {
             if(direction != Direction.UP && direction != Direction.DOWN) {
                 if(xellesToCreate > 0) {
                     pLevel.setBlock(blockPosition().relative(direction, random.nextIntBetweenInclusive(6, 10)), SpectrobesBlocks.mini_xelles_block.get().defaultBlockState(), 3);
+
+                    //find air.
+
+
+                    //make sure its on the ground.
+
+
+
                     xellesToCreate--;
                 }
             }
