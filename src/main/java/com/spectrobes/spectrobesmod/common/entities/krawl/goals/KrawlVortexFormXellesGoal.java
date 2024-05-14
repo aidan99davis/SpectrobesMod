@@ -57,8 +57,12 @@ public class KrawlVortexFormXellesGoal extends Goal {
 
                         SpectrobesWorldSaveData data = SpectrobesWorldSaveData.getWorldData((ServerLevel) level);
 
+                        while(level.getBlockState(vortexPos.below()).isAir()) {
+                            vortexPos = vortexPos.below();
+                        }
+
                         //create xelle mob.
-                        WorldGenUtils.generateDome(level, RandomSource.create(), vortexPos, 4, 7, Blocks.AIR.defaultBlockState());
+                        WorldGenUtils.generateDome(level, RandomSource.create(), vortexPos, 9, 8, Blocks.AIR.defaultBlockState());
                         KrawlEntities.ENTITY_XELLES.get()
                                 .spawn((ServerLevel) level,
                                         null,

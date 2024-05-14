@@ -12,6 +12,7 @@ import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesMineralsRegi
 import com.spectrobes.spectrobesmod.common.save_data.KrawlNest;
 import com.spectrobes.spectrobesmod.common.save_data.SpectrobesWorldSaveData;
 import com.spectrobes.spectrobesmod.util.KrawlPropertiesBuilder;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -110,14 +111,17 @@ public class EntityXelles extends EntityBossKrawl {
                 Direction.allShuffled(getRandom())) {
             if(direction != Direction.UP && direction != Direction.DOWN) {
                 if(xellesToCreate > 0) {
-                    pLevel.setBlock(blockPosition().relative(direction, random.nextIntBetweenInclusive(6, 10)), SpectrobesBlocks.mini_xelles_block.get().defaultBlockState(), 3);
+                    BlockPos initialPosition = blockPosition().relative(direction, random.nextIntBetweenInclusive(6, 10)).immutable();
 
                     //find air.
+                    BlockPos potentialPosition = initialPosition;
+                    while (!pLevel.getBlockState(potentialPosition).isAir() || !pLevel.getBlockState(potentialPosition.above(1)).isAir()) {
 
-
-                    //make sure its on the ground.
-
-
+                        //make sure its on the ground.
+                    }
+                    pLevel.setBlock(potentialPosition,
+                                    SpectrobesBlocks.mini_xelles_block.get().defaultBlockState(),
+                            3);
 
                     xellesToCreate--;
                 }
@@ -271,7 +275,8 @@ public class EntityXelles extends EntityBossKrawl {
         AABB searchBox = getBoundingBox().inflate(50, 50, 50);
         List<EntityOrbix> nearbyBosses = level.getEntities(KrawlEntities.ENTITY_ORBIX.get(), searchBox, entityOrbix -> true);
         boolean hasSpawnedBoss = nearbyBosses.size() > 0;
-        return entityData.get(LAST_SPAWNED_BOSS_SUMMONING_SPORE_TICKS) >= 24000
+        return getStage() > 1
+                && entityData.get(LAST_SPAWNED_BOSS_SUMMONING_SPORE_TICKS) >= 24000
                 && !hasSpawnedBoss;
     }
 
