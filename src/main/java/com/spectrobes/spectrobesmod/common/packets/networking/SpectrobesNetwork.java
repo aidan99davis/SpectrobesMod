@@ -14,7 +14,7 @@ public class SpectrobesNetwork {
     private static int packetId = 0;
 
     public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
-            new ResourceLocation(SpectrobesInfo.MOD_ID, "main"),
+            ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "main"),
             () -> PROTOCOL_VERSION,
             PROTOCOL_VERSION::equals,
             PROTOCOL_VERSION::equals

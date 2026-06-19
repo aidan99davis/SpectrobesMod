@@ -9,6 +9,6 @@
 //
 //public class SpectrobesDimensions {
 //
-//    public static final RegistryKey<LevelSettings> GENSHI_DIMENSION_SETTINGS = RegistryKey.create(Registry.NOISE_GENERATOR_SETTINGS_REGISTRY, new ResourceLocation(SpectrobesInfo.MOD_ID, "genshi_dimension_settings"));
-//    public static final RegistryKey<Level> GENSHI_DIMENSION = RegistryKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(SpectrobesInfo.MOD_ID, "genshi_dimension"));
+//    public static final RegistryKey<LevelSettings> GENSHI_DIMENSION_SETTINGS = RegistryKey.create(Registry.NOISE_GENERATOR_SETTINGS_REGISTRY, ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "genshi_dimension_settings"));
+//    public static final RegistryKey<Level> GENSHI_DIMENSION = RegistryKey.create(Registry.DIMENSION_REGISTRY, ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "genshi_dimension"));
 //}

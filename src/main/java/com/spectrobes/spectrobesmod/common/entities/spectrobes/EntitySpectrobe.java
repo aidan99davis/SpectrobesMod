@@ -49,7 +49,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import net.minecraftforge.network.NetworkHooks;
-import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.GeoAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
@@ -61,7 +61,7 @@ import javax.annotation.Nullable;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAdditionalSpawnData, IAnimatable, IHasNature {
+public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAdditionalSpawnData, GeoAnimatable, IHasNature {
     public static final Predicate<ItemEntity> MINERAL_SELECTOR = (itemEntity) -> !itemEntity.hasPickUpDelay() && itemEntity.isAlive() && itemEntity.getItem().getItem() instanceof MineralItem;
     private static final Predicate<EntityKrawl> TARGET_KRAWL = (entity) -> !(entity).isVortex();
     private boolean recentInteract = false;

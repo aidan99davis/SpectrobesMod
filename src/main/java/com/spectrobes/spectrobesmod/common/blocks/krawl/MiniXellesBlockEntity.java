@@ -33,29 +33,22 @@ import net.minecraft.world.level.gameevent.BlockPositionSource;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.gameevent.GameEventListener;
 import net.minecraft.world.level.gameevent.PositionSource;
-import net.minecraft.world.level.gameevent.vibrations.VibrationListener;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.builder.ILoopType;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public class MiniXellesBlockEntity extends BlockEntity implements GameEventListener, IAnimatable {
+public class MiniXellesBlockEntity extends BlockEntity implements GameEventListener, GeoAnimatable {
     private int lastVibrationFrequency;
     private static final int LISTENER_RADIUS = 8;
     private int warningLevel;
     private final BlockPositionSource blockPosSource = new BlockPositionSource(this.worldPosition);
     private final KrawlSpreader krawlSpreader = KrawlSpreader.createLevelSpreader();
-    private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private float receivingDistance;
     private VibrationListener.ReceivingEvent receivingEvent;
     private int travelTimeInTicks;

@@ -22,9 +22,9 @@ public class KasumiRenderer extends GeoEntityRenderer<EntityKasumi> {
     public ResourceLocation getTextureLocation(EntityKasumi entity)
     {
         return switch (entity.getSpectrobeData().Variant) {
-            case 1 -> new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/kasumi_1.png");
-            case 2 -> new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/kasumi_2.png");
-            default -> new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/kasumi_0.png");
+            case 1 -> ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/kasumi_1.png");
+            case 2 -> ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/kasumi_2.png");
+            default -> ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/kasumi_0.png");
         };
     }
 

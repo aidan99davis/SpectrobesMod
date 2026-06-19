@@ -48,14 +48,14 @@ public class MineralPreviewSlot implements Widget {
 
             if(mineralItem instanceof MineralItem mineral) {
                 RenderSystem.setShaderTexture(0,
-                        new ResourceLocation("spectrobesmod", "textures/items/" + mineral.mineral.name + ".png"));
+                        ResourceLocation.fromNamespaceAndPath("spectrobesmod", "textures/items/" + mineral.mineral.name + ".png"));
 
             } else if(mineralItem instanceof ChromaMineralItem chromaMineral) {
                 ResourceLocation mineralTexture;
                 switch (chromaMineral.getVariantNumber()) {
-                    case 1 -> mineralTexture = new ResourceLocation("spectrobesmod", "textures/items/chroma_mineral_item_one.png");
-                    case 2 -> mineralTexture = new ResourceLocation("spectrobesmod", "textures/items/chroma_mineral_item_two.png");
-                    default -> mineralTexture = new ResourceLocation("spectrobesmod", "textures/items/chroma_mineral_item_zero.png");
+                    case 1 -> mineralTexture = ResourceLocation.fromNamespaceAndPath("spectrobesmod", "textures/items/chroma_mineral_item_one.png");
+                    case 2 -> mineralTexture = ResourceLocation.fromNamespaceAndPath("spectrobesmod", "textures/items/chroma_mineral_item_two.png");
+                    default -> mineralTexture = ResourceLocation.fromNamespaceAndPath("spectrobesmod", "textures/items/chroma_mineral_item_zero.png");
                 }
                 RenderSystem.setShaderTexture(0, mineralTexture);
             }

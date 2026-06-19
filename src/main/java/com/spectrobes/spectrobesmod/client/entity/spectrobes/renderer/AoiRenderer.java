@@ -25,13 +25,13 @@ public class AoiRenderer extends GeoEntityRenderer<EntityAoi> {
     {
         switch (entity.getSpectrobeData().Variant) {
             case 0:
-                return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/aoi_0.png");
+                return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/aoi_0.png");
             case 1:
-                return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/aoi_1.png");
+                return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/aoi_1.png");
             case 2:
-                return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/aoi_2.png");
+                return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/aoi_2.png");
             default:
-                return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/aoi_0.png");
+                return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/aoi_0.png");
 
         }
     }

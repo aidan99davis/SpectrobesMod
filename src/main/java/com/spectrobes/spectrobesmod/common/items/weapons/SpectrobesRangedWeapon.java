@@ -13,7 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib3.core.AnimationState;
-import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.GeoAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Predicate;
 
-public abstract class SpectrobesRangedWeapon extends BowItem implements IAnimatable, ISyncable, ISpectrobeWeapon {
+public abstract class SpectrobesRangedWeapon extends BowItem implements GeoAnimatable, ISyncable, ISpectrobeWeapon {
     private static final int ANIM_OPEN = 0;
     public AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
@@ -91,7 +91,7 @@ public abstract class SpectrobesRangedWeapon extends BowItem implements IAnimata
         return this.factory;
     }
 
-    public <P extends Item & IAnimatable> PlayState predicate(AnimationEvent<P> event) {
+    public <P extends Item & GeoAnimatable> PlayState predicate(AnimationEvent<P> event) {
         return event.isMoving() ? PlayState.CONTINUE : PlayState.STOP;
     }
 

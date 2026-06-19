@@ -5,11 +5,7 @@ import com.spectrobes.spectrobesmod.common.registry.KrawlRegistry;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.builder.ILoopType;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.animation.PlayState;
 
 public class EntityVizbar extends EntityKrawl {
     public EntityVizbar(EntityType<? extends Monster> type, Level worldIn) {

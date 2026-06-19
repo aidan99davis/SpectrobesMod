@@ -32,8 +32,8 @@ import static net.minecraft.client.gui.GuiComponent.fill;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = SpectrobesInfo.MOD_ID)
 public class HUDHandler {
-    public static final ResourceLocation SPECTROBE_SLOT_TEXTURE = new ResourceLocation("spectrobesmod:textures/gui/spectrobe_slot.png");
-    public static final ResourceLocation SPECTROBE_SLOT_CURRENT_TEXTURE = new ResourceLocation("spectrobesmod:textures/gui/spectrobe_slot_selected.png");
+    public static final ResourceLocation SPECTROBE_SLOT_TEXTURE = ResourceLocation.fromNamespaceAndPath("spectrobesmod:textures/gui/spectrobe_slot.png");
+    public static final ResourceLocation SPECTROBE_SLOT_CURRENT_TEXTURE = ResourceLocation.fromNamespaceAndPath("spectrobesmod:textures/gui/spectrobe_slot_selected.png");
 
     @SubscribeEvent
     public static void onDraw(RenderGuiOverlayEvent.Pre event) {

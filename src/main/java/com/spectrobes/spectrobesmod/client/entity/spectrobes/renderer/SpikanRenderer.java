@@ -20,9 +20,9 @@ public class SpikanRenderer extends GeoEntityRenderer<EntitySpikan> {
     public ResourceLocation getTextureLocation(EntitySpikan entity)
     {
         return switch (entity.getSpectrobeData().Variant) {
-            case 1 -> new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/spikan_1.png");
-            case 2 -> new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/spikan_2.png");
-            default -> new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/spikan_0.png");
+            case 1 -> ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/spikan_1.png");
+            case 2 -> ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/spikan_2.png");
+            default -> ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/spikan_0.png");
         };
     }
 }

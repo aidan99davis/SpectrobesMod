@@ -25,7 +25,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkHooks;
-import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.GeoAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
@@ -35,7 +35,7 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import static com.spectrobes.spectrobesmod.util.DamageUtils.getTypeBonus;
 
-public abstract class EntityKrawl extends Monster implements IAnimatable, IHasNature {
+public abstract class EntityKrawl extends Monster implements GeoAnimatable, IHasNature {
     public KrawlProperties krawlProperties;
     public AnimationFactory animationControllers = GeckoLibUtil.createFactory(this);
     protected AnimationController<EntityKrawl> moveController = new AnimationController<>(this, "moveAnimationController", 10F, this::moveController);

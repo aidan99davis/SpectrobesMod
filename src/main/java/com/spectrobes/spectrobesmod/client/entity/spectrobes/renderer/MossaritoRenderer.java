@@ -25,13 +25,13 @@ public class MossaritoRenderer extends GeoEntityRenderer<EntityMossarito> {
     {
         switch (entity.getSpectrobeData().Variant) {
             case 0:
-                return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/mossarito_0.png");
+                return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/mossarito_0.png");
             case 1:
-                return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/mossarito_1.png");
+                return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/mossarito_1.png");
             case 2:
-                return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/mossarito_2.png");
+                return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/mossarito_2.png");
             default:
-                return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/mossarito_0.png");
+                return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/mossarito_0.png");
 
         }
     }

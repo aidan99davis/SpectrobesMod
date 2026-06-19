@@ -23,7 +23,7 @@ public class SwarRenderer extends GeoEntityRenderer<EntitySwar> {
     @Override
     public ResourceLocation getTextureLocation(EntitySwar entity)
     {
-        return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/krawl/swar.png");
+        return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID + ":textures/models/krawl/swar.png");
     }
 
     @Override

@@ -18,7 +18,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraftforge.network.NetworkHooks;
-import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.GeoAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.builder.ILoopType;
@@ -31,7 +31,7 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class EntityHealingSpore extends Monster implements IAnimatable, FlyingAnimal {
+public class EntityHealingSpore extends Monster implements GeoAnimatable, FlyingAnimal {
     private static final EntityDataAccessor<Integer> AGE_IN_TICKS =
             SynchedEntityData.defineId(EntityHealingSpore.class,
                     EntityDataSerializers.INT);

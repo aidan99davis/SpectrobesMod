@@ -3,25 +3,25 @@ package com.spectrobes.spectrobesmod.client.entity.krawl.model;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntitySwar;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.model.GeoModel;
 
-public class SwarModel extends AnimatedGeoModel<EntitySwar> {
+public class SwarModel extends GeoModel<EntitySwar> {
 
 	@Override
 	public ResourceLocation getModelResource(EntitySwar object)
 	{
-		return new ResourceLocation(SpectrobesInfo.MOD_ID, "geo/swar.geo.json");
+		return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "geo/swar.geo.json");
 	}
 
 	@Override
 	public ResourceLocation getTextureResource(EntitySwar object)
 	{
-		return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/krawl/swar.png");
+		return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "textures/models/krawl/swar.png");
 	}
 
 	@Override
 	public ResourceLocation getAnimationResource(EntitySwar object)
 	{
-		return new ResourceLocation(SpectrobesInfo.MOD_ID, "animations/spectrobe/swar.json");
+		return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "animations/spectrobe/swar.json");
 	}
 }

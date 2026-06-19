@@ -3,7 +3,6 @@ package com.spectrobes.spectrobesmod.client.container;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.items.minerals.IWorthGura;
-import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.*;
 import net.minecraft.server.level.ServerPlayer;
@@ -12,15 +11,14 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.RegistryObject;
-
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 public class CyrusShopContainer extends AbstractContainerMenu {
     private final Player player;
     private final PlayerSpectrobeMaster capability;
     private boolean needsSync = true;
 
-    public static RegistryObject<MenuType<CyrusShopContainer>> CYRUS_SHOP = null;
+    public static DeferredHolder<MenuType<CyrusShopContainer>> CYRUS_SHOP = null;
 
     public CyrusShopContainer(int id, Player player) {
         super(CYRUS_SHOP.get(), id);

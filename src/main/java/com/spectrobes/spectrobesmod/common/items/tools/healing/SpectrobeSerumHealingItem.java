@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.common.util.NonNullLazy;
-import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.GeoAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.builder.ILoopType;
@@ -18,7 +18,7 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import java.util.function.Consumer;
 
-public class SpectrobeSerumHealingItem extends Item implements IAnimatable, IWorthGura {
+public class SpectrobeSerumHealingItem extends Item implements GeoAnimatable, IWorthGura {
     public AnimationFactory animationControllers = GeckoLibUtil.createFactory(this);
 
     private int healAmount;

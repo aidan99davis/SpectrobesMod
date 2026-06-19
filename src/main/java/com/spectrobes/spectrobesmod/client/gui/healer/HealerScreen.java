@@ -13,7 +13,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class HealerScreen extends AbstractContainerScreen<HealerContainer> {
 
-    private static final ResourceLocation HEALER_GUI_BACKGROUND = new ResourceLocation("spectrobesmod:textures/gui/prizmod_background.png");
+    private static final ResourceLocation HEALER_GUI_BACKGROUND = ResourceLocation.fromNamespaceAndPath("spectrobesmod:textures/gui/prizmod_background.png");
 
     private static final int HEAL_COST = 200;
 

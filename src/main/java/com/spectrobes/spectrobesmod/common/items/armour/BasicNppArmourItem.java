@@ -3,30 +3,21 @@ package com.spectrobes.spectrobesmod.common.items.armour;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorMaterial;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.item.GeoArmorItem;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import net.minecraft.world.item.Item;
+import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class BasicNppArmourItem extends GeoArmorItem implements IAnimatable, ISpectrobeArmour {
-    private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
+public class BasicNppArmourItem extends Item implements GeoItem, ISpectrobeArmour {
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private final SpectrobeProperties.Nature ArmourNature;
     private final int ArmourHealthBonus;
 
     public BasicNppArmourItem(SpectrobeProperties.Nature nature, int healthBonus, ArmorMaterial materialIn, EquipmentSlot slot, Properties builder) {
-        super(materialIn, slot, builder);
+        super(builder);
         this.ArmourNature = nature;
         this.ArmourHealthBonus = healthBonus;
-    }
-
-    @Override
-    public void registerControllers(AnimationData data) {
-    }
-
-    @Override
-    public AnimationFactory getFactory() {
-        return this.factory;
     }
 
     public SpectrobeProperties.Nature getNature() {
@@ -34,4 +25,14 @@ public class BasicNppArmourItem extends GeoArmorItem implements IAnimatable, ISp
     }
 
     public int GetHealthBonus() { return ArmourHealthBonus; }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
+    }
 }

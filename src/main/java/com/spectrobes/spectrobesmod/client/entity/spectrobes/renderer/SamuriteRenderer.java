@@ -21,6 +21,6 @@ public class SamuriteRenderer extends GeoEntityRenderer<EntitySamurite> {
     @Override
     public ResourceLocation getTextureLocation(EntitySamurite entity)
     {
-        return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/samurite.png");
+        return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/samurite.png");
     }
 }

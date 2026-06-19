@@ -18,7 +18,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraftforge.network.NetworkHooks;
-import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.GeoAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.builder.ILoopType;
@@ -28,7 +28,7 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
-public class EntitySpawningSpore extends Monster implements IAnimatable, FlyingAnimal {
+public class EntitySpawningSpore extends Monster implements GeoAnimatable, FlyingAnimal {
     protected static final EntityDataAccessor<Boolean> BOSS_SPORE =
             SynchedEntityData.defineId(EntitySpawningSpore.class,
                     EntityDataSerializers.BOOLEAN);

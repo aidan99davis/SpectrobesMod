@@ -7,13 +7,13 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.registries.DeferredHolder;
 
 public class SpectrobeDetailsContainer extends AbstractContainerMenu {
 
     private final Spectrobe spectrobe;
 
-    public static RegistryObject<MenuType<SpectrobeDetailsContainer>> SPECTROBE_DETAILS = null;
+    public static DeferredHolder<MenuType<SpectrobeDetailsContainer>> SPECTROBE_DETAILS = null;
 
     public SpectrobeDetailsContainer(int id, Spectrobe spectrobe) {
         super(SPECTROBE_DETAILS.get(), id);

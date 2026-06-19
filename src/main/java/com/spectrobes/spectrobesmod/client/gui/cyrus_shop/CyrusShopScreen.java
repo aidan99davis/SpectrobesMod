@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CyrusShopScreen extends AbstractContainerScreen<CyrusShopContainer> {
-    public static final ResourceLocation background_texture = new ResourceLocation("spectrobesmod:textures/gui/cyrus_shop_background.png");
+    public static final ResourceLocation background_texture = ResourceLocation.fromNamespaceAndPath("spectrobesmod:textures/gui/cyrus_shop_background.png");
     ShopScrollList shopScrollList;
 
     public CyrusShopScreen(CyrusShopContainer pMenu, Inventory pPlayerInventory, Component pTitle) {

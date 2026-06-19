@@ -3,18 +3,18 @@ package com.spectrobes.spectrobesmod.client.items.weapons.model;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.items.weapons.BasicSwordItem;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.model.GeoModel;
 
-public class BasicSwordItemModel extends AnimatedGeoModel<BasicSwordItem> {
+public class BasicSwordItemModel extends GeoModel<BasicSwordItem> {
 
     @Override
     public ResourceLocation getModelResource(BasicSwordItem aoiFossilItem) {
-        return new ResourceLocation(SpectrobesInfo.MOD_ID, "geo/weapons/basic_sword.geo.json");
+        return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "geo/weapons/basic_sword.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(BasicSwordItem aoiFossilItem) {
-        return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/item/basic_sword.png");
+        return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "textures/models/item/basic_sword.png");
     }
 
     @Override

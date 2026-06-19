@@ -3,18 +3,18 @@ package com.spectrobes.spectrobesmod.client.items.model;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.items.fossils.AoiFossilItem;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.model.GeoModel;
 
-public class AoiFossilItemModel extends AnimatedGeoModel<AoiFossilItem> {
+public class AoiFossilItemModel extends GeoModel<AoiFossilItem> {
 
     @Override
     public ResourceLocation getModelResource(AoiFossilItem aoiFossilItem) {
-        return new ResourceLocation(SpectrobesInfo.MOD_ID, "geo/blocks/aoi.geo.json");
+        return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "geo/blocks/aoi.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(AoiFossilItem aoiFossilItem) {
-        return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/blocks/fossil.png");
+        return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "textures/models/blocks/fossil.png");
     }
 
     @Override

@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.registries.DeferredHolder;
 
 import java.util.*;
 
@@ -22,7 +22,7 @@ public class PrizmodContainer extends AbstractContainerMenu {
     private PlayerSpectrobeMaster capability;
     private boolean needsSync = true;
 
-    public static RegistryObject<MenuType<PrizmodContainer>> PRIZMOD = null;
+    public static DeferredHolder<MenuType<PrizmodContainer>> PRIZMOD = null;
 
     public PrizmodContainer(int id, Player player) {
         super(PRIZMOD.get(), id);

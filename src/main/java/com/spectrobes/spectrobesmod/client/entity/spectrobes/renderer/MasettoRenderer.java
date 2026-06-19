@@ -25,13 +25,13 @@ public class MasettoRenderer extends GeoEntityRenderer<EntityMasetto> {
     {
         switch (entity.getSpectrobeData().Variant) {
             case 0:
-                return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/masetto_0.png");
+                return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/masetto_0.png");
             case 1:
-                return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/masetto_1.png");
+                return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/masetto_1.png");
             case 2:
-                return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/masetto_2.png");
+                return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/masetto_2.png");
             default:
-                return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/masetto_0.png");
+                return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/masetto_0.png");
 
         }
     }

@@ -8,13 +8,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.registries.DeferredHolder;
 
 public class HealerContainer extends AbstractContainerMenu {
     private PlayerSpectrobeMaster capability;
     private Player player;
 
-    public static RegistryObject<MenuType<HealerContainer>> HEALER = null;
+    public static DeferredHolder<MenuType<HealerContainer>> HEALER = null;
 
     public HealerContainer(int pContainerId, Player player) {
         super(HEALER.get(), pContainerId);

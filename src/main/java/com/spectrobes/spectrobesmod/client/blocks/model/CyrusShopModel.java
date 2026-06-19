@@ -3,18 +3,18 @@ package com.spectrobes.spectrobesmod.client.blocks.model;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.blocks.machines.entity.CyrusShopBlockEntity;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.model.GeoModel;
 
-public class CyrusShopModel extends AnimatedGeoModel<CyrusShopBlockEntity> {
+public class CyrusShopModel extends GeoModel<CyrusShopBlockEntity> {
 
     @Override
     public ResourceLocation getModelResource(CyrusShopBlockEntity grildaFossilBlock) {
-        return new ResourceLocation(SpectrobesInfo.MOD_ID, "geo/blocks/lab_machine_small.geo.json");
+        return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "geo/blocks/lab_machine_small.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(CyrusShopBlockEntity grildaFossilBlock) {
-        return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/blocks/cyrus_shop.png");
+        return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "textures/models/blocks/cyrus_shop.png");
     }
 
     @Override

@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
 
 public class PlayerSpectrobeMasterDispatcher implements ICapabilitySerializable<CompoundTag> {
 
-    public static final ResourceLocation IDENTIFIER = new ResourceLocation(SpectrobesInfo.MOD_ID, "spectrobemasters");
+    public static final ResourceLocation IDENTIFIER = ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "spectrobemasters");
 
     private final PlayerSpectrobeMaster backend = new PlayerSpectrobeMaster();
     private final LazyOptional<PlayerSpectrobeMaster> optionalData = LazyOptional.of(() -> backend);

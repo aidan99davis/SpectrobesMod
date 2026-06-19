@@ -17,7 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.common.util.NonNullLazy;
-import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.GeoAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.builder.ILoopType;
@@ -30,7 +30,7 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class SpectrobeAntidoteHealingItem extends Item implements IAnimatable, IWorthGura {
+public class SpectrobeAntidoteHealingItem extends Item implements GeoAnimatable, IWorthGura {
     public AnimationFactory animationControllers = GeckoLibUtil.createFactory(this);
 
     private int healAmount;

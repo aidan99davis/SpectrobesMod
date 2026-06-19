@@ -8,7 +8,7 @@ public class SpectrobeIconInfo {
     private int height;
 
     public SpectrobeIconInfo(String name, int width, int height) {
-        iconRl = new ResourceLocation("spectrobesmod:textures/gui/" + name + ".png");
+        iconRl = ResourceLocation.fromNamespaceAndPath("spectrobesmod:textures/gui/" + name + ".png");
         this.height = height;
         this.width = width;
     }

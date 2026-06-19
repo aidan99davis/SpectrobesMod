@@ -23,7 +23,7 @@ public class KuganonRenderer extends GeoEntityRenderer<EntityKuganon> {
     @Override
     public ResourceLocation getTextureLocation(EntityKuganon entity)
     {
-        return new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/kuganon.png");
+        return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/kuganon.png");
     }
 
     @Override

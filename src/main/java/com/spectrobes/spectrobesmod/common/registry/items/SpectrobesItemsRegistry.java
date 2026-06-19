@@ -8,20 +8,20 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.registries.DeferredHolder;
 
 public class SpectrobesItemsRegistry {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, SpectrobesInfo.MOD_ID);
 
-    public static final RegistryObject<Item> metalium = 
+    public static final DeferredHolder<Item> metalium = 
     		ITEMS.register("metalium",
     				() -> new Item(new Item.Properties().tab(SpectrobesItemGroups.SpectrobesMineralItemGroup.Instance)));
     
-    public static final RegistryObject<Item> titanium = 
+    public static final DeferredHolder<Item> titanium = 
     		ITEMS.register("titanium",
     				() -> new Item(new Item.Properties().tab(SpectrobesItemGroups.SpectrobesMineralItemGroup.Instance)));
     
-    public static final RegistryObject<Item> marble = 
+    public static final DeferredHolder<Item> marble = 
     		ITEMS.register("marble",
     				() -> new Item(new Item.Properties().tab(SpectrobesItemGroups.SpectrobesMineralItemGroup.Instance)));
 

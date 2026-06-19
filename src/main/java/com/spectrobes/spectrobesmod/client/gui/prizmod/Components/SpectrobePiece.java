@@ -18,7 +18,7 @@ import software.bernie.geckolib3.core.util.Color;
 public class SpectrobePiece extends AbstractWidget {
 
     private static final ResourceLocation DELETE_BACKGROUND
-            = new ResourceLocation("spectrobesmod:textures/gui/spectrobe_slot_delete.png");
+            = ResourceLocation.fromNamespaceAndPath("spectrobesmod:textures/gui/spectrobe_slot_delete.png");
 
     public Spectrobe spectrobe;
     private final int x, y;

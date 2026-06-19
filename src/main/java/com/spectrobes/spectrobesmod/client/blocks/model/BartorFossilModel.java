@@ -3,18 +3,18 @@ package com.spectrobes.spectrobesmod.client.blocks.model;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.blocks.fossils.tile.BartorFossilBlockTileEntity;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.model.GeoModel;
 
-public class BartorFossilModel extends AnimatedGeoModel<BartorFossilBlockTileEntity> {
+public class BartorFossilModel extends GeoModel<BartorFossilBlockTileEntity> {
 
     @Override
     public ResourceLocation getModelResource(BartorFossilBlockTileEntity grildaFossilBlock) {
-        return new ResourceLocation(SpectrobesInfo.MOD_ID, "geo/blocks/bartor.geo.json");
+        return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "geo/blocks/bartor.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(BartorFossilBlockTileEntity grildaFossilBlock) {
-        return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/blocks/fossil.png");
+        return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "textures/models/blocks/fossil.png");
     }
 
     @Override

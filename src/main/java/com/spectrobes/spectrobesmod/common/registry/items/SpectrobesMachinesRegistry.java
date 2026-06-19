@@ -9,17 +9,17 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.registries.DeferredHolder;
 
 public class SpectrobesMachinesRegistry {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, SpectrobesInfo.MOD_ID);
 
-    public static final RegistryObject<BlockItem> healer_block_item =
+    public static final DeferredHolder<BlockItem> healer_block_item =
             ITEMS.register("healer_block_item",
                     () -> new HealerBlockItem(SpectrobesBlocks.healer_block.get(),
                             new Item.Properties().tab(SpectrobesItemGroups.SpectrobesBlocksItemGroup.Instance)));
 
-    public static final RegistryObject<BlockItem> cyrus_shop_block_item =
+    public static final DeferredHolder<BlockItem> cyrus_shop_block_item =
             ITEMS.register("cyrus_shop_block_item",
                     () -> new CyrusShopBlockItem(SpectrobesBlocks.cyrus_shop_block.get(),
                             new Item.Properties().tab(SpectrobesItemGroups.SpectrobesBlocksItemGroup.Instance)));
