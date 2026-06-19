@@ -6,15 +6,11 @@ import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.items.fossils.FossilBlockItem;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
 import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesFossilsRegistry;
-import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesItemsRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.builder.ILoopType;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
 
 public class EntitySpiko extends EntityMammalSpectrobe {
 
@@ -47,28 +43,23 @@ public class EntitySpiko extends EntityMammalSpectrobe {
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return animationControllers;
-    }
-
-    @Override
-    public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event) {
-        event.getController().transitionLengthTicks = 2;
+    public PlayState moveController(AnimationState<EntitySpectrobe> animationState) {
+        animationState.getController().transitionLength(2);
         if(!(animationSpeed > -0.15F && animationSpeed < 0.15F))
         {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.spiko.walk", ILoopType.EDefaultLoopTypes.LOOP));
+            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.spiko.walk", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         }
         if(this.isOrderedToSit()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.spiko.sit", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
+            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.spiko.sit", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
             return PlayState.CONTINUE;
         }
         else if(jumping) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.spiko.jump", ILoopType.EDefaultLoopTypes.LOOP));
+            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.spiko.jump", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         }
         else {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.spiko.idle", ILoopType.EDefaultLoopTypes.LOOP));
+            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.spiko.idle", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         }
     }

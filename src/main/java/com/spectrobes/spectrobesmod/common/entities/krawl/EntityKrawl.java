@@ -12,9 +12,11 @@ import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import com.spectrobes.spectrobesmod.util.DamageUtils;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerEntity;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -26,7 +28,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
@@ -35,7 +39,7 @@ import static com.spectrobes.spectrobesmod.util.DamageUtils.getTypeBonus;
 public abstract class EntityKrawl extends Monster implements GeoAnimatable, IHasNature {
     public KrawlProperties krawlProperties;
     public AnimatableInstanceCache animationControllers = GeckoLibUtil.createInstanceCache(this);
-    protected AnimationController<EntityKrawl> moveController = new AnimationController<>(this, "moveAnimationController", 10F, this::moveController);
+    protected AnimationController<EntityKrawl> moveController = new AnimationController<>(this, "moveAnimationController", 10, this::moveController);
 
     private static final EntityDataAccessor<Boolean> IS_ATTACKING =
             SynchedEntityData.defineId(EntityKrawl.class,
@@ -177,13 +181,13 @@ public abstract class EntityKrawl extends Monster implements GeoAnimatable, IHas
     }
 
     //Networking
-    @Override
-    public Packet<?> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
+//    @Override
+//    public Packet<?> getAddEntityPacket() {
+//        return NetworkHooks.getEntitySpawningPacket(this);
+//    }
 
     //Animation
-    public abstract <ENTITY extends EntityKrawl> PlayState moveController(AnimationEvent<ENTITY> entityAnimationTestEvent);
+    public abstract PlayState moveController(AnimationState<EntityKrawl> event);
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
@@ -191,9 +195,8 @@ public abstract class EntityKrawl extends Monster implements GeoAnimatable, IHas
     }
 
     @Override
-    public void registerControllers(AnimationData data)
-    {
-        data.addAnimationController(new AnimationController<>(this, "controller", 0, this::moveController));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "controller", 0, this::moveController));
     }
 
     @Override
@@ -204,5 +207,10 @@ public abstract class EntityKrawl extends Monster implements GeoAnimatable, IHas
     public void setGlowing(boolean glowing) {
         this.setGlowingTag(glowing);
 //        this.setSharedFlag(6, glowing);
+    }
+
+    @Override
+    public double getTick(Object object) {
+        return 0;
     }
 }

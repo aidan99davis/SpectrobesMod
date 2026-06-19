@@ -7,7 +7,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobType;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.LookControl;
 import net.minecraft.world.entity.ai.control.MoveControl;
@@ -15,7 +15,7 @@ import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.RandomSwimmingGoal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.List;
@@ -25,8 +25,8 @@ import java.util.Random;
 public abstract class EntityCrustaceanSpectrobe extends EntitySpectrobe {
     public EntityCrustaceanSpectrobe(EntityType<? extends EntitySpectrobe> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
-        this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
-        this.setPathfindingMalus(BlockPathTypes.WALKABLE, 0.0F);
+        this.setPathfindingMalus(PathType.WATER, 0.0F);
+        this.setPathfindingMalus(PathType.WALKABLE, 0.0F);
         this.moveControl = new MoveHelperController(this);
         this.lookControl = new LookControl(this);
     }
@@ -37,8 +37,8 @@ public abstract class EntityCrustaceanSpectrobe extends EntitySpectrobe {
     }
 
     @Override
-    public MobType getMobType() {
-        return MobType.WATER;
+    public MobCategory getClassification(boolean forSpawnCount) {
+        return MobCategory.WATER_CREATURE;
     }
 
     @Override
@@ -56,14 +56,9 @@ public abstract class EntityCrustaceanSpectrobe extends EntitySpectrobe {
     }
 
     @Override
-    public boolean canBreatheUnderwater() {
-        return true;
-    }
-
-    @Override
     public void mate() {
         List<? extends EntityCrustaceanSpectrobe> mates
-                = level.getEntitiesOfClass(getSpectrobeClass(),
+                = level().getEntitiesOfClass(this.getClass(),
                 this.getBoundingBox()
                         .inflate(10, 10, 10));
         if(mates.isEmpty() || mates.size() == 1) {
@@ -94,8 +89,8 @@ public abstract class EntityCrustaceanSpectrobe extends EntitySpectrobe {
 
         for(int i = 0; i < litterSize; i++) {
             EntitySpectrobe spectrobe = getChildForLineage()
-                    .create(level);
-            this.level.addFreshEntity(spectrobe);
+                    .create(level());
+            this.level().addFreshEntity(spectrobe);
             spectrobe.teleportTo(getX(), getY(), getZ());
         }
         //todo: aquatic breeding. eggs? livebirth? - livebirth for now, with a litter size.
@@ -132,9 +127,9 @@ public abstract class EntityCrustaceanSpectrobe extends EntitySpectrobe {
                 float d2 = (float) this.wantedZ - (float) this.fish.getZ();
                 float lvt_7_1_ = Mth.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
                 BlockPos blockpos = this.mob.blockPosition();
-                BlockState blockstate = this.mob.level.getBlockState(blockpos);
-                VoxelShape voxelshape = blockstate.getCollisionShape(this.mob.level, blockpos);
-                if (d1 > (double)this.mob.getStepHeight() && d0 * d0 + d2 * d2 < (double)Math.max(1.0F, this.mob.getBbWidth()) || !voxelshape.isEmpty() && this.mob.getY() < voxelshape.max(Direction.Axis.Y) + (double)blockpos.getY() && !blockstate.is(BlockTags.DOORS) && !blockstate.is(BlockTags.FENCES)) {
+                BlockState blockstate = this.mob.level().getBlockState(blockpos);
+                VoxelShape voxelshape = blockstate.getCollisionShape(this.mob.level(), blockpos);
+                if (d1 > (double)this.mob.maxUpStep() && d0 * d0 + d2 * d2 < (double)Math.max(1.0F, this.mob.getBbWidth()) || !voxelshape.isEmpty() && this.mob.getY() < voxelshape.max(Direction.Axis.Y) + (double)blockpos.getY() && !blockstate.is(BlockTags.DOORS) && !blockstate.is(BlockTags.FENCES)) {
                     this.mob.getJumpControl().jump();
                     this.operation = MoveControl.Operation.JUMPING;
                 }
@@ -147,7 +142,7 @@ public abstract class EntityCrustaceanSpectrobe extends EntitySpectrobe {
                 this.fish.setDeltaMovement(this.fish.getDeltaMovement().add(0.0D, (double) this.fish.getSpeed() * d1 * 0.1D, 0.0D));
             } else if (this.operation == MoveControl.Operation.JUMPING) {
                 this.mob.setSpeed((float)(this.speedModifier * this.mob.getAttributeValue(Attributes.MOVEMENT_SPEED)));
-                if (this.mob.isOnGround()) {
+                if (this.mob.onGround()) {
                     this.operation = MoveControl.Operation.WAIT;
                 }
             }

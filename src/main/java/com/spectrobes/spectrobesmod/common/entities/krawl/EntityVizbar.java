@@ -5,6 +5,8 @@ import com.spectrobes.spectrobesmod.common.registry.KrawlRegistry;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.PlayState;
 
 public class EntityVizbar extends EntityKrawl {
@@ -13,13 +15,13 @@ public class EntityVizbar extends EntityKrawl {
     }
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return animationControllers;
     }
 
     @Override
-    public <ENTITY extends EntityKrawl> PlayState moveController(AnimationEvent<ENTITY> event) {
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.subar.idle", ILoopType.EDefaultLoopTypes.LOOP));
+    public PlayState moveController(AnimationState<EntityKrawl> animationState) {
+        animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.subar.idle", ILoopType.EDefaultLoopTypes.LOOP));
         return PlayState.CONTINUE;
     }
 

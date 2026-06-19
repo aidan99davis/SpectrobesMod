@@ -9,11 +9,9 @@ import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesFossilsRegis
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.builder.ILoopType;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
 
 public class EntityAoi extends EntityAvianSpectrobe {
 
@@ -46,21 +44,17 @@ public class EntityAoi extends EntityAvianSpectrobe {
         return SpectrobesEntities.ENTITY_AOI.get();
     }
 
-    @Override
-    public AnimationFactory getFactory() {
-        return animationControllers;
-    }
 
     @Override
-    public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event) {
-        if(event.getAnimatable().isOrderedToSit())
+    public PlayState moveController(AnimationState<EntitySpectrobe> animationState) {
+        if(animationState.getAnimatable().isOrderedToSit())
         {
-            event.getController().setAnimationSpeed(2);
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.aoi.sit", ILoopType.EDefaultLoopTypes.LOOP));
+            animationState.getController().setAnimationSpeed(2);
+            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.aoi.sit", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         } else {
-            event.getController().setAnimationSpeed(5);
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.aoi.idle", ILoopType.EDefaultLoopTypes.LOOP));
+            animationState.getController().setAnimationSpeed(5);
+            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.aoi.idle", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         }
 

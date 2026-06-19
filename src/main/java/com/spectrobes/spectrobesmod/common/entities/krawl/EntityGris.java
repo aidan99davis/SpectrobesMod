@@ -5,6 +5,8 @@ import com.spectrobes.spectrobesmod.common.registry.KrawlRegistry;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
 
 public class EntityGris extends EntityKrawl {
     public EntityGris(EntityType<? extends Monster> type, Level worldIn) {
@@ -12,12 +14,7 @@ public class EntityGris extends EntityKrawl {
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return animationControllers;
-    }
-
-    @Override
-    public <ENTITY extends EntityKrawl> PlayState moveController(AnimationEvent<ENTITY> event) {
+    public PlayState moveController(AnimationState<EntityKrawl> animationState) {
 //        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.subar.idle", true));
         return PlayState.STOP;
     }

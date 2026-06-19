@@ -1,11 +1,10 @@
 package com.spectrobes.spectrobesmod.client.gui.cyrus_shop;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.spectrobes.spectrobesmod.client.container.CyrusShopContainer;
-import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
+import com.spectrobes.spectrobesmod.common.items.minerals.IWorthGura;
 import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesMineralsRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -13,77 +12,108 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.Item;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CyrusShopScreen extends AbstractContainerScreen<CyrusShopContainer> {
-    public static final ResourceLocation background_texture = ResourceLocation.fromNamespaceAndPath("spectrobesmod:textures/gui/cyrus_shop_background.png");
-    ShopScrollList shopScrollList;
+    public static final ResourceLocation BACKGROUND_TEXTURE = ResourceLocation.fromNamespaceAndPath(
+            "spectrobesmod",
+            "textures/gui/cyrus_shop_background.png"
+    );
 
-    public CyrusShopScreen(CyrusShopContainer pMenu, Inventory pPlayerInventory, Component pTitle) {
-        super(pMenu, pPlayerInventory, pTitle);
-        this.imageWidth = Minecraft.getInstance().getWindow().getGuiScaledWidth();
-        this.imageHeight = Minecraft.getInstance().getWindow().getGuiScaledHeight();
+    private ShopScrollList shopScrollList;
+
+    public CyrusShopScreen(CyrusShopContainer menu, Inventory playerInventory, Component title) {
+        super(menu, playerInventory, title);
+
+        Minecraft minecraft = Minecraft.getInstance();
+
+        this.imageWidth = minecraft.getWindow().getGuiScaledWidth();
+        this.imageHeight = minecraft.getWindow().getGuiScaledHeight();
     }
 
     @Override
     protected void init() {
-        shopScrollList = addWidget(
-                new ShopScrollList(this,
-                                width / 5,
-                                height / 8,
-                                    32 * 9,
-                        (height / 5) * 4,
-                                    Component.literal("Minerals")));
+        super.init();
+
+        this.imageWidth = this.width;
+        this.imageHeight = this.height;
+        this.leftPos = 0;
+        this.topPos = 0;
+
+        this.shopScrollList = this.addRenderableWidget(
+                new ShopScrollList(
+                        this,
+                        this.width / 5,
+                        this.height / 8,
+                        32 * 9,
+                        (this.height / 5) * 4,
+                        Component.literal("Minerals")
+                )
+        );
 
         List<Item> mineralItems = new ArrayList<>();
         SpectrobesMineralsRegistry.all_minerals.values().forEach(mineralItems::addAll);
-        List<Item> listSorted = mineralItems.stream().sorted((o1, o2) -> {
-            if (((MineralItem)o1).getGuraWorth() > ((MineralItem)o2).getGuraWorth()) {
-                return 1;
-            } else if (((MineralItem)o1).getGuraWorth() < ((MineralItem)o2).getGuraWorth()){
-                return -1;
-            } else {
-                return 0;
-            }
-        }).collect(Collectors.toList());
-        listSorted.forEach(mineral -> shopScrollList.addMineralToSell(mineral));
 
-        shopScrollList.addMineralToSell(SpectrobesMineralsRegistry.chroma_mineral_item_zero.get());
-        shopScrollList.addMineralToSell(SpectrobesMineralsRegistry.chroma_mineral_item_one.get());
-        shopScrollList.addMineralToSell(SpectrobesMineralsRegistry.chroma_mineral_item_two.get());
-        shopScrollList.changeFocus(true);
+        mineralItems.stream()
+                .filter(item -> item instanceof IWorthGura)
+                .sorted(Comparator.comparingInt(item -> ((IWorthGura) item).getGuraWorth()))
+                .forEach(this.shopScrollList::addMineralToSell);
+
+        this.shopScrollList.addMineralToSell(SpectrobesMineralsRegistry.chroma_mineral_item_zero.get());
+        this.shopScrollList.addMineralToSell(SpectrobesMineralsRegistry.chroma_mineral_item_one.get());
+        this.shopScrollList.addMineralToSell(SpectrobesMineralsRegistry.chroma_mineral_item_two.get());
+
+        this.setFocused(this.shopScrollList);
+        this.shopScrollList.setFocused(true);
     }
 
     @Override
-    public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
-        shopScrollList.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
-        return super.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        if (this.shopScrollList != null && this.shopScrollList.mouseDragged(mouseX, mouseY, button, dragX, dragY)) {
+            return true;
+        }
+
+        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
     }
 
     @Override
-    public void resize(Minecraft pMinecraft, int pWidth, int pHeight) {
-        super.resize(pMinecraft, pWidth, pHeight);
-        this.imageWidth = Minecraft.getInstance().getWindow().getGuiScaledWidth();
-        this.imageHeight = Minecraft.getInstance().getWindow().getGuiScaledHeight();
+    public void resize(Minecraft minecraft, int width, int height) {
+        super.resize(minecraft, width, height);
+
+        this.imageWidth = width;
+        this.imageHeight = height;
+        this.leftPos = 0;
+        this.topPos = 0;
     }
 
     @Override
-    protected void renderBg(PoseStack pMatrixStack, float pPartialTicks, int pX, int pY) {
-        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-        RenderSystem.setShaderTexture(0, background_texture);
-        blit(pMatrixStack, 0, 0, 0, 0, 600, 400, imageWidth, imageHeight);
+    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+        guiGraphics.blit(
+                BACKGROUND_TEXTURE,
+                0,
+                0,
+                0,
+                0,
+                this.width,
+                this.height,
+                this.width,
+                this.height
+        );
     }
 
     @Override
-    protected boolean isHovering(int pX, int pY, int pWidth, int pHeight, double pMouseX, double pMouseY) {
-        return super.isHovering(pX, pY, pWidth, pHeight, pMouseX, pMouseY);
-    }
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
 
-    @Override
-    public void render(PoseStack pMatrixStack, int pMouseX, int pMouseY, float pPartialTicks) {
-        super.render(pMatrixStack, pMouseX, pMouseY, pPartialTicks);
-        drawCenteredString(pMatrixStack, font, "Gura Balance: " + getMenu().getGuraBalance(), this.width / 2, height / 11, 10526880);
-        shopScrollList.render(pMatrixStack, pMouseX, pMouseY, pPartialTicks);
+        guiGraphics.drawCenteredString(
+                this.font,
+                "Gura Balance: " + getMenu().getGuraBalance(),
+                this.width / 2,
+                this.height / 11,
+                0x00A0A0A0
+        );
+
+        this.renderTooltip(guiGraphics, mouseX, mouseY);
     }
 }

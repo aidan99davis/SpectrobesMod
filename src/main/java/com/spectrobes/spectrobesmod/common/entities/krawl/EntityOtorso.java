@@ -16,6 +16,9 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -42,10 +45,10 @@ public class EntityOtorso extends EntityBossKrawl {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        entityData.define(LAST_HURT_TICKS, 1000);
-        entityData.define(IS_ATTACKING, false);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(LAST_HURT_TICKS, 1000);
+        builder.define(IS_ATTACKING, false);
     }
 
     @Override
@@ -88,8 +91,8 @@ public class EntityOtorso extends EntityBossKrawl {
     public int lastHurtTicksAgo() {return entityData.get(LAST_HURT_TICKS); }
 
     private boolean canSpawnAid() {
-        List<? extends EntityOrbix> existingOrbix = level.getEntities(KrawlEntities.ENTITY_ORBIX.get(), getBoundingBox().inflate(40, 40, 40), entity -> true);
-        List<? extends EntityOrbux> existingOrbux = level.getEntities(KrawlEntities.ENTITY_ORBUX.get(), getBoundingBox().inflate(40, 40, 40), entity -> true);
+        List<? extends EntityOrbix> existingOrbix = level().getEntities(KrawlEntities.ENTITY_ORBIX.get(), getBoundingBox().inflate(40, 40, 40), entity -> true);
+        List<? extends EntityOrbux> existingOrbux = level().getEntities(KrawlEntities.ENTITY_ORBUX.get(), getBoundingBox().inflate(40, 40, 40), entity -> true);
         return existingOrbux.size() == 0 || existingOrbix.size() == 0;
     }
 
@@ -104,17 +107,17 @@ public class EntityOtorso extends EntityBossKrawl {
     }
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return animationControllers;
     }
 
     @Override
-    public <ENTITY extends EntityKrawl> PlayState moveController(AnimationEvent<ENTITY> event) {
-        if(event.getAnimatable().getDeltaMovement() != Vec3.ZERO) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.otorso.walk", ILoopType.EDefaultLoopTypes.LOOP));
+    public PlayState moveController(AnimationState<EntityKrawl> animationState) {
+        if(animationState.getAnimatable().getDeltaMovement() != Vec3.ZERO) {
+            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.otorso.walk", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
-        } else if(((EntityOtorso)event.getAnimatable()).isAttacking()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.otorso.attack", ILoopType.EDefaultLoopTypes.LOOP));
+        } else if(((EntityOtorso)animationState.getAnimatable()).isAttacking()) {
+            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.otorso.attack", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
@@ -136,15 +139,15 @@ public class EntityOtorso extends EntityBossKrawl {
         public void start() {
             super.start();
 
-            if(!mob.level.isClientSide()) {
+            if(!mob.level().isClientSide()) {
                 EntityOrbix orbix;
                 EntityOrbux orbux;
-                List<? extends EntityOrbix> existingOrbix = mob.level.getEntities(KrawlEntities.ENTITY_ORBIX.get(), mob.getBoundingBox().inflate(40, 40, 40), entity -> true);
+                List<? extends EntityOrbix> existingOrbix = mob.level().getEntities(KrawlEntities.ENTITY_ORBIX.get(), mob.getBoundingBox().inflate(40, 40, 40), entity -> true);
                 if(existingOrbix.size() == 0
                     || !existingOrbix.stream().anyMatch(entityOrbix ->
                         entityOrbix.getDisplayName().toString() == "Orbix")) {
                     orbix = (EntityOrbix) KrawlEntities.ENTITY_ORBIX.get()
-                            .spawn((ServerLevel) mob.level,
+                            .spawn((ServerLevel) mob.level(),
                                     null,
                                     null,
                                     mob.blockPosition(),
@@ -154,12 +157,12 @@ public class EntityOtorso extends EntityBossKrawl {
                     orbix.setDeltaMovement(0, 0.5, 0);
 
                 }
-                List<? extends EntityOrbix> existingOrbux = mob.level.getEntities(KrawlEntities.ENTITY_ORBUX.get(), mob.getBoundingBox().inflate(40, 40, 40), entity -> true);
+                List<? extends EntityOrbix> existingOrbux = mob.level().getEntities(KrawlEntities.ENTITY_ORBUX.get(), mob.getBoundingBox().inflate(40, 40, 40), entity -> true);
                 if(existingOrbux.size() == 0
                         || !existingOrbux.stream().anyMatch(entityOrbux ->
                         entityOrbux.getDisplayName().toString() == "Orbux")) {
                     orbux = (EntityOrbux) KrawlEntities.ENTITY_ORBUX.get()
-                            .spawn((ServerLevel) mob.level,
+                            .spawn((ServerLevel) mob.level(),
                                     null,
                                     null,
                                     mob.blockPosition(),

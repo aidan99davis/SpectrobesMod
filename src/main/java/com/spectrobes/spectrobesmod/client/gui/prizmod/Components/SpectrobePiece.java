@@ -6,19 +6,17 @@ import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeIconInfo;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import software.bernie.geckolib3.core.util.Color;
 
 public class SpectrobePiece extends AbstractWidget {
 
     private static final ResourceLocation DELETE_BACKGROUND
-            = ResourceLocation.fromNamespaceAndPath("spectrobesmod:textures/gui/spectrobe_slot_delete.png");
+            = ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "textures/gui/spectrobe_slot_delete.png");
 
     public Spectrobe spectrobe;
     private final int x, y;
@@ -50,7 +48,7 @@ public class SpectrobePiece extends AbstractWidget {
         return getUnlocalizedName();
     }
 
-    public void draw(PoseStack stack, boolean withAdditional) {
+    public void draw(GuiGraphics stack, boolean withAdditional) {
         drawBackground(stack);
         if(withAdditional)
             drawAdditional(stack);
@@ -59,7 +57,7 @@ public class SpectrobePiece extends AbstractWidget {
     /**
      * Draws this piece's background.
      */
-    public void drawBackground(PoseStack stack) {
+    public void drawBackground(GuiGraphics stack) {
         ResourceLocation bg;
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 
@@ -87,7 +85,7 @@ public class SpectrobePiece extends AbstractWidget {
     /**
      * Draws any additional stuff for this piece. Used for the spectrobes icon
      */
-    public void drawAdditional(PoseStack stack) {
+    public void drawAdditional(GuiGraphics stack) {
         if(spectrobe != null) {
             SpectrobeIconInfo iconInfo = spectrobe.getIcon();
 
@@ -124,7 +122,7 @@ public class SpectrobePiece extends AbstractWidget {
         }
     }
 
-    public void drawAdditionalAtCursor(PoseStack stack, int mouseX, int mouseY) {
+    public void drawAdditionalAtCursor(GuiGraphics stack, int mouseX, int mouseY) {
         if(spectrobe != null) {
             SpectrobeIconInfo iconInfo = spectrobe.getIcon();
 
@@ -149,9 +147,5 @@ public class SpectrobePiece extends AbstractWidget {
 
     public void setSelected(boolean selected) {
         this.selected = selected;
-    }
-
-    @Override
-    public void updateNarration(NarrationElementOutput pNarrationElementOutput) {
     }
 }

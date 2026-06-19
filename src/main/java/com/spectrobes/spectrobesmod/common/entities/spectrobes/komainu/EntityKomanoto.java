@@ -9,15 +9,10 @@ import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesFossilsRegis
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.builder.ILoopType;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
 
 public class EntityKomanoto extends EntityMammalSpectrobe {
-
-
     public EntityKomanoto(EntityType<EntityKomanoto> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
     }
@@ -47,25 +42,20 @@ public class EntityKomanoto extends EntityMammalSpectrobe {
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return animationControllers;
-    }
-
-    @Override
-    public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event)
+    public PlayState moveController(AnimationState<EntitySpectrobe> animationState)
     {
         moveAnimationController.transitionLengthTicks = 2;
-        if(event.isMoving())
+        if(animationState.isMoving())
         {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.komanoto.walk", ILoopType.EDefaultLoopTypes.LOOP));
+            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.komanoto.walk", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         }
-        else if(event.getAnimatable().isOrderedToSit()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.komanoto.sit", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
+        else if(animationState.getAnimatable().isOrderedToSit()) {
+            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.komanoto.sit", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
             return PlayState.CONTINUE;
         } else {
             if(this.IsAttacking()) {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.komanoto.attack", ILoopType.EDefaultLoopTypes.LOOP));
+                animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.komanoto.attack", ILoopType.EDefaultLoopTypes.LOOP));
                 return PlayState.CONTINUE;
             }
         }

@@ -4,6 +4,9 @@ import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import com.spectrobes.spectrobesmod.common.registry.KrawlRegistry;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
 
 public class EntitySwar extends EntityKrawl {
     public EntitySwar(EntityType<? extends EntityKrawl> type, Level worldIn) {
@@ -11,15 +14,15 @@ public class EntitySwar extends EntityKrawl {
     }
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return animationControllers;
     }
 
     @Override
-    public <ENTITY extends EntityKrawl> PlayState moveController(AnimationEvent<ENTITY> event) {
-        event.getController().transitionLengthTicks = 2;
-        if(event.isMoving()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.swar.walk", ILoopType.EDefaultLoopTypes.LOOP));
+    public PlayState moveController(AnimationState<EntityKrawl> animationState) {
+        animationState.getController().transitionLengthTicks = 2;
+        if(animationState.isMoving()) {
+            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.swar.walk", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
 
         } else {

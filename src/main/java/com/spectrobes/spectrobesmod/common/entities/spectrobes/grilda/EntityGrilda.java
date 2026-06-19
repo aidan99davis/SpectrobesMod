@@ -10,13 +10,10 @@ import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesItemsRegistr
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.builder.ILoopType;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
 
 public class EntityGrilda extends EntityMammalSpectrobe {
 
@@ -51,28 +48,22 @@ public class EntityGrilda extends EntityMammalSpectrobe {
     protected AnimationController headAnimationController = new AnimationController(this, "headAnimationController", 10F, this::headController);
 
     @Override
-    public void registerControllers(AnimationData data)
+    public void registerControllers(AnimatableManager.ControllerRegistrar data)
     {
         super.registerControllers(data);
-        data.addAnimationController(headAnimationController);
+        data.add(headAnimationController);
     }
 
-    @Override
-    public AnimationFactory getFactory() {
-        return animationControllers;
-    }
-
-
-    public <ENTITY extends EntitySpectrobe> PlayState headController(AnimationEvent<ENTITY> event) {
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.grilda.idle", ILoopType.EDefaultLoopTypes.LOOP));
+    public PlayState headController(AnimationState<EntitySpectrobe> animationState) {
+        animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.grilda.idle", ILoopType.EDefaultLoopTypes.LOOP));
         return PlayState.CONTINUE;
     }
 
     @Override
-    public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event) {
-        if(event.isMoving())
+    public PlayState moveController(AnimationState<EntitySpectrobe> animationState) {
+        if(animationState.isMoving())
         {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.grilda.walk", ILoopType.EDefaultLoopTypes.LOOP));
+            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.grilda.walk", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;

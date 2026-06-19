@@ -9,11 +9,8 @@ import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesFossilsRegis
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.builder.ILoopType;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
 
 public class EntitySamukabu extends EntityMammalSpectrobe {
 
@@ -46,20 +43,15 @@ public class EntitySamukabu extends EntityMammalSpectrobe {
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return animationControllers;
-    }
-
-    @Override
-    public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event) {
-        event.getController().transitionLengthTicks = 2;
-        if(event.isMoving())
+    public PlayState moveController(AnimationState<EntitySpectrobe> animationState) {
+        animationState.getController().transitionLength(2);
+        if(animationState.isMoving())
         {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.samukabu.walk", ILoopType.EDefaultLoopTypes.LOOP));
+            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.samukabu.walk", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         }
-        else if(event.getAnimatable().isOrderedToSit()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.samukabu.sitting", ILoopType.EDefaultLoopTypes.LOOP));
+        else if(animationState.getAnimatable().isOrderedToSit()) {
+            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.samukabu.sitting", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;

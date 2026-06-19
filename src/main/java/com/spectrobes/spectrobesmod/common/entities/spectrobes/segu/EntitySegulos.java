@@ -9,17 +9,12 @@ import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesFossilsRegis
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.builder.ILoopType;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
 
 public class EntitySegulos extends EntityMammalSpectrobe {
-
-
     public EntitySegulos(EntityType<EntitySegulos> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
     }
@@ -48,35 +43,30 @@ public class EntitySegulos extends EntityMammalSpectrobe {
         return SpectrobesEntities.ENTITY_SEGU.get();
     }
 
-    public <ENTITY extends EntitySpectrobe> PlayState bodyController(AnimationEvent<ENTITY> event) {
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.segulos.idle", ILoopType.EDefaultLoopTypes.LOOP));
+    public PlayState bodyController(AnimationState<EntitySpectrobe> animationState) {
+        animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.segulos.idle", ILoopType.EDefaultLoopTypes.LOOP));
         return PlayState.CONTINUE;
     }
 
     protected AnimationController bodyAnimationController = new AnimationController(this, "bodyAnimationController", 10F, this::bodyController);
 
     @Override
-    public void registerControllers(AnimationData data)
+    public void registerControllers(AnimatableManager.ControllerRegistrar data)
     {
         super.registerControllers(data);
-        data.addAnimationController(bodyAnimationController);
+        data.add(bodyAnimationController);
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return animationControllers;
-    }
-
-    @Override
-    public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event)
+    public PlayState moveController(AnimationState<EntitySpectrobe> animationState)
     {
-        if(event.getAnimatable().isAttacking()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.segulos.attack", ILoopType.EDefaultLoopTypes.LOOP));
+        if(animationState.getAnimatable().isAttacking()) {
+            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.segulos.attack", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         }
-        if(event.isMoving())
+        if(animationState.isMoving())
         {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.segulos.walk", ILoopType.EDefaultLoopTypes.LOOP));
+            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.segulos.walk", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         } else {
             return PlayState.STOP;

@@ -33,7 +33,7 @@ public abstract class EntityMammalSpectrobe extends EntitySpectrobe {
     @Override
     public void mate() {
         List<? extends EntityMammalSpectrobe> mates
-                = level.getEntitiesOfClass(getSpectrobeClass(),
+                = level().getEntitiesOfClass(getSpectrobeClass(),
                 this.getBoundingBox()
                         .inflate(10, 10, 10));
         if(mates.isEmpty() || mates.size() == 1) {
@@ -63,9 +63,9 @@ public abstract class EntityMammalSpectrobe extends EntitySpectrobe {
 
         for(int i = 0; i < litterSize; i++) {
             EntitySpectrobe spectrobe = getChildForLineage()
-                    .create(level);
+                    .create(level());
 
-            this.level.addFreshEntity(spectrobe);
+            this.level().addFreshEntity(spectrobe);
 
             spectrobe.teleportTo(getX(), getY(), getZ());
         }

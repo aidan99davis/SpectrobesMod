@@ -9,11 +9,8 @@ import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesFossilsRegis
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.builder.ILoopType;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
 
 public class EntityMasetto extends EntityMammalSpectrobe {
 
@@ -46,27 +43,21 @@ public class EntityMasetto extends EntityMammalSpectrobe {
     }
 
     @Override
-    public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event) {
-        if(event.isMoving())
+    public PlayState moveController(AnimationState<EntitySpectrobe> animationState) {
+        if(animationState.isMoving())
         {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.Masetto.walk", ILoopType.EDefaultLoopTypes.LOOP));
+            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.Masetto.walk", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         }
-        else if(event.getAnimatable().isOrderedToSit()) {
-            event.getController().setAnimation(new AnimationBuilder()
+        else if(animationState.getAnimatable().isOrderedToSit()) {
+            animationState.getController().setAnimation(new AnimationBuilder()
                     .addAnimation("animation.Masetto.sitting")
                     .addAnimation("animation.Masetto.sit", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         } else {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.Masetto.idle", ILoopType.EDefaultLoopTypes.LOOP));
+            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.Masetto.idle", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         }
-    }
-
-
-    @Override
-    public AnimationFactory getFactory() {
-        return animationControllers;
     }
 
     @Override

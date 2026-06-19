@@ -14,6 +14,9 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -40,10 +43,10 @@ public class EntityOrbix extends EntityBossKrawl {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        entityData.define(LAST_HURT_TICKS, 1000);
-        entityData.define(IS_ATTACKING, false);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(LAST_HURT_TICKS, 1000);
+        builder.define(IS_ATTACKING, false);
     }
 
     @Override
@@ -86,16 +89,16 @@ public class EntityOrbix extends EntityBossKrawl {
     }
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return animationControllers;
     }
 
     @Override
-    public <ENTITY extends EntityKrawl> PlayState moveController(AnimationEvent<ENTITY> event) {
+    public PlayState moveController(AnimationState<EntityKrawl> animationState) {
         if(this.isAttacking()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.orbix.idle", ILoopType.EDefaultLoopTypes.LOOP).addAnimation("animation.orbix.attack"));
+            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.orbix.idle", ILoopType.EDefaultLoopTypes.LOOP).addAnimation("animation.orbix.attack"));
         } else {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.orbix.idle", ILoopType.EDefaultLoopTypes.LOOP));
+            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.orbix.idle", ILoopType.EDefaultLoopTypes.LOOP));
         }
         return PlayState.CONTINUE;
     }

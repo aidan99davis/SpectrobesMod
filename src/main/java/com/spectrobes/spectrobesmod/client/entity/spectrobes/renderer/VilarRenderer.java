@@ -7,7 +7,7 @@ import com.spectrobes.spectrobesmod.common.entities.spectrobes.vilar.EntityVilar
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
+import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 import javax.annotation.Nullable;
 
@@ -22,9 +22,9 @@ public class VilarRenderer extends GeoEntityRenderer<EntityVilar> {
     public ResourceLocation getTextureLocation(EntityVilar entity)
     {
         return switch (entity.getSpectrobeData().Variant) {
-            case 1 -> ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/vilar_1.png");
-            case 2 -> ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/vilar_2.png");
-            default -> ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/vilar_0.png");
+            case 1 -> ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "textures/models/spectrobe/vilar_1.png");
+            case 2 -> ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "textures/models/spectrobe/vilar_2.png");
+            default -> ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "textures/models/spectrobe/vilar_0.png");
         };
     }
 

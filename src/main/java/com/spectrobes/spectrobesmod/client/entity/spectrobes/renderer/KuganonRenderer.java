@@ -7,9 +7,7 @@ import com.spectrobes.spectrobesmod.common.entities.spectrobes.kubaku.EntityKuga
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
+import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 import javax.annotation.Nullable;
 
@@ -23,7 +21,7 @@ public class KuganonRenderer extends GeoEntityRenderer<EntityKuganon> {
     @Override
     public ResourceLocation getTextureLocation(EntityKuganon entity)
     {
-        return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/kuganon.png");
+        return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "textures/models/spectrobe/kuganon.png");
     }
 
     @Override

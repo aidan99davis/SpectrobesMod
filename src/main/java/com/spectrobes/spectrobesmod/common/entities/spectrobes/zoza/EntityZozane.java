@@ -9,15 +9,10 @@ import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesFossilsRegis
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.builder.ILoopType;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
 
 public class EntityZozane extends EntityMammalSpectrobe {
-
-
     public EntityZozane(EntityType<EntityZozane> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
     }
@@ -47,20 +42,15 @@ public class EntityZozane extends EntityMammalSpectrobe {
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return animationControllers;
-    }
-
-    @Override
-    public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event)
+    public PlayState moveController(AnimationState<EntitySpectrobe> animationState)
     {
-        if(event.getAnimatable().isAttacking()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.zozane.attack", ILoopType.EDefaultLoopTypes.LOOP));
+        if(animationState.getAnimatable().isAttacking()) {
+            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.zozane.attack", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         }
-        if(event.isMoving())
+        if(animationState.isMoving())
         {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.zozane.walk", ILoopType.EDefaultLoopTypes.LOOP));
+            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.zozane.walk", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         } else {
             return PlayState.STOP;

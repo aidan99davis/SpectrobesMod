@@ -9,14 +9,10 @@ import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesFossilsRegis
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.builder.ILoopType;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
 
 public class EntityZoza extends EntityMammalSpectrobe {
-
     public EntityZoza(EntityType<EntityZoza> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
     }
@@ -50,21 +46,15 @@ public class EntityZoza extends EntityMammalSpectrobe {
         return 0;
     }
 
-
     @Override
-    public AnimationFactory getFactory() {
-        return animationControllers;
-    }
-
-    @Override
-    public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event) {
-        if(event.isMoving())
+    public PlayState moveController(AnimationState<EntitySpectrobe> animationState) {
+        if(animationState.isMoving())
         {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.zoza.walk", ILoopType.EDefaultLoopTypes.LOOP));
+            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.zoza.walk", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         }
-        else if(event.getAnimatable().isOrderedToSit()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.zoza.idle", ILoopType.EDefaultLoopTypes.LOOP));
+        else if(animationState.getAnimatable().isOrderedToSit()) {
+            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.zoza.idle", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;

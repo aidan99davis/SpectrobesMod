@@ -35,6 +35,9 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -88,16 +91,16 @@ public class EntityXelles extends EntityBossKrawl {
 
     @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData, @Nullable CompoundTag pDataTag) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty, MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData) {
         if(pReason.equals(MobSpawnType.COMMAND)) {
             SpectrobesWorldSaveData worldData = SpectrobesWorldSaveData.getWorldData((ServerLevel) pLevel);
 
-            worldData.addNest(new KrawlNest(getOnPos(), level.dimension().toString()));
+            worldData.addNest(new KrawlNest(getOnPos(), level().dimension().toString()));
         }
 
         spawnMiniXelles(pLevel);
 
-        return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData, pDataTag);
+        return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData);
     }
 
     private void spawnMiniXelles(ServerLevelAccessor pLevel) {
@@ -126,15 +129,15 @@ public class EntityXelles extends EntityBossKrawl {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        entityData.define(AGE_IN_TICKS, 0);
-        entityData.define(STAGE, 1);
-        entityData.define(LAST_SPAWNED_SUMMONING_SPORES_TICKS, 0);
-        entityData.define(LAST_SPAWNED_HEALING_SPORES_TICKS, 0);
-        entityData.define(LAST_SPAWNED_BOSS_SUMMONING_SPORE_TICKS, 24000);
-        entityData.define(LAST_HURT_TICKS, 1000);
-        entityData.define(IS_SPAWNING_SPORES, false);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(AGE_IN_TICKS, 0);
+        builder.define(STAGE, 1);
+        builder.define(LAST_SPAWNED_SUMMONING_SPORES_TICKS, 0);
+        builder.define(LAST_SPAWNED_HEALING_SPORES_TICKS, 0);
+        builder.define(LAST_SPAWNED_BOSS_SUMMONING_SPORE_TICKS, 24000);
+        builder.define(LAST_HURT_TICKS, 1000);
+        builder.define(IS_SPAWNING_SPORES, false);
     }
 
     @Override
@@ -164,7 +167,7 @@ public class EntityXelles extends EntityBossKrawl {
     protected void actuallyHurt(DamageSource damageSrc, float damageAmount) {
         if(damageSrc != DamageSource.CRAMMING) {
             AABB bounds = getBoundingBox().inflate(40, 40, 40);
-            List<EntityOtorso> otorso = level.getEntities(KrawlEntities.ENTITY_OTORSO.get(), bounds, entity -> true);
+            List<EntityOtorso> otorso = level().getEntities(KrawlEntities.ENTITY_OTORSO.get(), bounds, entity -> true);
             if(otorso.size() == 0) {
                 super.actuallyHurt(damageSrc, damageAmount);
             }
@@ -185,9 +188,9 @@ public class EntityXelles extends EntityBossKrawl {
         entityData.set(LAST_SPAWNED_SUMMONING_SPORES_TICKS, entityData.get(LAST_SPAWNED_SUMMONING_SPORES_TICKS) + 1);
         entityData.set(LAST_SPAWNED_HEALING_SPORES_TICKS, entityData.get(LAST_SPAWNED_HEALING_SPORES_TICKS) + 1);
         entityData.set(LAST_SPAWNED_BOSS_SUMMONING_SPORE_TICKS, entityData.get(LAST_SPAWNED_BOSS_SUMMONING_SPORE_TICKS) + 1);
-        if(!level.isClientSide()) {
+        if(!level().isClientSide()) {
 
-            SpectrobesWorldSaveData worldData = SpectrobesWorldSaveData.getWorldData((ServerLevel) level);
+            SpectrobesWorldSaveData worldData = SpectrobesWorldSaveData.getWorldData((ServerLevel) level());
             entityData.set(STAGE, worldData.getNest(blockPosition()).stage);
 
             if(getStage() == 1 && (worldData.getNest(blockPosition()).vortex_absorbed > 5 || getAge() >=5)) {
@@ -200,7 +203,7 @@ public class EntityXelles extends EntityBossKrawl {
             }
             if(getAge() >= 3) {
                 AABB bound = getBoundingBox().inflate(40,40,40);
-                List<EntityVortex> nearbyVortex = level.getEntities(KrawlEntities.ENTITY_VORTEX.get(), bound, entityVortex -> true);
+                List<EntityVortex> nearbyVortex = level().getEntities(KrawlEntities.ENTITY_VORTEX.get(), bound, entityVortex -> true);
                 nearbyVortex.forEach(entityVortex -> entityVortex.remove(RemovalReason.DISCARDED));
             }
         }
@@ -216,8 +219,8 @@ public class EntityXelles extends EntityBossKrawl {
     @ParametersAreNonnullByDefault
     public void die(DamageSource pCause) {
         super.die(pCause);
-        if(!level.isClientSide()) {
-            SpectrobesWorldSaveData saveData = SpectrobesWorldSaveData.getWorldData((ServerLevel) level);
+        if(!level().isClientSide()) {
+            SpectrobesWorldSaveData saveData = SpectrobesWorldSaveData.getWorldData((ServerLevel) level());
             saveData.getNest(blockPosition()).setDead();
             saveData.setDirty();
         }
@@ -226,20 +229,20 @@ public class EntityXelles extends EntityBossKrawl {
             int mineralCount = random.nextInt(3) + 3;
             for (int i = 0; i < mineralCount; i++) {
                 ItemStack mineralStack = SpectrobesMineralsRegistry.getRandomMineral(Mineral.MineralRarity.Rare);
-                ItemEntity minerals = new ItemEntity(level,
+                ItemEntity minerals = new ItemEntity(level(),
                         this.getX() + 0.5D,
                         (this.getY() + 1),
                         this.getZ() + 0.5D, mineralStack);
                 minerals.setDefaultPickUpDelay();
-                level.addFreshEntity(minerals);
+                level().addFreshEntity(minerals);
             }
 
-            ItemEntity trophy = new ItemEntity(level,
+            ItemEntity trophy = new ItemEntity(level(),
                     this.getX() + 0.5D,
                     (this.getY() + 1),
                     this.getZ() + 0.5D, SpectrobesBlocks.xelles_trophy.get().asItem().getDefaultInstance());
             trophy.setDefaultPickUpDelay();
-            level.addFreshEntity(trophy);
+            level().addFreshEntity(trophy);
         }
     }
 
@@ -268,7 +271,7 @@ public class EntityXelles extends EntityBossKrawl {
 
     public boolean canSpawnBossSpore() {
         AABB searchBox = getBoundingBox().inflate(50, 50, 50);
-        List<EntityOrbix> nearbyBosses = level.getEntities(KrawlEntities.ENTITY_ORBIX.get(), searchBox, entityOrbix -> true);
+        List<EntityOrbix> nearbyBosses = level().getEntities(KrawlEntities.ENTITY_ORBIX.get(), searchBox, entityOrbix -> true);
         boolean hasSpawnedBoss = nearbyBosses.size() > 0;
         return getStage() > 1
                 && entityData.get(LAST_SPAWNED_BOSS_SUMMONING_SPORE_TICKS) >= 24000
@@ -290,13 +293,13 @@ public class EntityXelles extends EntityBossKrawl {
     public void spawnHealingSpores(List<EntityKrawl> targets) {
         entityData.set(LAST_SPAWNED_HEALING_SPORES_TICKS, 0);
         setIsSpawningSpores(true);
-        if(!level.isClientSide()) {
+        if(!level().isClientSide()) {
             for (EntityKrawl krawl :
                     targets) {
                 //create healing spore
                 EntityHealingSpore spore =
                         (EntityHealingSpore) KrawlEntities.ENTITY_HEALING_SPORES.get()
-                                .spawn((ServerLevel) level,
+                                .spawn((ServerLevel) level(),
                                         null,
                                         null,
                                         blockPosition(),
@@ -335,23 +338,23 @@ public class EntityXelles extends EntityBossKrawl {
     }
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return animationControllers;
     }
 
     @Override
-    public <ENTITY extends EntityKrawl> PlayState moveController(AnimationEvent<ENTITY> event) {
-        if(event.getAnimatable().isDeadOrDying()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.xelles.death", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
+    public PlayState moveController(AnimationState<EntityKrawl> animationState) {
+        if(animationState.getAnimatable().isDeadOrDying()) {
+            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.xelles.death", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
             return PlayState.CONTINUE;
-        } else if(((EntityXelles)event.getAnimatable()).isSpawningSpores()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.xelles.spawning", ILoopType.EDefaultLoopTypes.LOOP));
+        } else if(((EntityXelles)animationState.getAnimatable()).isSpawningSpores()) {
+            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.xelles.spawning", ILoopType.EDefaultLoopTypes.LOOP));
             return PlayState.CONTINUE;
-        } else if(((EntityXelles)event.getAnimatable()).lastHurtTicksAgo() == 0) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.xelles.hurt", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
+        } else if(((EntityXelles)animationState.getAnimatable()).lastHurtTicksAgo() == 0) {
+            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.xelles.hurt", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
             return PlayState.CONTINUE;
         }
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.xelles.idle", ILoopType.EDefaultLoopTypes.LOOP));
+        animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.xelles.idle", ILoopType.EDefaultLoopTypes.LOOP));
         return PlayState.CONTINUE;
     }
 
@@ -376,9 +379,9 @@ public class EntityXelles extends EntityBossKrawl {
             mob.setIsSpawningSpores(true);
 
             for (int i = 0; i < numToSpawn; i++) {
-                if(!mob.level.isClientSide()) {
+                if(!mob.level().isClientSide()) {
                     EntitySpawningSpore spore = (EntitySpawningSpore) KrawlEntities.ENTITY_SPAWNING_SPORE.get()
-                            .spawn((ServerLevel) mob.level,
+                            .spawn((ServerLevel) mob.level(),
                                     null,
                                     null,
                                     mob.blockPosition(),
@@ -415,9 +418,9 @@ public class EntityXelles extends EntityBossKrawl {
 
             mob.setIsSpawningSpores(true);
 
-            if(!mob.level.isClientSide()) {
-                EntitySpawningSpore spore = (EntitySpawningSpore) KrawlEntities.ENTITY_SPAWNING_SPORE.get()
-                        .spawn((ServerLevel) mob.level,
+            if(!mob.level().isClientSide()) {
+                EntitySpawningSpore spore = KrawlEntities.ENTITY_SPAWNING_SPORE.get()
+                        .spawn((ServerLevel) mob.level(),
                                 null,
                                 null,
                                 mob.blockPosition(),

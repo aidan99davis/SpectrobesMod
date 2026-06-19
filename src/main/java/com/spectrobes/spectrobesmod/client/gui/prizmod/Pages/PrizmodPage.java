@@ -1,11 +1,9 @@
 package com.spectrobes.spectrobesmod.client.gui.prizmod.Pages;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.Widget;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
@@ -24,7 +22,8 @@ public abstract class PrizmodPage extends AbstractWidget {
     }
 
     @Override
-    public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+    protected void renderWidget(GuiGraphics guiGraphics, int i, int i1, float v) {
+
     }
 
     public List<AbstractWidget> getButtons() {
@@ -39,15 +38,9 @@ public abstract class PrizmodPage extends AbstractWidget {
         this.buttons.addAll(buttons);
     }
 
-
     public void init() {
         parent.addButtons(getButtons());
     }
 
     public abstract void tick();
-
-    @Override
-    public void updateNarration(NarrationElementOutput pNarrationElementOutput) {
-
-    }
 }

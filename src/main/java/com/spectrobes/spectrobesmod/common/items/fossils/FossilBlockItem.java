@@ -14,17 +14,17 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import software.bernie.geckolib3.core.GeoAnimatable;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 public abstract class FossilBlockItem extends BlockItem implements GeoAnimatable {
 
-    public AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    public AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 
     public FossilBlockItem(Block blockIn, Properties builder) {
         super(blockIn, builder);
@@ -54,18 +54,18 @@ public abstract class FossilBlockItem extends BlockItem implements GeoAnimatable
     public abstract Spectrobe getSpectrobeInstance();
 
     @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
-        super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
+    public void appendHoverText(ItemStack pStack, List<Component> pTooltip, TooltipFlag pFlag) {
+        super.appendHoverText(pStack, pTooltip, pFlag);
         pTooltip.add(Component.literal("Shift right click air to awaken this fossil."));
     }
 
     @Override
-    public void registerControllers(AnimationData animationData) {
+    public void registerControllers(AnimatableManager.ControllerRegistrar animationData) {
 
     }
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return factory;
     }
 }

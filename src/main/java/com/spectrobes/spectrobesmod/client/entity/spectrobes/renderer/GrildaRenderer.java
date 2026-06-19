@@ -7,8 +7,8 @@ import com.spectrobes.spectrobesmod.common.entities.spectrobes.grilda.EntityGril
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
-import software.bernie.geckolib3.resource.GeckoLibCache;
+import software.bernie.geckolib.cache.GeckoLibCache;
+import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 import javax.annotation.Nullable;
 
@@ -25,13 +25,13 @@ public class GrildaRenderer extends GeoEntityRenderer<EntityGrilda> {
     {
         switch (entity.getSpectrobeData().Variant) {
             case 0:
-                return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/grilda_0.png");
+                return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "textures/models/spectrobe/grilda_0.png");
             case 1:
-                return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/grilda_1.png");
+                return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "textures/models/spectrobe/grilda_1.png");
             case 2:
-                return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/grilda_2.png");
+                return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "textures/models/spectrobe/grilda_2.png");
             default:
-                return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/grilda_0.png");
+                return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "textures/models/spectrobe/grilda_0.png");
 
         }
     }

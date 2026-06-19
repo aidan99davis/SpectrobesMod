@@ -10,7 +10,7 @@ import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
@@ -26,9 +26,9 @@ public abstract class EntityAvianSpectrobe extends EntitySpectrobe implements Fl
     public EntityAvianSpectrobe(EntityType<? extends EntitySpectrobe> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
         this.moveControl = new FlyingMoveControl(this, 10, true);
-        this.setPathfindingMalus(BlockPathTypes.DANGER_FIRE, -1.0F);
-        this.setPathfindingMalus(BlockPathTypes.DAMAGE_FIRE, -1.0F);
-        this.setPathfindingMalus(BlockPathTypes.COCOA, -1.0F);
+        this.setPathfindingMalus(PathType.DANGER_FIRE, -1.0F);
+        this.setPathfindingMalus(PathType.DAMAGE_FIRE, -1.0F);
+        this.setPathfindingMalus(PathType.COCOA, -1.0F);
     }
 
     public static AttributeSupplier.Builder setCustomAttributes() {
@@ -52,7 +52,7 @@ public abstract class EntityAvianSpectrobe extends EntitySpectrobe implements Fl
     @Override
     public void mate() {
         List<? extends EntityAvianSpectrobe> mates
-                = level.getEntitiesOfClass(getSpectrobeClass(),
+                = level().getEntitiesOfClass(getSpectrobeClass(),
                 this.getBoundingBox()
                         .inflate(10, 10, 10));
         if(mates.isEmpty() || mates.size() == 1) {
@@ -83,9 +83,9 @@ public abstract class EntityAvianSpectrobe extends EntitySpectrobe implements Fl
 
         for(int i = 0; i < litterSize; i++) {
             EntitySpectrobe spectrobe = getChildForLineage()
-                    .create(level);
+                    .create(level());
             assert spectrobe != null;
-            this.level.addFreshEntity(spectrobe);
+            this.level().addFreshEntity(spectrobe);
             spectrobe.teleportTo(getX(), getY(), getZ());
         }
         //todo avian mating: eggs, clutch size, gestation time, requirements
@@ -101,15 +101,15 @@ public abstract class EntityAvianSpectrobe extends EntitySpectrobe implements Fl
     private void calculateFlapping() {
         this.oFlap = this.flap;
         this.oFlapSpeed = this.flapSpeed;
-        this.flapSpeed = (float)((double)this.flapSpeed + (double)(!this.onGround && !this.isPassenger() ? 4 : -1) * 0.3D);
+        this.flapSpeed = (float)((double)this.flapSpeed + (double)(!this.onGround() && !this.isPassenger() ? 4 : -1) * 0.3D);
         this.flapSpeed = Mth.clamp(this.flapSpeed, 0.0F, 1.0F);
-        if (!this.onGround && this.flapping < 1.0F) {
+        if (!this.onGround() && this.flapping < 1.0F) {
             this.flapping = 1.0F;
         }
 
         this.flapping = (float)((double)this.flapping * 0.9D);
         Vec3 vec3d = this.getDeltaMovement();
-        if (!this.onGround && vec3d.y < 0.0D) {
+        if (!this.onGround() && vec3d.y < 0.0D) {
             this.setDeltaMovement(vec3d.multiply(1.0D, 0.6D, 1.0D));
         }
 
@@ -123,6 +123,6 @@ public abstract class EntityAvianSpectrobe extends EntitySpectrobe implements Fl
 
     @Override
     public boolean isFlying() {
-        return !this.onGround;
+        return !this.onGround();
     }
 }

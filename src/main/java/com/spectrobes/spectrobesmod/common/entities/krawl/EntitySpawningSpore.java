@@ -18,7 +18,10 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class EntitySpawningSpore extends Monster implements GeoAnimatable, FlyingAnimal {
@@ -45,7 +48,7 @@ public class EntitySpawningSpore extends Monster implements GeoAnimatable, Flyin
 
         entityData.set(AGE_TICKS, entityData.get(AGE_TICKS) + 1);
 
-        if(entityData.get(AGE_TICKS) >= 40 && !level.isClientSide()) {
+        if(entityData.get(AGE_TICKS) >= 40 && !level().isClientSide()) {
             spawnKrawl();
         }
     }
@@ -80,8 +83,8 @@ public class EntitySpawningSpore extends Monster implements GeoAnimatable, Flyin
 
     private void spawnKrawl() {
         if(entityData.get(BOSS_SPORE)) {
-            EntityKrawl bossKrawl = (EntityKrawl) KrawlEntities.getBossForDimension(level)
-                    .spawn((ServerLevel) level,
+            EntityKrawl bossKrawl = (EntityKrawl) KrawlEntities.getBossForDimension(level())
+                    .spawn((ServerLevel) level(),
                             null,
                             null,
                             blockPosition(),
@@ -91,8 +94,8 @@ public class EntitySpawningSpore extends Monster implements GeoAnimatable, Flyin
             this.remove(RemovalReason.DISCARDED);
 
         } else {
-            EntityKrawl krawl = (EntityKrawl) KrawlEntities.getByLevel(100, level)
-                    .spawn((ServerLevel) level,
+            EntityKrawl krawl = (EntityKrawl) KrawlEntities.getByLevel(100, level())
+                    .spawn((ServerLevel) level(),
                             null,
                             null,
                             blockPosition(),
@@ -116,30 +119,24 @@ public class EntitySpawningSpore extends Monster implements GeoAnimatable, Flyin
                 .add(Attributes.FLYING_SPEED, 0.5);
     }
 
-    //Networking
-    @Override
-    public Packet<?> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
-
     //Animation
-    public <ENTITY extends EntityKrawl> PlayState moveController(AnimationEvent<ENTITY> event) {
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.xelles_spore_spawn.idle", ILoopType.EDefaultLoopTypes.LOOP));
+    public PlayState moveController(AnimationState<EntitySpawningSpore> animationState) {
+        animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.xelles_spore_spawn.idle", ILoopType.EDefaultLoopTypes.LOOP));
         return PlayState.CONTINUE;
     }
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return animationControllers;
     }
 
     @Override
-    public void registerControllers(AnimationData data)
+    public void registerControllers(AnimatableManager.ControllerRegistrar data)
     {
-        data.addAnimationController(new AnimationController(this, "controller", 0, this::moveController));
+        data.add(new AnimationController(this, "controller", 0, this::moveController));
     }
 
     @Override
     public boolean isFlying() {
-        return !this.onGround;
+        return !this.onGround();
     }
 }

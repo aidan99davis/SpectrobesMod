@@ -17,6 +17,10 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
@@ -48,14 +52,9 @@ public class EntityHealingSpore extends Monster implements GeoAnimatable, Flying
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        entityData.define(AGE_IN_TICKS, 0);
-    }
-
-    @Override
-    public boolean canBreatheUnderwater() {
-        return true;
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(AGE_IN_TICKS, 0);
     }
 
     @Override
@@ -93,26 +92,20 @@ public class EntityHealingSpore extends Monster implements GeoAnimatable, Flying
         return new Random().nextInt(20) + 1;
     }
 
-    //Networking
-    @Override
-    public Packet<?> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
-
     //Animation
-    public <ENTITY extends EntityKrawl> PlayState moveController(AnimationEvent<ENTITY> event) {
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.xelles_spore.idle", ILoopType.EDefaultLoopTypes.LOOP));
+    public PlayState moveController(AnimationState<EntityHealingSpore> animationState) {
+        animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.xelles_spore.idle", ILoopType.EDefaultLoopTypes.LOOP));
         return PlayState.CONTINUE;
     }
     @Override
-    public AnimationFactory getFactory() {
-        return animationControllers;
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
     }
 
     @Override
-    public void registerControllers(AnimationData data)
+    public void registerControllers(AnimatableManager.ControllerRegistrar data)
     {
-        data.addAnimationController(new AnimationController(this, "controller", 0, this::moveController));
+        data.add(new AnimationController(this, "controller", 0, this::moveController));
     }
 
     @Override

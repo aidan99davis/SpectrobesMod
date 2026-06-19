@@ -6,6 +6,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
 
 public class EntityGrisen extends EntityKrawl {
     public EntityGrisen(EntityType<? extends Monster> type, Level worldIn) {
@@ -17,9 +19,9 @@ public class EntityGrisen extends EntityKrawl {
         return animationControllers;
     }
 
+
     @Override
-    public <ENTITY extends EntityKrawl> PlayState moveController(AnimationEvent<ENTITY> event) {
-//        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.subar.idle", true));
+    public PlayState moveController(AnimationState<EntityKrawl> event) {
         return PlayState.STOP;
     }
 

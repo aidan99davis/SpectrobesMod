@@ -3,8 +3,6 @@ package com.spectrobes.spectrobesmod.client.gui.prizmod.Components;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.Pages.PrizmodPage;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.Widget;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
@@ -24,7 +22,7 @@ public class AllSpectrobesList extends AbstractWidget {
     public int currentPage = 0;
 
     public AllSpectrobesList(PrizmodPage parent) {
-        super(parent.x, parent.y, 0, 0, Component.literal(""));
+        super(parent.getX(), parent.getY(), 0, 0, Component.literal(""));
         gridData_paged = new HashMap<>();
         int specCount = parent.parent.getMenu().getOwnedSpectrobesCount();
         int remainder = specCount % 25;
@@ -99,10 +97,5 @@ public class AllSpectrobesList extends AbstractWidget {
         } else {
             currentPage = 0;
         }
-    }
-
-    @Override
-    public void updateNarration(NarrationElementOutput pNarrationElementOutput) {
-
     }
 }

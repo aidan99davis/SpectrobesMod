@@ -5,9 +5,7 @@ import com.spectrobes.spectrobesmod.client.entity.spectrobes.model.SeguModel;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.segu.EntitySegu;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
+import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 import javax.annotation.Nullable;
 
@@ -23,13 +21,13 @@ public class SeguRenderer extends GeoEntityRenderer<EntitySegu> {
     {
         switch (entity.getSpectrobeData().Variant) {
             case 0:
-                return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/segu_0.png");
+                return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "textures/models/spectrobe/segu_0.png");
             case 1:
-                return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/segu_1.png");
+                return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "textures/models/spectrobe/segu_1.png");
             case 2:
-                return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/segu_2.png");
+                return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "textures/models/spectrobe/segu_2.png");
             default:
-                return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/segu_0.png");
+                return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "textures/models/spectrobe/segu_0.png");
 
         }
     }
