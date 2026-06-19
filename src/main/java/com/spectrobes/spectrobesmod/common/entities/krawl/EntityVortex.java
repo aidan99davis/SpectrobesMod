@@ -30,11 +30,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.builder.ILoopType;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -68,15 +64,15 @@ public class EntityVortex extends EntityKrawl {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        entityData.define(WAVES_REMAINING, calculateKrawlWaves());
-        entityData.define(AGE_IN_TICKS, 0);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(WAVES_REMAINING, calculateKrawlWaves());
+        builder.define(AGE_IN_TICKS, 0);
     }
 
     @Override
     public boolean isPersistenceRequired() {
-        if(!level.isClientSide()) {
+        if(!level().isClientSide()) {
             SpectrobesWorldSaveData worldData = (SpectrobesWorldSaveData.getWorldData((ServerLevel) level));
             return worldData.canSpawnNest(blockPosition());
         }
@@ -136,7 +132,7 @@ public class EntityVortex extends EntityKrawl {
 
     private void setNatureByBiome() {
         List<SpectrobeProperties.Nature> possibleNatures = new ArrayList<>();
-        Biome biome = level.getBiome(blockPosition()).value();
+        Biome biome = level().getBiome(blockPosition()).value();
 
         if(biome.getPrecipitation().equals(Biome.Precipitation.RAIN)
                 || biome.getPrecipitation().equals(Biome.Precipitation.SNOW)) {
@@ -167,7 +163,7 @@ public class EntityVortex extends EntityKrawl {
     }
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return animationControllers;
     }
 
@@ -233,7 +229,7 @@ public class EntityVortex extends EntityKrawl {
     }
 
     public void addKrawl(EntityKrawl entityKrawl) {
-        this.level.addFreshEntity(entityKrawl);
+        this.level().addFreshEntity(entityKrawl);
         entityKrawl.teleportTo(getX(), getY(), getZ());
         children.add(entityKrawl);
     }

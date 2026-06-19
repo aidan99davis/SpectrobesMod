@@ -5,9 +5,7 @@ import com.spectrobes.spectrobesmod.common.registry.KrawlRegistry;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 
 public class EntityGrisen extends EntityKrawl {
     public EntityGrisen(EntityType<? extends Monster> type, Level worldIn) {
@@ -15,7 +13,7 @@ public class EntityGrisen extends EntityKrawl {
     }
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return animationControllers;
     }
 

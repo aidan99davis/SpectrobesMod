@@ -4,87 +4,118 @@ import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.items.minerals.IWorthGura;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.*;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.CSyncSpectrobeMasterPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.SConsumeMineralPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.SGiveMineralPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSpawnDroppedMineralPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSyncSpectrobeMasterPacket;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.registries.DeferredHolder;
+
+import java.util.function.Supplier;
 
 public class CyrusShopContainer extends AbstractContainerMenu {
     private final Player player;
     private final PlayerSpectrobeMaster capability;
     private boolean needsSync = true;
 
-    public static DeferredHolder<MenuType<CyrusShopContainer>> CYRUS_SHOP = null;
+    public static Supplier<MenuType<CyrusShopContainer>> CYRUS_SHOP = null;
 
-    public CyrusShopContainer(int id, Player player) {
-        super(CYRUS_SHOP.get(), id);
+    public CyrusShopContainer(int containerId, Inventory playerInventory) {
+        this(containerId, playerInventory.player);
+    }
+
+    public CyrusShopContainer(int containerId, Player player) {
+        super(CYRUS_SHOP.get(), containerId);
+
         this.player = player;
-        capability = this.player.getCapability(SpectrobeMaster.INSTANCE)
-                .orElseThrow(IllegalStateException::new);
+        this.capability = getSpectrobeMaster(player);
+    }
+
+    private static PlayerSpectrobeMaster getSpectrobeMaster(Player player) {
+        PlayerSpectrobeMaster capability = player.getCapability(SpectrobeMaster.INSTANCE);
+
+        if (capability == null) {
+            throw new IllegalStateException("Player is missing SpectrobeMaster capability.");
+        }
+
+        return capability;
     }
 
     public boolean buyMineral(IWorthGura mineral) {
-        if(capability.spendGura(mineral.getGuraWorth())) {
-            if(player.getInventory().getFreeSlot() < 0) {
-                //drop item
-                if(player.level.isClientSide()) {
-                    SpectrobesNetwork.sendToServer(new SSpawnDroppedMineralPacket(mineral.getName()));
-                    SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket(capability));
-                }
-            } else {
-              //give item
-                if(player.level.isClientSide()) {
-                    SpectrobesNetwork.sendToServer(new SGiveMineralPacket(mineral.getName()));
-                    SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket(capability));
-                }
-            }
-            needsSync = true;
-            return true;
+        if (!capability.spendGura(mineral.getGuraWorth())) {
+            return false;
         }
-        return false;
+
+        if (player.level().isClientSide()) {
+            if (player.getInventory().getFreeSlot() < 0) {
+                SpectrobesNetwork.sendToServer(new SSpawnDroppedMineralPacket(mineral.getName()));
+            } else {
+                SpectrobesNetwork.sendToServer(new SGiveMineralPacket(mineral.getName()));
+            }
+
+            SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket(capability));
+        }
+
+        needsSync = true;
+        return true;
     }
 
     public boolean sellMineral(Item mineral) {
-        if(player.getInventory().contains(mineral.getDefaultInstance())) {
-            if(player.level.isClientSide()) {
-                SpectrobesNetwork.sendToServer(new SConsumeMineralPacket(((IWorthGura)mineral).getName()));
-                capability.addGura(((IWorthGura)mineral).getGuraWorth() / 3);
-                SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket(capability));
-            }
-            needsSync = true;
-            return true;
+        if (!(mineral instanceof IWorthGura worthGura)) {
+            return false;
         }
-        return false;
+
+        if (!player.getInventory().contains(mineral.getDefaultInstance())) {
+            return false;
+        }
+
+        if (player.level().isClientSide()) {
+            SpectrobesNetwork.sendToServer(new SConsumeMineralPacket(worthGura.getName()));
+
+            capability.addGura(worthGura.getGuraWorth() / 3);
+
+            SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket(capability));
+        }
+
+        needsSync = true;
+        return true;
     }
 
     @Override
     public void broadcastChanges() {
-        if(player.level.isClientSide()) {
-            SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket(capability));
+        super.broadcastChanges();
 
-        } else {
-            SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(capability),
-                        (ServerPlayer) player);
+        if (!needsSync) {
+            return;
         }
+
+        if (player.level().isClientSide()) {
+            SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket(capability));
+        } else if (player instanceof ServerPlayer serverPlayer) {
+            SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(capability), serverPlayer);
+        }
+
         needsSync = false;
     }
 
     @Override
-    public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
-        return null;
+    public ItemStack quickMoveStack(Player player, int index) {
+        return ItemStack.EMPTY;
     }
 
     @Override
-    public boolean stillValid(Player pPlayer) {
+    public boolean stillValid(Player player) {
         return true;
     }
 
     public void tick() {
-        if(needsSync) {
+        if (needsSync) {
             broadcastChanges();
         }
     }

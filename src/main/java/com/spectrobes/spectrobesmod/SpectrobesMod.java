@@ -14,6 +14,8 @@ import com.spectrobes.spectrobesmod.common.registry.items.*;
 import com.spectrobes.spectrobesmod.common.world.SpectrobesOreGen;
 import com.spectrobes.spectrobesmod.events.ClientEvents;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.SpawnPlacementType;
+import net.minecraft.world.entity.SpawnPlacementTypes;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -79,7 +81,7 @@ public class SpectrobesMod
     {
         NeoForge.EVENT_BUS.register(PlayerEvents.instance);
         IconRegistry.init();
-        event.enqueueWork(() -> SpawnPlacements.register(KrawlEntities.ENTITY_VORTEX.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Monster::checkMonsterSpawnRules));
+        event.enqueueWork(() -> SpawnPlacements.register(KrawlEntities.ENTITY_VORTEX.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Monster::checkMonsterSpawnRules));
     }
 
     @SubscribeEvent

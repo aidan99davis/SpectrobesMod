@@ -33,6 +33,7 @@ import net.minecraft.world.level.gameevent.BlockPositionSource;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.gameevent.GameEventListener;
 import net.minecraft.world.level.gameevent.PositionSource;
+import net.minecraft.world.level.gameevent.vibrations.VibrationSystem;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.animatable.GeoAnimatable;
@@ -50,7 +51,7 @@ public class MiniXellesBlockEntity extends BlockEntity implements GameEventListe
     private final KrawlSpreader krawlSpreader = KrawlSpreader.createLevelSpreader();
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private float receivingDistance;
-    private VibrationListener.ReceivingEvent receivingEvent;
+    private VibrationSystemListener.ReceivingEvent receivingEvent;
     private int travelTimeInTicks;
     private int summon_delay;
 

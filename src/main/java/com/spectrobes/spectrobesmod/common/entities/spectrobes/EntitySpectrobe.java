@@ -47,15 +47,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.DirectionalPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.entity.IEntityAdditionalSpawnData;
-import net.minecraftforge.network.NetworkHooks;
-import software.bernie.geckolib3.core.GeoAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.animatable.GeoAnimatable;
 
 import javax.annotation.Nullable;
 import java.util.function.Predicate;
@@ -174,7 +166,7 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityAd
                 itemstack.shrink(1);
             } else if(itemstack.getItem() instanceof PrizmodItem) {
                 if(player.isShiftKeyDown()) {
-                    if(player.level.isClientSide()) {
+                    if(player.level().isClientSide()) {
                         SpectrobeGuiHandler.openDetails(getSpectrobeData());
                     }
                 }

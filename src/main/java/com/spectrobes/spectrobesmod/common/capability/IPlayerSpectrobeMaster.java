@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-@AutoRegisterCapability
 public interface IPlayerSpectrobeMaster extends INBTSerializable<CompoundTag> {
     Spectrobe getCurrentTeamMember();
     void changeSelected(int direction);

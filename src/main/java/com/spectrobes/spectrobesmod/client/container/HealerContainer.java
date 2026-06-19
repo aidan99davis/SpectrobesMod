@@ -1,36 +1,50 @@
 package com.spectrobes.spectrobesmod.client.container;
 
-import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
+import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesToolsRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.DeferredHolder;
+
+import java.util.function.Supplier;
 
 public class HealerContainer extends AbstractContainerMenu {
-    private PlayerSpectrobeMaster capability;
-    private Player player;
+    private final PlayerSpectrobeMaster capability;
+    private final Player player;
 
-    public static DeferredHolder<MenuType<HealerContainer>> HEALER = null;
+    public static Supplier<MenuType<HealerContainer>> HEALER = null;
 
-    public HealerContainer(int pContainerId, Player player) {
-        super(HEALER.get(), pContainerId);
+    public HealerContainer(int containerId, Inventory playerInventory) {
+        this(containerId, playerInventory.player);
+    }
+
+    public HealerContainer(int containerId, Player player) {
+        super(HEALER.get(), containerId);
+
         this.player = player;
-        this.capability = (PlayerSpectrobeMaster) this.player.getCapability(SpectrobeMaster.INSTANCE)
-                .orElseThrow(IllegalStateException::new);
+        this.capability = getSpectrobeMaster(player);
+    }
+
+    private static PlayerSpectrobeMaster getSpectrobeMaster(Player player) {
+        PlayerSpectrobeMaster capability = player.getCapability(SpectrobeMaster.INSTANCE);
+
+        if (capability == null) {
+            throw new IllegalStateException("Player is missing SpectrobeMaster capability.");
+        }
+
+        return capability;
     }
 
     /**
-     * Determines whether supplied player can use this container
-     *
-     * @param playerIn
+     * Determines whether the supplied player can use this container.
      */
     @Override
-    public boolean stillValid(Player playerIn) {
-        return playerIn.getInventory().contains(SpectrobesToolsRegistry.prizmod_item.get().getDefaultInstance());
+    public boolean stillValid(Player player) {
+        return player.getInventory().contains(SpectrobesToolsRegistry.prizmod_item.get().getDefaultInstance());
     }
 
     public int getCurrentGuraBalance() {
@@ -38,9 +52,14 @@ public class HealerContainer extends AbstractContainerMenu {
     }
 
     public void healTeam() {
-        capability.getCurrentTeamUuids().forEach((integer, uuid) -> {
-            if(uuid != null) {
-                Spectrobe spectrobe = capability.getSpectrobeByUuid(uuid);
+        capability.getCurrentTeamUuids().forEach((slot, uuid) -> {
+            if (uuid == null) {
+                return;
+            }
+
+            Spectrobe spectrobe = capability.getSpectrobeByUuid(uuid);
+
+            if (spectrobe != null) {
                 spectrobe.setCurrentHealth(spectrobe.stats.getHpLevel());
             }
         });
@@ -51,7 +70,7 @@ public class HealerContainer extends AbstractContainerMenu {
     }
 
     @Override
-    public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
-        return null;
+    public ItemStack quickMoveStack(Player player, int index) {
+        return ItemStack.EMPTY;
     }
 }

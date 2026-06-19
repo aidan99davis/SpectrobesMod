@@ -5,180 +5,180 @@ import com.spectrobes.spectrobesmod.common.items.minerals.Mineral;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
 import com.spectrobes.spectrobesmod.common.items.minerals.chroma.ChromaMineralItem;
 import com.spectrobes.spectrobesmod.common.registry.MineralRegistry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.spectrobes.spectrobesmod.common.registry.MineralRegistry.*;
 
 public class SpectrobesMineralsRegistry {
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, SpectrobesInfo.MOD_ID);
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(Registries.ITEM, SpectrobesInfo.MOD_ID);
     public static final HashMap<Mineral.MineralRarity, List<Item>> all_minerals = new HashMap<>();
 
-    public static final DeferredHolder<Item> mineral_item_power_c =
+    public static final Supplier<Item> mineral_item_power_c =
             ITEMS.register("mineral_item_power_c",
                     () -> new MineralItem(MINERAL_POWER_C));
 
-    public static final DeferredHolder<Item> mineral_item_power_b =
+    public static final Supplier<Item> mineral_item_power_b =
             ITEMS.register("mineral_item_power_b",
                     () -> new MineralItem(MINERAL_POWER_B));
 
-    public static final DeferredHolder<Item> mineral_item_power_a =
+    public static final Supplier<Item> mineral_item_power_a =
             ITEMS.register("mineral_item_power_a",
                     () -> new MineralItem(MINERAL_POWER_A));
 
-    public static final DeferredHolder<Item> mineral_item_power_a_plus =
+    public static final Supplier<Item> mineral_item_power_a_plus =
             ITEMS.register("mineral_item_power_a_plus",
                     () -> new MineralItem(MINERAL_POWER_A_PLUS));
-    public static final DeferredHolder<Item> mineral_item_defence_c =
+    public static final Supplier<Item> mineral_item_defence_c =
             ITEMS.register("mineral_item_defence_c",
                     () -> new MineralItem(MINERAL_DEFENCE_C));
 
-    public static final DeferredHolder<Item> mineral_item_defence_b =
+    public static final Supplier<Item> mineral_item_defence_b =
             ITEMS.register("mineral_item_defence_b",
                     () -> new MineralItem(MINERAL_DEFENCE_B));
 
-    public static final DeferredHolder<Item> mineral_item_defence_a =
+    public static final Supplier<Item> mineral_item_defence_a =
             ITEMS.register("mineral_item_defence_a",
                     () -> new MineralItem(MINERAL_DEFENCE_A));
 
-    public static final DeferredHolder<Item> mineral_item_defence_a_plus =
+    public static final Supplier<Item> mineral_item_defence_a_plus =
             ITEMS.register("mineral_item_defence_a_plus",
                     () -> new MineralItem(MINERAL_DEFENCE_A_PLUS));
 
-    public static final DeferredHolder<Item> mineral_item_health_c =
+    public static final Supplier<Item> mineral_item_health_c =
             ITEMS.register("mineral_item_health_c",
                     () -> new MineralItem(MINERAL_HEALTH_C));
 
-    public static final DeferredHolder<Item> mineral_item_health_b =
+    public static final Supplier<Item> mineral_item_health_b =
             ITEMS.register("mineral_item_health_b",
                     () -> new MineralItem(MINERAL_HEALTH_B));
 
-    public static final DeferredHolder<Item> mineral_item_health_a =
+    public static final Supplier<Item> mineral_item_health_a =
             ITEMS.register("mineral_item_health_a",
                     () -> new MineralItem(MINERAL_HEALTH_A));
 
-    public static final DeferredHolder<Item> mineral_item_health_a_plus =
+    public static final Supplier<Item> mineral_item_health_a_plus =
             ITEMS.register("mineral_item_health_a_plus",
                     () -> new MineralItem(MINERAL_HEALTH_A_PLUS));
 
-    public static final DeferredHolder<Item> mineral_item_agate =
+    public static final Supplier<Item> mineral_item_agate =
             ITEMS.register("mineral_item_agate",
                     () -> new MineralItem(MINERAL_AGATE));
 
-    public static final DeferredHolder<Item> mineral_item_amber =
+    public static final Supplier<Item> mineral_item_amber =
             ITEMS.register("mineral_item_amber",
                     () -> new MineralItem(MINERAL_AMBER));
 
-    public static final DeferredHolder<Item> mineral_item_azurite =
+    public static final Supplier<Item> mineral_item_azurite =
             ITEMS.register("mineral_item_azurite",
                     () -> new MineralItem(MINERAL_AZURITE));
 
-    public static final DeferredHolder<Item> mineral_item_citrine =
+    public static final Supplier<Item> mineral_item_citrine =
             ITEMS.register("mineral_item_citrine",
                     () -> new MineralItem(MINERAL_CITRINE));
 
-    public static final DeferredHolder<Item> mineral_item_cobalt =
+    public static final Supplier<Item> mineral_item_cobalt =
             ITEMS.register("mineral_item_cobalt",
                     () -> new MineralItem(MINERAL_COBALT));
 
-    public static final DeferredHolder<Item> mineral_item_coral =
+    public static final Supplier<Item> mineral_item_coral =
             ITEMS.register("mineral_item_coral",
                     () -> new MineralItem(MINERAL_CORAL));
 
-    public static final DeferredHolder<Item> mineral_item_diamond =
+    public static final Supplier<Item> mineral_item_diamond =
             ITEMS.register("mineral_item_diamond",
                     () -> new MineralItem(MINERAL_DIAMOND));
 
-    public static final DeferredHolder<Item> mineral_item_emerald =
+    public static final Supplier<Item> mineral_item_emerald =
             ITEMS.register("mineral_item_emerald",
                     () -> new MineralItem(MINERAL_EMERALD));
 
-    public static final DeferredHolder<Item> mineral_item_fluorite =
+    public static final Supplier<Item> mineral_item_fluorite =
             ITEMS.register("mineral_item_fluorite",
                     () -> new MineralItem(MINERAL_FLUORITE));
 
-    public static final DeferredHolder<Item> mineral_item_garnet =
+    public static final Supplier<Item> mineral_item_garnet =
             ITEMS.register("mineral_item_garnet",
                     () -> new MineralItem(MINERAL_GARNET));
 
-    public static final DeferredHolder<Item> mineral_item_gold =
+    public static final Supplier<Item> mineral_item_gold =
             ITEMS.register("mineral_item_gold",
                     () -> new MineralItem(MINERAL_GOLD));
 
-    public static final DeferredHolder<Item> mineral_item_graphite =
+    public static final Supplier<Item> mineral_item_graphite =
             ITEMS.register("mineral_item_graphite",
                     () -> new MineralItem(MINERAL_GRAPHITE));
 
-    public static final DeferredHolder<Item> mineral_item_jade =
+    public static final Supplier<Item> mineral_item_jade =
             ITEMS.register("mineral_item_jade",
                     () -> new MineralItem(MINERAL_JADE));
 
-    public static final DeferredHolder<Item> mineral_item_lazuli =
+    public static final Supplier<Item> mineral_item_lazuli =
             ITEMS.register("mineral_item_lazuli",
                     () -> new MineralItem(MINERAL_LAZULI));
 
-    public static final DeferredHolder<Item> mineral_item_onyx =
+    public static final Supplier<Item> mineral_item_onyx =
             ITEMS.register("mineral_item_onyx",
                     () -> new MineralItem(MINERAL_ONYX));
 
-    public static final DeferredHolder<Item> mineral_item_opal =
+    public static final Supplier<Item> mineral_item_opal =
             ITEMS.register("mineral_item_opal",
                     () -> new MineralItem(MINERAL_OPAL));
 
-    public static final DeferredHolder<Item> mineral_item_pearl =
+    public static final Supplier<Item> mineral_item_pearl =
             ITEMS.register("mineral_item_pearl",
                     () -> new MineralItem(MINERAL_PEARL));
 
-    public static final DeferredHolder<Item> mineral_item_platinum =
+    public static final Supplier<Item> mineral_item_platinum =
             ITEMS.register("mineral_item_platinum",
                     () -> new MineralItem(MINERAL_PLATINUM));
 
-    public static final DeferredHolder<Item> mineral_item_quartz =
+    public static final Supplier<Item> mineral_item_quartz =
             ITEMS.register("mineral_item_quartz",
                     () -> new MineralItem(MINERAL_QUARTZ));
 
-    public static final DeferredHolder<Item> mineral_item_ruby =
+    public static final Supplier<Item> mineral_item_ruby =
             ITEMS.register("mineral_item_ruby",
                     () -> new MineralItem(MINERAL_RUBY));
 
-    public static final DeferredHolder<Item> mineral_item_sapphire =
+    public static final Supplier<Item> mineral_item_sapphire =
             ITEMS.register("mineral_item_sapphire",
                     () -> new MineralItem(MINERAL_SAPPHIRE));
 
-    public static final DeferredHolder<Item> mineral_item_spinal =
+    public static final Supplier<Item> mineral_item_spinal =
             ITEMS.register("mineral_item_spinal",
                     () -> new MineralItem(MINERAL_SPINAL));
 
-    public static final DeferredHolder<Item> mineral_item_sylvite =
+    public static final Supplier<Item> mineral_item_sylvite =
             ITEMS.register("mineral_item_sylvite",
                     () -> new MineralItem(MINERAL_SYLVITE));
 
-    public static final DeferredHolder<Item> mineral_item_topaz =
+    public static final Supplier<Item> mineral_item_topaz =
             ITEMS.register("mineral_item_topaz",
                     () -> new MineralItem(MINERAL_TOPAZ));
 
-    public static final DeferredHolder<Item> mineral_item_zircon =
+    public static final Supplier<Item> mineral_item_zircon =
             ITEMS.register("mineral_item_zircon",
                     () -> new MineralItem(MINERAL_ZIRCON));
 
-    public static final DeferredHolder<Item> chroma_mineral_item_zero =
+    public static final Supplier<Item> chroma_mineral_item_zero =
             ITEMS.register("chroma_mineral_item_zero",
                     () -> new ChromaMineralItem(0));
 
-    public static final DeferredHolder<Item> chroma_mineral_item_one =
+    public static final Supplier<Item> chroma_mineral_item_one =
             ITEMS.register("chroma_mineral_item_one",
                     () -> new ChromaMineralItem(1));
 
-    public static final DeferredHolder<Item> chroma_mineral_item_two =
+    public static final Supplier<Item> chroma_mineral_item_two =
             ITEMS.register("chroma_mineral_item_two",
                     () -> new ChromaMineralItem(2));
 

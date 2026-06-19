@@ -16,17 +16,10 @@ import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
-import net.minecraftforge.network.NetworkHooks;
-import software.bernie.geckolib3.core.GeoAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.builder.ILoopType;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class EntitySpawningSpore extends Monster implements GeoAnimatable, FlyingAnimal {
     protected static final EntityDataAccessor<Boolean> BOSS_SPORE =
@@ -36,7 +29,7 @@ public class EntitySpawningSpore extends Monster implements GeoAnimatable, Flyin
             SynchedEntityData.defineId(EntitySpawningSpore.class,
                     EntityDataSerializers.INT);
 
-    public AnimationFactory animationControllers = GeckoLibUtil.createFactory(this);
+    public AnimatableInstanceCache animationControllers = GeckoLibUtil.createInstanceCache(this);
     protected AnimationController moveController = new AnimationController(this, "moveAnimationController", 10F, this::moveController);
 
     public EntitySpawningSpore(EntityType<? extends Monster> type, Level worldIn) {
@@ -62,10 +55,10 @@ public class EntitySpawningSpore extends Monster implements GeoAnimatable, Flyin
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        entityData.define(BOSS_SPORE, false);
-        entityData.define(AGE_TICKS, 0);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(BOSS_SPORE, false);
+        builder.define(AGE_TICKS, 0);
     }
 
     @Override

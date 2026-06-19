@@ -4,16 +4,16 @@ import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesToolsRegistr
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.DeferredHolder;
+
+import java.util.function.Supplier;
 
 public class SpectrobeDetailsContainer extends AbstractContainerMenu {
 
     private final Spectrobe spectrobe;
 
-    public static DeferredHolder<MenuType<SpectrobeDetailsContainer>> SPECTROBE_DETAILS = null;
+    public static Supplier<MenuType<SpectrobeDetailsContainer>> SPECTROBE_DETAILS = null;
 
     public SpectrobeDetailsContainer(int id, Spectrobe spectrobe) {
         super(SPECTROBE_DETAILS.get(), id);

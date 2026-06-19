@@ -24,20 +24,17 @@ import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.network.NetworkHooks;
-import software.bernie.geckolib3.core.GeoAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import static com.spectrobes.spectrobesmod.util.DamageUtils.getTypeBonus;
 
 public abstract class EntityKrawl extends Monster implements GeoAnimatable, IHasNature {
     public KrawlProperties krawlProperties;
-    public AnimationFactory animationControllers = GeckoLibUtil.createFactory(this);
+    public AnimatableInstanceCache animationControllers = GeckoLibUtil.createInstanceCache(this);
     protected AnimationController<EntityKrawl> moveController = new AnimationController<>(this, "moveAnimationController", 10F, this::moveController);
 
     private static final EntityDataAccessor<Boolean> IS_ATTACKING =
@@ -48,11 +45,6 @@ public abstract class EntityKrawl extends Monster implements GeoAnimatable, IHas
         super(type, worldIn);
         krawlProperties = GetKrawlProperties();
         updateEntityAttributes();
-    }
-
-    @Override
-    public boolean canBreatheUnderwater() {
-        return true;
     }
 
     public abstract KrawlProperties GetKrawlProperties();
@@ -135,7 +127,7 @@ public abstract class EntityKrawl extends Monster implements GeoAnimatable, IHas
         super.aiStep();
 
         if(this.isSunBurnTick()) {
-            this.setSecondsOnFire(8);
+            this.setRemainingFireTicks(8);
         }
         if((getLastHurtByMobTimestamp() - this.tickCount) > 2000) this.setHealth(getHealth() + (getHealth() / 100));
     }
@@ -160,9 +152,9 @@ public abstract class EntityKrawl extends Monster implements GeoAnimatable, IHas
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        entityData.define(IS_ATTACKING, false);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(IS_ATTACKING, false);
     }
 
     public static AttributeSupplier.Builder setCustomAttributes() {
@@ -194,7 +186,7 @@ public abstract class EntityKrawl extends Monster implements GeoAnimatable, IHas
     public abstract <ENTITY extends EntityKrawl> PlayState moveController(AnimationEvent<ENTITY> entityAnimationTestEvent);
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return animationControllers;
     }
 

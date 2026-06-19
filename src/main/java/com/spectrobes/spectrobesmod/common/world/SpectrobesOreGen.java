@@ -3,27 +3,26 @@ package com.spectrobes.spectrobesmod.common.world;
 import com.google.common.base.Suppliers;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesBlocks;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.features.OreFeatures;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
 import net.minecraft.world.level.levelgen.placement.*;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.DeferredHolder;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
-@Mod.EventBusSubscriber(modid = SpectrobesInfo.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = SpectrobesInfo.MOD_ID)
 public class SpectrobesOreGen {
     public static final DeferredRegister<ConfiguredFeature<?,?>> CONFIGURED_FEATURES
-            = DeferredRegister.create(Registry.CONFIGURED_FEATURE_REGISTRY, SpectrobesInfo.MOD_ID);
+            = DeferredRegister.create(Registries.CONFIGURED_FEATURE, SpectrobesInfo.MOD_ID);
     public static final DeferredRegister<PlacedFeature> PLACED_FEATURES
-            = DeferredRegister.create(Registry.PLACED_FEATURE_REGISTRY, SpectrobesInfo.MOD_ID);
+            = DeferredRegister.create(Registries.PLACED_FEATURE, SpectrobesInfo.MOD_ID);
 
     //Configured Features
     public static final Supplier<List<OreConfiguration.TargetBlockState>> OWERWORLD_FOSSIL_ORES
@@ -61,47 +60,47 @@ public class SpectrobesOreGen {
             OreConfiguration.target(OreFeatures.DEEPSLATE_ORE_REPLACEABLES,
                     SpectrobesBlocks.marble_ore.get().defaultBlockState()))); //TODO Add DeepSlate marble ore block variant
 
-    public static final DeferredHolder<ConfiguredFeature<?,?>> FOSSIL_ORES = CONFIGURED_FEATURES.register("fossil_ore",
+    public static final Supplier<ConfiguredFeature<?,?>> FOSSIL_ORES = CONFIGURED_FEATURES.register("fossil_ore",
             () -> new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(OWERWORLD_FOSSIL_ORES.get(), 3)));
 
-    public static final DeferredHolder<ConfiguredFeature<?,?>> MINERAL_ORES = CONFIGURED_FEATURES.register("mineral_ore",
+    public static final Supplier<ConfiguredFeature<?,?>> MINERAL_ORES = CONFIGURED_FEATURES.register("mineral_ore",
             () -> new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(OWERWORLD_MINERAL_ORES.get(), 12)));
 
-    public static final DeferredHolder<ConfiguredFeature<?,?>> METALIUM_ORES = CONFIGURED_FEATURES.register("metalium_ore",
+    public static final Supplier<ConfiguredFeature<?,?>> METALIUM_ORES = CONFIGURED_FEATURES.register("metalium_ore",
             () -> new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(OWERWORLD_METALIUM_ORES.get(), 3, 0.15f)));
 
-    public static final DeferredHolder<ConfiguredFeature<?,?>> TITANIUM_ORES = CONFIGURED_FEATURES.register("titanium_ore",
+    public static final Supplier<ConfiguredFeature<?,?>> TITANIUM_ORES = CONFIGURED_FEATURES.register("titanium_ore",
             () -> new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(OWERWORLD_TITANIUM_ORES.get(), 3, 0.15f)));
 
-    public static final DeferredHolder<ConfiguredFeature<?,?>> MARBLE_ORES = CONFIGURED_FEATURES.register("marble_ore",
+    public static final Supplier<ConfiguredFeature<?,?>> MARBLE_ORES = CONFIGURED_FEATURES.register("marble_ore",
             () -> new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(OWERWORLD_MARBLE_ORES.get(), 3, 0.15f)));
 
     //Placed Features
-    public static final DeferredHolder<PlacedFeature> FOSSIL_ORE_PLACED
+    public static final Supplier<PlacedFeature> FOSSIL_ORE_PLACED
             = PLACED_FEATURES.register("fossil_ore_placed",
             () -> new PlacedFeature(FOSSIL_ORES.getHolder().get(),
                     commonOrePlacement(8,
                             HeightRangePlacement.triangle(VerticalAnchor.absolute(-16),
                                     VerticalAnchor.absolute(112)))));
-    public static final DeferredHolder<PlacedFeature> MINERAL_ORE_PLACED
+    public static final Supplier<PlacedFeature> MINERAL_ORE_PLACED
             = PLACED_FEATURES.register("mineral_ore_placed",
             () -> new PlacedFeature(MINERAL_ORES.getHolder().get(),
                     commonOrePlacement(16,
                             HeightRangePlacement.triangle(VerticalAnchor.absolute(-16),
                                     VerticalAnchor.absolute(112)))));
-    public static final DeferredHolder<PlacedFeature> METALIUM_ORE_PLACED
+    public static final Supplier<PlacedFeature> METALIUM_ORE_PLACED
             = PLACED_FEATURES.register("metalium_ore_placed",
             () -> new PlacedFeature(METALIUM_ORES.getHolder().get(),
                     commonOrePlacement(4,
                             HeightRangePlacement.triangle(VerticalAnchor.absolute(-32),
                                     VerticalAnchor.absolute(32)))));
-    public static final DeferredHolder<PlacedFeature> TITANIUM_ORE_PLACED
+    public static final Supplier<PlacedFeature> TITANIUM_ORE_PLACED
             = PLACED_FEATURES.register("titanium_ore_placed",
             () -> new PlacedFeature(TITANIUM_ORES.getHolder().get(),
                     commonOrePlacement(4,
                             HeightRangePlacement.triangle(VerticalAnchor.absolute(-32),
                                     VerticalAnchor.absolute(32)))));
-    public static final DeferredHolder<PlacedFeature> MARBLE_ORE_PLACED
+    public static final Supplier<PlacedFeature> MARBLE_ORE_PLACED
             = PLACED_FEATURES.register("marble_ore_placed",
             () -> new PlacedFeature(MARBLE_ORES.getHolder().get(),
                     commonOrePlacement(4,

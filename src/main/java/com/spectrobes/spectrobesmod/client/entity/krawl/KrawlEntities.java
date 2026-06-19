@@ -3,19 +3,19 @@ package com.spectrobes.spectrobesmod.client.entity.krawl;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.entities.krawl.*;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.DeferredHolder;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static net.minecraft.world.entity.MobCategory.MONSTER;
@@ -29,86 +29,86 @@ public class KrawlEntities {
     private static final ArrayList<EntityType<? extends EntityKrawl>> SPECIAL_KRAWL = new ArrayList<>();
 
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES
-            = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, SpectrobesInfo.MOD_ID);
+            = DeferredRegister.create(Registries.ENTITY_TYPE, SpectrobesInfo.MOD_ID);
 
-    public static final DeferredHolder<EntityType<EntityXelles>> ENTITY_XELLES
+    public static final Supplier<EntityType<EntityXelles>> ENTITY_XELLES
             = ENTITY_TYPES.register("entity_xelles",
             () -> EntityType.Builder.of(EntityXelles::new,
                     MONSTER)
                     .sized(3f, 5f)
                     .build(ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "xelles").toString()));
 
-    public static final DeferredHolder<EntityType<EntityHealingSpore>> ENTITY_HEALING_SPORES
+    public static final Supplier<EntityType<EntityHealingSpore>> ENTITY_HEALING_SPORES
             = ENTITY_TYPES.register("entity_healing_spores",
             () -> EntityType.Builder.of(EntityHealingSpore::new,
                     MONSTER)
                     .sized(1f, 1f)
                     .build(ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "healing_spores").toString()));
 
-    public static final DeferredHolder<EntityType<EntitySpawningSpore>> ENTITY_SPAWNING_SPORE
+    public static final Supplier<EntityType<EntitySpawningSpore>> ENTITY_SPAWNING_SPORE
             = ENTITY_TYPES.register("entity_spawning_spores",
             () -> EntityType.Builder.of(EntitySpawningSpore::new,
                     MONSTER)
                     .sized(1f, 1f)
                     .build(ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "spawning_spores").toString()));
 
-    public static final DeferredHolder<EntityType<EntityOrbix>> ENTITY_ORBIX
+    public static final Supplier<EntityType<EntityOrbix>> ENTITY_ORBIX
             = ENTITY_TYPES.register("entity_orbix",
             () -> EntityType.Builder.of(EntityOrbix::new,
                     MONSTER)
                     .sized(1f, 1.5f)
                     .build(ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "orbix").toString()));
 
-    public static final DeferredHolder<EntityType<EntityOrbux>> ENTITY_ORBUX
+    public static final Supplier<EntityType<EntityOrbux>> ENTITY_ORBUX
             = ENTITY_TYPES.register("entity_orbux",
             () -> EntityType.Builder.of(EntityOrbux::new,
                     MONSTER)
                     .sized(1f, 1.5f)
                     .build(ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "orbux").toString()));
 
-    public static final DeferredHolder<EntityType<EntityOtorso>> ENTITY_OTORSO
+    public static final Supplier<EntityType<EntityOtorso>> ENTITY_OTORSO
             = ENTITY_TYPES.register("entity_otorso",
             () -> EntityType.Builder.of(EntityOtorso::new,
                     MONSTER)
                     .sized(2f, 2f)
                     .build(ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "otorso").toString()));
 
-    public static final DeferredHolder<EntityType<EntitySwar>> ENTITY_SWAR
+    public static final Supplier<EntityType<EntitySwar>> ENTITY_SWAR
             = ENTITY_TYPES.register("entity_swar",
             () -> EntityType.Builder.of(EntitySwar::new,
                     MONSTER)
                     .sized(1f, 2f)
                     .build(ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "swar").toString()));
 
-    public static final DeferredHolder<EntityType<EntitySubar>> ENTITY_SUBAR
+    public static final Supplier<EntityType<EntitySubar>> ENTITY_SUBAR
             = ENTITY_TYPES.register("entity_subar",
             () -> EntityType.Builder.of(EntitySubar::new,
                     MONSTER)
                     .sized(1.5f, 1.25f)
                     .build(ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "subar").toString()));
 
-    public static final DeferredHolder<EntityType<EntityVizbar>> ENTITY_VIZBAR
+    public static final Supplier<EntityType<EntityVizbar>> ENTITY_VIZBAR
             = ENTITY_TYPES.register("entity_vizbar",
             () -> EntityType.Builder.of(EntityVizbar::new,
                     MONSTER)
                     .sized(1.5f, 1.25f)
                     .build(ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "vizbar").toString()));
 
-    public static final DeferredHolder<EntityType<EntityGris>> ENTITY_GRIS
+    public static final Supplier<EntityType<EntityGris>> ENTITY_GRIS
             = ENTITY_TYPES.register("entity_gris",
             () -> EntityType.Builder.of(EntityGris::new,
                     MONSTER)
                     .sized(1.5f, 1.25f)
                     .build(ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "gris").toString()));
 
-    public static final DeferredHolder<EntityType<EntityGrisen>> ENTITY_GRISEN
+    public static final Supplier<EntityType<EntityGrisen>> ENTITY_GRISEN
             = ENTITY_TYPES.register("entity_grisen",
             () -> EntityType.Builder.of(EntityGrisen::new,
                     MONSTER)
                     .sized(1.5f, 1.25f)
                     .build(ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "grisen").toString()));
 
-    public static final DeferredHolder<EntityType<EntityVortex>> ENTITY_VORTEX
+    public static final Supplier<EntityType<EntityVortex>> ENTITY_VORTEX
             = ENTITY_TYPES.register("entity_vortex",
             () -> EntityType.Builder.of(EntityVortex::new,
                     MONSTER)
