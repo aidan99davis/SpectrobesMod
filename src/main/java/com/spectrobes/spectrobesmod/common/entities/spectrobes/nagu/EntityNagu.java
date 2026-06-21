@@ -11,13 +11,16 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 public class EntityNagu extends EntityMammalSpectrobe {
+    private static final RawAnimation IDLE_ANIM = RawAnimation.begin().thenLoop("animation.nagu.idle");
 
     public EntityNagu(EntityType<EntityNagu> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
     }
 
+    @Override
     public Spectrobe GetNewSpectrobeInstance() {
         return SpectrobeRegistry.Nagu.copy(false);
     }
@@ -33,7 +36,7 @@ public class EntityNagu extends EntityMammalSpectrobe {
     }
 
     @Override
-    public Class getSpectrobeClass() {
+    public Class<? extends EntitySpectrobe> getSpectrobeClass() {
         return EntityNagu.class;
     }
 
@@ -44,13 +47,11 @@ public class EntityNagu extends EntityMammalSpectrobe {
 
     @Override
     public PlayState moveController(AnimationState<EntitySpectrobe> animationState) {
-        if(animationState.isMoving())
-        {
-            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.nagu.idle", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
-        } else {
-            return PlayState.STOP;
+        if (animationState.isMoving()) {
+            return animationState.setAndContinue(IDLE_ANIM);
         }
+
+        return PlayState.STOP;
     }
 
     @Override

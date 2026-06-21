@@ -11,13 +11,17 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 public class EntityHarumite extends EntityCrustaceanSpectrobe {
+    private static final RawAnimation WALK_ANIMATION =
+            RawAnimation.begin().thenLoop("animation.harumite.walk");
 
-    public EntityHarumite(EntityType<EntityHarumite> entityTypeIn, Level worldIn) {
-        super(entityTypeIn, worldIn);
+    public EntityHarumite(EntityType<EntityHarumite> entityType, Level level) {
+        super(entityType, level);
     }
 
+    @Override
     public Spectrobe GetNewSpectrobeInstance() {
         return SpectrobeRegistry.Harumite.copy(false);
     }
@@ -33,6 +37,7 @@ public class EntityHarumite extends EntityCrustaceanSpectrobe {
     }
 
     @Override
+    @SuppressWarnings("rawtypes")
     public Class getSpectrobeClass() {
         return EntityHarumite.class;
     }
@@ -49,13 +54,13 @@ public class EntityHarumite extends EntityCrustaceanSpectrobe {
 
     @Override
     public PlayState moveController(AnimationState<EntitySpectrobe> animationState) {
-        if(animationState.isMoving() || animationState.getAnimatable().isSwimming())
-        {
-            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.harumite.walk", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
-        }
-        return PlayState.STOP;
+        EntitySpectrobe spectrobe = animationState.getAnimatable();
 
+        if (animationState.isMoving() || spectrobe.isSwimming()) {
+            return animationState.setAndContinue(WALK_ANIMATION);
+        }
+
+        return PlayState.STOP;
     }
 
     @Override

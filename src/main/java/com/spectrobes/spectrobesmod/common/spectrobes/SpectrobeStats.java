@@ -66,7 +66,7 @@ public class SpectrobeStats {
             mineralsEaten++;
         } else {
             if(Minecraft.getInstance().level.isClientSide()) {
-                Minecraft.getInstance().player.chatSigned("Your spectrobe cannot eat this mineral", Component.empty());
+                Minecraft.getInstance().player.displayClientMessage(Component.literal("Your spectrobe cannot eat this mineral."), true);
             }
         }
 

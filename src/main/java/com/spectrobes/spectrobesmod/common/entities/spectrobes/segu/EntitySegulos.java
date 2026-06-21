@@ -13,12 +13,18 @@ import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 public class EntitySegulos extends EntityMammalSpectrobe {
+    private static final RawAnimation BODY_IDLE_ANIM = RawAnimation.begin().thenLoop("animation.segulos.idle");
+    private static final RawAnimation ATTACK_ANIM = RawAnimation.begin().thenLoop("animation.segulos.attack");
+    private static final RawAnimation WALK_ANIM = RawAnimation.begin().thenLoop("animation.segulos.walk");
+
     public EntitySegulos(EntityType<EntitySegulos> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
     }
 
+    @Override
     public Spectrobe GetNewSpectrobeInstance() {
         return SpectrobeRegistry.Segulos.copy(false);
     }
@@ -34,7 +40,7 @@ public class EntitySegulos extends EntityMammalSpectrobe {
     }
 
     @Override
-    public Class getSpectrobeClass() {
+    public Class<? extends EntitySpectrobe> getSpectrobeClass() {
         return EntitySegulos.class;
     }
 
@@ -44,33 +50,26 @@ public class EntitySegulos extends EntityMammalSpectrobe {
     }
 
     public PlayState bodyController(AnimationState<EntitySpectrobe> animationState) {
-        animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.segulos.idle", ILoopType.EDefaultLoopTypes.LOOP));
-        return PlayState.CONTINUE;
+        return animationState.setAndContinue(BODY_IDLE_ANIM);
     }
 
-    protected AnimationController bodyAnimationController = new AnimationController(this, "bodyAnimationController", 10F, this::bodyController);
-
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar data)
-    {
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         super.registerControllers(data);
-        data.add(bodyAnimationController);
+        data.add(new AnimationController<>(this, "bodyAnimationController", 10, this::bodyController));
     }
 
     @Override
-    public PlayState moveController(AnimationState<EntitySpectrobe> animationState)
-    {
-        if(animationState.getAnimatable().isAttacking()) {
-            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.segulos.attack", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
+    public PlayState moveController(AnimationState<EntitySpectrobe> animationState) {
+        if (animationState.getAnimatable().isAttacking()) {
+            return animationState.setAndContinue(ATTACK_ANIM);
         }
-        if(animationState.isMoving())
-        {
-            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.segulos.walk", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
-        } else {
-            return PlayState.STOP;
+
+        if (animationState.isMoving()) {
+            return animationState.setAndContinue(WALK_ANIM);
         }
+
+        return PlayState.STOP;
     }
 
     @Override

@@ -211,6 +211,6 @@ public abstract class EntityKrawl extends Monster implements GeoAnimatable, IHas
 
     @Override
     public double getTick(Object object) {
-        return 0;
+        return this.tickCount;
     }
 }

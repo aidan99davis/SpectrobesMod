@@ -11,12 +11,17 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 public class EntityZozane extends EntityMammalSpectrobe {
+    private static final RawAnimation ATTACK_ANIM = RawAnimation.begin().thenLoop("animation.zozane.attack");
+    private static final RawAnimation WALK_ANIM = RawAnimation.begin().thenLoop("animation.zozane.walk");
+
     public EntityZozane(EntityType<EntityZozane> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
     }
 
+    @Override
     public Spectrobe GetNewSpectrobeInstance() {
         return SpectrobeRegistry.Zozane.copy(false);
     }
@@ -32,7 +37,7 @@ public class EntityZozane extends EntityMammalSpectrobe {
     }
 
     @Override
-    public Class getSpectrobeClass() {
+    public Class<? extends EntitySpectrobe> getSpectrobeClass() {
         return EntityZozane.class;
     }
 
@@ -42,19 +47,16 @@ public class EntityZozane extends EntityMammalSpectrobe {
     }
 
     @Override
-    public PlayState moveController(AnimationState<EntitySpectrobe> animationState)
-    {
-        if(animationState.getAnimatable().isAttacking()) {
-            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.zozane.attack", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
+    public PlayState moveController(AnimationState<EntitySpectrobe> animationState) {
+        if (animationState.getAnimatable().isAttacking()) {
+            return animationState.setAndContinue(ATTACK_ANIM);
         }
-        if(animationState.isMoving())
-        {
-            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.zozane.walk", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
-        } else {
-            return PlayState.STOP;
+
+        if (animationState.isMoving()) {
+            return animationState.setAndContinue(WALK_ANIM);
         }
+
+        return PlayState.STOP;
     }
 
     @Override

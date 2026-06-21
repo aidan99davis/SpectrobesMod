@@ -52,7 +52,7 @@ public abstract class EntityAvianSpectrobe extends EntitySpectrobe implements Fl
     @Override
     public void mate() {
         List<? extends EntityAvianSpectrobe> mates
-                = level().getEntitiesOfClass(getSpectrobeClass(),
+                = level().getEntitiesOfClass(getClass(),
                 this.getBoundingBox()
                         .inflate(10, 10, 10));
         if(mates.isEmpty() || mates.size() == 1) {

@@ -11,12 +11,17 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 public class EntityZoza extends EntityMammalSpectrobe {
+    private static final RawAnimation WALK_ANIM = RawAnimation.begin().thenLoop("animation.zoza.walk");
+    private static final RawAnimation IDLE_ANIM = RawAnimation.begin().thenLoop("animation.zoza.idle");
+
     public EntityZoza(EntityType<EntityZoza> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
     }
 
+    @Override
     public Spectrobe GetNewSpectrobeInstance() {
         return SpectrobeRegistry.Zoza.copy(false);
     }
@@ -32,7 +37,7 @@ public class EntityZoza extends EntityMammalSpectrobe {
     }
 
     @Override
-    public Class getSpectrobeClass() {
+    public Class<? extends EntitySpectrobe> getSpectrobeClass() {
         return EntityZoza.class;
     }
 
@@ -42,27 +47,25 @@ public class EntityZoza extends EntityMammalSpectrobe {
     }
 
     @Override
-    public int getLitterSize() {
-        return 0;
-    }
-
-    @Override
     public PlayState moveController(AnimationState<EntitySpectrobe> animationState) {
-        if(animationState.isMoving())
-        {
-            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.zoza.walk", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
+        if (animationState.isMoving()) {
+            return animationState.setAndContinue(WALK_ANIM);
         }
-        else if(animationState.getAnimatable().isOrderedToSit()) {
-            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.zoza.idle", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
-        }
-        return PlayState.STOP;
 
+        if (animationState.getAnimatable().isOrderedToSit()) {
+            return animationState.setAndContinue(IDLE_ANIM);
+        }
+
+        return PlayState.STOP;
     }
 
     @Override
     protected FossilBlockItem getFossil() {
         return (FossilBlockItem) SpectrobesFossilsRegistry.zoza_fossil_item.get();
+    }
+
+    @Override
+    public int getLitterSize() {
+        return 0;
     }
 }

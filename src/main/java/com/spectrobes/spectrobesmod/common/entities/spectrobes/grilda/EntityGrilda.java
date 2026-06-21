@@ -6,7 +6,6 @@ import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.items.fossils.FossilBlockItem;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
 import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesFossilsRegistry;
-import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesItemsRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
@@ -14,13 +13,20 @@ import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 public class EntityGrilda extends EntityMammalSpectrobe {
+    private static final RawAnimation HEAD_IDLE_ANIMATION =
+            RawAnimation.begin().thenLoop("animation.grilda.idle");
 
-    public EntityGrilda(EntityType<EntityGrilda> entityTypeIn, Level worldIn) {
-        super(entityTypeIn, worldIn);
+    private static final RawAnimation WALK_ANIMATION =
+            RawAnimation.begin().thenLoop("animation.grilda.walk");
+
+    public EntityGrilda(EntityType<EntityGrilda> entityType, Level level) {
+        super(entityType, level);
     }
 
+    @Override
     public Spectrobe GetNewSpectrobeInstance() {
         return SpectrobeRegistry.Grilda.copy(false);
     }
@@ -36,7 +42,7 @@ public class EntityGrilda extends EntityMammalSpectrobe {
     }
 
     @Override
-    public Class getSpectrobeClass() {
+    public Class<? extends EntitySpectrobe> getSpectrobeClass() {
         return EntityGrilda.class;
     }
 
@@ -45,29 +51,26 @@ public class EntityGrilda extends EntityMammalSpectrobe {
         return SpectrobesEntities.ENTITY_GRILDA.get();
     }
 
-    protected AnimationController headAnimationController = new AnimationController(this, "headAnimationController", 10F, this::headController);
-
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar data)
-    {
-        super.registerControllers(data);
-        data.add(headAnimationController);
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        super.registerControllers(controllers);
+        controllers.add(new AnimationController<>(this, "head_animation_controller", 10, this::headController));
     }
 
     public PlayState headController(AnimationState<EntitySpectrobe> animationState) {
-        animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.grilda.idle", ILoopType.EDefaultLoopTypes.LOOP));
-        return PlayState.CONTINUE;
+        animationState.getController().setAnimationSpeed(0.5D);
+        return animationState.setAndContinue(HEAD_IDLE_ANIMATION);
     }
 
     @Override
     public PlayState moveController(AnimationState<EntitySpectrobe> animationState) {
-        if(animationState.isMoving())
-        {
-            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.grilda.walk", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
-        }
-        return PlayState.STOP;
+        animationState.getController().setAnimationSpeed(0.5D);
 
+        if (animationState.isMoving()) {
+            return animationState.setAndContinue(WALK_ANIMATION);
+        }
+
+        return PlayState.STOP;
     }
 
     @Override

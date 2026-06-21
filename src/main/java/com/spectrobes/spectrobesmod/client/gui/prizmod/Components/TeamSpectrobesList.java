@@ -1,9 +1,9 @@
 package com.spectrobes.spectrobesmod.client.gui.prizmod.Components;
 
-import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.Pages.PrizmodPage;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
@@ -21,8 +21,10 @@ public class TeamSpectrobesList extends AbstractWidget {
     private final PrizmodPage parent;
 
     public TeamSpectrobesList(PrizmodPage parent) {
-        super(parent.x, parent.y, 64, 128,  Component.literal(""));
+        super(parent.getX(), parent.getY(), 64, 128, Component.empty());
+
         this.parent = parent;
+
         gridData = new SpectrobePiece[GRID_SIZE];
         gridData[0] = new SpectrobePiece(null, 6, 0);
         gridData[1] = new SpectrobePiece(null, 7, 0);
@@ -38,21 +40,22 @@ public class TeamSpectrobesList extends AbstractWidget {
     }
 
     public boolean addSpectrobe(int index, Spectrobe piece) {
-
-        if(index  >= 0
+        if (index >= 0
                 && index < 6
-                && (piece == null || piece.properties.getStage()
-                    != SpectrobeProperties.Stage.CHILD)) {
+                && (piece == null || piece.properties.getStage() != SpectrobeProperties.Stage.CHILD)) {
+
             gridData[index].spectrobe = piece;
-            parent.parent.getMenu().setTeamMember(index, piece == null? null : piece.SpectrobeUUID);
+            parent.parent.getMenu().setTeamMember(index, piece == null ? null : piece.SpectrobeUUID);
             return true;
-        } else if(index == 6 && piece != null && piece.properties.getStage() == SpectrobeProperties.Stage.CHILD) {
+        }
+
+        if (index == 6 && piece != null && piece.properties.getStage() == SpectrobeProperties.Stage.CHILD) {
             gridData[index].spectrobe = piece;
             parent.parent.getMenu().setTeamMember(index, piece.SpectrobeUUID);
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     public void clear() {
@@ -69,14 +72,22 @@ public class TeamSpectrobesList extends AbstractWidget {
         SpectrobePiece s1 = gridData[i];
         SpectrobePiece s2 = gridData[j];
 
-        if(i < 6 && j < 6 && i != j) {
+        if (i < 6 && j < 6 && i != j) {
+            Spectrobe temp = s1.spectrobe;
 
-            Spectrobe temp;
-            temp = s1.spectrobe;
             gridData[i].spectrobe = s2.spectrobe;
             gridData[j].spectrobe = temp;
-            parent.parent.getMenu().setTeamMember(i, gridData[i].spectrobe != null? gridData[i].spectrobe.SpectrobeUUID : null);
-            parent.parent.getMenu().setTeamMember(j, gridData[j].spectrobe != null? gridData[j].spectrobe.SpectrobeUUID : null);
+
+            parent.parent.getMenu().setTeamMember(
+                    i,
+                    gridData[i].spectrobe != null ? gridData[i].spectrobe.SpectrobeUUID : null
+            );
+
+            parent.parent.getMenu().setTeamMember(
+                    j,
+                    gridData[j].spectrobe != null ? gridData[j].spectrobe.SpectrobeUUID : null
+            );
+
             return true;
         }
 
@@ -88,7 +99,19 @@ public class TeamSpectrobesList extends AbstractWidget {
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput pNarrationElementOutput) {
+    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        /*
+         * Intentionally empty.
+         *
+         * TeamSpectrobesList acts as a logical container for SpectrobePiece slots.
+         * The original 1.19.1 class did not render the slots directly, so rendering
+         * should continue to be handled by the parent PrizmodPage / PrizmodScreen
+         * code that iterates over getAll() and draws the SpectrobePiece instances.
+         */
+    }
 
+    @Override
+    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
+        defaultButtonNarrationText(narrationElementOutput);
     }
 }

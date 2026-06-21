@@ -11,13 +11,17 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 public class EntityMossari extends EntityMammalSpectrobe {
+    private static final RawAnimation WALK_ANIM = RawAnimation.begin().thenLoop("animation.mossari.walk");
+    private static final RawAnimation SIT_ANIM = RawAnimation.begin().thenPlayAndHold("animation.mossari.sit");
 
     public EntityMossari(EntityType<EntityMossari> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
     }
 
+    @Override
     public Spectrobe GetNewSpectrobeInstance() {
         return SpectrobeRegistry.Mossari.copy(false);
     }
@@ -33,7 +37,7 @@ public class EntityMossari extends EntityMammalSpectrobe {
     }
 
     @Override
-    public Class getSpectrobeClass() {
+    public Class<? extends EntitySpectrobe> getSpectrobeClass() {
         return EntityMossari.class;
     }
 
@@ -44,16 +48,15 @@ public class EntityMossari extends EntityMammalSpectrobe {
 
     @Override
     public PlayState moveController(AnimationState<EntitySpectrobe> animationState) {
-        if(animationState.isMoving())
-        {
-            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.mossari.walk", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
-        } else if(animationState.getAnimatable().isOrderedToSit()) {
-            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.mossari.sit", ILoopType.EDefaultLoopTypes.HOLD_ON_LAST_FRAME));
-            return PlayState.CONTINUE;
-        }else {
-            return PlayState.STOP;
+        if (animationState.isMoving()) {
+            return animationState.setAndContinue(WALK_ANIM);
         }
+
+        if (animationState.getAnimatable().isOrderedToSit()) {
+            return animationState.setAndContinue(SIT_ANIM);
+        }
+
+        return PlayState.STOP;
     }
 
     @Override

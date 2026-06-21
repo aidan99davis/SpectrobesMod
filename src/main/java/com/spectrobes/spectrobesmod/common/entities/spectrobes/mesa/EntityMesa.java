@@ -11,20 +11,26 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 public class EntityMesa extends EntityMammalSpectrobe {
+    private static final RawAnimation WALK_ANIM = RawAnimation.begin().thenLoop("animation.mesa.walk");
+    private static final RawAnimation SIT_ANIM = RawAnimation.begin()
+            .thenPlay("animation.mesa.sitting")
+            .thenLoop("animation.mesa.sit");
+    private static final RawAnimation IDLE_ANIM = RawAnimation.begin().thenLoop("animation.mesa.idle");
 
     public EntityMesa(EntityType<EntityMesa> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
     }
 
+    @Override
     public Spectrobe GetNewSpectrobeInstance() {
         return SpectrobeRegistry.Mesa.copy(false);
     }
 
     @Override
     public EntityType<? extends EntitySpectrobe> getEvolutionRegistry() {
-//        return SpectrobesEntities.ENTITY_MESABONE.get();
         return null;
     }
 
@@ -34,7 +40,7 @@ public class EntityMesa extends EntityMammalSpectrobe {
     }
 
     @Override
-    public Class getSpectrobeClass() {
+    public Class<? extends EntitySpectrobe> getSpectrobeClass() {
         return EntityMesa.class;
     }
 
@@ -45,20 +51,15 @@ public class EntityMesa extends EntityMammalSpectrobe {
 
     @Override
     public PlayState moveController(AnimationState<EntitySpectrobe> animationState) {
-        if(animationState.isMoving())
-        {
-            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.mesa.walk", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
+        if (animationState.isMoving()) {
+            return animationState.setAndContinue(WALK_ANIM);
         }
-        else if(animationState.getAnimatable().isOrderedToSit()) {
-            animationState.getController().setAnimation(new AnimationBuilder()
-                    .addAnimation("animation.mesa.sitting", ILoopType.EDefaultLoopTypes.PLAY_ONCE)
-                    .addAnimation("animation.mesa.sit", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
-        } else {
-            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.mesa.idle", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
+
+        if (animationState.getAnimatable().isOrderedToSit()) {
+            return animationState.setAndContinue(SIT_ANIM);
         }
+
+        return animationState.setAndContinue(IDLE_ANIM);
     }
 
     @Override

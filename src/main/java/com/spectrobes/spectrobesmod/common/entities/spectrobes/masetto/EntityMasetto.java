@@ -11,13 +11,20 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 public class EntityMasetto extends EntityMammalSpectrobe {
+    private static final RawAnimation WALK_ANIM = RawAnimation.begin().thenLoop("animation.Masetto.walk");
+    private static final RawAnimation SIT_ANIM = RawAnimation.begin()
+            .thenPlay("animation.Masetto.sitting")
+            .thenLoop("animation.Masetto.sit");
+    private static final RawAnimation IDLE_ANIM = RawAnimation.begin().thenLoop("animation.Masetto.idle");
 
     public EntityMasetto(EntityType<EntityMasetto> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
     }
 
+    @Override
     public Spectrobe GetNewSpectrobeInstance() {
         return SpectrobeRegistry.Masetto.copy(false);
     }
@@ -33,7 +40,7 @@ public class EntityMasetto extends EntityMammalSpectrobe {
     }
 
     @Override
-    public Class getSpectrobeClass() {
+    public Class<? extends EntitySpectrobe> getSpectrobeClass() {
         return EntityMasetto.class;
     }
 
@@ -44,20 +51,15 @@ public class EntityMasetto extends EntityMammalSpectrobe {
 
     @Override
     public PlayState moveController(AnimationState<EntitySpectrobe> animationState) {
-        if(animationState.isMoving())
-        {
-            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.Masetto.walk", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
+        if (animationState.isMoving()) {
+            return animationState.setAndContinue(WALK_ANIM);
         }
-        else if(animationState.getAnimatable().isOrderedToSit()) {
-            animationState.getController().setAnimation(new AnimationBuilder()
-                    .addAnimation("animation.Masetto.sitting")
-                    .addAnimation("animation.Masetto.sit", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
-        } else {
-            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.Masetto.idle", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
+
+        if (animationState.getAnimatable().isOrderedToSit()) {
+            return animationState.setAndContinue(SIT_ANIM);
         }
+
+        return animationState.setAndContinue(IDLE_ANIM);
     }
 
     @Override

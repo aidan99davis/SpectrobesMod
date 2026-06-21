@@ -1,18 +1,13 @@
 package com.spectrobes.spectrobesmod.client.gui.prizmod.Pages;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.Components.MenuButton;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
 
 public class MenuPage extends PrizmodPage {
 
     public MenuPage(PrizmodScreen prizmodScreen) {
         super(prizmodScreen);
-    }
-
-    @Override
-    public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-        super.render(stack, mouseX, mouseY, partialTicks);
     }
 
     @Override
@@ -26,6 +21,11 @@ public class MenuPage extends PrizmodPage {
 
     @Override
     public void tick() {
+
+    }
+
+    @Override
+    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
 
     }
 }

@@ -11,13 +11,21 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 public class EntityMossarito extends EntityMammalSpectrobe {
+    private static final RawAnimation WALK_ANIM = RawAnimation.begin().thenPlay("animation.mossarito.walk");
+    private static final RawAnimation SIT_ANIM = RawAnimation.begin()
+            .thenPlay("animation.mossarito.sitting")
+            .thenLoop("animation.mossarito.sit");
+    private static final RawAnimation ATTACK_ANIM = RawAnimation.begin().thenPlay("animation.mossarito.attack");
+    private static final RawAnimation IDLE_ANIM = RawAnimation.begin().thenPlay("animation.mossarito.idle");
 
     public EntityMossarito(EntityType<EntityMossarito> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
     }
 
+    @Override
     public Spectrobe GetNewSpectrobeInstance() {
         return SpectrobeRegistry.Mossarito.copy(false);
     }
@@ -33,7 +41,7 @@ public class EntityMossarito extends EntityMammalSpectrobe {
     }
 
     @Override
-    public Class getSpectrobeClass() {
+    public Class<? extends EntitySpectrobe> getSpectrobeClass() {
         return EntityMossarito.class;
     }
 
@@ -44,24 +52,19 @@ public class EntityMossarito extends EntityMammalSpectrobe {
 
     @Override
     public PlayState moveController(AnimationState<EntitySpectrobe> animationState) {
-        if(animationState.isMoving())
-        {
-            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.mossarito.walk", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
-            return PlayState.CONTINUE;
+        if (animationState.isMoving()) {
+            return animationState.setAndContinue(WALK_ANIM);
         }
-        else if(animationState.getAnimatable().isOrderedToSit()) {
-            animationState.getController().setAnimation(new AnimationBuilder()
-                    .addAnimation("animation.mossarito.sitting", ILoopType.EDefaultLoopTypes.PLAY_ONCE)
-                    .addAnimation("animation.mossarito.sit", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
-        } else if(animationState.getAnimatable().isAttacking()) {
-            animationState.getController().setAnimation(new AnimationBuilder()
-                    .addAnimation("animation.mossarito.attack", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
-            return PlayState.CONTINUE;
-        } else {
-            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.mossarito.idle", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
-            return PlayState.CONTINUE;
+
+        if (animationState.getAnimatable().isOrderedToSit()) {
+            return animationState.setAndContinue(SIT_ANIM);
         }
+
+        if (animationState.getAnimatable().isAttacking()) {
+            return animationState.setAndContinue(ATTACK_ANIM);
+        }
+
+        return animationState.setAndContinue(IDLE_ANIM);
     }
 
     @Override

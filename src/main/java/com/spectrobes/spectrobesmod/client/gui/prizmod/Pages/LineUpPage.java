@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class LineUpPage extends PrizmodPage {
+
     private final AllSpectrobesList allSpectrobesGrid;
     private final TeamSpectrobesList teamSpectrobesGrid;
 
@@ -36,16 +37,17 @@ public class LineUpPage extends PrizmodPage {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         super.renderWidget(guiGraphics, mouseX, mouseY, partialTicks);
 
-        if (this.selectedButton != null) {
+        if (this.selectedButton != null && this.selectedButton.piece != null) {
             this.selectedButton.piece.drawAdditionalAtCursor(guiGraphics, mouseX, mouseY);
         }
     }
 
     @Override
     public void init() {
+        this.selectedButton = null;
         this.buttons.clear();
 
         this.addButton(
@@ -53,9 +55,7 @@ public class LineUpPage extends PrizmodPage {
                                 Component.literal("Prev"),
                                 button -> {
                                     this.allSpectrobesGrid.previousPage();
-                                    this.parent.removeButtons(getButtons());
-                                    this.init();
-                                    this.setFocused(true);
+                                    rebuildButtons();
                                 }
                         )
                         .bounds(this.parent.width / 2 - 60, 45, 60, 20)
@@ -67,9 +67,7 @@ public class LineUpPage extends PrizmodPage {
                                 Component.literal("Next"),
                                 button -> {
                                     this.allSpectrobesGrid.nextPage();
-                                    this.parent.removeButtons(getButtons());
-                                    this.init();
-                                    this.setFocused(true);
+                                    rebuildButtons();
                                 }
                         )
                         .bounds(this.parent.width / 2, 45, 60, 20)
@@ -81,25 +79,44 @@ public class LineUpPage extends PrizmodPage {
         super.init();
     }
 
+    private void rebuildButtons() {
+        this.selectedButton = null;
+        this.parent.removeButtons(getButtons());
+        this.init();
+        this.setFocused(true);
+    }
+
     private void populateGrid() {
         this.teamSpectrobesGrid.clear();
         this.allSpectrobesGrid.clear();
 
+        for (SpectrobePiece spectrobePiece : this.teamSpectrobesGrid.getAll()) {
+            spectrobePiece.current = false;
+            spectrobePiece.setSelected(false);
+        }
+
+        for (SpectrobePiece spectrobePiece : this.allSpectrobesGrid.getAll()) {
+            spectrobePiece.current = false;
+            spectrobePiece.setSelected(false);
+        }
+
         Map<Integer, UUID> teamUuids = this.parent.getMenu().getCurrentTeamUUIDs();
+        UUID currentSelectedUuid = this.parent.getMenu().getCurrentSelectedUUID();
 
         for (Spectrobe spectrobe : this.parent.getMenu().getOwnedSpectrobes()) {
             boolean dontAdd = false;
 
-            for (int i = 0; i < 7; i++) {
+            for (int i = 0; i < TeamSpectrobesList.GRID_SIZE; i++) {
                 UUID teamUuid = teamUuids.get(i);
 
                 if (teamUuid != null && teamUuid.equals(spectrobe.SpectrobeUUID)) {
-                    if (teamUuid.equals(this.parent.getMenu().getCurrentSelectedUUID())) {
-                        this.teamSpectrobesGrid.setSlotCurrent(i);
+                    if (teamUuid.equals(currentSelectedUuid)) {
+                        this.teamSpectrobesGrid.gridData[i].current = true;
                     }
 
                     this.teamSpectrobesGrid.populateSlot(i, spectrobe);
                     dontAdd = true;
+                    break;
                 }
             }
 
@@ -130,17 +147,23 @@ public class LineUpPage extends PrizmodPage {
                                 this.parent.getMenu().spawnSpectrobe(spectrobe);
                             }
                         }
-                    } else if (Screen.hasAltDown() && !teamSpectrobe) {
+
+                        return;
+                    }
+
+                    if (Screen.hasAltDown() && !teamSpectrobe) {
                         if (spectrobePiece.spectrobe != null) {
                             if (this.parent.player.level().isClientSide()) {
                                 Spectrobe spectrobe = spectrobePiece.spectrobe;
                                 this.parent.getMenu().releaseSpectrobe(spectrobe);
-                                populateGrid();
+                                rebuildButtons();
                             }
                         }
-                    } else {
-                        setSelectedSpectrobe((SpectrobeButton) onClick);
+
+                        return;
                     }
+
+                    setSelectedSpectrobe((SpectrobeButton) onClick);
                 },
                 null
         );
@@ -152,11 +175,12 @@ public class LineUpPage extends PrizmodPage {
 
             if (this.allSpectrobesGrid.getAll().contains(this.selectedButton.piece)
                     && this.teamSpectrobesGrid.getAll().contains(button.piece)) {
+
                 if (this.teamSpectrobesGrid.addSpectrobe(
                         this.teamSpectrobesGrid.getAll().indexOf(button.piece),
                         this.selectedButton.piece.spectrobe
                 )) {
-                    populateGrid();
+                    rebuildButtons();
                 }
 
                 this.selectedButton = null;
@@ -165,11 +189,12 @@ public class LineUpPage extends PrizmodPage {
 
             if (this.teamSpectrobesGrid.getAll().contains(this.selectedButton.piece)
                     && this.teamSpectrobesGrid.getAll().contains(button.piece)) {
+
                 if (this.teamSpectrobesGrid.swapSpectrobes(
                         this.teamSpectrobesGrid.getAll().indexOf(button.piece),
                         this.teamSpectrobesGrid.getAll().indexOf(this.selectedButton.piece)
                 )) {
-                    populateGrid();
+                    rebuildButtons();
                 }
 
                 this.selectedButton = null;
@@ -178,11 +203,12 @@ public class LineUpPage extends PrizmodPage {
 
             if (this.teamSpectrobesGrid.getAll().contains(this.selectedButton.piece)
                     && this.allSpectrobesGrid.getAll().contains(button.piece)) {
+
                 if (this.teamSpectrobesGrid.addSpectrobe(
                         this.teamSpectrobesGrid.getAll().indexOf(this.selectedButton.piece),
                         button.piece.spectrobe
                 )) {
-                    populateGrid();
+                    rebuildButtons();
                     this.selectedButton = null;
                     return;
                 }
@@ -200,10 +226,6 @@ public class LineUpPage extends PrizmodPage {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        if (this.allSpectrobesGrid.mouseClicked(mouseX, mouseY, mouseButton)) {
-            return true;
-        }
-
         if (this.teamSpectrobesGrid.mouseClicked(mouseX, mouseY, mouseButton)) {
             return true;
         }
@@ -213,6 +235,6 @@ public class LineUpPage extends PrizmodPage {
 
     @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
-
+        defaultButtonNarrationText(narrationElementOutput);
     }
 }

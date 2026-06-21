@@ -8,8 +8,12 @@ import net.minecraft.world.level.Level;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 public class EntityVizbar extends EntityKrawl {
+    private static final RawAnimation IDLE_ANIMATION =
+            RawAnimation.begin().thenLoop("animation.subar.idle");
+
     public EntityVizbar(EntityType<? extends Monster> type, Level worldIn) {
         super(type, worldIn);
     }
@@ -21,8 +25,7 @@ public class EntityVizbar extends EntityKrawl {
 
     @Override
     public PlayState moveController(AnimationState<EntityKrawl> animationState) {
-        animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.subar.idle", ILoopType.EDefaultLoopTypes.LOOP));
-        return PlayState.CONTINUE;
+        return animationState.setAndContinue(IDLE_ANIMATION);
     }
 
     @Override

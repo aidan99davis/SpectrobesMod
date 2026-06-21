@@ -30,18 +30,18 @@ public class SpectrobeFollowLeaderGoal extends Goal {
             return true;
         } else {
             Predicate<EntitySpectrobe> predicate = (p_25258_) -> p_25258_.canBeFollowed() || !p_25258_.isFollower();
-            EntitySpectrobe adult = this.mob.getEvolutionRegistry() == null? null : this.mob.getEvolutionRegistry().create(mob.level);
+            EntitySpectrobe adult = this.mob.getEvolutionRegistry() == null? null : this.mob.getEvolutionRegistry().create(mob.level());
             EntitySpectrobe evolved = null;//adult.getEvolutionRegistry().create(mob.level);
 
             if(evolved != null) {
-                List<? extends EntitySpectrobe> list2 = this.mob.level.getEntitiesOfClass(evolved.getSpectrobeClass(), this.mob.getBoundingBox().inflate(8.0D, 8.0D, 8.0D), predicate);
+                List<? extends EntitySpectrobe> list2 = this.mob.level().getEntitiesOfClass(evolved.getSpectrobeClass(), this.mob.getBoundingBox().inflate(8.0D, 8.0D, 8.0D), predicate);
                 EntitySpectrobe abstractschoolingfish = DataFixUtils.orElse(list2.stream().filter(EntitySpectrobe::canBeFollowed).findAny(), null);
                 if(abstractschoolingfish == null) return false;
                 this.mob.startFollowing(abstractschoolingfish);
                 return this.mob.isFollower();
             }
             if(adult != null) {
-                List<? extends EntitySpectrobe> list = this.mob.level.getEntitiesOfClass(adult.getSpectrobeClass(), this.mob.getBoundingBox().inflate(16.0D, 16.0D, 16.0D), predicate);
+                List<? extends EntitySpectrobe> list = this.mob.level().getEntitiesOfClass(adult.getSpectrobeClass(), this.mob.getBoundingBox().inflate(16.0D, 16.0D, 16.0D), predicate);
                 EntitySpectrobe abstractschoolingfish = DataFixUtils.orElse(list.stream().filter(EntitySpectrobe::canBeFollowed).findAny(), null);
                 if(abstractschoolingfish == null) return false;
                 this.mob.startFollowing(abstractschoolingfish);

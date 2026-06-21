@@ -11,20 +11,32 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 public class EntityDongora extends EntityMammalSpectrobe {
+    private static final RawAnimation WALK_ANIMATION =
+            RawAnimation.begin().thenLoop("animation.dongora.walk");
 
-    public EntityDongora(EntityType<EntityDongora> entityTypeIn, Level worldIn) {
-        super(entityTypeIn, worldIn);
+    private static final RawAnimation SITTING_ANIMATION =
+            RawAnimation.begin()
+                    .thenPlay("animation.dongora.sitting")
+                    .thenLoop("animation.dongora.sit");
+
+    private static final RawAnimation IDLE_ANIMATION =
+            RawAnimation.begin().thenLoop("animation.dongora.idle");
+
+    public EntityDongora(EntityType<EntityDongora> entityType, Level level) {
+        super(entityType, level);
     }
 
+    @Override
     public Spectrobe GetNewSpectrobeInstance() {
         return SpectrobeRegistry.Dongora.copy(false);
     }
 
     @Override
     public EntityType<? extends EntitySpectrobe> getEvolutionRegistry() {
-//        return SpectrobesEntities.ENTITY_DONGIGA.get();
+        // return SpectrobesEntities.ENTITY_DONGIGA.get();
         return null;
     }
 
@@ -34,6 +46,7 @@ public class EntityDongora extends EntityMammalSpectrobe {
     }
 
     @Override
+    @SuppressWarnings("rawtypes")
     public Class getSpectrobeClass() {
         return EntityDongora.class;
     }
@@ -45,20 +58,17 @@ public class EntityDongora extends EntityMammalSpectrobe {
 
     @Override
     public PlayState moveController(AnimationState<EntitySpectrobe> animationState) {
-        if(animationState.isMoving())
-        {
-            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dongora.walk", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
+        EntitySpectrobe spectrobe = animationState.getAnimatable();
+
+        if (animationState.isMoving()) {
+            return animationState.setAndContinue(WALK_ANIMATION);
         }
-        else if(animationState.getAnimatable().isOrderedToSit()) {
-            animationState.getController().setAnimation(new AnimationBuilder()
-                    .addAnimation("animation.dongora.sitting", ILoopType.EDefaultLoopTypes.PLAY_ONCE)
-                    .addAnimation("animation.dongora.sit", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
-        } else {
-            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dongora.idle", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
+
+        if (spectrobe.isOrderedToSit()) {
+            return animationState.setAndContinue(SITTING_ANIMATION);
         }
+
+        return animationState.setAndContinue(IDLE_ANIMATION);
     }
 
     @Override

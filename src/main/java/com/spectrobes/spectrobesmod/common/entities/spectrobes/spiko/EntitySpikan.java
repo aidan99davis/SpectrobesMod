@@ -11,12 +11,17 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 public class EntitySpikan extends EntityMammalSpectrobe {
+    private static final RawAnimation WALK_ANIM = RawAnimation.begin().thenLoop("animation.spikan.walk");
+    private static final RawAnimation SIT_ANIM = RawAnimation.begin().thenPlay("animation.spikan.sit");
+
     public EntitySpikan(EntityType<EntitySpikan> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
     }
 
+    @Override
     public Spectrobe GetNewSpectrobeInstance() {
         return SpectrobeRegistry.Spikan.copy(false);
     }
@@ -32,7 +37,7 @@ public class EntitySpikan extends EntityMammalSpectrobe {
     }
 
     @Override
-    public Class getSpectrobeClass() {
+    public Class<? extends EntitySpectrobe> getSpectrobeClass() {
         return EntitySpikan.class;
     }
 
@@ -42,23 +47,19 @@ public class EntitySpikan extends EntityMammalSpectrobe {
     }
 
     @Override
-    public PlayState moveController(AnimationState<EntitySpectrobe> animationState)
-    {
-        animationState.getController().transitionLength(2);
-        if(animationState.isMoving())
-        {
-            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.spikan.walk", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
+    public PlayState moveController(AnimationState<EntitySpectrobe> animationState) {
+        if (animationState.isMoving()) {
+            return animationState.setAndContinue(WALK_ANIM);
         }
-        else if(this.isOrderedToSit()) {
-            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.spikan.sit", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
-            return PlayState.CONTINUE;
-        } else {
-            if(this.getKillCredit() != null) {
-                animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.spikan.walk", ILoopType.EDefaultLoopTypes.LOOP));
-                return PlayState.CONTINUE;
-            }
+
+        if (animationState.getAnimatable().isOrderedToSit()) {
+            return animationState.setAndContinue(SIT_ANIM);
         }
+
+        if (this.getKillCredit() != null) {
+            return animationState.setAndContinue(WALK_ANIM);
+        }
+
         return PlayState.STOP;
     }
 

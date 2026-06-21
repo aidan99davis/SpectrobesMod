@@ -8,21 +8,24 @@ import net.minecraft.world.level.Level;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 public class EntitySubar extends EntityKrawl {
-    public EntitySubar(EntityType<? extends Monster> type, Level worldIn) {
-        super(type, worldIn);
+    private static final RawAnimation IDLE_ANIMATION =
+            RawAnimation.begin().thenLoop("animation.subar.idle");
+
+    public EntitySubar(EntityType<? extends Monster> entityType, Level level) {
+        super(entityType, level);
     }
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return animationControllers;
+        return this.animationControllers;
     }
 
     @Override
     public PlayState moveController(AnimationState<EntityKrawl> animationState) {
-        animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.subar.idle", ILoopType.EDefaultLoopTypes.LOOP));
-        return PlayState.CONTINUE;
+        return animationState.setAndContinue(IDLE_ANIMATION);
     }
 
     @Override

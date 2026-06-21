@@ -7,33 +7,35 @@ import net.minecraft.world.level.Level;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 public class EntitySwar extends EntityKrawl {
-    public EntitySwar(EntityType<? extends EntityKrawl> type, Level worldIn) {
-        super(type, worldIn);
+    private static final RawAnimation WALK_ANIMATION =
+            RawAnimation.begin().thenLoop("animation.swar.walk");
+
+    public EntitySwar(EntityType<? extends EntityKrawl> entityType, Level level) {
+        super(entityType, level);
     }
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return animationControllers;
+        return this.animationControllers;
     }
 
     @Override
     public PlayState moveController(AnimationState<EntityKrawl> animationState) {
-        animationState.getController().transitionLengthTicks = 2;
-        if(animationState.isMoving()) {
-            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.swar.walk", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
+        animationState.getController().setAnimationSpeed(1.0D);
+        animationState.getController().transitionLength(2);
 
-        } else {
-//            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.swar.attack", true));
-            return PlayState.STOP;
+        if (animationState.isMoving()) {
+            return animationState.setAndContinue(WALK_ANIMATION);
         }
+
+        return PlayState.STOP;
     }
 
     @Override
     public KrawlProperties GetKrawlProperties() {
         return KrawlRegistry.Swar_Properties.copy();
     }
-
 }

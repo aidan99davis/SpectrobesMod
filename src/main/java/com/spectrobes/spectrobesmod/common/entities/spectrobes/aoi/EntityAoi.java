@@ -8,24 +8,31 @@ import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
 import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesFossilsRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 public class EntityAoi extends EntityAvianSpectrobe {
+    private static final RawAnimation SIT_ANIMATION =
+            RawAnimation.begin().thenLoop("animation.aoi.sit");
 
-    public EntityAoi(EntityType<EntityAoi> entityTypeIn, Level worldIn) {
-        super(entityTypeIn, worldIn);
+    private static final RawAnimation IDLE_ANIMATION =
+            RawAnimation.begin().thenLoop("animation.aoi.idle");
+
+    public EntityAoi(EntityType<EntityAoi> entityType, Level level) {
+        super(entityType, level);
     }
 
+    @Override
     public Spectrobe GetNewSpectrobeInstance() {
         return SpectrobeRegistry.Aoi.copy(false);
     }
 
     @Override
     public EntityType<? extends EntitySpectrobe> getEvolutionRegistry() {
-//        return SpectrobesEntities.ENTITY_AOBA.get();
+        // return SpectrobesEntities.ENTITY_AOBA.get();
         return null;
     }
 
@@ -35,6 +42,7 @@ public class EntityAoi extends EntityAvianSpectrobe {
     }
 
     @Override
+    @SuppressWarnings("rawtypes")
     public Class getSpectrobeClass() {
         return EntityAoi.class;
     }
@@ -44,20 +52,17 @@ public class EntityAoi extends EntityAvianSpectrobe {
         return SpectrobesEntities.ENTITY_AOI.get();
     }
 
-
     @Override
     public PlayState moveController(AnimationState<EntitySpectrobe> animationState) {
-        if(animationState.getAnimatable().isOrderedToSit())
-        {
-            animationState.getController().setAnimationSpeed(2);
-            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.aoi.sit", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
-        } else {
-            animationState.getController().setAnimationSpeed(5);
-            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.aoi.idle", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
+        EntitySpectrobe spectrobe = animationState.getAnimatable();
+
+        if (spectrobe.isOrderedToSit()) {
+            animationState.getController().setAnimationSpeed(2.0D);
+            return animationState.setAndContinue(SIT_ANIMATION);
         }
 
+        animationState.getController().setAnimationSpeed(5.0D);
+        return animationState.setAndContinue(IDLE_ANIMATION);
     }
 
     @Override

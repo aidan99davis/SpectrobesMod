@@ -11,12 +11,17 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 public class EntityVilar extends EntityMammalSpectrobe {
+    private static final RawAnimation WALK_ANIM = RawAnimation.begin().thenLoop("animation.vilar.walk");
+    private static final RawAnimation IDLE_ANIM = RawAnimation.begin().thenLoop("animation.vilar.idle");
+
     public EntityVilar(EntityType<EntityVilar> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
     }
 
+    @Override
     public Spectrobe GetNewSpectrobeInstance() {
         return SpectrobeRegistry.Vilar.copy(false);
     }
@@ -32,29 +37,26 @@ public class EntityVilar extends EntityMammalSpectrobe {
     }
 
     @Override
-    public Class getSpectrobeClass() {
+    public Class<? extends EntitySpectrobe> getSpectrobeClass() {
         return EntityVilar.class;
     }
 
     @Override
-    protected EntityType<EntityVilar> getChildForLineage() {
+    protected EntityType<? extends EntitySpectrobe> getChildForLineage() {
         return SpectrobesEntities.ENTITY_VILAR.get();
     }
 
     @Override
     public PlayState moveController(AnimationState<EntitySpectrobe> animationState) {
-        animationState.getController().transitionLength(2);
-        if(animationState.isMoving())
-        {
-            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.vilar.walk", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
+        if (animationState.isMoving()) {
+            return animationState.setAndContinue(WALK_ANIM);
         }
-        else if(this.isOrderedToSit()) {
-            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.vilar.idle", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
-        }
-        return PlayState.STOP;
 
+        if (animationState.getAnimatable().isOrderedToSit()) {
+            return animationState.setAndContinue(IDLE_ANIM);
+        }
+
+        return PlayState.STOP;
     }
 
     @Override

@@ -777,6 +777,11 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityWi
         this.setHealth(Math.min(spectrobeInstance.currentHealth, getMaxHealth()));
     }
 
+    @Override
+    public double getTick(Object object) {
+        return this.tickCount;
+    }
+
     public Nature getNature() {
         return getSpectrobeData().properties.getNature();
     }
@@ -792,6 +797,12 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityWi
     @Override
     public boolean isInLove() {
         return this.entityData.get(TICKS_TILL_MATE) == 0;
+    }
+
+
+    @Override
+    public boolean isFood(ItemStack itemStack) {
+        return false;
     }
 
     @Nullable

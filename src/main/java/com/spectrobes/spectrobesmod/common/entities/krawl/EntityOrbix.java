@@ -1,6 +1,5 @@
 package com.spectrobes.spectrobesmod.common.entities.krawl;
 
-import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.entities.krawl.goals.AttackSpectrobeGoal;
 import com.spectrobes.spectrobesmod.common.entities.krawl.goals.AttackSpectrobeMasterGoal;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
@@ -11,33 +10,41 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.PlayState;
-
-import javax.annotation.ParametersAreNonnullByDefault;
+import software.bernie.geckolib.animation.RawAnimation;
 
 public class EntityOrbix extends EntityBossKrawl {
+    private static final String TAG_LAST_HURT_TICKS = "LAST_HURT_TICKS";
+
+    private static final RawAnimation IDLE_ANIMATION =
+            RawAnimation.begin().thenLoop("animation.orbix.idle");
+
+    private static final RawAnimation ATTACK_ANIMATION =
+            RawAnimation.begin()
+                    .thenPlay("animation.orbix.attack")
+                    .thenLoop("animation.orbix.idle");
 
     private static final EntityDataAccessor<Integer> LAST_HURT_TICKS =
-            SynchedEntityData.defineId(EntityOrbix.class,
-                    EntityDataSerializers.INT);
+            SynchedEntityData.defineId(EntityOrbix.class, EntityDataSerializers.INT);
 
     private static final EntityDataAccessor<Boolean> IS_ATTACKING =
-            SynchedEntityData.defineId(EntityOrbix.class,
-                    EntityDataSerializers.BOOLEAN);
+            SynchedEntityData.defineId(EntityOrbix.class, EntityDataSerializers.BOOLEAN);
 
-    public EntityOrbix(EntityType<? extends Monster> type, Level worldIn) {
-        super(type, worldIn);
-        setPersistenceRequired();
+    public EntityOrbix(EntityType<? extends Monster> entityType, Level level) {
+        super(entityType, level);
+        this.setPersistenceRequired();
     }
 
     @Override
     protected void registerGoals() {
         super.registerGoals();
+
         this.goalSelector.addGoal(0, new AttackSpectrobeMasterGoal(this, true, true));
         this.goalSelector.addGoal(0, new AttackSpectrobeGoal(this, true, true));
     }
@@ -50,33 +57,36 @@ public class EntityOrbix extends EntityBossKrawl {
     }
 
     @Override
-    @ParametersAreNonnullByDefault
-    public void addAdditionalSaveData(CompoundTag pCompound) {
-        super.addAdditionalSaveData(pCompound);
-        pCompound.putInt("LAST_HURT_TICKS", entityData.get(LAST_HURT_TICKS));
+    public void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+        compound.putInt(TAG_LAST_HURT_TICKS, this.entityData.get(LAST_HURT_TICKS));
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag pCompound) {
-        super.readAdditionalSaveData(pCompound);
-        entityData.set(LAST_HURT_TICKS, pCompound.getInt("LAST_HURT_TICKS"));
+    public void readAdditionalSaveData(CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+        this.entityData.set(LAST_HURT_TICKS, compound.getInt(TAG_LAST_HURT_TICKS));
     }
 
     @Override
-    protected void actuallyHurt(DamageSource damageSrc, float damageAmount) {
-        if(damageSrc != DamageSource.CRAMMING) {
-            super.actuallyHurt(damageSrc, damageAmount);
-            entityData.set(LAST_HURT_TICKS, 0);
+    protected void actuallyHurt(DamageSource damageSource, float damageAmount) {
+        if (damageSource.is(DamageTypes.CRAMMING)) {
+            return;
         }
+
+        super.actuallyHurt(damageSource, damageAmount);
+        this.entityData.set(LAST_HURT_TICKS, 0);
     }
 
     @Override
     public void setIsAttacking(boolean attacking) {
-        entityData.set(IS_ATTACKING, attacking);
+        this.entityData.set(IS_ATTACKING, attacking);
         super.setIsAttacking(attacking);
     }
 
-    public boolean isAttacking() {return entityData.get(IS_ATTACKING); }
+    public boolean isAttacking() {
+        return this.entityData.get(IS_ATTACKING);
+    }
 
     @Override
     public BossEvent.BossBarColor getBossNameColour() {
@@ -90,16 +100,16 @@ public class EntityOrbix extends EntityBossKrawl {
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return animationControllers;
+        return this.animationControllers;
     }
 
     @Override
     public PlayState moveController(AnimationState<EntityKrawl> animationState) {
-        if(this.isAttacking()) {
-            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.orbix.idle", ILoopType.EDefaultLoopTypes.LOOP).addAnimation("animation.orbix.attack"));
-        } else {
-            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.orbix.idle", ILoopType.EDefaultLoopTypes.LOOP));
-        }
-        return PlayState.CONTINUE;
+        return animationState.setAndContinue(this.isAttacking() ? ATTACK_ANIMATION : IDLE_ANIMATION);
+    }
+
+    @Override
+    public double getTick(Object object) {
+        return this.tickCount;
     }
 }

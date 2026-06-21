@@ -11,13 +11,17 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 public class EntitySegu extends EntityMammalSpectrobe {
+    private static final RawAnimation WALK_ANIM = RawAnimation.begin().thenLoop("animation.segu.walk");
+    private static final RawAnimation IDLE_ANIM = RawAnimation.begin().thenLoop("animation.segu.idle");
 
     public EntitySegu(EntityType<EntitySegu> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
     }
 
+    @Override
     public Spectrobe GetNewSpectrobeInstance() {
         return SpectrobeRegistry.Segu.copy(false);
     }
@@ -33,7 +37,7 @@ public class EntitySegu extends EntityMammalSpectrobe {
     }
 
     @Override
-    public Class getSpectrobeClass() {
+    public Class<? extends EntitySpectrobe> getSpectrobeClass() {
         return EntitySegu.class;
     }
 
@@ -44,16 +48,14 @@ public class EntitySegu extends EntityMammalSpectrobe {
 
     @Override
     public PlayState moveController(AnimationState<EntitySpectrobe> animationState) {
-        animationState.getController().transitionLength(2);
-        if(!(animationSpeed > -0.15F && animationSpeed < 0.15F))
-        {
-            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.segu.walk", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
+        if (animationState.isMoving()) {
+            return animationState.setAndContinue(WALK_ANIM);
         }
-        if(this.isOrderedToSit()) {
-            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.segu.idle", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
+
+        if (animationState.getAnimatable().isOrderedToSit()) {
+            return animationState.setAndContinue(IDLE_ANIM);
         }
+
         return PlayState.STOP;
     }
 

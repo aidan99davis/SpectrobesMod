@@ -11,13 +11,25 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 public class EntityDongor extends EntityMammalSpectrobe {
+    private static final RawAnimation WALK_ANIMATION =
+            RawAnimation.begin().thenLoop("animation.dongor.walk");
 
-    public EntityDongor(EntityType<EntityDongor> entityTypeIn, Level worldIn) {
-        super(entityTypeIn, worldIn);
+    private static final RawAnimation SITTING_ANIMATION =
+            RawAnimation.begin()
+                    .thenPlay("animation.dongor.sitting")
+                    .thenLoop("animation.dongor.sit");
+
+    private static final RawAnimation IDLE_ANIMATION =
+            RawAnimation.begin().thenLoop("animation.dongor.idle");
+
+    public EntityDongor(EntityType<EntityDongor> entityType, Level level) {
+        super(entityType, level);
     }
 
+    @Override
     public Spectrobe GetNewSpectrobeInstance() {
         return SpectrobeRegistry.Dongor.copy(false);
     }
@@ -33,6 +45,7 @@ public class EntityDongor extends EntityMammalSpectrobe {
     }
 
     @Override
+    @SuppressWarnings("rawtypes")
     public Class getSpectrobeClass() {
         return EntityDongor.class;
     }
@@ -44,20 +57,17 @@ public class EntityDongor extends EntityMammalSpectrobe {
 
     @Override
     public PlayState moveController(AnimationState<EntitySpectrobe> animationState) {
-        if(animationState.isMoving())
-        {
-            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dongor.walk", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
+        EntitySpectrobe spectrobe = animationState.getAnimatable();
+
+        if (animationState.isMoving()) {
+            return animationState.setAndContinue(WALK_ANIMATION);
         }
-        else if(animationState.getAnimatable().isOrderedToSit()) {
-            animationState.getController().setAnimation(new AnimationBuilder()
-                    .addAnimation("animation.dongor.sitting", ILoopType.EDefaultLoopTypes.PLAY_ONCE)
-                    .addAnimation("animation.dongor.sit", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
-        } else {
-            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.dongor.idle", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
+
+        if (spectrobe.isOrderedToSit()) {
+            return animationState.setAndContinue(SITTING_ANIMATION);
         }
+
+        return animationState.setAndContinue(IDLE_ANIMATION);
     }
 
     @Override

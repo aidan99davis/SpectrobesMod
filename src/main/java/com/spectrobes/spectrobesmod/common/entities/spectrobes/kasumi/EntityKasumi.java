@@ -11,20 +11,32 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 public class EntityKasumi extends EntityMammalSpectrobe {
+    private static final RawAnimation WALK_ANIMATION =
+            RawAnimation.begin().thenLoop("animation.kasumi.walk");
 
-    public EntityKasumi(EntityType<EntityKasumi> entityTypeIn, Level worldIn) {
-        super(entityTypeIn, worldIn);
+    private static final RawAnimation SITTING_ANIMATION =
+            RawAnimation.begin()
+                    .thenPlay("animation.kasumi.sitting")
+                    .thenLoop("animation.kasumi.sit");
+
+    private static final RawAnimation IDLE_ANIMATION =
+            RawAnimation.begin().thenLoop("animation.kasumi.idle");
+
+    public EntityKasumi(EntityType<EntityKasumi> entityType, Level level) {
+        super(entityType, level);
     }
 
+    @Override
     public Spectrobe GetNewSpectrobeInstance() {
         return SpectrobeRegistry.Kasumi.copy(false);
     }
 
     @Override
     public EntityType<? extends EntitySpectrobe> getEvolutionRegistry() {
-//        return SpectrobesEntities.ENTITY_KASUMITE.get();
+        // return SpectrobesEntities.ENTITY_KASUMITE.get();
         return null;
     }
 
@@ -34,6 +46,7 @@ public class EntityKasumi extends EntityMammalSpectrobe {
     }
 
     @Override
+    @SuppressWarnings("rawtypes")
     public Class getSpectrobeClass() {
         return EntityKasumi.class;
     }
@@ -45,20 +58,17 @@ public class EntityKasumi extends EntityMammalSpectrobe {
 
     @Override
     public PlayState moveController(AnimationState<EntitySpectrobe> animationState) {
-        if(animationState.isMoving())
-        {
-            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.kasumi.walk", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
+        EntitySpectrobe spectrobe = animationState.getAnimatable();
+
+        if (animationState.isMoving()) {
+            return animationState.setAndContinue(WALK_ANIMATION);
         }
-        else if(animationState.getAnimatable().isOrderedToSit()) {
-            animationState.getController().setAnimation(new AnimationBuilder()
-                    .addAnimation("animation.kasumi.sitting", ILoopType.EDefaultLoopTypes.PLAY_ONCE)
-                    .addAnimation("animation.kasumi.sit", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
-        } else {
-            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.kasumi.idle", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
+
+        if (spectrobe.isOrderedToSit()) {
+            return animationState.setAndContinue(SITTING_ANIMATION);
         }
+
+        return animationState.setAndContinue(IDLE_ANIMATION);
     }
 
     @Override

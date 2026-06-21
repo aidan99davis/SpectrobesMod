@@ -11,13 +11,20 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 public class EntityHarumi extends EntityCrustaceanSpectrobe {
+    private static final RawAnimation WALK_ANIMATION =
+            RawAnimation.begin().thenLoop("animation.harumi.walk");
 
-    public EntityHarumi(EntityType<EntityHarumi> entityTypeIn, Level worldIn) {
-        super(entityTypeIn, worldIn);
+    private static final RawAnimation IDLE_ANIMATION =
+            RawAnimation.begin().thenLoop("animation.harumi.idle");
+
+    public EntityHarumi(EntityType<EntityHarumi> entityType, Level level) {
+        super(entityType, level);
     }
 
+    @Override
     public Spectrobe GetNewSpectrobeInstance() {
         return SpectrobeRegistry.Harumi.copy(false);
     }
@@ -33,6 +40,7 @@ public class EntityHarumi extends EntityCrustaceanSpectrobe {
     }
 
     @Override
+    @SuppressWarnings("rawtypes")
     public Class getSpectrobeClass() {
         return EntityHarumi.class;
     }
@@ -49,18 +57,17 @@ public class EntityHarumi extends EntityCrustaceanSpectrobe {
 
     @Override
     public PlayState moveController(AnimationState<EntitySpectrobe> animationState) {
-//        moveAnimationController.transitionLengthTicks = 2;
-        if(animationState.isMoving())
-        {
-            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.harumi.walk", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
-        }
-        else if(animationState.getAnimatable().isOrderedToSit()) {
-            animationState.getController().setAnimation(new AnimationBuilder().addAnimation("animation.harumi.idle", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
-        }
-        return PlayState.STOP;
+        EntitySpectrobe spectrobe = animationState.getAnimatable();
 
+        if (animationState.isMoving()) {
+            return animationState.setAndContinue(WALK_ANIMATION);
+        }
+
+        if (spectrobe.isOrderedToSit()) {
+            return animationState.setAndContinue(IDLE_ANIMATION);
+        }
+
+        return PlayState.STOP;
     }
 
     @Override

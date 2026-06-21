@@ -50,9 +50,13 @@ public class EnergyBoltEntity extends ThrowableProjectile implements IHasNature,
     }
 
     @Override
-    protected void onHitEntity(EntityHitResult pResult) {
-        super.onHitEntity(pResult);
-        pResult.getEntity().hurt(DamageSource.thrown(this, this.getOwner()), AtkDamage);
+    protected void onHitEntity(EntityHitResult result) {
+        super.onHitEntity(result);
+
+        result.getEntity().hurt(
+                this.level().damageSources().thrown(this, this.getOwner()),
+                AtkDamage
+        );
     }
 
     @Override
