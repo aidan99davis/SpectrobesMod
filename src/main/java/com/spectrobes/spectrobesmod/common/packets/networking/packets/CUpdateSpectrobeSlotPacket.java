@@ -1,37 +1,50 @@
 package com.spectrobes.spectrobesmod.common.packets.networking.packets;
 
-
+import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobePacketHandler;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.core.UUIDUtil;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.UUID;
-import java.util.function.Supplier;
 
-public class CUpdateSpectrobeSlotPacket {
+public class CUpdateSpectrobeSlotPacket implements CustomPacketPayload {
 
-    public int slot;
+    public static final Type<CUpdateSpectrobeSlotPacket> TYPE = new Type<>(
+            ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "c_update_spectrobe_slot")
+    );
 
-    public UUID spectrobeUUID;
+    public static final StreamCodec<RegistryFriendlyByteBuf, CUpdateSpectrobeSlotPacket> STREAM_CODEC =
+            StreamCodec.ofMember(CUpdateSpectrobeSlotPacket::write, CUpdateSpectrobeSlotPacket::new);
+
+    public final int slot;
+    public final UUID spectrobeUUID;
 
     public CUpdateSpectrobeSlotPacket(int slot, UUID spectrobeUUID) {
         this.slot = slot;
         this.spectrobeUUID = spectrobeUUID;
     }
 
-    public void toBytes(FriendlyByteBuf buf) {
-        buf.writeUUID(spectrobeUUID);
-        buf.writeInt(slot);
+    private CUpdateSpectrobeSlotPacket(RegistryFriendlyByteBuf buffer) {
+        this.spectrobeUUID = UUIDUtil.STREAM_CODEC.decode(buffer);
+        this.slot = ByteBufCodecs.VAR_INT.decode(buffer);
     }
 
-    public static CUpdateSpectrobeSlotPacket fromBytes(FriendlyByteBuf buf) {
-        int slot = buf.readInt();
-        UUID spectrobeUUID = buf.readUUID();
-
-        return new CUpdateSpectrobeSlotPacket(slot, spectrobeUUID);
+    private void write(RegistryFriendlyByteBuf buffer) {
+        UUIDUtil.STREAM_CODEC.encode(buffer, this.spectrobeUUID);
+        ByteBufCodecs.VAR_INT.encode(buffer, this.slot);
     }
 
-    public boolean handle(Supplier<NetworkEvent.Context> ctx) {
-        return SpectrobePacketHandler.handlePacket(this, ctx);
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
+    }
+
+    public static void handle(CUpdateSpectrobeSlotPacket packet, IPayloadContext context) {
+        SpectrobePacketHandler.handlePacket(packet, context);
     }
 }

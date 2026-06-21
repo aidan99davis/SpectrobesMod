@@ -1,45 +1,63 @@
 package com.spectrobes.spectrobesmod.common.packets.networking.packets;
 
-
-import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
+import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
-import net.minecraft.network.FriendlyByteBuf;
+import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-import java.util.UUID;
-import java.util.function.Supplier;
+public class CSyncSpectrobeMasterPacket implements CustomPacketPayload {
 
-public class CSyncSpectrobeMasterPacket {
+    public static final Type<CSyncSpectrobeMasterPacket> TYPE = new Type<>(
+            ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "c_sync_spectrobe_master")
+    );
 
-    private UUID playerUuid;
-    private PlayerSpectrobeMaster capability;
+    public static final StreamCodec<RegistryFriendlyByteBuf, CSyncSpectrobeMasterPacket> STREAM_CODEC =
+            StreamCodec.ofMember(CSyncSpectrobeMasterPacket::write, CSyncSpectrobeMasterPacket::new);
+
+    private final PlayerSpectrobeMaster capability;
 
     public CSyncSpectrobeMasterPacket(PlayerSpectrobeMaster capability) {
         this.capability = capability;
     }
 
-    public void toBytes(FriendlyByteBuf buf) {
-        buf.writeNbt(capability.serializeNBT());
+    private CSyncSpectrobeMasterPacket(RegistryFriendlyByteBuf buf) {
+        PlayerSpectrobeMaster capability = new PlayerSpectrobeMaster();
+
+        CompoundTag tag = buf.readNbt();
+
+        if (tag != null) {
+            capability.deserializeNBT(buf.registryAccess(), tag);
+        }
+
+        this.capability = capability;
     }
 
-    public static CSyncSpectrobeMasterPacket fromBytes(FriendlyByteBuf buf) {
-        PlayerSpectrobeMaster cap = new PlayerSpectrobeMaster();
-        cap.deserializeNBT(buf.readNbt());
-
-        return new CSyncSpectrobeMasterPacket(cap);
+    private void write(RegistryFriendlyByteBuf buf) {
+        buf.writeNbt(this.capability.serializeNBT(buf.registryAccess()));
     }
 
-    public boolean handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            ServerPlayer player = ctx.get().getSender();
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
+    }
 
-            player.getCapability(SpectrobeMaster.INSTANCE)
-                    .ifPresent(playerSpectrobeMaster ->
-                            playerSpectrobeMaster.deserializeNBT(capability.serializeNBT()));
+    public static void handle(CSyncSpectrobeMasterPacket packet, IPayloadContext context) {
+        if (!(context.player() instanceof ServerPlayer player)) {
+            return;
+        }
 
-        });
-        ctx.get().setPacketHandled(true);
-        return true;
+        PlayerSpectrobeMaster playerSpectrobeMaster = player.getCapability(SpectrobeMaster.INSTANCE);
+
+        if (playerSpectrobeMaster == null) {
+            return;
+        }
+
+        playerSpectrobeMaster.copyFrom(packet.capability);
     }
 }

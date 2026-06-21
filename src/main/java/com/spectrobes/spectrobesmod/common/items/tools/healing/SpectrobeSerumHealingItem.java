@@ -4,11 +4,19 @@ import com.spectrobes.spectrobesmod.client.items.healing.renderer.SerumItemRende
 import com.spectrobes.spectrobesmod.common.items.minerals.IWorthGura;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.item.Item;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.function.Consumer;
 
 public class SpectrobeSerumHealingItem extends Item implements GeoAnimatable, IWorthGura {
-    public AnimationFactory animationControllers = GeckoLibUtil.createFactory(this);
+    public AnimatableInstanceCache animationControllers = GeckoLibUtil.createInstanceCache(this);
 
     private int healAmount;
     private int guraWorth;
@@ -54,17 +62,22 @@ public class SpectrobeSerumHealingItem extends Item implements GeoAnimatable, IW
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 0, this::controller));
-    }
-
-    private PlayState controller(AnimationEvent animationEvent) {
-        animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.serum.particle", ILoopType.EDefaultLoopTypes.LOOP));
-        return PlayState.CONTINUE;
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+        data.add(new AnimationController(this, "controller", 0, this::controller));
     }
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return animationControllers;
+    }
+
+    @Override
+    public double getTick(Object object) {
+        return 0;
+    }
+
+    private PlayState controller(AnimationState animationEvent) {
+        animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.serum.particle", ILoopType.EDefaultLoopTypes.LOOP));
+        return PlayState.CONTINUE;
     }
 }

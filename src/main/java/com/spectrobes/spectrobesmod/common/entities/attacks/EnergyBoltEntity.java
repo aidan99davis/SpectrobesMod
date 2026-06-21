@@ -55,12 +55,6 @@ public class EnergyBoltEntity extends ThrowableProjectile implements IHasNature,
         pResult.getEntity().hurt(DamageSource.thrown(this, this.getOwner()), AtkDamage);
     }
 
-
-    @Override
-    public Packet<?> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
-
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
 

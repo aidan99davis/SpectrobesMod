@@ -14,6 +14,7 @@ import java.util.Random;
 public class MineralBlock extends SpectrobesBlock {
     private static final Properties props = Properties.of(Material.STONE)
             .requiresCorrectToolForDrops()
+            .isValidSpawn((state, level, pos, entityType) -> false)
             .strength(1.5f)
             .sound(SoundType.STONE);
 

@@ -25,6 +25,7 @@ import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.CSyncSpectrobeMasterPacket;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSyncSpectrobeMasterPacket;
+import com.spectrobes.spectrobesmod.common.registry.DataSerializerRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties.Nature;
@@ -99,7 +100,7 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityWi
             SynchedEntityData.defineId(EntitySpectrobe.class, EntityDataSerializers.INT);
 
     private static final EntityDataAccessor<Spectrobe> SPECTROBE_DATA =
-            SynchedEntityData.defineId(EntitySpectrobe.class, Spectrobe.SpectrobeSerializer);
+            SynchedEntityData.defineId(EntitySpectrobe.class, DataSerializerRegistry.SPECTROBE_SERIALIZER.get());
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 

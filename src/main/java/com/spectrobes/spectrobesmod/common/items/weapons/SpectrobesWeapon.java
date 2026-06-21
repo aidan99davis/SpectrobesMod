@@ -3,69 +3,59 @@ package com.spectrobes.spectrobesmod.common.items.weapons;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import com.spectrobes.spectrobesmod.util.WeaponStats;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.*;
-import net.minecraft.world.level.Level;
-import software.bernie.geckolib3.core.AnimationState;
-import software.bernie.geckolib3.core.GeoAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.network.GeckoLibNetwork;
-import software.bernie.geckolib3.network.ISyncable;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TieredItem;
+import net.minecraft.world.item.Tiers;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.UseAnim;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
-public abstract class SpectrobesWeapon extends TieredItem implements GeoAnimatable, ISyncable, ISpectrobeWeapon {
-    private static final int ANIM_OPEN = 0;
-    public AnimationFactory factory = GeckoLibUtil.createFactory(this);
+public abstract class SpectrobesWeapon extends TieredItem implements GeoItem, ISpectrobeWeapon {
 
-    public SpectrobesWeapon(Properties pProperties) {
-        super(Tiers.DIAMOND, pProperties);
-        GeckoLibNetwork.registerSyncable(this);
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+
+    public SpectrobesWeapon(Item.Properties properties) {
+        super(Tiers.DIAMOND, properties);
+        SingletonGeoAnimatable.registerSyncedAnimatable(this);
     }
 
     @Override
-    public abstract void registerControllers(AnimationData data);
+    public abstract void registerControllers(AnimatableManager.ControllerRegistrar controllers);
 
     @Override
-    public AnimationFactory getFactory() {
-        return this.factory;
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.cache;
     }
 
-    public <P extends Item & GeoAnimatable> PlayState predicate(AnimationEvent<P> event) {
+    public <T extends GeoAnimatable> PlayState predicate(AnimationState<T> event) {
         return PlayState.CONTINUE;
     }
 
     public abstract WeaponStats GetWeaponStats();
 
     @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
-        super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
-        pTooltip.add(Component.literal("Weapon Tier: " + GetWeaponStats().Tier));
-        pTooltip.add(Component.literal("Attack Stat: " + GetWeaponStats().AtkDamage));
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
+        super.appendHoverText(stack, context, tooltip, flag);
+
+        WeaponStats stats = GetWeaponStats();
+
+        tooltip.add(Component.literal("Weapon Tier: " + stats.Tier));
+        tooltip.add(Component.literal("Attack Stat: " + stats.AtkDamage));
     }
 
     @Override
-    public UseAnim getUseAnimation(ItemStack pStack) {
+    public UseAnim getUseAnimation(ItemStack stack) {
         return UseAnim.BLOCK;
-    }
-
-    @Override
-    public void onAnimationSync(int id, int state) {
-        if (state == ANIM_OPEN) {
-            final AnimationController<?> controller = GeckoLibUtil.getControllerForID(this.factory, id, getControllerName());
-            if (controller.getAnimationState() == AnimationState.Stopped) {
-                runAnimation(controller);
-            }
-        }
-    }
-
-    private void runAnimation(AnimationController<?> controller) {
-        controller.markNeedsReload();
     }
 
     public abstract String getControllerName();

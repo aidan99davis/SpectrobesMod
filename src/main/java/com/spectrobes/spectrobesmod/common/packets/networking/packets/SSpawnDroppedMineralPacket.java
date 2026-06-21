@@ -1,47 +1,74 @@
 package com.spectrobes.spectrobesmod.common.packets.networking.packets;
 
+import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesMineralsRegistry;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-import java.util.function.Supplier;
+public class SSpawnDroppedMineralPacket implements CustomPacketPayload {
 
-public class SSpawnDroppedMineralPacket {
+    public static final Type<SSpawnDroppedMineralPacket> TYPE = new Type<>(
+            ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "spawn_dropped_mineral")
+    );
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, SSpawnDroppedMineralPacket> STREAM_CODEC =
+            StreamCodec.ofMember(SSpawnDroppedMineralPacket::write, SSpawnDroppedMineralPacket::new);
 
     private final String mineral;
 
     public SSpawnDroppedMineralPacket(String mineral) {
-        this.mineral = mineral;
+        this.mineral = mineral == null ? "" : mineral;
     }
 
-    public void toBytes(FriendlyByteBuf buf) {
-        if(mineral != null) {
-            buf.writeUtf(mineral);
-        }
+    private SSpawnDroppedMineralPacket(RegistryFriendlyByteBuf buffer) {
+        this.mineral = buffer.readUtf();
     }
 
-    public static SSpawnDroppedMineralPacket fromBytes(FriendlyByteBuf buf) {
-        String mineral = buf.readUtf();
-
-        return new SSpawnDroppedMineralPacket(mineral);
+    private void write(RegistryFriendlyByteBuf buffer) {
+        buffer.writeUtf(this.mineral);
     }
 
-    public boolean handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            Player player = ctx.get().getSender();
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
+    }
 
-            ItemStack itemStack = SpectrobesMineralsRegistry.getMineralByRegistryName(mineral);
-            assert player != null;
-            ItemEntity itemEntity = new ItemEntity(player.level,
+    public String getMineral() {
+        return mineral;
+    }
+
+    public static void handle(SSpawnDroppedMineralPacket packet, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            if (!(context.player() instanceof ServerPlayer player)) {
+                return;
+            }
+
+            if (packet.mineral.isBlank()) {
+                return;
+            }
+
+            ItemStack itemStack = SpectrobesMineralsRegistry.getMineralByRegistryName(packet.mineral);
+
+            if (itemStack == null || itemStack.isEmpty()) {
+                return;
+            }
+
+            ItemEntity itemEntity = new ItemEntity(
+                    player.level(),
                     player.getX(),
-                    (player.getY() + 1),
-                    player.getZ(), itemStack);
+                    player.getY() + 1.0D,
+                    player.getZ(),
+                    itemStack.copy()
+            );
+
             itemEntity.setDefaultPickUpDelay();
-            player.level.addFreshEntity(itemEntity);
+            player.level().addFreshEntity(itemEntity);
         });
-        return true;
     }
 }

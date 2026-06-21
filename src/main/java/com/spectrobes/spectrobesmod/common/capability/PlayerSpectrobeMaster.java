@@ -3,6 +3,7 @@ package com.spectrobes.spectrobesmod.common.capability;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -106,7 +107,7 @@ public class PlayerSpectrobeMaster implements IPlayerSpectrobeMaster {
         return new ArrayList<>();
     }
 
-    public CompoundTag serializeNBT() {
+    public CompoundTag serializeNBT(HolderLookup.Provider provider) {
         CompoundTag myData = new CompoundTag();
         CompoundTag currentTeamNbt = new CompoundTag();
         ListTag spectrobes = new ListTag();
@@ -130,7 +131,8 @@ public class PlayerSpectrobeMaster implements IPlayerSpectrobeMaster {
         return myData;
     }
 
-    public void deserializeNBT(CompoundTag nbt) {
+    @Override
+    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
         this.ownedSpectrobes = new ArrayList<>();
         this.currentTeam = new HashMap<>(7);
         for(int i = 0; i < 7; i++) {

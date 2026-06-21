@@ -27,14 +27,13 @@ public class PrizmodContainer extends AbstractContainerMenu {
     public PrizmodContainer(int id, Player player) {
         super(PRIZMOD.get(), id);
         this.player = player;
-        capability = (PlayerSpectrobeMaster) this.player.getCapability(SpectrobeMaster.INSTANCE)
-                .orElseThrow(IllegalStateException::new);
+        capability = this.player.getCapability(SpectrobeMaster.INSTANCE);
     }
 
     @Override
     public void broadcastChanges() {
         if(needsSync) {
-            if(!player.level.isClientSide()) {
+            if(!player.level().isClientSide()) {
                 SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(capability),
                         (ServerPlayer) player);
             } else {
@@ -83,7 +82,7 @@ public class PrizmodContainer extends AbstractContainerMenu {
     public void spawnSpectrobe(Spectrobe spectrobe) {
         synchronized (capability) {
             capability.spawnSpectrobe(spectrobe);
-            if(player.level.isClientSide()) {
+            if(player.level().isClientSide()) {
 
             }
             markDirty();
@@ -92,7 +91,7 @@ public class PrizmodContainer extends AbstractContainerMenu {
 
     public void setTeamMember(int index, UUID spectrobeUUID) {
         capability.setTeamMember(index, spectrobeUUID);
-        if(player.level.isClientSide()) {
+        if(player.level().isClientSide()) {
             SpectrobesNetwork.sendToServer(new SUpdateSpectrobeSlotPacket(index, spectrobeUUID));
             markDirty();
         }
@@ -110,9 +109,9 @@ public class PrizmodContainer extends AbstractContainerMenu {
     public void releaseSpectrobe(Spectrobe spectrobe) {
         synchronized (capability) {
             capability.releaseSpectrobe(spectrobe);
-        if(player.level.isClientSide()) {
-            SpectrobesNetwork.sendToServer(new SReleaseSpectrobePacket(spectrobe));
-        }
+            if(player.level().isClientSide()) {
+                SpectrobesNetwork.sendToServer(new SReleaseSpectrobePacket(spectrobe));
+            }
             markDirty();
         }
     }

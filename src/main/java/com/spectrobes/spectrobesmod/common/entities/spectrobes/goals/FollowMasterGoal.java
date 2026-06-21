@@ -17,7 +17,7 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
 
 import java.util.EnumSet;
@@ -35,7 +35,7 @@ public class FollowMasterGoal extends Goal {
 
     public FollowMasterGoal(TamableAnimal entity, double followSpeed, float minDist, float maxDist, boolean canFly) {
         this.tamable = entity;
-        this.level = entity.level;
+        this.level = entity.level();
         this.speedModifier = followSpeed;
         this.navigation = entity.getNavigation();
         this.startDistance = minDist;
@@ -86,7 +86,7 @@ public class FollowMasterGoal extends Goal {
      */
     public void start() {
         this.timeToRecalcPath = 0;
-        this.tamable.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
+        this.tamable.setPathfindingMalus(PathType.WATER, 0.0F);
     }
 
     /**
@@ -95,7 +95,7 @@ public class FollowMasterGoal extends Goal {
     public void stop() {
         this.owner = null;
         this.navigation.stop();
-        this.tamable.setPathfindingMalus(BlockPathTypes.WATER, 0.0f);
+        this.tamable.setPathfindingMalus(PathType.WATER, 0.0f);
     }
 
     /**
@@ -144,8 +144,8 @@ public class FollowMasterGoal extends Goal {
     }
 
     private boolean canTeleportTo(BlockPos pPos) {
-        BlockPathTypes pathnodetype = WalkNodeEvaluator.getBlockPathTypeStatic(this.level, pPos.mutable());
-        if (pathnodetype != BlockPathTypes.WALKABLE && pathnodetype != BlockPathTypes.WATER) {
+        PathType pathnodetype = WalkNodeEvaluator.getPathTypeStatic(this.tamable, pPos.mutable());
+        if (pathnodetype != PathType.WALKABLE && pathnodetype != PathType.WATER) {
             return false;
         } else {
             BlockState blockstate = this.level.getBlockState(pPos.below());

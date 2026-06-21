@@ -1,71 +1,105 @@
 package com.spectrobes.spectrobesmod.common.packets.networking.packets;
 
-
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
-import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
+import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
-import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
-import java.util.function.Supplier;
+public class SReleaseSpectrobePacket implements CustomPacketPayload {
 
-public class SReleaseSpectrobePacket {
+    public static final Type<SReleaseSpectrobePacket> TYPE = new Type<>(
+            ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "release_spectrobe")
+    );
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, SReleaseSpectrobePacket> STREAM_CODEC =
+            StreamCodec.ofMember(SReleaseSpectrobePacket::write, SReleaseSpectrobePacket::new);
 
     @Nullable
-    private Spectrobe spectrobe;
+    private final Spectrobe spectrobe;
 
-    public SReleaseSpectrobePacket(Spectrobe spectrobe) {
+    public SReleaseSpectrobePacket(@Nullable Spectrobe spectrobe) {
         this.spectrobe = spectrobe;
     }
 
-    public void toBytes(FriendlyByteBuf buf) {
-        if(spectrobe != null) {
-            buf.writeNbt(spectrobe.write());
-        }
+    private SReleaseSpectrobePacket(RegistryFriendlyByteBuf buffer) {
+        CompoundTag tag = buffer.readNbt();
+        this.spectrobe = tag == null ? null : Spectrobe.read(tag);
     }
 
-    public static SReleaseSpectrobePacket fromBytes(FriendlyByteBuf buf) {
-        Spectrobe spectrobe = Spectrobe.read(buf.readNbt());
-
-        return new SReleaseSpectrobePacket(spectrobe);
+    private void write(RegistryFriendlyByteBuf buffer) {
+        buffer.writeNbt(this.spectrobe == null ? null : this.spectrobe.write());
     }
 
-    public boolean handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            ServerPlayer player = ctx.get().getSender();
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
+    }
 
-            PlayerSpectrobeMaster serverCap = player
-                    .getCapability(SpectrobeMaster.INSTANCE)
-                    .orElseThrow(IllegalStateException::new);
+    @Nullable
+    public Spectrobe getSpectrobe() {
+        return spectrobe;
+    }
 
-            EntitySpectrobe spectrobe1 = null;
+    public static void handle(SReleaseSpectrobePacket packet, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            if (!(context.player() instanceof ServerPlayer player)) {
+                return;
+            }
+
+            if (!(player.level() instanceof ServerLevel serverLevel)) {
+                return;
+            }
+
+            Spectrobe spectrobe = packet.spectrobe;
+
+            if (spectrobe == null) {
+                return;
+            }
+
+            PlayerSpectrobeMaster serverCap = player.getCapability(SpectrobeMaster.INSTANCE);
+
+            if (serverCap == null) {
+                return;
+            }
+
             try {
-                spectrobe1 = SpectrobesEntities.getByName(spectrobe.name).spawn(
-                        (ServerLevel) player.level,
+                EntitySpectrobe spawnedSpectrobe = SpectrobesEntities.getByName(spectrobe.name).spawn(
+                        serverLevel,
                         spectrobe.write(),
                         Component.literal(spectrobe.name),
                         player,
                         player.blockPosition(),
                         MobSpawnType.MOB_SUMMONED,
-                        true,true);
-                spectrobe1.setSpectrobeData(spectrobe);
+                        true,
+                        true
+                );
+
+                if (spawnedSpectrobe == null) {
+                    return;
+                }
+
+                spawnedSpectrobe.setSpectrobeData(spectrobe);
                 serverCap.releaseSpectrobe(spectrobe);
-            } catch (ClassNotFoundException e) {
-                SpectrobesInfo.LOGGER.info("Couldnt find spectrobe's registry.\n" + e.getMessage());
+            } catch (ClassNotFoundException exception) {
+                SpectrobesInfo.LOGGER.info(
+                        "Couldn't find Spectrobe registry for '{}'. {}",
+                        spectrobe.name,
+                        exception.getMessage()
+                );
             }
-
-
         });
-        return true;
     }
 }

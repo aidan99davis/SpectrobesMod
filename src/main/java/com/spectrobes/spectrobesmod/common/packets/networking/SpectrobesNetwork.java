@@ -1,126 +1,130 @@
 package com.spectrobes.spectrobesmod.common.packets.networking;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.*;
-import net.minecraft.resources.ResourceLocation;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.CSpectrobeAttackPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.CSyncSpectrobeMasterPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.CUpdateSpectrobeSlotPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.SConsumeMineralPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.SDespawnSpectrobePacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.SGiveMineralPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.SOpenCyrusShopPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.SOpenPrizmodPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.SOpenSpectrobeDetailsScreenPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.SReleaseSpectrobePacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSpawnDroppedMineralPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSpawnSpectrobePacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSyncSpectrobeMasterPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.SUpdateSpectrobeSlotPacket;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.simple.SimpleChannel;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
-public class SpectrobesNetwork {
+@EventBusSubscriber(modid = SpectrobesInfo.MOD_ID)
+public final class SpectrobesNetwork {
 
     private static final String PROTOCOL_VERSION = "1";
-    private static int packetId = 0;
 
-    public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
-            ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "main"),
-            () -> PROTOCOL_VERSION,
-            PROTOCOL_VERSION::equals,
-            PROTOCOL_VERSION::equals
-    );
-
-    private static int nextID() {
-        return packetId++;
+    private SpectrobesNetwork() {
     }
 
-    public static void init() {
-        INSTANCE.messageBuilder(SSyncSpectrobeMasterPacket.class, nextID())
-                .encoder(SSyncSpectrobeMasterPacket::toBytes)
-                .decoder(SSyncSpectrobeMasterPacket::fromBytes)
-                .consumerMainThread(SSyncSpectrobeMasterPacket::handle)
-                .add();
+    @SubscribeEvent
+    public static void registerPayloads(RegisterPayloadHandlersEvent event) {
+        PayloadRegistrar registrar = event.registrar(PROTOCOL_VERSION);
 
-//        INSTANCE.messageBuilder(SChangeDimensionPacket.class, nextID())
-//                .encoder(SChangeDimensionPacket::toBytes)
-//                .decoder(SChangeDimensionPacket::fromBytes)
-//                .consumerMainThread(SChangeDimensionPacket::handle)
-//                .add();
+        registrar.playToClient(
+                SSyncSpectrobeMasterPacket.TYPE,
+                SSyncSpectrobeMasterPacket.STREAM_CODEC,
+                SSyncSpectrobeMasterPacket::handle
+        );
 
-        INSTANCE.messageBuilder(CSyncSpectrobeMasterPacket.class, nextID())
-                .encoder(CSyncSpectrobeMasterPacket::toBytes)
-                .decoder(CSyncSpectrobeMasterPacket::fromBytes)
-                .consumerMainThread(CSyncSpectrobeMasterPacket::handle)
-                .add();
+        registrar.playToServer(
+                CSyncSpectrobeMasterPacket.TYPE,
+                CSyncSpectrobeMasterPacket.STREAM_CODEC,
+                CSyncSpectrobeMasterPacket::handle
+        );
 
-        INSTANCE.messageBuilder(SUpdateSpectrobeSlotPacket.class, nextID())
-                .encoder(SUpdateSpectrobeSlotPacket::toBytes)
-                .decoder(SUpdateSpectrobeSlotPacket::fromBytes)
-                .consumerMainThread(SUpdateSpectrobeSlotPacket::handle)
-                .add();
+        registrar.playToClient(
+                SUpdateSpectrobeSlotPacket.TYPE,
+                SUpdateSpectrobeSlotPacket.STREAM_CODEC,
+                SUpdateSpectrobeSlotPacket::handle
+        );
 
-        INSTANCE.messageBuilder(CUpdateSpectrobeSlotPacket.class, nextID())
-                .encoder(CUpdateSpectrobeSlotPacket::toBytes)
-                .decoder(CUpdateSpectrobeSlotPacket::fromBytes)
-                .consumerMainThread(CUpdateSpectrobeSlotPacket::handle)
-                .add();
+        registrar.playToServer(
+                CUpdateSpectrobeSlotPacket.TYPE,
+                CUpdateSpectrobeSlotPacket.STREAM_CODEC,
+                CUpdateSpectrobeSlotPacket::handle
+        );
 
-        INSTANCE.messageBuilder(SSpawnSpectrobePacket.class, nextID())
-                .encoder(SSpawnSpectrobePacket::toBytes)
-                .decoder(SSpawnSpectrobePacket::fromBytes)
-                .consumerMainThread(SSpawnSpectrobePacket::handle)
-                .add();
+        registrar.playToClient(
+                SSpawnSpectrobePacket.TYPE,
+                SSpawnSpectrobePacket.STREAM_CODEC,
+                SSpawnSpectrobePacket::handle
+        );
 
-        INSTANCE.messageBuilder(SReleaseSpectrobePacket.class, nextID())
-                .encoder(SReleaseSpectrobePacket::toBytes)
-                .decoder(SReleaseSpectrobePacket::fromBytes)
-                .consumerMainThread(SReleaseSpectrobePacket::handle)
-                .add();
+        registrar.playToClient(
+                SReleaseSpectrobePacket.TYPE,
+                SReleaseSpectrobePacket.STREAM_CODEC,
+                SReleaseSpectrobePacket::handle
+        );
 
-        INSTANCE.messageBuilder(SDespawnSpectrobePacket.class, nextID())
-                .encoder(SDespawnSpectrobePacket::toBytes)
-                .decoder(SDespawnSpectrobePacket::fromBytes)
-                .consumerMainThread(SDespawnSpectrobePacket::handle)
-                .add();
+        registrar.playToClient(
+                SDespawnSpectrobePacket.TYPE,
+                SDespawnSpectrobePacket.STREAM_CODEC,
+                SDespawnSpectrobePacket::handle
+        );
 
-        INSTANCE.messageBuilder(CSpectrobeAttackPacket.class, nextID())
-                .encoder(CSpectrobeAttackPacket::toBytes)
-                .decoder(CSpectrobeAttackPacket::fromBytes)
-                .consumerMainThread(CSpectrobeAttackPacket::handle)
-                .add();
+        registrar.playToServer(
+                CSpectrobeAttackPacket.TYPE,
+                CSpectrobeAttackPacket.STREAM_CODEC,
+                CSpectrobeAttackPacket::handle
+        );
 
-        INSTANCE.messageBuilder(SOpenPrizmodPacket.class, nextID())
-                .encoder(SOpenPrizmodPacket::toBytes)
-                .decoder(SOpenPrizmodPacket::fromBytes)
-                .consumerMainThread(SOpenPrizmodPacket::handle)
-                .add();
+        registrar.playToClient(
+                SOpenPrizmodPacket.TYPE,
+                SOpenPrizmodPacket.STREAM_CODEC,
+                SOpenPrizmodPacket::handle
+        );
 
-        INSTANCE.messageBuilder(SOpenSpectrobeDetailsScreenPacket.class, nextID())
-                .encoder(SOpenSpectrobeDetailsScreenPacket::toBytes)
-                .decoder(SOpenSpectrobeDetailsScreenPacket::fromBytes)
-                .consumerMainThread(SOpenSpectrobeDetailsScreenPacket::handle)
-                .add();
+        registrar.playToClient(
+                SOpenSpectrobeDetailsScreenPacket.TYPE,
+                SOpenSpectrobeDetailsScreenPacket.STREAM_CODEC,
+                SOpenSpectrobeDetailsScreenPacket::handle
+        );
 
-        INSTANCE.messageBuilder(SGiveMineralPacket.class, nextID())
-                .encoder(SGiveMineralPacket::toBytes)
-                .decoder(SGiveMineralPacket::fromBytes)
-                .consumerMainThread(SGiveMineralPacket::handle)
-                .add();
+        registrar.playToClient(
+                SGiveMineralPacket.TYPE,
+                SGiveMineralPacket.STREAM_CODEC,
+                SGiveMineralPacket::handle
+        );
 
-        INSTANCE.messageBuilder(SSpawnDroppedMineralPacket.class, nextID())
-                .encoder(SSpawnDroppedMineralPacket::toBytes)
-                .decoder(SSpawnDroppedMineralPacket::fromBytes)
-                .consumerMainThread(SSpawnDroppedMineralPacket::handle)
-                .add();
+        registrar.playToClient(
+                SSpawnDroppedMineralPacket.TYPE,
+                SSpawnDroppedMineralPacket.STREAM_CODEC,
+                SSpawnDroppedMineralPacket::handle
+        );
 
-        INSTANCE.messageBuilder(SConsumeMineralPacket.class, nextID())
-                .encoder(SConsumeMineralPacket::toBytes)
-                .decoder(SConsumeMineralPacket::fromBytes)
-                .consumerMainThread(SConsumeMineralPacket::handle)
-                .add();
+        registrar.playToClient(
+                SConsumeMineralPacket.TYPE,
+                SConsumeMineralPacket.STREAM_CODEC,
+                SConsumeMineralPacket::handle
+        );
 
-        INSTANCE.messageBuilder(SOpenCyrusShopPacket.class, nextID())
-                .encoder(SOpenCyrusShopPacket::toBytes)
-                .decoder(SOpenCyrusShopPacket::fromBytes)
-                .consumerMainThread(SOpenCyrusShopPacket::handle)
-                .add();
+        registrar.playToClient(
+                SOpenCyrusShopPacket.TYPE,
+                SOpenCyrusShopPacket.STREAM_CODEC,
+                SOpenCyrusShopPacket::handle
+        );
     }
 
-    public static void sendToClient(Object packet, ServerPlayer player) {
-        INSTANCE.sendTo(packet, player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
+    public static void sendToClient(CustomPacketPayload packet, ServerPlayer player) {
+        PacketDistributor.sendToPlayer(player, packet);
     }
 
-    public static void sendToServer(Object packet) {
-        INSTANCE.sendToServer(packet);
+    public static void sendToServer(CustomPacketPayload packet) {
+        PacketDistributor.sendToServer(packet);
     }
 }

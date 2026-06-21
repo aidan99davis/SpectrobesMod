@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AllSpectrobesList extends AbstractWidget {
+public class AllSpectrobesList {
 
     public static final int GRID_SIZE = 5;
 
@@ -22,7 +22,6 @@ public class AllSpectrobesList extends AbstractWidget {
     public int currentPage = 0;
 
     public AllSpectrobesList(PrizmodPage parent) {
-        super(parent.getX(), parent.getY(), 0, 0, Component.literal(""));
         gridData_paged = new HashMap<>();
         int specCount = parent.parent.getMenu().getOwnedSpectrobesCount();
         int remainder = specCount % 25;

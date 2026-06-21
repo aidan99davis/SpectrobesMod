@@ -1,8 +1,6 @@
 package com.spectrobes.spectrobesmod.common.items.tools;
 
 import com.spectrobes.spectrobesmod.client.container.PrizmodContainer;
-import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.SOpenSpectrobeDetailsScreenPacket;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -13,7 +11,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 import java.util.List;

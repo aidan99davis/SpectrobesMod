@@ -1,14 +1,14 @@
 package com.spectrobes.spectrobesmod.common.spectrobes;
 
-import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.entities.IHasNature;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralProperties;
 import com.spectrobes.spectrobesmod.common.registry.IconRegistry;
 import com.spectrobes.spectrobesmod.util.SpectrobeBuilder;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.syncher.EntityDataSerializer;
-import net.minecraft.network.syncher.EntityDataSerializers;
 import org.apache.logging.log4j.core.config.plugins.validation.constraints.Required;
 import org.apache.logging.log4j.core.util.UuidUtil;
 
@@ -16,7 +16,6 @@ import javax.annotation.Nullable;
 import java.util.UUID;
 
 public class Spectrobe {
-    public static final EntityDataSerializer<Spectrobe> SpectrobeSerializer = new SpectrobeSerializer().init();
     @Nullable
     public UUID MasterUUID;
 
@@ -235,32 +234,6 @@ public class Spectrobe {
             setCurrentHealth(currentHealth - damageAmount);
         } else {
             setCurrentHealth(0);
-        }
-    }
-
-    public static class SpectrobeSerializer implements EntityDataSerializer<Spectrobe> {
-
-        @Override
-        public void write(FriendlyByteBuf buf, Spectrobe value) {
-            buf.writeNbt(value.write());
-        }
-
-        @Override
-        public Spectrobe read(FriendlyByteBuf buf) {
-            return Spectrobe.read(buf.readNbt());
-        }
-
-        @Override
-        public Spectrobe copy(Spectrobe value) {
-            return value.copy(true);
-        }
-
-        public EntityDataSerializer<Spectrobe> init() {
-            if(EntityDataSerializers.getSerializer(EntityDataSerializers.getSerializedId(this)) == null) {
-                SpectrobesInfo.LOGGER.info("Registering serializer");
-                EntityDataSerializers.registerSerializer(this);
-            }
-            return this;
         }
     }
 }
