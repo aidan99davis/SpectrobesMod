@@ -18,7 +18,7 @@ public class Containers {
         PrizmodContainer.PRIZMOD = CONTAINERS.register(
                 "prizmod",
                 () -> new MenuType<>(
-                        (containerId, inventory) -> new PrizmodContainer(containerId, null),
+                        (containerId, inventory) -> new PrizmodContainer(containerId, inventory.player),
                         FeatureFlags.DEFAULT_FLAGS)
         );
 

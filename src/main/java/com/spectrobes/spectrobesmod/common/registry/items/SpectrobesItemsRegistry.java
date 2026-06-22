@@ -1,7 +1,6 @@
 package com.spectrobes.spectrobesmod.common.registry.items;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.common.items.SpectrobesItemGroups;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -25,8 +24,4 @@ public class SpectrobesItemsRegistry {
     		ITEMS.register("marble",
     				() -> new Item(new Item.Properties()));
 
-	@SubscribeEvent
-	public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
-
-	}
 }

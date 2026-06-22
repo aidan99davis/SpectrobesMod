@@ -2,13 +2,18 @@ package com.spectrobes.spectrobesmod.common.registry.items;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.items.armour.BasicNppArmourItem;
+import com.spectrobes.spectrobesmod.common.registry.SpectrobesItemGroupsRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorMaterials;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
@@ -69,9 +74,31 @@ public class SpectrobesArmourRegistry {
             () -> new BasicNppArmourItem(SpectrobeProperties.Nature.FLASH, 10, ArmorMaterials.DIAMOND.value(), EquipmentSlot.FEET,
                     new Item.Properties()));
 
-    @SubscribeEvent
-    public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> SPECTROBES_ARMOUR_TAB =
+            SpectrobesItemGroupsRegistry.CREATIVE_MODE_TABS.register("armour", () -> CreativeModeTab.builder()
+                    .title(Component.translatable("itemGroup.spectrobestab.armour"))
+                    .icon(() -> new ItemStack(SpectrobesArmourRegistry.BASIC_CHEST.get()))
+                    .displayItems((parameters, output) -> {
+                        output.accept(SpectrobesArmourRegistry.BASIC_HEAD.get());
+                        output.accept(SpectrobesArmourRegistry.BASIC_CHEST.get());
+                        output.accept(SpectrobesArmourRegistry.BASIC_LEGGINGS.get());
+                        output.accept(SpectrobesArmourRegistry.BASIC_BOOTS.get());
 
-    }
+                        output.accept(SpectrobesArmourRegistry.BASIC_CORONA_HEAD.get());
+                        output.accept(SpectrobesArmourRegistry.BASIC_CORONA_CHEST.get());
+                        output.accept(SpectrobesArmourRegistry.BASIC_CORONA_LEGGINGS.get());
+                        output.accept(SpectrobesArmourRegistry.BASIC_CORONA_BOOTS.get());
+
+                        output.accept(SpectrobesArmourRegistry.BASIC_AURORA_HEAD.get());
+                        output.accept(SpectrobesArmourRegistry.BASIC_AURORA_CHEST.get());
+                        output.accept(SpectrobesArmourRegistry.BASIC_AURORA_LEGGINGS.get());
+                        output.accept(SpectrobesArmourRegistry.BASIC_AURORA_BOOTS.get());
+
+                        output.accept(SpectrobesArmourRegistry.BASIC_FLASH_HEAD.get());
+                        output.accept(SpectrobesArmourRegistry.BASIC_FLASH_CHEST.get());
+                        output.accept(SpectrobesArmourRegistry.BASIC_FLASH_LEGGINGS.get());
+                        output.accept(SpectrobesArmourRegistry.BASIC_FLASH_BOOTS.get());
+                    })
+                    .build());
 
 }

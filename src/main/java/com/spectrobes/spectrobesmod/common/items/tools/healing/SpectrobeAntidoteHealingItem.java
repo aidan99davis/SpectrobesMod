@@ -1,6 +1,7 @@
 package com.spectrobes.spectrobesmod.common.items.tools.healing;
 
 import com.spectrobes.spectrobesmod.client.items.healing.renderer.AntidoteItemRenderer;
+import com.spectrobes.spectrobesmod.client.items.healing.renderer.SerumItemRenderer;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
@@ -18,6 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.animatable.client.GeoRenderProvider;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
@@ -65,6 +67,22 @@ public class SpectrobeAntidoteHealingItem extends Item implements GeoItem, IWort
 
     public int getTier() {
         return this.tier;
+    }
+
+    @Override
+    public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
+        consumer.accept(new GeoRenderProvider() {
+            private AntidoteItemRenderer renderer;
+
+            @Override
+            public BlockEntityWithoutLevelRenderer getGeoItemRenderer() {
+                if (this.renderer == null) {
+                    this.renderer = new AntidoteItemRenderer();
+                }
+
+                return this.renderer;
+            }
+        });
     }
 
     @Override

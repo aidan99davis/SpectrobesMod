@@ -5,7 +5,7 @@ import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.common.capability.PlayerEvents;
 import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
-import com.spectrobes.spectrobesmod.common.items.SpectrobesItemGroups;
+import com.spectrobes.spectrobesmod.common.registry.SpectrobesItemGroupsRegistry;
 import com.spectrobes.spectrobesmod.common.registry.*;
 import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesBlocks;
 import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesTileRegistry;
@@ -24,14 +24,7 @@ import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 
 @Mod(SpectrobesInfo.MOD_ID)
 public class SpectrobesMod {
-
-    public static SpectrobesMod Instance;
-
-    private final IEventBus modEventBus;
-
     public SpectrobesMod(IEventBus modEventBus) {
-        this.modEventBus = modEventBus;
-
         SpectrobesMineralsRegistry.init();
 
         modEventBus.addListener(this::setup);
@@ -60,7 +53,7 @@ public class SpectrobesMod {
         SpectrobesItemsRegistry.ITEMS.register(modEventBus);
         SpectrobesBlockItemsRegistry.ITEMS.register(modEventBus);
 
-        SpectrobesItemGroups.register(modEventBus);
+        SpectrobesItemGroupsRegistry.register(modEventBus);
 
         DataSerializerRegistry.SERIALIZERS.register(modEventBus);
         Containers.CONTAINERS.register(modEventBus);
@@ -68,7 +61,6 @@ public class SpectrobesMod {
 
         SpectrobesOreGen.register(modEventBus);
 
-        Instance = this;
     }
 
     private void setup(final FMLCommonSetupEvent event) {

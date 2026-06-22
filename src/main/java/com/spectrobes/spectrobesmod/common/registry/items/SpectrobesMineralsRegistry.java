@@ -5,11 +5,15 @@ import com.spectrobes.spectrobesmod.common.items.minerals.Mineral;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
 import com.spectrobes.spectrobesmod.common.items.minerals.chroma.ChromaMineralItem;
 import com.spectrobes.spectrobesmod.common.registry.MineralRegistry;
+import com.spectrobes.spectrobesmod.common.registry.SpectrobesItemGroupsRegistry;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.ArrayList;
@@ -220,10 +224,5 @@ public class SpectrobesMineralsRegistry {
         Random random = new Random();
         int index = random.nextInt(all_minerals.get(rarity).size());
         return new ItemStack(all_minerals.get(rarity).get(index));
-    }
-
-    @SubscribeEvent
-    public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
-
     }
 }

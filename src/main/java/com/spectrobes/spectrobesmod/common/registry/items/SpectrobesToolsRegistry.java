@@ -4,8 +4,6 @@ import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.items.healing.renderer.AntidoteItemRenderer;
 import com.spectrobes.spectrobesmod.client.items.healing.renderer.SerumItemRenderer;
 import com.spectrobes.spectrobesmod.client.items.weapons.renderer.BasicBlasterItemRenderer;
-import com.spectrobes.spectrobesmod.client.items.weapons.renderer.BasicGloveItemRenderer;
-import com.spectrobes.spectrobesmod.common.items.SpectrobesItemGroups;
 import com.spectrobes.spectrobesmod.common.items.tools.PrizmodItem;
 import com.spectrobes.spectrobesmod.common.items.tools.healing.SpectrobeAntidoteHealingItem;
 import com.spectrobes.spectrobesmod.common.items.tools.healing.SpectrobeSerumHealingItem;
@@ -48,42 +46,4 @@ public class SpectrobesToolsRegistry {
             ITEMS.register("basic_antidote",
                     () -> new SpectrobeAntidoteHealingItem(50, 2000, 1,
                             new Item.Properties()));
-
-    @SubscribeEvent
-    public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
-        event.registerItem(
-                new IClientItemExtensions() {
-                    private final BlockEntityWithoutLevelRenderer renderer = new SerumItemRenderer();
-
-                    @Override
-                    public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                        return renderer;
-                    }
-                },
-                SpectrobesToolsRegistry.basic_serum.get()
-        );
-        event.registerItem(
-                new IClientItemExtensions() {
-                    private final BlockEntityWithoutLevelRenderer renderer = new AntidoteItemRenderer();
-
-                    @Override
-                    public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                        return renderer;
-                    }
-                },
-                SpectrobesToolsRegistry.basic_antidote.get()
-        );
-        event.registerItem(
-                new IClientItemExtensions() {
-                    private final BlockEntityWithoutLevelRenderer renderer = new BasicBlasterItemRenderer();
-
-                    @Override
-                    public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                        return renderer;
-                    }
-                },
-                SpectrobesToolsRegistry.basic_blaster_item.get()
-        );
-    }
-
 }
