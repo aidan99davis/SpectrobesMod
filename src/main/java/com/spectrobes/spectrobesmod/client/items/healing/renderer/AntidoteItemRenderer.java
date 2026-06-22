@@ -1,16 +1,13 @@
 package com.spectrobes.spectrobesmod.client.items.healing.renderer;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.spectrobes.spectrobesmod.client.items.healing.model.BasicAntidoteItemModel;
-import com.spectrobes.spectrobesmod.client.items.healing.model.BasicSerumItemModel;
 import com.spectrobes.spectrobesmod.common.items.tools.healing.SpectrobeAntidoteHealingItem;
-import com.spectrobes.spectrobesmod.common.items.tools.healing.SpectrobeSerumHealingItem;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.renderer.GeoItemRenderer;
 
 @OnlyIn(Dist.CLIENT)
@@ -21,7 +18,7 @@ public class AntidoteItemRenderer extends GeoItemRenderer<SpectrobeAntidoteHeali
     }
 
     @Override
-    public RenderType getRenderType(SpectrobeAntidoteHealingItem animatable, float partialTick, PoseStack poseStack, @org.jetbrains.annotations.Nullable MultiBufferSource bufferSource, @org.jetbrains.annotations.Nullable VertexConsumer buffer, int packedLight, ResourceLocation texture) {
+    public @Nullable RenderType getRenderType(SpectrobeAntidoteHealingItem animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
         return RenderType.entityTranslucent(texture);
     }
 }

@@ -1,7 +1,8 @@
 package com.spectrobes.spectrobesmod.common.blocks;
 
-import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
+import com.mojang.serialization.MapCodec;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
+import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSyncSpectrobeMasterPacket;
 import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesTileRegistry;
@@ -19,11 +20,19 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class HealerBlock extends SpectrobesTileEntityBlock {
+
+    public static final MapCodec<HealerBlock> CODEC = MapCodec.unit(HealerBlock::new);
+
     protected static final VoxelShape SHAPE = Block.box(0D, 0.0D, 0D, 16.0D, 32.0D, 16.0D);
     protected static final VoxelShape AABB = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D);
 
     public HealerBlock() {
         super();
+    }
+
+    @Override
+    protected MapCodec<? extends HealerBlock> codec() {
+        return CODEC;
     }
 
     public static VoxelShape getSHAPE() {
@@ -42,13 +51,11 @@ public class HealerBlock extends SpectrobesTileEntityBlock {
 
     @Override
     public void entityInside(BlockState pState, Level pLevel, BlockPos pPos, Entity pEntity) {
-        if(!pLevel.isClientSide && pEntity instanceof Player) {
-            PlayerSpectrobeMaster capability = (PlayerSpectrobeMaster) pEntity.getCapability(SpectrobeMaster.INSTANCE)
-                    .orElseThrow(IllegalStateException::new);
+        if (!pLevel.isClientSide && pEntity instanceof Player) {
+            PlayerSpectrobeMaster capability = pEntity.getCapability(SpectrobeMaster.INSTANCE);
             capability.setCurrentHealth(capability.getMaxHealth());
             capability.getCurrentTeamUuids().forEach((integer, uuid) -> {
-
-                if(uuid != null) {
+                if (uuid != null) {
                     Spectrobe spectrobe = capability.getSpectrobeByUuid(uuid);
                     spectrobe.setCurrentHealth(spectrobe.stats.getHpLevel());
                 }

@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class XellesTrophyBlock extends SpectrobesTileEntityBlock {
 
-    public static final MapCodec<XellesTrophyBlock> CODEC = simpleCodec(XellesTrophyBlock::new);
+    public static final MapCodec<XellesTrophyBlock> CODEC = MapCodec.unit(XellesTrophyBlock::new);
 
     private static final Properties PROPS = Properties.of()
             .noOcclusion()
@@ -21,7 +21,7 @@ public class XellesTrophyBlock extends SpectrobesTileEntityBlock {
         this(PROPS);
     }
 
-    public XellesTrophyBlock(Properties properties) {
+    private XellesTrophyBlock(Properties properties) {
         super(properties);
     }
 

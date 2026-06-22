@@ -1,32 +1,14 @@
 package com.spectrobes.spectrobesmod.common.items.weapons;
 
-import com.spectrobes.spectrobesmod.client.items.weapons.renderer.BasicBlasterItemRenderer;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import com.spectrobes.spectrobesmod.util.WeaponStats;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.item.Item;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
-
-import java.util.function.Consumer;
 
 public class BasicBlasterItem extends SpectrobesRangedWeapon {
     public BasicBlasterItem(Item.Properties pProperties) {
         super(pProperties);
-    }
-
-    @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-        consumer.accept(new IClientItemExtensions()
-        {
-            private final NonNullLazy<BlockEntityWithoutLevelRenderer> ister = NonNullLazy.of(() -> new BasicBlasterItemRenderer());
-
-            @Override
-            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                return ister.get();
-            }
-        });
     }
 
     @Override

@@ -25,11 +25,11 @@ public class AbsorbKrawlGoal extends Goal {
     @Override
     public void tick() {
         super.tick();
-        List<EntityKrawl> nearbyKrawl = owner.level.getEntitiesOfClass(EntityKrawl.class, owner.getBoundingBox().inflate(10, 2, 10));
+        List<EntityKrawl> nearbyKrawl = owner.level().getEntitiesOfClass(EntityKrawl.class, owner.getBoundingBox().inflate(10, 2, 10));
         List<EntityKrawl> filteredKrawl = nearbyKrawl.stream().filter(entityKrawl -> entityKrawl.isVortex() && !(entityKrawl instanceof EntityXelles)).collect(Collectors.toList());
 
         if(filteredKrawl.size() > 0) {
-            SpectrobesWorldSaveData worldData = SpectrobesWorldSaveData.getWorldData((ServerLevel) owner.level);
+            SpectrobesWorldSaveData worldData = SpectrobesWorldSaveData.getWorldData((ServerLevel) owner.level());
             worldData.getNest(owner.blockPosition()).absorbVortexes(filteredKrawl.size());
             worldData.setDirty();
 

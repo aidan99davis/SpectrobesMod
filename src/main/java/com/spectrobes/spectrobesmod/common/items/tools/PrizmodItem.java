@@ -12,38 +12,36 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class PrizmodItem extends Item {
+
     public PrizmodItem(Properties properties) {
-        super(properties);
+        super(properties.stacksTo(1));
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
-        ItemStack itemStack = new ItemStack(playerIn.getItemInHand(handIn).getItem(), 1);
-        if(!playerIn.isShiftKeyDown()) {
-            if(!worldIn.isClientSide()) {
-                NetworkHooks.openScreen((ServerPlayer) playerIn, new SimpleMenuProvider(
-                        (id, player, stack) -> new PrizmodContainer(id, playerIn),
-                        Component.empty())
-                );
-            }
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        ItemStack itemStack = player.getItemInHand(hand);
+
+        if (player.isShiftKeyDown()) {
+            return InteractionResultHolder.pass(itemStack);
         }
-        return InteractionResultHolder.success(itemStack);
+
+        if (player instanceof ServerPlayer serverPlayer) {
+            serverPlayer.openMenu(new SimpleMenuProvider(
+                    (containerId, playerInventory, menuPlayer) -> new PrizmodContainer(containerId, menuPlayer),
+                    Component.empty()
+            ));
+        }
+
+        return InteractionResultHolder.sidedSuccess(itemStack, level.isClientSide);
     }
 
-
     @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
-        super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
-        pTooltip.add(Component.literal("Right click to open the prizmod."));
-        pTooltip.add(Component.literal("Shift Right click on a spectrobe to view its stats."));
-    }
-
-    @Override
-    public int getMaxStackSize(ItemStack stack) {
-        return 1;
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
+        super.appendHoverText(stack, context, tooltip, flag);
+        tooltip.add(Component.literal("Right click to open the prizmod."));
+        tooltip.add(Component.literal("Shift Right click on a spectrobe to view its stats."));
     }
 }

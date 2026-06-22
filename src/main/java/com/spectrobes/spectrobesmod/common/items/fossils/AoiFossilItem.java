@@ -1,11 +1,8 @@
 package com.spectrobes.spectrobesmod.common.items.fossils;
 
-import com.spectrobes.spectrobesmod.client.items.renderer.AoiFossilItemRenderer;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 
 import java.util.function.Consumer;
 
@@ -13,19 +10,6 @@ public class AoiFossilItem extends FossilBlockItem {
 
     public AoiFossilItem(Block block, Properties properties) {
         super(block, properties);
-    }
-
-    @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-        consumer.accept(new IClientItemExtensions()
-        {
-            private final NonNullLazy<BlockEntityWithoutLevelRenderer> ister = NonNullLazy.of(() -> new AoiFossilItemRenderer());
-
-            @Override
-            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                return ister.get();
-            }
-        });
     }
 
     @Override

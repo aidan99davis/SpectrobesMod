@@ -28,7 +28,7 @@ public class AttackKrawlGoal extends TargetGoal {
         if(mob instanceof EntitySpectrobe && ((EntitySpectrobe)mob).getStage() == SpectrobeProperties.Stage.CHILD)
             return false;
 
-        List<EntityKrawl> nearbyMobs = mob.level.getEntitiesOfClass(EntityKrawl.class, mob.getBoundingBox().inflate(5, 5, 5));
+        List<EntityKrawl> nearbyMobs = mob.level().getEntitiesOfClass(EntityKrawl.class, mob.getBoundingBox().inflate(5, 5, 5));
         List<EntityKrawl> nonVortexKrawl = nearbyMobs.stream().filter(entityKrawl -> !entityKrawl.isVortex()).collect(Collectors.toList());
         if (!nonVortexKrawl.isEmpty()) {
             this.target = nonVortexKrawl.get(0);

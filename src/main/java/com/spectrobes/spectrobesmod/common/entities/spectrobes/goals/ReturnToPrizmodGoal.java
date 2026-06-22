@@ -21,7 +21,7 @@ public class ReturnToPrizmodGoal extends Goal {
     @Override
     public boolean canUse() {
         List<EntityKrawl> nearbyKrawl =
-                goalOwner.level.getEntitiesOfClass(EntityKrawl.class,
+                goalOwner.level().getEntitiesOfClass(EntityKrawl.class,
                         goalOwner.getBoundingBox()
                                 .inflate(10, 10, 5));
         if((goalOwner).getStage() == SpectrobeProperties.Stage.CHILD ) {

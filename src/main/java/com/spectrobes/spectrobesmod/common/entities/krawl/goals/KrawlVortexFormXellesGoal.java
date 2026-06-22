@@ -28,7 +28,7 @@ public class KrawlVortexFormXellesGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        SpectrobesWorldSaveData worldData = (SpectrobesWorldSaveData.getWorldData((ServerLevel) vortex.level));
+        SpectrobesWorldSaveData worldData = (SpectrobesWorldSaveData.getWorldData((ServerLevel) vortex.level()));
 
         return vortex.getAge() >= 0 //TODO: Make this configurable
                 && ((worldData.canSpawnNest((vortex.blockPosition()))
@@ -38,7 +38,7 @@ public class KrawlVortexFormXellesGoal extends Goal {
 
     @Override
     public void tick() {
-        List<EntityVortex> nearbyMobs = vortex.level.getEntitiesOfClass(EntityVortex.class, vortex.getBoundingBox().inflate(15, 3, 15));
+        List<EntityVortex> nearbyMobs = vortex.level().getEntitiesOfClass(EntityVortex.class, vortex.getBoundingBox().inflate(15, 3, 15));
         List<EntityVortex> nestingVortexes = nearbyMobs.stream().filter(v -> v.getAge() >= 0).collect(Collectors.toList());
 
         if (!nestingVortexes.isEmpty()) {
@@ -48,7 +48,7 @@ public class KrawlVortexFormXellesGoal extends Goal {
                 int extraVortexes = nestingVortexes.size() - 3;
                 //delete the vortexes.
                 BlockPos vortexPos = vortex.blockPosition();
-                Level level = vortex.level;
+                Level level = vortex.level();
                 if (!level.isClientSide() && level instanceof ServerLevel) {
                     if(SpectrobesWorldSaveData.getWorldData((ServerLevel) level).canSpawnNest((vortexPos))) {
 

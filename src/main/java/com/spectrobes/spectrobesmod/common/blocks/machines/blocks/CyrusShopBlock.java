@@ -1,12 +1,12 @@
 package com.spectrobes.spectrobesmod.common.blocks.machines.blocks;
 
+import com.mojang.serialization.MapCodec;
 import com.spectrobes.spectrobesmod.common.blocks.DirectionalBlock;
 import com.spectrobes.spectrobesmod.common.blocks.machines.entity.CyrusShopBlockEntity;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SOpenCyrusShopPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -19,12 +19,24 @@ import org.jetbrains.annotations.Nullable;
 
 public class CyrusShopBlock extends DirectionalBlock {
 
+    public static final MapCodec<CyrusShopBlock> CODEC = MapCodec.unit(CyrusShopBlock::new);
+
+    public CyrusShopBlock() {
+        super();
+    }
+
     @Override
-    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if(!pLevel.isClientSide()) {
-            SpectrobesNetwork.sendToClient(new SOpenCyrusShopPacket(), (ServerPlayer) pPlayer);
+    protected MapCodec<? extends CyrusShopBlock> codec() {
+        return CODEC;
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, BlockHitResult pHit) {
+        if (!pLevel.isClientSide && pPlayer instanceof ServerPlayer serverPlayer) {
+            SpectrobesNetwork.sendToClient(new SOpenCyrusShopPacket(), serverPlayer);
         }
-        return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
+
+        return InteractionResult.SUCCESS;
     }
 
     @Override
@@ -39,8 +51,7 @@ public class CyrusShopBlock extends DirectionalBlock {
     }
 
     @Override
-    public RenderShape getRenderShape(BlockState pState)
-    {
+    public RenderShape getRenderShape(BlockState pState) {
         return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 }

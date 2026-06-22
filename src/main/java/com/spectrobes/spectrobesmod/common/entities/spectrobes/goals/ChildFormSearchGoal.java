@@ -43,7 +43,7 @@ public class ChildFormSearchGoal extends Goal {
         List<BlockPos> mineralBlocks = new ArrayList<>();
 
         blocks.forEach((pos) -> {
-            Block block = entity.level.getBlockState(pos).getBlock();
+            Block block = entity.level().getBlockState(pos).getBlock();
             if(block.getName().toString().contains("mineral_block")
                     || block.getName().toString().contains("fossil_block")
                     || block.getName().toString().contains("marble_ore")

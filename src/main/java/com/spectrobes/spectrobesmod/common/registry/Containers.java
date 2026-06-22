@@ -17,7 +17,9 @@ public class Containers {
     public static void init() {
         PrizmodContainer.PRIZMOD = CONTAINERS.register(
                 "prizmod",
-                () -> new MenuType<>(PrizmodContainer::new, FeatureFlags.DEFAULT_FLAGS)
+                () -> new MenuType<>(
+                        (containerId, inventory) -> new PrizmodContainer(containerId, null),
+                        FeatureFlags.DEFAULT_FLAGS)
         );
 
         SpectrobeDetailsContainer.SPECTROBE_DETAILS = CONTAINERS.register(

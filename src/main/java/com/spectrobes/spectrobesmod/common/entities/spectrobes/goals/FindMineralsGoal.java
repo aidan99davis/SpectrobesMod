@@ -20,7 +20,7 @@ public class FindMineralsGoal extends Goal {
 
     public boolean canUse() {
         if(entity.getStage() == SpectrobeProperties.Stage.CHILD && entity.getOwner() == null) {
-            List<ItemEntity> minerals = entity.level.getEntitiesOfClass(ItemEntity.class, this.entity.getBoundingBox().inflate(8.0D, 8.0D, 8.0D), EntitySpectrobe.MINERAL_SELECTOR);
+            List<ItemEntity> minerals = entity.level().getEntitiesOfClass(ItemEntity.class, this.entity.getBoundingBox().inflate(8.0D, 8.0D, 8.0D), EntitySpectrobe.MINERAL_SELECTOR);
             return !minerals.isEmpty();
         }
         return false;
@@ -28,14 +28,14 @@ public class FindMineralsGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        List<ItemEntity> lvt_1_1_ = entity.level.getEntitiesOfClass(ItemEntity.class, this.entity.getBoundingBox().inflate(8.0D, 8.0D, 8.0D), EntitySpectrobe.MINERAL_SELECTOR);
+        List<ItemEntity> lvt_1_1_ = entity.level().getEntitiesOfClass(ItemEntity.class, this.entity.getBoundingBox().inflate(8.0D, 8.0D, 8.0D), EntitySpectrobe.MINERAL_SELECTOR);
         return !lvt_1_1_.isEmpty() && (entity.isSearching() || entity.getOwner() == null);
     }
 
     public void start() {
         BlockPos blockpos = null;
 
-        List<ItemEntity> minerals = this.entity.level.getEntitiesOfClass(ItemEntity.class, this.entity.getBoundingBox().inflate(2.0D, 2.0D, 2.0D), EntitySpectrobe.MINERAL_SELECTOR);
+        List<ItemEntity> minerals = this.entity.level().getEntitiesOfClass(ItemEntity.class, this.entity.getBoundingBox().inflate(2.0D, 2.0D, 2.0D), EntitySpectrobe.MINERAL_SELECTOR);
 
         for (ItemEntity mineral :
                 minerals) {
@@ -58,7 +58,7 @@ public class FindMineralsGoal extends Goal {
     }
 
     public void tick() {
-        List<ItemEntity> lvt_1_1_ = this.entity.level.getEntitiesOfClass(ItemEntity.class, this.entity.getBoundingBox().inflate(4.0D, 4.0D, 4.0D), EntitySpectrobe.MINERAL_SELECTOR);
+        List<ItemEntity> lvt_1_1_ = this.entity.level().getEntitiesOfClass(ItemEntity.class, this.entity.getBoundingBox().inflate(4.0D, 4.0D, 4.0D), EntitySpectrobe.MINERAL_SELECTOR);
         if (!lvt_1_1_.isEmpty()) {
             this.entity.getNavigation().moveTo(lvt_1_1_.get(0), 0.8000000476837158D);
             if(this.entity.distanceTo(lvt_1_1_.get(0)) < 5) {

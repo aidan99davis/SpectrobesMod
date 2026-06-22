@@ -4,6 +4,8 @@ import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.items.SpectrobesItemGroups;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.Item;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
@@ -13,14 +15,18 @@ public class SpectrobesItemsRegistry {
 
     public static final Supplier<Item> metalium =
     		ITEMS.register("metalium",
-    				() -> new Item(new Item.Properties().tab(SpectrobesItemGroups.SpectrobesMineralItemGroup.Instance)));
+    				() -> new Item(new Item.Properties()));
     
     public static final Supplier<Item> titanium =
     		ITEMS.register("titanium",
-    				() -> new Item(new Item.Properties().tab(SpectrobesItemGroups.SpectrobesMineralItemGroup.Instance)));
+    				() -> new Item(new Item.Properties()));
     
     public static final Supplier<Item> marble =
     		ITEMS.register("marble",
-    				() -> new Item(new Item.Properties().tab(SpectrobesItemGroups.SpectrobesMineralItemGroup.Instance)));
+    				() -> new Item(new Item.Properties()));
 
+	@SubscribeEvent
+	public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
+
+	}
 }

@@ -26,7 +26,7 @@ public class AttackSpectrobeGoal extends TargetGoal {
         if(mob instanceof EntitySpectrobe && ((EntitySpectrobe)mob).getStage() == SpectrobeProperties.Stage.CHILD)
             return false;
 
-        List<EntitySpectrobe> nearbyMobs = mob.level.getEntitiesOfClass(EntitySpectrobe.class, mob.getBoundingBox().inflate(10, 10, 10));
+        List<EntitySpectrobe> nearbyMobs = mob.level().getEntitiesOfClass(EntitySpectrobe.class, mob.getBoundingBox().inflate(10, 10, 10));
 
         if (!nearbyMobs.isEmpty()) {
             this.target = nearbyMobs.get(0);

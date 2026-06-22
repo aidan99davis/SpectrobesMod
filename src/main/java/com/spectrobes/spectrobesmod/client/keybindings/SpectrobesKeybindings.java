@@ -9,7 +9,10 @@ import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityVortex;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.*;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.CSpectrobeAttackPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.CSyncSpectrobeMasterPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.SDespawnSpectrobePacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSpawnSpectrobePacket;
 import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesToolsRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
@@ -33,182 +36,274 @@ import java.util.List;
 import java.util.UUID;
 
 public class SpectrobesKeybindings {
-    public static KeyMapping OPEN_TOOL_MENU_KEYBIND =
-            new KeyMapping("key.prizmod.open",
+
+    public static final KeyMapping OPEN_TOOL_MENU_KEYBIND =
+            new KeyMapping(
+                    "key.prizmod.open",
                     GLFW.GLFW_KEY_R,
-                    "key.prizmod.category");
+                    "key.prizmod.category"
+            );
 
-    public static KeyMapping CYCLE_TOOL_MENU_LEFT_KEYBIND =
-            new KeyMapping("key.prizmod.cycle.left",
+    public static final KeyMapping CYCLE_TOOL_MENU_LEFT_KEYBIND =
+            new KeyMapping(
+                    "key.prizmod.cycle.left",
                     GLFW.GLFW_KEY_LEFT_BRACKET,
-                    "key.prizmod.category");
+                    "key.prizmod.category"
+            );
 
-    public static KeyMapping CYCLE_TOOL_MENU_RIGHT_KEYBIND =
-            new KeyMapping("key.prizmod.cycle.right",
+    public static final KeyMapping CYCLE_TOOL_MENU_RIGHT_KEYBIND =
+            new KeyMapping(
+                    "key.prizmod.cycle.right",
                     GLFW.GLFW_KEY_RIGHT_BRACKET,
-                    "key.prizmod.category");
+                    "key.prizmod.category"
+            );
 
-    public static KeyMapping ATTACK_KEYBIND =
-            new KeyMapping("key.prizmod.attack",
+    public static final KeyMapping ATTACK_KEYBIND =
+            new KeyMapping(
+                    "key.prizmod.attack",
                     GLFW.GLFW_KEY_F,
-                    "key.prizmod.category");
+                    "key.prizmod.category"
+            );
 
     private static LivingEntity Last_Attack_Target = null;
 
     private static void SummonPlayerSpectrobe(Minecraft mc, Spectrobe currentMember, UUID oldUUID, List<EntitySpectrobe> spectrobes) {
-        if(oldUUID != null) {
-            for(EntitySpectrobe spectrobe : spectrobes) {
-                if(spectrobe.getOwner() != null && spectrobe.getOwnerUUID().equals(mc.player.getUUID())) {
+        if (mc.player == null) {
+            return;
+        }
+
+        if (oldUUID != null) {
+            for (EntitySpectrobe spectrobe : spectrobes) {
+                if (spectrobe.getOwner() != null
+                        && spectrobe.getOwnerUUID() != null
+                        && spectrobe.getOwnerUUID().equals(mc.player.getUUID())) {
                     spectrobe.despawn();
                 }
             }
-            if(mc.player.level().isClientSide()) {
+
+            if (mc.player.level().isClientSide()) {
                 SpectrobesNetwork.sendToServer(new SDespawnSpectrobePacket(mc.player.blockPosition()));
             }
-
         }
     }
 
-    @EventBusSubscriber(value = Dist.CLIENT, modid = SpectrobesInfo.MOD_ID)
-    public class KeybindingForgeEvents {
+    @EventBusSubscriber(
+            value = Dist.CLIENT,
+            modid = SpectrobesInfo.MOD_ID
+    )
+    public static class KeybindingForgeEvents {
+
         @SubscribeEvent
-        public static void handleKeys(InputEvent.Key ev)
-        {
+        public static void handleKeys(InputEvent.Key event) {
             Minecraft mc = Minecraft.getInstance();
 
-            if (mc.screen == null && mc.player.getInventory()
-                    .contains(new ItemStack(SpectrobesToolsRegistry.prizmod_item.get())))
-            {
-                if (ATTACK_KEYBIND.consumeClick())
-                {
-                    Vec3 vector3d = mc.player.getEyePosition(1.0F);
-                    Vec3 vector3d1 = mc.player.getViewVector(1.0F);
-                    double d0 = 15;
-                    double d1 = d0 * d0;
-                    Vec3 vector3d2 = vector3d.add(vector3d1.x * d0, vector3d1.y * d0, vector3d1.z * d0);
-                    AABB axisalignedbb = mc.player.getBoundingBox().expandTowards(vector3d1.scale(d0)).inflate(1.0D, 1.0D, 1.0D);
-
-                    EntityHitResult result = ProjectileUtil.getEntityHitResult(mc.player,
-                            vector3d, vector3d2, axisalignedbb,
-                            entity -> entity instanceof LivingEntity,
-                            d1);
-
-                    if (result != null) {
-                        if (result.getEntity() != null) {
-                            if (result.getEntity() instanceof EntityKrawl && !(result.getEntity() instanceof EntityVortex)) {
-                                EntityKrawl krawl = (EntityKrawl) result.getEntity();
-                                mc.player.getCapability(SpectrobeMaster.INSTANCE).ifPresent(sm -> {
-                                    if (sm.getCurrentTeamMember() != null && sm.getCurrentTeamMember().active && sm.getCurrentTeamMember().properties.getStage() != SpectrobeProperties.Stage.CHILD) {
-                                        List<EntitySpectrobe> spectrobes = mc.player.level
-                                                .getEntitiesOfClass(EntitySpectrobe.class, mc.player.getBoundingBox().inflate(30, 30, 30));
-                                        for (EntitySpectrobe spectrobe :
-                                                spectrobes) {
-                                            if (spectrobe.getSpectrobeData().SpectrobeUUID.equals(sm.getCurrentTeamMember().SpectrobeUUID)) {
-                                                SpectrobesNetwork.sendToServer(new CSpectrobeAttackPacket(spectrobe.getId(), krawl.getId()));
-                                                if(Last_Attack_Target != null && Last_Attack_Target.isAlive()) {
-                                                    if(spectrobe.getTarget() instanceof EntityKrawl krawl1) krawl1.setGlowing(false);
-                                                    if(spectrobe.getTarget() instanceof EntitySpectrobe spec1) spec1.setGlowing(false);
-//                                                    spectrobe.setTarget(null);
-                                                }
-                                                spectrobe.setTarget(krawl);
-                                                Last_Attack_Target = krawl;
-                                                spectrobe.getNavigation().moveTo(krawl, 1);
-                                                krawl.setGlowing(true);
-                                            }
-                                        }
-                                    }
-                                });
-                            } else if (result.getEntity() instanceof EntitySpectrobe) {
-                                EntitySpectrobe spectrobe = (EntitySpectrobe) result.getEntity();
-                                if(spectrobe.getOwner() == null && spectrobe.getStage() != SpectrobeProperties.Stage.CHILD) {
-                                    mc.player.getCapability(SpectrobeMaster.INSTANCE).ifPresent(sm -> {
-                                        if (sm.getCurrentTeamMember() != null && sm.getCurrentTeamMember().active && sm.getCurrentTeamMember().properties.getStage() != SpectrobeProperties.Stage.CHILD) {
-                                            List<EntitySpectrobe> spectrobes = mc.player.level
-                                                    .getEntitiesOfClass(EntitySpectrobe.class, mc.player.getBoundingBox().inflate(16, 16, 16));
-                                            for (EntitySpectrobe spec :
-                                                    spectrobes) {
-                                                if (spec.getSpectrobeData().SpectrobeUUID.equals(sm.getCurrentTeamMember().SpectrobeUUID)) {
-                                                    SpectrobesNetwork.sendToServer(new CSpectrobeAttackPacket(spec.getId(), spectrobe.getId()));
-                                                    if(Last_Attack_Target != null && Last_Attack_Target.isAlive()) {
-                                                        if(spec.getTarget() instanceof EntityKrawl krawl1) krawl1.setGlowing(false);
-                                                        if(spec.getTarget() instanceof EntitySpectrobe spec1) spec1.setGlowing(false);
-//                                                        spec.setTarget(null);
-                                                    }
-                                                    Last_Attack_Target = spectrobe;
-
-                                                    spec.setTarget(spectrobe);
-                                                    spec.getNavigation().moveTo(spectrobe, 1);
-                                                    spectrobe.setGlowing(true);
-
-                                                }
-                                            }
-                                        }
-                                    });
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (OPEN_TOOL_MENU_KEYBIND.consumeClick())
-                {
-                    if (mc.screen == null)
-                    {
-                        mc.setScreen(new PrizmodScreen(
-                                PrizmodContainer.PRIZMOD.get()
-                                        .create(0, mc.player.getInventory()),
-                                mc.player.getInventory(), Component.empty()));
-
-                    }
-                }
-
-                if (CYCLE_TOOL_MENU_LEFT_KEYBIND.consumeClick())
-                {
-                    mc.player.getCapability(SpectrobeMaster.INSTANCE)
-                            .ifPresent(sm -> {
-                                Spectrobe currentMember = sm.getCurrentTeamMember();
-
-                                UUID oldUUID = currentMember != null? currentMember.SpectrobeUUID : null;
-                                sm.changeSelected(-1);
-                                List<EntitySpectrobe> spectrobes = mc.player.level
-                                        .getEntitiesOfClass(EntitySpectrobe.class, mc.player.getBoundingBox().inflate(30, 30, 30));
-                                SummonPlayerSpectrobe(mc, currentMember, oldUUID, spectrobes);
-                                if(sm.getCurrentTeamMember() != null && sm.getCurrentTeamMember().currentHealth > 0) {
-                                    sm.spawnCurrent();
-                                    SpectrobesNetwork.sendToServer(new SSpawnSpectrobePacket(sm.getCurrentTeamMember()));
-                                }
-                                SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket((PlayerSpectrobeMaster) sm));
-                            });
-                }
-
-                if (CYCLE_TOOL_MENU_RIGHT_KEYBIND.consumeClick())
-                {
-                    mc.player.getCapability(SpectrobeMaster.INSTANCE)
-                            .ifPresent(sm -> {
-                                Spectrobe currentMember = sm.getCurrentTeamMember();
-
-                                UUID oldUUID = currentMember != null? currentMember.SpectrobeUUID : null;
-                                sm.changeSelected(1);
-                                List<EntitySpectrobe> spectrobes = mc.player.level
-                                        .getEntitiesOfClass(EntitySpectrobe.class, mc.player.getBoundingBox().inflate(30, 30, 30));
-
-                                SummonPlayerSpectrobe(mc, currentMember, oldUUID, spectrobes);
-
-                                if(sm.getCurrentTeamMember() != null && sm.getCurrentTeamMember().currentHealth > 0) {
-                                    sm.spawnCurrent();
-                                    SpectrobesNetwork.sendToServer(new SSpawnSpectrobePacket(sm.getCurrentTeamMember()));
-                                }
-                                SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket((PlayerSpectrobeMaster) sm));
-
-                            });
-                }
+            if (mc.player == null || mc.level == null || mc.screen != null) {
+                return;
             }
 
+            if (!mc.player.getInventory().contains(new ItemStack(SpectrobesToolsRegistry.prizmod_item.get()))) {
+                return;
+            }
+
+            if (ATTACK_KEYBIND.consumeClick()) {
+                handleAttackKey(mc);
+            }
+
+            if (OPEN_TOOL_MENU_KEYBIND.consumeClick()) {
+                handleOpenToolMenuKey(mc);
+            }
+
+            if (CYCLE_TOOL_MENU_LEFT_KEYBIND.consumeClick()) {
+                handleCycleToolMenuKey(mc, -1);
+            }
+
+            if (CYCLE_TOOL_MENU_RIGHT_KEYBIND.consumeClick()) {
+                handleCycleToolMenuKey(mc, 1);
+            }
+        }
+
+        private static void handleAttackKey(Minecraft mc) {
+            if (mc.player == null) {
+                return;
+            }
+
+            Vec3 eyePosition = mc.player.getEyePosition(1.0F);
+            Vec3 viewVector = mc.player.getViewVector(1.0F);
+
+            double range = 15.0D;
+            double rangeSquared = range * range;
+
+            Vec3 endPosition = eyePosition.add(
+                    viewVector.x * range,
+                    viewVector.y * range,
+                    viewVector.z * range
+            );
+
+            AABB hitBox = mc.player.getBoundingBox()
+                    .expandTowards(viewVector.scale(range))
+                    .inflate(1.0D, 1.0D, 1.0D);
+
+            EntityHitResult result = ProjectileUtil.getEntityHitResult(
+                    mc.player,
+                    eyePosition,
+                    endPosition,
+                    hitBox,
+                    entity -> entity instanceof LivingEntity,
+                    rangeSquared
+            );
+
+            if (result == null || result.getEntity() == null) {
+                return;
+            }
+
+            PlayerSpectrobeMaster spectrobeMaster = mc.player.getCapability(SpectrobeMaster.INSTANCE);
+
+            if (spectrobeMaster == null) {
+                return;
+            }
+
+            Spectrobe currentTeamMember = spectrobeMaster.getCurrentTeamMember();
+
+            if (currentTeamMember == null
+                    || !currentTeamMember.active
+                    || currentTeamMember.properties.getStage() == SpectrobeProperties.Stage.CHILD) {
+                return;
+            }
+
+            if (result.getEntity() instanceof EntityKrawl krawl && !(result.getEntity() instanceof EntityVortex)) {
+                attackKrawl(mc, currentTeamMember, krawl);
+                return;
+            }
+
+            if (result.getEntity() instanceof EntitySpectrobe targetSpectrobe) {
+                attackWildSpectrobe(mc, currentTeamMember, targetSpectrobe);
+            }
+        }
+
+        private static void attackKrawl(Minecraft mc, Spectrobe currentTeamMember, EntityKrawl krawl) {
+            if (mc.player == null) {
+                return;
+            }
+
+            List<EntitySpectrobe> spectrobes = mc.player.level().getEntitiesOfClass(
+                    EntitySpectrobe.class,
+                    mc.player.getBoundingBox().inflate(30.0D, 30.0D, 30.0D)
+            );
+
+            for (EntitySpectrobe spectrobe : spectrobes) {
+                if (!spectrobe.getSpectrobeData().SpectrobeUUID.equals(currentTeamMember.SpectrobeUUID)) {
+                    continue;
+                }
+
+                SpectrobesNetwork.sendToServer(new CSpectrobeAttackPacket(spectrobe.getId(), krawl.getId()));
+
+                clearPreviousTargetGlow(spectrobe);
+
+                spectrobe.setTarget(krawl);
+                Last_Attack_Target = krawl;
+
+                spectrobe.getNavigation().moveTo(krawl, 1.0D);
+                krawl.setGlowingTag(true);
+            }
+        }
+
+        private static void attackWildSpectrobe(Minecraft mc, Spectrobe currentTeamMember, EntitySpectrobe targetSpectrobe) {
+            if (mc.player == null) {
+                return;
+            }
+
+            if (targetSpectrobe.getOwner() != null
+                    || targetSpectrobe.getStage() == SpectrobeProperties.Stage.CHILD) {
+                return;
+            }
+
+            List<EntitySpectrobe> spectrobes = mc.player.level().getEntitiesOfClass(
+                    EntitySpectrobe.class,
+                    mc.player.getBoundingBox().inflate(16.0D, 16.0D, 16.0D)
+            );
+
+            for (EntitySpectrobe spectrobe : spectrobes) {
+                if (!spectrobe.getSpectrobeData().SpectrobeUUID.equals(currentTeamMember.SpectrobeUUID)) {
+                    continue;
+                }
+
+                SpectrobesNetwork.sendToServer(new CSpectrobeAttackPacket(spectrobe.getId(), targetSpectrobe.getId()));
+
+                clearPreviousTargetGlow(spectrobe);
+
+                Last_Attack_Target = targetSpectrobe;
+
+                spectrobe.setTarget(targetSpectrobe);
+                spectrobe.getNavigation().moveTo(targetSpectrobe, 1.0D);
+                targetSpectrobe.setGlowingTag(true);
+            }
+        }
+
+        private static void clearPreviousTargetGlow(EntitySpectrobe spectrobe) {
+            if (Last_Attack_Target == null || !Last_Attack_Target.isAlive()) {
+                return;
+            }
+
+            if (spectrobe.getTarget() instanceof EntityKrawl krawl) {
+                krawl.setGlowingTag(false);
+            }
+
+            if (spectrobe.getTarget() instanceof EntitySpectrobe targetSpectrobe) {
+                targetSpectrobe.setGlowingTag(false);
+            }
+        }
+
+        private static void handleOpenToolMenuKey(Minecraft mc) {
+            if (mc.player == null || mc.screen != null) {
+                return;
+            }
+
+            mc.setScreen(new PrizmodScreen(
+                    PrizmodContainer.PRIZMOD.get().create(0, mc.player.getInventory()),
+                    mc.player.getInventory(),
+                    Component.empty()
+            ));
+        }
+
+        private static void handleCycleToolMenuKey(Minecraft mc, int direction) {
+            if (mc.player == null) {
+                return;
+            }
+
+            PlayerSpectrobeMaster spectrobeMaster = mc.player.getCapability(SpectrobeMaster.INSTANCE);
+
+            if (spectrobeMaster == null) {
+                return;
+            }
+
+            Spectrobe currentMember = spectrobeMaster.getCurrentTeamMember();
+            UUID oldUUID = currentMember != null ? currentMember.SpectrobeUUID : null;
+
+            spectrobeMaster.changeSelected(direction);
+
+            List<EntitySpectrobe> spectrobes = mc.player.level().getEntitiesOfClass(
+                    EntitySpectrobe.class,
+                    mc.player.getBoundingBox().inflate(30.0D, 30.0D, 30.0D)
+            );
+
+            SummonPlayerSpectrobe(mc, currentMember, oldUUID, spectrobes);
+
+            if (spectrobeMaster.getCurrentTeamMember() != null
+                    && spectrobeMaster.getCurrentTeamMember().currentHealth > 0) {
+                spectrobeMaster.spawnCurrent();
+                SpectrobesNetwork.sendToServer(new SSpawnSpectrobePacket(spectrobeMaster.getCurrentTeamMember()));
+            }
+
+            SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket((PlayerSpectrobeMaster) spectrobeMaster));
         }
     }
 
-    @EventBusSubscriber(value = Dist.CLIENT, modid = SpectrobesInfo.MOD_ID)
-    public class KeybindingModBusEvents {
+    @EventBusSubscriber(
+            value = Dist.CLIENT,
+            modid = SpectrobesInfo.MOD_ID
+    )
+    public static class KeybindingModBusEvents {
+
         @SubscribeEvent
         public static void onKeyRegister(RegisterKeyMappingsEvent event) {
             event.register(ATTACK_KEYBIND);

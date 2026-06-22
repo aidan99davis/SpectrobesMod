@@ -1,0 +1,37 @@
+modLoader="javafml"
+loaderVersion="[1,)"
+license="MIT"
+issueTrackerURL="https://github.com/aidan99davis/SpectrobesMod/issues"
+
+[[mods]]
+modId="spectrobesmod"
+version="${mod_version}"
+displayName="Spectrobes Mod"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/spectrobes-mod"
+# logoFile="examplemod.png"
+credits="Thanks for this mod goes to the Spectrobes mod development team"
+authors="aidan99davis"
+description='''
+A mod based on the Spectrobes game franchise made by Disney.
+'''
+
+[[dependencies.spectrobesmod]]
+modId="neoforge"
+type="required"
+versionRange="[21.1,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.spectrobesmod]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1,1.21.2)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.spectrobesmod]]
+modId="geckolib"
+type="required"
+versionRange="[4,5)"
+ordering="AFTER"
+side="BOTH"

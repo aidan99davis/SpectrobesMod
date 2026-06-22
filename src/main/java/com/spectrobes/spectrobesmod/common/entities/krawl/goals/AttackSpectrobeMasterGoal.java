@@ -26,7 +26,7 @@ public class AttackSpectrobeMasterGoal extends TargetGoal {
         if(!(mob instanceof EntityKrawl))
             return false;
 
-        List<Player> nearbyPlayers = mob.level.getEntitiesOfClass(Player.class, mob.getBoundingBox().inflate(20, 20, 20));
+        List<Player> nearbyPlayers = mob.level().getEntitiesOfClass(Player.class, mob.getBoundingBox().inflate(20, 20, 20));
 
         AtomicReference<Player> toAttack = new AtomicReference<>();
         toAttack.set(null);

@@ -36,7 +36,7 @@ public class FossilBlock extends SpectrobesTileEntityBlock {
         this(PROPS);
     }
 
-    public FossilBlock(BlockBehaviour.Properties properties) {
+    private FossilBlock(BlockBehaviour.Properties properties) {
         super(properties);
     }
 

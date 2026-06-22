@@ -11,7 +11,6 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
-@EventBusSubscriber(modid = SpectrobesInfo.MOD_ID)
 public final class DataSerializerRegistry {
 
     public static final DeferredRegister<EntityDataSerializer<?>> SERIALIZERS =

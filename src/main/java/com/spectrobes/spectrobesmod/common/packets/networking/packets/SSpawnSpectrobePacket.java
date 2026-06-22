@@ -76,15 +76,21 @@ public class SSpawnSpectrobePacket implements CustomPacketPayload {
             }
 
             try {
+//                EntitySpectrobe spawnedSpectrobe = SpectrobesEntities.getByName(spectrobe.name).spawn(
+//                        serverLevel,
+//                        spectrobe.write(),
+//                        Component.literal(spectrobe.name),
+//                        player,
+//                        player.blockPosition(),
+//                        MobSpawnType.MOB_SUMMONED,
+//                        true,
+//                        true
+//                );
+
                 EntitySpectrobe spawnedSpectrobe = SpectrobesEntities.getByName(spectrobe.name).spawn(
                         serverLevel,
-                        spectrobe.write(),
-                        Component.literal(spectrobe.name),
-                        player,
                         player.blockPosition(),
-                        MobSpawnType.MOB_SUMMONED,
-                        true,
-                        true
+                        MobSpawnType.MOB_SUMMONED
                 );
 
                 if (spawnedSpectrobe == null) {

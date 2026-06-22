@@ -23,6 +23,8 @@ import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
@@ -63,8 +65,8 @@ public abstract class SpectrobesRangedWeapon extends BowItem implements GeoItem,
             energyBolt.setPos(player.getX(), player.getY() + 1.5D, player.getZ());
             energyBolt.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, power, 1.0F);
 
-            energyBolt.AtkDamage = getWeaponStats().AtkDamage;
-            energyBolt.Nature = getWeaponStats().Nature;
+            energyBolt.AtkDamage = GetWeaponStats().AtkDamage;
+            energyBolt.Nature = GetWeaponStats().Nature;
 
             level.addFreshEntity(energyBolt);
         }
@@ -101,7 +103,7 @@ public abstract class SpectrobesRangedWeapon extends BowItem implements GeoItem,
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         super.appendHoverText(stack, context, tooltip, flag);
 
-        WeaponStats stats = getWeaponStats();
+        WeaponStats stats = GetWeaponStats();
 
         tooltip.add(Component.literal("Weapon Tier: " + stats.Tier));
         tooltip.add(Component.literal("Attack Stat: " + stats.AtkDamage));
@@ -115,7 +117,7 @@ public abstract class SpectrobesRangedWeapon extends BowItem implements GeoItem,
 
     @Override
     public int getDefaultProjectileRange() {
-        return getWeaponStats().Tier * 7;
+        return GetWeaponStats().Tier * 7;
     }
 
     @Override
@@ -126,7 +128,7 @@ public abstract class SpectrobesRangedWeapon extends BowItem implements GeoItem,
         return this.cache;
     }
 
-    public abstract WeaponStats getWeaponStats();
+    public abstract WeaponStats GetWeaponStats();
 
     @Override
     public UseAnim getUseAnimation(ItemStack stack) {
@@ -136,6 +138,10 @@ public abstract class SpectrobesRangedWeapon extends BowItem implements GeoItem,
     public abstract String getControllerName();
 
     public SpectrobeProperties.Nature getNature() {
-        return getWeaponStats().Nature;
+        return GetWeaponStats().Nature;
+    }
+
+    public PlayState predicate(AnimationState animationState) {
+        return animationState.isMoving() ? PlayState.CONTINUE : PlayState.STOP;
     }
 }

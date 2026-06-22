@@ -6,7 +6,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.goal.JumpGoal;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
@@ -47,11 +46,11 @@ public class AquaticJumpGoal extends JumpGoal {
 
     private boolean waterIsClear(BlockPos pPos, int pDx, int pDz, int pScale) {
         BlockPos blockpos = pPos.offset(pDx * pScale, 0, pDz * pScale);
-        return this.spectrobe.level.getFluidState(blockpos).is(FluidTags.WATER) && !this.spectrobe.level.getBlockState(blockpos).getMaterial().blocksMotion();
+        return this.spectrobe.level().getFluidState(blockpos).is(FluidTags.WATER) && !this.spectrobe.level().getBlockState(blockpos).blocksMotion();
     }
 
     private boolean surfaceIsClear(BlockPos pPos, int pDx, int pDz, int pScale) {
-        return this.spectrobe.level.getBlockState(pPos.offset(pDx * pScale, 1, pDz * pScale)).isAir() && this.spectrobe.level.getBlockState(pPos.offset(pDx * pScale, 2, pDz * pScale)).isAir();
+        return this.spectrobe.level().getBlockState(pPos.offset(pDx * pScale, 1, pDz * pScale)).isAir() && this.spectrobe.level().getBlockState(pPos.offset(pDx * pScale, 2, pDz * pScale)).isAir();
     }
 
     /**
@@ -59,7 +58,7 @@ public class AquaticJumpGoal extends JumpGoal {
      */
     public boolean canContinueToUse() {
         double d0 = this.spectrobe.getDeltaMovement().y;
-        return (!(d0 * d0 < (double)0.03F) || this.spectrobe.xRotO == 0.0F || !(Math.abs(this.spectrobe.xRotO) < 10.0F) || !this.spectrobe.isInWater()) && !this.spectrobe.isOnGround();
+        return (!(d0 * d0 < (double)0.03F) || this.spectrobe.xRotO == 0.0F || !(Math.abs(this.spectrobe.xRotO) < 10.0F) || !this.spectrobe.isInWater()) && !this.spectrobe.onGround();
     }
 
     public boolean isInterruptable() {
@@ -88,7 +87,7 @@ public class AquaticJumpGoal extends JumpGoal {
     public void tick() {
         boolean flag = this.breached;
         if (!flag) {
-            FluidState fluidstate = this.spectrobe.level.getFluidState(this.spectrobe.blockPosition());
+            FluidState fluidstate = this.spectrobe.level().getFluidState(this.spectrobe.blockPosition());
             this.breached = fluidstate.is(FluidTags.WATER);
         }
 
@@ -98,7 +97,7 @@ public class AquaticJumpGoal extends JumpGoal {
 
         Vec3 vec3 = this.spectrobe.getDeltaMovement();
         if (vec3.y * vec3.y < (double)0.03F && this.spectrobe.getXRot() != 0.0F) {
-            this.spectrobe.setXRot(Mth.rotlerp(this.spectrobe.getXRot(), 0.0F, 0.2F));
+            this.spectrobe.setXRot(Mth.rotLerp(this.spectrobe.getXRot(), 0.0F, 0.2F));
         } else if (vec3.length() > (double)1.0E-5F) {
             double d0 = vec3.horizontalDistance();
             double d1 = Math.atan2(-vec3.y, d0) * (double)(180F / (float)Math.PI);

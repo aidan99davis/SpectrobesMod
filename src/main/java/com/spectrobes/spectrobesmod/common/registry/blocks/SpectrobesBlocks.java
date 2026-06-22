@@ -13,6 +13,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.MapColor;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
@@ -50,42 +51,57 @@ public class SpectrobesBlocks {
     public static final Supplier<Block> mineral_block = BLOCKS.register("mineral_block", MineralBlock::new);
     public static final Supplier<Block> fossil_block = BLOCKS.register("fossil_block", FossilBlock::new);
     public static final Supplier<Block> metalium_ore = BLOCKS.register("metalium_ore", 
-    		() -> new Block(BlockBehaviour.Properties.of(Material.STONE).strength(1.5f).sound(SoundType.STONE)));
+    		() -> new Block(BlockBehaviour.Properties.of().strength(1.5f).sound(SoundType.STONE)));
     public static final Supplier<Block> titanium_ore = BLOCKS.register("titanium_ore", 
-    		() -> new Block(BlockBehaviour.Properties.of(Material.STONE).strength(1.5f).sound(SoundType.STONE)));
+    		() -> new Block(BlockBehaviour.Properties.of().strength(1.5f).sound(SoundType.STONE)));
     public static final Supplier<Block> marble_ore = BLOCKS.register("marble_ore", 
-    		() -> new Block(BlockBehaviour.Properties.of(Material.STONE).strength(1.5f).sound(SoundType.STONE).requiresCorrectToolForDrops()));
+    		() -> new Block(BlockBehaviour.Properties.of().strength(1.5f).sound(SoundType.STONE).requiresCorrectToolForDrops()));
     public static final Supplier<Block> metalium_block_horizontal = BLOCKS.register("metalium_block_horizontal", MetaliumBlock::new);
     public static final Supplier<Block> metalium_block_vertical = BLOCKS.register("metalium_block_vertical", MetaliumBlock::new);
     public static final Supplier<Block> titanium_block = BLOCKS.register("titanium_block", 
-    		() -> new Block(BlockBehaviour.Properties.of(Material.METAL).strength(3f).sound(SoundType.METAL)));
+    		() -> new Block(BlockBehaviour.Properties.of().strength(3f).sound(SoundType.METAL)));
     public static final Supplier<Block> titanium_slab = BLOCKS.register("titanium_slab",
-            () -> new SlabBlock(BlockBehaviour.Properties.of(Material.METAL).strength(3f).sound(SoundType.METAL)));
+            () -> new SlabBlock(BlockBehaviour.Properties.of().strength(3f).sound(SoundType.METAL)));
     public static final Supplier<Block> titanium_stairs = BLOCKS.register("titanium_stairs",
-            () -> new StairBlock(titanium_block.get().defaultBlockState(), BlockBehaviour.Properties.copy(titanium_block.get())));
+            () -> new StairBlock(titanium_block.get().defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(titanium_block.get())));
     public static final Supplier<Block> minergy_lamp = BLOCKS.register("minergy_lamp",
-            () -> new Block(BlockBehaviour.Properties.of(Material.METAL).strength(3f).sound(SoundType.METAL)
+            () -> new Block(BlockBehaviour.Properties.of().strength(3f).sound(SoundType.METAL)
                     .lightLevel(BlockState -> 15)));
     public static final Supplier<Block> marble_block = BLOCKS.register("marble_block", 
-    		() -> new Block(BlockBehaviour.Properties.of(Material.GLASS).strength(3f).sound(SoundType.GLASS)));
+    		() -> new Block(BlockBehaviour.Properties.of().strength(3f).sound(SoundType.GLASS)));
     public static final Supplier<SpectrobesBlock> krawl_nest = BLOCKS.register("krawl_nest",
-    		() -> new SpreadingKrawlNestBlock(BlockBehaviour.Properties.of(Material.STONE).strength(10f).sound(SoundType.STONE)));
+    		() -> new SpreadingKrawlNestBlock(BlockBehaviour.Properties.of().strength(10f).sound(SoundType.STONE)));
     public static final Supplier<SpectrobesBlock> krawl_stone = BLOCKS.register("krawl_stone",
-    		() -> new MultiTextureBlock(BlockBehaviour.Properties.of(Material.STONE).strength(10f).sound(SoundType.STONE)));
+    		() -> new MultiTextureBlock(BlockBehaviour.Properties.of().strength(10f).sound(SoundType.STONE)));
 //    public static final Supplier<PlanetaryTeleporterBlock> planetary_teleporter = BLOCKS.register("planetary_teleporter",
 //            PlanetaryTeleporterBlock::new);
     public static final Supplier<Block> krawl_vine = BLOCKS.register("krawl_vine",
-    		() -> new VineBlock(BlockBehaviour.Properties.of(Material.REPLACEABLE_PLANT).noOcclusion().strength(0.2F).sound(SoundType.VINE)));
+    		() -> new VineBlock(BlockBehaviour.Properties.of().noOcclusion().strength(0.2F).sound(SoundType.VINE)));
     public static final Supplier<Block> krawl_fiber = BLOCKS.register("krawl_fiber",
-            () -> new KrawlFiberBlock(BlockBehaviour.Properties.of(Material.REPLACEABLE_PLANT).noOcclusion().strength(0.2F).sound(SoundType.VINE)));
+            () -> new KrawlFiberBlock(BlockBehaviour.Properties.of().noOcclusion().strength(0.2F).sound(SoundType.VINE)));
     public static final Supplier<SpectrobesBlock> krawl_mycelium = BLOCKS.register("krawl_mycelium",
-    		() -> new MultiTextureBlock(BlockBehaviour.Properties.of(Material.DIRT).strength(1F).sound(SoundType.WET_GRASS)));
+    		() -> new MultiTextureBlock(BlockBehaviour.Properties.of().strength(1F).sound(SoundType.WET_GRASS)));
     public static final Supplier<SpectrobesBlock> krawl_mud = BLOCKS.register("krawl_mud",
-    		() -> new SpreadingKrawlNestBlock(BlockBehaviour.Properties.of(Material.SNOW).strength(1F).sound(SoundType.SOUL_SAND)));
+    		() -> new SpreadingKrawlNestBlock(BlockBehaviour.Properties.of().strength(1F).sound(SoundType.SOUL_SAND)));
     public static final Supplier<Block> snag_log = BLOCKS.register("snag_log",
-    		() -> new RotatedPillarBlock(BlockBehaviour.Properties.of(Material.WOOD, (p_235431_2_) -> p_235431_2_.getValue(RotatedPillarBlock.AXIS) == Direction.Axis.Y ? MaterialColor.WOOD : MaterialColor.COLOR_PURPLE).strength(2.0F).sound(SoundType.WOOD)));
+            () -> new RotatedPillarBlock(BlockBehaviour.Properties.of()
+                    .mapColor(state -> state.getValue(RotatedPillarBlock.AXIS) == Direction.Axis.Y
+                            ? MapColor.WOOD
+                            : MapColor.COLOR_PURPLE)
+                    .strength(2.0F)
+                    .sound(SoundType.WOOD)
+                    .ignitedByLava()));
     public static final Supplier<SpectrobesBlock> snag_planks = BLOCKS.register("snag_planks",
-    		() ->  new SpectrobesBlock(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD)));
+            () -> new SpectrobesBlock(BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.WOOD)
+                    .strength(2.0F, 3.0F)
+                    .sound(SoundType.WOOD)
+                    .ignitedByLava()));
+
     public static final Supplier<Block> krawlshroom = BLOCKS.register("krawlshroom",
-    		() -> new HugeMushroomBlock(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.COLOR_GREEN).strength(0.2F).sound(SoundType.WOOD)));
+            () -> new HugeMushroomBlock(BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.COLOR_GREEN)
+                    .strength(0.2F)
+                    .sound(SoundType.WOOD)
+                    .ignitedByLava()));
 }
