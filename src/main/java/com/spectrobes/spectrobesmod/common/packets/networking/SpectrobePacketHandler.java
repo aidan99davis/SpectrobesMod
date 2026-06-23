@@ -9,6 +9,9 @@ import com.spectrobes.spectrobesmod.client.gui.spectrobes_details.SpectrobeDetai
 import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.*;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.client.COpenCyrusShopPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.client.CSyncSpectrobeMasterPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.client.CUpdateSpectrobeSlotPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -46,7 +49,7 @@ public class SpectrobePacketHandler {
         });
         return true;
     }
-    public static boolean handlePacket(SOpenCyrusShopPacket packet, IPayloadContext ctx) {
+    public static boolean handlePacket(COpenCyrusShopPacket packet, IPayloadContext ctx) {
         ctx.enqueueWork(() -> {
             Player player = Minecraft.getInstance().player;
             Minecraft.getInstance()
@@ -62,7 +65,7 @@ public class SpectrobePacketHandler {
         return true;
     }
 
-    public static boolean handlePacket(SSyncSpectrobeMasterPacket packet, IPayloadContext ctx) {
+    public static boolean handlePacket(CSyncSpectrobeMasterPacket packet, IPayloadContext ctx) {
         ctx.enqueueWork(() -> {
             Player player = Minecraft.getInstance().player;
             PlayerSpectrobeMaster clientCap = player.getCapability(SpectrobeMaster.INSTANCE);

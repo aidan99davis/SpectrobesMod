@@ -4,6 +4,7 @@ import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.*;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.client.CSyncSpectrobeMasterPacket;
 import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesToolsRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.server.level.ServerPlayer;
@@ -34,10 +35,8 @@ public class PrizmodContainer extends AbstractContainerMenu {
     public void broadcastChanges() {
         if(needsSync) {
             if(!player.level().isClientSide()) {
-                SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(capability),
+                SpectrobesNetwork.sendToClient(new CSyncSpectrobeMasterPacket(capability),
                         (ServerPlayer) player);
-            } else {
-                SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket(capability));
             }
             needsSync = false;
         }

@@ -2,7 +2,6 @@ package com.spectrobes.spectrobesmod.client.gui.prizmod.Pages;
 
 import com.spectrobes.spectrobesmod.client.gui.prizmod.Components.MenuButton;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 
 public class MenuPage extends PrizmodPage {
 
@@ -12,20 +11,16 @@ public class MenuPage extends PrizmodPage {
 
     @Override
     public void init() {
-        this.addButton(new MenuButton(parent.width / 2 - 60, 40, 60, 20, "Line Up", button -> {
+        super.init();
+        clearButtons();
+
+        addButton(new MenuButton(parent.width / 2 - 60, 40, 60, 20, "Line Up", button -> {
             parent.setMenuPage(new LineUpPage(parent));
         }));
-        //call super.init last cos it needs buttons to be populated.
-        super.init();
     }
 
     @Override
     public void tick() {
-
-    }
-
-    @Override
-    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
-
+        setFocused(true);
     }
 }

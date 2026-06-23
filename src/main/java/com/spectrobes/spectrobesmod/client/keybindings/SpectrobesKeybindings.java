@@ -9,8 +9,7 @@ import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityVortex;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.CSpectrobeAttackPacket;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.CSyncSpectrobeMasterPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.server.SSpectrobeAttackPacket;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SDespawnSpectrobePacket;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSpawnSpectrobePacket;
 import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesToolsRegistry;
@@ -195,7 +194,7 @@ public class SpectrobesKeybindings {
                     continue;
                 }
 
-                SpectrobesNetwork.sendToServer(new CSpectrobeAttackPacket(spectrobe.getId(), krawl.getId()));
+                SpectrobesNetwork.sendToServer(new SSpectrobeAttackPacket(spectrobe.getId(), krawl.getId()));
 
                 clearPreviousTargetGlow(spectrobe);
 
@@ -227,7 +226,7 @@ public class SpectrobesKeybindings {
                     continue;
                 }
 
-                SpectrobesNetwork.sendToServer(new CSpectrobeAttackPacket(spectrobe.getId(), targetSpectrobe.getId()));
+                SpectrobesNetwork.sendToServer(new SSpectrobeAttackPacket(spectrobe.getId(), targetSpectrobe.getId()));
 
                 clearPreviousTargetGlow(spectrobe);
 
@@ -293,8 +292,6 @@ public class SpectrobesKeybindings {
                 spectrobeMaster.spawnCurrent();
                 SpectrobesNetwork.sendToServer(new SSpawnSpectrobePacket(spectrobeMaster.getCurrentTeamMember()));
             }
-
-            SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket((PlayerSpectrobeMaster) spectrobeMaster));
         }
     }
 

@@ -1,15 +1,15 @@
 package com.spectrobes.spectrobesmod.common.items.tools.healing;
 
 import com.spectrobes.spectrobesmod.client.items.healing.renderer.AntidoteItemRenderer;
-import com.spectrobes.spectrobesmod.client.items.healing.renderer.SerumItemRenderer;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.items.minerals.IWorthGura;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.CSyncSpectrobeMasterPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.client.CSyncSpectrobeMasterPacket;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
@@ -17,7 +17,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.client.GeoRenderProvider;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -89,7 +88,7 @@ public class SpectrobeAntidoteHealingItem extends Item implements GeoItem, IWort
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         ItemStack stack = player.getItemInHand(usedHand);
 
-        if (level.isClientSide()) {
+        if (!level.isClientSide()) {
             PlayerSpectrobeMaster playerSpectrobeMaster = player.getCapability(SpectrobeMaster.INSTANCE);
 
             if (playerSpectrobeMaster != null) {
@@ -121,7 +120,7 @@ public class SpectrobeAntidoteHealingItem extends Item implements GeoItem, IWort
                     }
                 });
 
-                SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket(playerSpectrobeMaster));
+                SpectrobesNetwork.sendToClient(new CSyncSpectrobeMasterPacket(playerSpectrobeMaster), (ServerPlayer) player);
             }
         }
 

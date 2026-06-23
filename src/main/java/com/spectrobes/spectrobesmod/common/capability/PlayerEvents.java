@@ -2,7 +2,7 @@ package com.spectrobes.spectrobesmod.common.capability;
 
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSyncSpectrobeMasterPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.client.CSyncSpectrobeMasterPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -43,7 +43,7 @@ public class PlayerEvents {
         despawnSpectrobes(originalPlayer, newStore);
 
         SpectrobesNetwork.sendToClient(
-                new SSyncSpectrobeMasterPacket(newStore),
+                new CSyncSpectrobeMasterPacket(newStore),
                 serverPlayer
         );
     }
@@ -83,7 +83,7 @@ public class PlayerEvents {
         }
 
         SpectrobesNetwork.sendToClient(
-                new SSyncSpectrobeMasterPacket(store),
+                new CSyncSpectrobeMasterPacket(store),
                 serverPlayer
         );
     }
@@ -101,7 +101,7 @@ public class PlayerEvents {
         }
 
         SpectrobesNetwork.sendToClient(
-                new SSyncSpectrobeMasterPacket(store),
+                new CSyncSpectrobeMasterPacket(store),
                 serverPlayer
         );
     }

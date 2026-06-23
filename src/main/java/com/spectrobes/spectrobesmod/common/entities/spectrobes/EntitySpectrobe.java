@@ -23,8 +23,7 @@ import com.spectrobes.spectrobesmod.common.items.tools.PrizmodItem;
 import com.spectrobes.spectrobesmod.common.items.tools.healing.SpectrobeSerumHealingItem;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.CSyncSpectrobeMasterPacket;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSyncSpectrobeMasterPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.client.CSyncSpectrobeMasterPacket;
 import com.spectrobes.spectrobesmod.common.registry.DataSerializerRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.EvolutionRequirements;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
@@ -230,7 +229,7 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityWi
                 specData.addHealth(spectrobeHealAmount);
                 spectrobeMaster.updateSpectrobe(specData);
 
-                if (this.level().isClientSide()) {
+                if (!this.level().isClientSide()) {
                     SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket(spectrobeMaster));
                     owner.sendSystemMessage(Component.literal("Your spectrobe has been healed: " + spectrobeHealAmount + " HP Points."));
                 }
@@ -533,7 +532,7 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityWi
                     spectrobeMaster.updateSpectrobe(evolution.getSpectrobeData());
 
                     if (owner instanceof ServerPlayer serverPlayer) {
-                        SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(spectrobeMaster), serverPlayer);
+                        SpectrobesNetwork.sendToClient(new CSyncSpectrobeMasterPacket(spectrobeMaster), serverPlayer);
                     }
 
                     evolution.despawn();
@@ -580,7 +579,7 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityWi
                 spectrobeMaster.updateSpectrobe(this.getSpectrobeData());
 
                 if (!this.level().isClientSide() && owner instanceof ServerPlayer serverPlayer) {
-                    SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(spectrobeMaster), serverPlayer);
+                    SpectrobesNetwork.sendToClient(new CSyncSpectrobeMasterPacket(spectrobeMaster), serverPlayer);
                 }
             }
 
@@ -645,7 +644,7 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityWi
                 spectrobeMaster.updateSpectrobe(this.getSpectrobeData());
 
                 if (owner instanceof ServerPlayer serverPlayer) {
-                    SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(spectrobeMaster), serverPlayer);
+                    SpectrobesNetwork.sendToClient(new CSyncSpectrobeMasterPacket(spectrobeMaster), serverPlayer);
                 }
             }
         }
@@ -711,7 +710,7 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityWi
                 spectrobeMaster.addGura(krawlProperties.getGuraWorth());
 
                 if (owner instanceof ServerPlayer serverPlayer) {
-                    SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(spectrobeMaster), serverPlayer);
+                    SpectrobesNetwork.sendToClient(new CSyncSpectrobeMasterPacket(spectrobeMaster), serverPlayer);
                 }
             }
         }

@@ -6,26 +6,42 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 
 public class SpectrobeButton extends Button {
-    public SpectrobePiece piece;
-    final PrizmodScreen gui;
+
+    public final SpectrobePiece piece;
+    private final PrizmodScreen gui;
     private boolean selected;
 
-    public SpectrobeButton(PrizmodScreen gui, SpectrobePiece piece, Button.OnPress pressable, CreateNarration nar) {
-        super(piece.posX, piece.posY, 32, 32, Component.literal(""), pressable, nar);
+    public SpectrobeButton(PrizmodScreen gui, SpectrobePiece piece, Button.OnPress pressable, CreateNarration narration) {
+        super(
+                piece.getX(),
+                piece.getY(),
+                SpectrobePiece.SLOT_SIZE,
+                SpectrobePiece.SLOT_SIZE,
+                Component.empty(),
+                pressable,
+                narration == null ? DEFAULT_NARRATION : narration
+        );
+
         this.gui = gui;
         this.piece = piece;
     }
 
+    public PrizmodScreen getGui() {
+        return gui;
+    }
+
     @Override
-    public void renderWidget(GuiGraphics stack, int mouseX, int mouseY, float partialTicks) {
-        piece.draw(stack, !selected);
-        if(this.isHovered) {
-//            piece.drawInfo(); Name/Custom name? or a stat sheet?
-        }
+    public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        setX(piece.getX());
+        setY(piece.getY());
+        setWidth(SpectrobePiece.SLOT_SIZE);
+        setHeight(SpectrobePiece.SLOT_SIZE);
+
+        piece.draw(graphics, !selected);
     }
 
     public void setSelected(boolean selected) {
         this.selected = selected;
-        piece.setSelected(selected);
+        this.piece.setSelected(selected);
     }
 }

@@ -1,4 +1,4 @@
-package com.spectrobes.spectrobesmod.common.packets.networking.packets;
+package com.spectrobes.spectrobesmod.common.packets.networking.packets.server;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
@@ -13,25 +13,25 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public class CSpectrobeAttackPacket implements CustomPacketPayload {
+public class SSpectrobeAttackPacket implements CustomPacketPayload {
 
-    public static final Type<CSpectrobeAttackPacket> TYPE = new Type<>(
+    public static final Type<SSpectrobeAttackPacket> TYPE = new Type<>(
             ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "spectrobe_attack")
     );
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, CSpectrobeAttackPacket> STREAM_CODEC =
+    public static final StreamCodec<RegistryFriendlyByteBuf, SSpectrobeAttackPacket> STREAM_CODEC =
             StreamCodec.composite(
                     ByteBufCodecs.VAR_INT,
-                    CSpectrobeAttackPacket::getSpectrobeID,
+                    SSpectrobeAttackPacket::getSpectrobeID,
                     ByteBufCodecs.VAR_INT,
-                    CSpectrobeAttackPacket::getKrawlID,
-                    CSpectrobeAttackPacket::new
+                    SSpectrobeAttackPacket::getKrawlID,
+                    SSpectrobeAttackPacket::new
             );
 
     private final int spectrobeID;
     private final int krawlID;
 
-    public CSpectrobeAttackPacket(int spectrobeID, int krawlID) {
+    public SSpectrobeAttackPacket(int spectrobeID, int krawlID) {
         this.spectrobeID = spectrobeID;
         this.krawlID = krawlID;
     }
@@ -49,7 +49,7 @@ public class CSpectrobeAttackPacket implements CustomPacketPayload {
         return TYPE;
     }
 
-    public static void handle(CSpectrobeAttackPacket packet, IPayloadContext context) {
+    public static void handle(SSpectrobeAttackPacket packet, IPayloadContext context) {
         if (!(context.player() instanceof ServerPlayer player)) {
             return;
         }

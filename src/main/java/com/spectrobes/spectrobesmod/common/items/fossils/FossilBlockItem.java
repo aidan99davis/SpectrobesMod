@@ -1,7 +1,7 @@
 package com.spectrobes.spectrobesmod.common.items.fossils;
 
 import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSyncSpectrobeMasterPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.client.CSyncSpectrobeMasterPacket;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -64,7 +64,7 @@ public abstract class FossilBlockItem extends BlockItem implements GeoItem {
 
         PacketDistributor.sendToPlayer(
                 serverPlayer,
-                new SSyncSpectrobeMasterPacket(playerCap)
+                new CSyncSpectrobeMasterPacket(playerCap)
         );
 
         serverPlayer.sendSystemMessage(AWAKEN_MESSAGE);

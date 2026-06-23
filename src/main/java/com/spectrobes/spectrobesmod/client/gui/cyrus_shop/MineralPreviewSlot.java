@@ -63,7 +63,7 @@ public class MineralPreviewSlot implements Renderable, GuiEventListener {
         if (this.mineralItem instanceof MineralItem mineral) {
             return ResourceLocation.fromNamespaceAndPath(
                     "spectrobesmod",
-                    "textures/items/" + mineral.mineral.name + ".png"
+                    "textures/item/" + mineral.mineral.name + ".png"
             );
         }
 
@@ -71,15 +71,15 @@ public class MineralPreviewSlot implements Renderable, GuiEventListener {
             return switch (chromaMineral.getVariantNumber()) {
                 case 1 -> ResourceLocation.fromNamespaceAndPath(
                         "spectrobesmod",
-                        "textures/items/chroma_mineral_item_one.png"
+                        "textures/item/chroma_mineral_item_one.png"
                 );
                 case 2 -> ResourceLocation.fromNamespaceAndPath(
                         "spectrobesmod",
-                        "textures/items/chroma_mineral_item_two.png"
+                        "textures/item/chroma_mineral_item_two.png"
                 );
                 default -> ResourceLocation.fromNamespaceAndPath(
                         "spectrobesmod",
-                        "textures/items/chroma_mineral_item_zero.png"
+                        "textures/item/chroma_mineral_item_zero.png"
                 );
             };
         }

@@ -2,9 +2,9 @@
 	"credit": "Made with Blockbench",
 	"parent": "minecraft:block/orientable",
 	"textures": {
-		"0": "spectrobesmod:blocks/metalium_block_side",
-		"1": "spectrobesmod:blocks/titanium_block",
-		"particle": "spectrobesmod:blocks/metalium_block_side"
+		"0": "spectrobesmod:block/metalium_block_side",
+		"1": "spectrobesmod:block/titanium_block",
+		"particle": "spectrobesmod:block/metalium_block_side"
 	},
 	"elements": [
 		{

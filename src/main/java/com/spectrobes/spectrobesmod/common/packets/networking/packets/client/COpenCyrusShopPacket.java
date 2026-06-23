@@ -1,4 +1,4 @@
-package com.spectrobes.spectrobesmod.common.packets.networking.packets;
+package com.spectrobes.spectrobesmod.common.packets.networking.packets.client;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobePacketHandler;
@@ -8,18 +8,18 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public class SOpenCyrusShopPacket implements CustomPacketPayload {
+public class COpenCyrusShopPacket implements CustomPacketPayload {
 
-    public static final SOpenCyrusShopPacket INSTANCE = new SOpenCyrusShopPacket();
+    public static final COpenCyrusShopPacket INSTANCE = new COpenCyrusShopPacket();
 
-    public static final Type<SOpenCyrusShopPacket> TYPE = new Type<>(
+    public static final Type<COpenCyrusShopPacket> TYPE = new Type<>(
             ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "open_cyrus_shop")
     );
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, SOpenCyrusShopPacket> STREAM_CODEC =
+    public static final StreamCodec<RegistryFriendlyByteBuf, COpenCyrusShopPacket> STREAM_CODEC =
             StreamCodec.unit(INSTANCE);
 
-    public SOpenCyrusShopPacket() {
+    public COpenCyrusShopPacket() {
     }
 
     @Override
@@ -27,7 +27,7 @@ public class SOpenCyrusShopPacket implements CustomPacketPayload {
         return TYPE;
     }
 
-    public static void handle(SOpenCyrusShopPacket packet, IPayloadContext context) {
+    public static void handle(COpenCyrusShopPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> SpectrobePacketHandler.handlePacket(packet, context));
     }
 }

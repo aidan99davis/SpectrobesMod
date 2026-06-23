@@ -3,12 +3,16 @@ package com.spectrobes.spectrobesmod.common.blocks.machines.blocks;
 import com.mojang.serialization.MapCodec;
 import com.spectrobes.spectrobesmod.common.blocks.DirectionalBlock;
 import com.spectrobes.spectrobesmod.common.blocks.machines.entity.CyrusShopBlockEntity;
-import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.SOpenCyrusShopPacket;
+import com.spectrobes.spectrobesmod.client.container.CyrusShopContainer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.RenderShape;
@@ -18,7 +22,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 public class CyrusShopBlock extends DirectionalBlock {
-
     public static final MapCodec<CyrusShopBlock> CODEC = MapCodec.unit(CyrusShopBlock::new);
 
     public CyrusShopBlock() {
@@ -30,28 +33,43 @@ public class CyrusShopBlock extends DirectionalBlock {
         return CODEC;
     }
 
+    @Nullable
     @Override
-    protected InteractionResult useWithoutItem(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, BlockHitResult pHit) {
-        if (!pLevel.isClientSide && pPlayer instanceof ServerPlayer serverPlayer) {
-            SpectrobesNetwork.sendToClient(new SOpenCyrusShopPacket(), serverPlayer);
-        }
-
-        return InteractionResult.SUCCESS;
+    public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
+        return new SimpleMenuProvider(
+                (containerId, playerInventory, player) -> new CyrusShopContainer(containerId, playerInventory),
+                Component.translatable("container.spectrobesmod.cyrus_shop")
+        );
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext pContext) {
-        return this.defaultBlockState().setValue(FACING, pContext.getHorizontalDirection().getOpposite());
+    protected InteractionResult useWithoutItem(
+            BlockState state,
+            Level level,
+            BlockPos pos,
+            Player player,
+            BlockHitResult hit
+    ) {
+        if (!level.isClientSide() && player instanceof ServerPlayer serverPlayer) {
+            serverPlayer.openMenu(state.getMenuProvider(level, pos));
+        }
+
+        return InteractionResult.sidedSuccess(level.isClientSide());
+    }
+
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new CyrusShopBlockEntity(pPos, pState);
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new CyrusShopBlockEntity(pos, state);
     }
 
     @Override
-    public RenderShape getRenderShape(BlockState pState) {
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 }

@@ -9,7 +9,7 @@ import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.items.armour.ISpectrobeArmour;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSyncSpectrobeMasterPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.client.CSyncSpectrobeMasterPacket;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import com.spectrobes.spectrobesmod.util.DamageUtils;
 import net.minecraft.server.level.ServerPlayer;
@@ -43,7 +43,7 @@ public class ServerEvents {
         spectrobeMaster.setCurrentHealth(currentHealth);
 
         SpectrobesNetwork.sendToClient(
-                new SSyncSpectrobeMasterPacket(spectrobeMaster),
+                new CSyncSpectrobeMasterPacket(spectrobeMaster),
                 serverPlayer
         );
     }
@@ -75,7 +75,7 @@ public class ServerEvents {
         spectrobeMaster.addGura(krawlProperties.getGuraWorth());
 
         SpectrobesNetwork.sendToClient(
-                new SSyncSpectrobeMasterPacket(spectrobeMaster),
+                new CSyncSpectrobeMasterPacket(spectrobeMaster),
                 player
         );
     }
@@ -156,7 +156,7 @@ public class ServerEvents {
         spectrobeMaster.setCurrentHealth(newHealth);
 
         SpectrobesNetwork.sendToClient(
-                new SSyncSpectrobeMasterPacket(spectrobeMaster),
+                new CSyncSpectrobeMasterPacket(spectrobeMaster),
                 player
         );
     }
@@ -191,7 +191,7 @@ public class ServerEvents {
 
         if (changed) {
             SpectrobesNetwork.sendToClient(
-                    new SSyncSpectrobeMasterPacket(spectrobeMaster),
+                    new CSyncSpectrobeMasterPacket(spectrobeMaster),
                     player
             );
         }

@@ -1,4 +1,4 @@
-package com.spectrobes.spectrobesmod.common.packets.networking.packets;
+package com.spectrobes.spectrobesmod.common.packets.networking.packets.client;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobePacketHandler;

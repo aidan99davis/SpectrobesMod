@@ -1,19 +1,19 @@
 package com.spectrobes.spectrobesmod.common.packets.networking;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.CSpectrobeAttackPacket;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.CSyncSpectrobeMasterPacket;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.CUpdateSpectrobeSlotPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.server.SSellMineralPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.server.SSpectrobeAttackPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.client.CUpdateSpectrobeSlotPacket;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SConsumeMineralPacket;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SDespawnSpectrobePacket;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SGiveMineralPacket;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.SOpenCyrusShopPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.client.COpenCyrusShopPacket;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SOpenPrizmodPacket;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SOpenSpectrobeDetailsScreenPacket;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SReleaseSpectrobePacket;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSpawnDroppedMineralPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.server.SBuyMineralPacket;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSpawnSpectrobePacket;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSyncSpectrobeMasterPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.client.CSyncSpectrobeMasterPacket;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SUpdateSpectrobeSlotPacket;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
@@ -36,51 +36,45 @@ public final class SpectrobesNetwork {
         PayloadRegistrar registrar = event.registrar(PROTOCOL_VERSION);
 
         registrar.playToClient(
-                SSyncSpectrobeMasterPacket.TYPE,
-                SSyncSpectrobeMasterPacket.STREAM_CODEC,
-                SSyncSpectrobeMasterPacket::handle
-        );
-
-        registrar.playToServer(
                 CSyncSpectrobeMasterPacket.TYPE,
                 CSyncSpectrobeMasterPacket.STREAM_CODEC,
                 CSyncSpectrobeMasterPacket::handle
         );
 
-        registrar.playToClient(
+        registrar.playToServer(
                 SUpdateSpectrobeSlotPacket.TYPE,
                 SUpdateSpectrobeSlotPacket.STREAM_CODEC,
                 SUpdateSpectrobeSlotPacket::handle
         );
 
-        registrar.playToServer(
+        registrar.playToClient(
                 CUpdateSpectrobeSlotPacket.TYPE,
                 CUpdateSpectrobeSlotPacket.STREAM_CODEC,
                 CUpdateSpectrobeSlotPacket::handle
         );
 
-        registrar.playToClient(
+        registrar.playToServer(
                 SSpawnSpectrobePacket.TYPE,
                 SSpawnSpectrobePacket.STREAM_CODEC,
                 SSpawnSpectrobePacket::handle
         );
 
-        registrar.playToClient(
+        registrar.playToServer(
                 SReleaseSpectrobePacket.TYPE,
                 SReleaseSpectrobePacket.STREAM_CODEC,
                 SReleaseSpectrobePacket::handle
         );
 
-        registrar.playToClient(
+        registrar.playToServer(
                 SDespawnSpectrobePacket.TYPE,
                 SDespawnSpectrobePacket.STREAM_CODEC,
                 SDespawnSpectrobePacket::handle
         );
 
         registrar.playToServer(
-                CSpectrobeAttackPacket.TYPE,
-                CSpectrobeAttackPacket.STREAM_CODEC,
-                CSpectrobeAttackPacket::handle
+                SSpectrobeAttackPacket.TYPE,
+                SSpectrobeAttackPacket.STREAM_CODEC,
+                SSpectrobeAttackPacket::handle
         );
 
         registrar.playToClient(
@@ -101,10 +95,16 @@ public final class SpectrobesNetwork {
                 SGiveMineralPacket::handle
         );
 
-        registrar.playToClient(
-                SSpawnDroppedMineralPacket.TYPE,
-                SSpawnDroppedMineralPacket.STREAM_CODEC,
-                SSpawnDroppedMineralPacket::handle
+        registrar.playToServer(
+                SBuyMineralPacket.TYPE,
+                SBuyMineralPacket.STREAM_CODEC,
+                SBuyMineralPacket::handle
+        );
+
+        registrar.playToServer(
+                SSellMineralPacket.TYPE,
+                SSellMineralPacket.STREAM_CODEC,
+                SSellMineralPacket::handle
         );
 
         registrar.playToClient(
@@ -114,9 +114,9 @@ public final class SpectrobesNetwork {
         );
 
         registrar.playToClient(
-                SOpenCyrusShopPacket.TYPE,
-                SOpenCyrusShopPacket.STREAM_CODEC,
-                SOpenCyrusShopPacket::handle
+                COpenCyrusShopPacket.TYPE,
+                COpenCyrusShopPacket.STREAM_CODEC,
+                COpenCyrusShopPacket::handle
         );
     }
 

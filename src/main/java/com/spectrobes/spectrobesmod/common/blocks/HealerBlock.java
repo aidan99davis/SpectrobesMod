@@ -4,7 +4,7 @@ import com.mojang.serialization.MapCodec;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSyncSpectrobeMasterPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.client.CSyncSpectrobeMasterPacket;
 import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesTileRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.core.BlockPos;
@@ -61,7 +61,7 @@ public class HealerBlock extends SpectrobesTileEntityBlock {
                 }
             });
 
-            SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(capability), (ServerPlayer) pEntity);
+            SpectrobesNetwork.sendToClient(new CSyncSpectrobeMasterPacket(capability), (ServerPlayer) pEntity);
         }
     }
 

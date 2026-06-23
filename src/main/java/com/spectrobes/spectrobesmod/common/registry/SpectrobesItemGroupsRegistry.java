@@ -22,44 +22,44 @@ public class SpectrobesItemGroupsRegistry {
                     .icon(() -> new ItemStack(SpectrobesBlocks.fossil_block.get()))
                     .displayItems((parameters, output) -> {
                         SpectrobesBlockItemsRegistry.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
+                        SpectrobesMachinesRegistry.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
                     })
                     .build());
 
-    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> SPECTROBES_WEAPONS_TAB =
-            CREATIVE_MODE_TABS.register("weapons", () -> CreativeModeTab.builder()
-                    .title(Component.translatable("itemGroup.spectrobestab.weapons"))
-                    .icon(() -> new ItemStack(SpectrobesToolsRegistry.basic_sword_item.get()))
-                    .displayItems((parameters, output) -> {
-                        SpectrobesArmourRegistry.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
-                    })
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> SPECTROBES_ARMOUR_TAB =
+
+            CREATIVE_MODE_TABS.register("armour", () -> CreativeModeTab.builder()
+                    .title(Component.translatable("itemGroup.spectrobestab.armour"))
+                    .icon(() -> new ItemStack(SpectrobesArmourRegistry.BASIC_CHEST.get()))
+                    .displayItems((parameters, output) -> SpectrobesArmourRegistry.ITEMS.getEntries().forEach(item -> output.accept(item.get())))
                     .build());
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> SPECTROBES_TOOLS_TAB =
             CREATIVE_MODE_TABS.register("tools", () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.spectrobestab.tools"))
                     .icon(() -> new ItemStack(SpectrobesToolsRegistry.prizmod_item.get()))
-                    .displayItems((parameters, output) -> {
-                        output.accept(SpectrobesToolsRegistry.prizmod_item.get());
-                        SpectrobesToolsRegistry.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
-                    })
+                    .displayItems((parameters, output) -> SpectrobesToolsRegistry.ITEMS.getEntries().forEach(item -> output.accept(item.get())))
                     .build());
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> SPECTROBES_FOSSILS_TAB =
             CREATIVE_MODE_TABS.register("fossils", () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.spectrobestab.fossils"))
                     .icon(() -> new ItemStack(SpectrobesFossilsRegistry.komainu_fossil_item.get()))
-                    .displayItems((parameters, output) -> {
-                        SpectrobesFossilsRegistry.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
-                    })
+                    .displayItems((parameters, output) -> SpectrobesFossilsRegistry.ITEMS.getEntries().forEach(item -> output.accept(item.get())))
                     .build());
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> SPECTROBES_MINERALS_TAB =
             CREATIVE_MODE_TABS.register("minerals", () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.spectrobestab.minerals"))
                     .icon(() -> new ItemStack(SpectrobesMineralsRegistry.mineral_item_power_c.get()))
-                    .displayItems((parameters, output) -> {
-                        SpectrobesMineralsRegistry.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
-                    })
+                    .displayItems((parameters, output) -> SpectrobesMineralsRegistry.ITEMS.getEntries().forEach(item -> output.accept(item.get())))
+                    .build());
+
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> SPECTROBES_ITEMS_TAB =
+            CREATIVE_MODE_TABS.register("items", () -> CreativeModeTab.builder()
+                    .title(Component.translatable("itemGroup.spectrobestab.items"))
+                    .icon(() -> new ItemStack(SpectrobesItemsRegistry.metalium.get()))
+                    .displayItems((parameters, output) -> SpectrobesItemsRegistry.ITEMS.getEntries().forEach(item -> output.accept(item.get())))
                     .build());
 
     public static void register(IEventBus eventBus) {

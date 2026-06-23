@@ -1,45 +1,45 @@
-package com.spectrobes.spectrobesmod.common.packets.networking.packets;
+package com.spectrobes.spectrobesmod.common.packets.networking.packets.client;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
+import com.spectrobes.spectrobesmod.common.capability.IPlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
-import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
+import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobePacketHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class CSyncSpectrobeMasterPacket implements CustomPacketPayload {
 
     public static final Type<CSyncSpectrobeMasterPacket> TYPE = new Type<>(
-            ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "c_sync_spectrobe_master")
+            ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "s_sync_spectrobe_master")
     );
 
     public static final StreamCodec<RegistryFriendlyByteBuf, CSyncSpectrobeMasterPacket> STREAM_CODEC =
             StreamCodec.ofMember(CSyncSpectrobeMasterPacket::write, CSyncSpectrobeMasterPacket::new);
 
-    private final PlayerSpectrobeMaster capability;
+    public final IPlayerSpectrobeMaster capability;
 
-    public CSyncSpectrobeMasterPacket(PlayerSpectrobeMaster capability) {
+    public CSyncSpectrobeMasterPacket(IPlayerSpectrobeMaster capability) {
         this.capability = capability;
     }
 
-    private CSyncSpectrobeMasterPacket(RegistryFriendlyByteBuf buf) {
+    private CSyncSpectrobeMasterPacket(RegistryFriendlyByteBuf buffer) {
         PlayerSpectrobeMaster capability = new PlayerSpectrobeMaster();
 
-        CompoundTag tag = buf.readNbt();
+        CompoundTag tag = buffer.readNbt();
 
         if (tag != null) {
-            capability.deserializeNBT(buf.registryAccess(), tag);
+            capability.deserializeNBT(buffer.registryAccess(), tag);
         }
 
         this.capability = capability;
     }
 
-    private void write(RegistryFriendlyByteBuf buf) {
-        buf.writeNbt(this.capability.serializeNBT(buf.registryAccess()));
+    private void write(RegistryFriendlyByteBuf buffer) {
+        buffer.writeNbt(this.capability.serializeNBT(buffer.registryAccess()));
     }
 
     @Override
@@ -48,16 +48,6 @@ public class CSyncSpectrobeMasterPacket implements CustomPacketPayload {
     }
 
     public static void handle(CSyncSpectrobeMasterPacket packet, IPayloadContext context) {
-        if (!(context.player() instanceof ServerPlayer player)) {
-            return;
-        }
-
-        PlayerSpectrobeMaster playerSpectrobeMaster = player.getCapability(SpectrobeMaster.INSTANCE);
-
-        if (playerSpectrobeMaster == null) {
-            return;
-        }
-
-        playerSpectrobeMaster.copyFrom(packet.capability);
+        context.enqueueWork(() -> SpectrobePacketHandler.handlePacket(packet, context));
     }
 }

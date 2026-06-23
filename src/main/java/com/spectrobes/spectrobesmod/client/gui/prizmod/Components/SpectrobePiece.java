@@ -5,6 +5,7 @@ import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeIconInfo;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -13,12 +14,17 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
+import java.util.function.Consumer;
+
 public class SpectrobePiece extends AbstractWidget {
 
-    private static final ResourceLocation DELETE_BACKGROUND =
-            ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "textures/gui/spectrobe_slot_delete.png");
+    public static final int SLOT_SIZE = 32;
 
-    private static final int SLOT_SIZE = 32;
+    private static final ResourceLocation DELETE_BACKGROUND = ResourceLocation.fromNamespaceAndPath(
+            SpectrobesInfo.MOD_ID,
+            "textures/gui/spectrobe_slot_delete.png"
+    );
+
     private static final int HEALTH_BAR_LEFT = 2;
     private static final int HEALTH_BAR_RIGHT = 30;
     private static final int HEALTH_BAR_TOP = 28;
@@ -30,47 +36,99 @@ public class SpectrobePiece extends AbstractWidget {
 
     public Spectrobe spectrobe;
 
-    private final int x;
-    private final int y;
+    private final int gridX;
+    private final int gridY;
 
     public int posX;
     public int posY;
 
-    public boolean selected;
-    public boolean current;
+    private int slotIndex = -1;
+    private boolean selected;
+    private boolean current;
+    private Consumer<SpectrobePiece> pressHandler;
 
-    public SpectrobePiece(Spectrobe spectrobe, int x, int y) {
-        super(toScreenX(x), toScreenY(y), SLOT_SIZE, SLOT_SIZE, Component.empty());
+    public SpectrobePiece(Spectrobe spectrobe, int gridX, int gridY) {
+        this(spectrobe, gridX, gridY, null);
+    }
+
+    public SpectrobePiece(Spectrobe spectrobe, int gridX, int gridY, Consumer<SpectrobePiece> pressHandler) {
+        super(toScreenX(gridX), toScreenY(gridY), SLOT_SIZE, SLOT_SIZE, Component.empty());
 
         this.spectrobe = spectrobe;
-        this.x = x;
-        this.y = y;
-        this.posX = toScreenX(x);
-        this.posY = toScreenY(y);
+        this.gridX = gridX;
+        this.gridY = gridY;
+        this.posX = toScreenX(gridX);
+        this.posY = toScreenY(gridY);
+        this.pressHandler = pressHandler;
+    }
+
+    private static int toScreenX(int gridX) {
+        return (gridX + 3) * SLOT_SIZE;
+    }
+
+    private static int toScreenY(int gridY) {
+        return (gridY + 2) * SLOT_SIZE;
+    }
+
+    public int getGridX() {
+        return gridX;
+    }
+
+    public int getGridY() {
+        return gridY;
+    }
+
+    public int getSlotIndex() {
+        return slotIndex;
+    }
+
+    public void setSlotIndex(int slotIndex) {
+        this.slotIndex = slotIndex;
+    }
+
+    public Spectrobe getSpectrobe() {
+        return spectrobe;
+    }
+
+    public void setSpectrobe(Spectrobe spectrobe) {
+        this.spectrobe = spectrobe;
+    }
+
+    public void setPressHandler(Consumer<SpectrobePiece> pressHandler) {
+        this.pressHandler = pressHandler;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
+    public boolean isCurrent() {
+        return current;
+    }
+
+    public void setCurrent(boolean current) {
+        this.current = current;
+    }
+
+    public void toggleCurrent() {
+        this.current = !this.current;
+    }
+
+    public void resetState() {
+        this.spectrobe = null;
         this.selected = false;
         this.current = false;
     }
 
-    private static int toScreenX(int x) {
-        return (x + 3) * SLOT_SIZE;
-    }
-
-    private static int toScreenY(int y) {
-        return (y + 2) * SLOT_SIZE;
-    }
-
-    private void syncWidgetBounds() {
-        setX(posX);
-        setY(posY);
-        setWidth(SLOT_SIZE);
-        setHeight(SLOT_SIZE);
-    }
-
-    public void toggleCurrent() {
-        current = !current;
-    }
-
     public String getUnlocalizedName() {
+        if (spectrobe == null) {
+            return SpectrobesInfo.MOD_ID + ".spectrobe.empty";
+        }
+
         return SpectrobesInfo.MOD_ID + ".spectrobe." + spectrobe.name;
     }
 
@@ -79,8 +137,6 @@ public class SpectrobePiece extends AbstractWidget {
     }
 
     public void draw(GuiGraphics graphics, boolean withAdditional) {
-        syncWidgetBounds();
-
         drawBackground(graphics);
 
         if (withAdditional) {
@@ -88,28 +144,23 @@ public class SpectrobePiece extends AbstractWidget {
         }
     }
 
-    /**
-     * Draws this piece's background.
-     */
     public void drawBackground(GuiGraphics graphics) {
-        syncWidgetBounds();
-
         ResourceLocation background;
 
-        if (Screen.hasAltDown()) {
+        if (Screen.hasAltDown() && isHovered()) {
             background = DELETE_BACKGROUND;
-        } else if (!current) {
-            background = selected ? PrizmodScreen.SPECTROBE_SLOT_SELECTED_TEXTURE : PrizmodScreen.SPECTROBE_SLOT_TEXTURE;
-        } else {
+        } else if (current || selected) {
             background = PrizmodScreen.SPECTROBE_SLOT_SELECTED_TEXTURE;
+        } else {
+            background = PrizmodScreen.SPECTROBE_SLOT_TEXTURE;
         }
 
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         graphics.blit(
                 background,
-                posX,
-                posY,
+                getX(),
+                getY(),
                 0.0F,
                 0.0F,
                 SLOT_SIZE,
@@ -119,26 +170,16 @@ public class SpectrobePiece extends AbstractWidget {
         );
     }
 
-    /**
-     * Draws any additional stuff for this piece. Used for the spectrobe icon.
-     */
     public void drawAdditional(GuiGraphics graphics) {
-        if (spectrobe == null) {
+        if (spectrobe == null || selected) {
             return;
         }
 
         SpectrobeIconInfo iconInfo = spectrobe.getIcon();
-
         int drawWidth = getScaledIconWidth(iconInfo);
         int drawHeight = getScaledIconHeight(iconInfo);
-
-        int marginLeft = iconInfo.getWidth() < 31
-                ? (SLOT_SIZE - iconInfo.getWidth()) / 2
-                : 0;
-
-        int marginTop = iconInfo.getHeight() < 31
-                ? (SLOT_SIZE - iconInfo.getHeight()) / 2
-                : 0;
+        int marginLeft = (SLOT_SIZE - drawWidth) / 2;
+        int marginTop = (SLOT_SIZE - drawHeight) / 2;
 
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
@@ -146,8 +187,8 @@ public class SpectrobePiece extends AbstractWidget {
 
         graphics.blit(
                 iconInfo.icon(),
-                posX + marginLeft,
-                posY + marginTop,
+                getX() + marginLeft,
+                getY() + marginTop,
                 0.0F,
                 0.0F,
                 drawWidth,
@@ -162,11 +203,15 @@ public class SpectrobePiece extends AbstractWidget {
     }
 
     private void drawHealthBar(GuiGraphics graphics) {
+        if (spectrobe == null) {
+            return;
+        }
+
         graphics.fill(
-                posX + HEALTH_BAR_LEFT,
-                posY + HEALTH_BAR_TOP,
-                posX + HEALTH_BAR_RIGHT,
-                posY + HEALTH_BAR_BOTTOM,
+                getX() + HEALTH_BAR_LEFT,
+                getY() + HEALTH_BAR_TOP,
+                getX() + HEALTH_BAR_RIGHT,
+                getY() + HEALTH_BAR_BOTTOM,
                 HEALTH_BAR_RED
         );
 
@@ -175,10 +220,10 @@ public class SpectrobePiece extends AbstractWidget {
         int greenWidth = Math.round(healthPercent * HEALTH_BAR_WIDTH);
 
         graphics.fill(
-                posX + HEALTH_BAR_LEFT,
-                posY + HEALTH_BAR_TOP,
-                posX + HEALTH_BAR_LEFT + greenWidth,
-                posY + HEALTH_BAR_BOTTOM,
+                getX() + HEALTH_BAR_LEFT,
+                getY() + HEALTH_BAR_TOP,
+                getX() + HEALTH_BAR_LEFT + greenWidth,
+                getY() + HEALTH_BAR_BOTTOM,
                 HEALTH_BAR_GREEN
         );
     }
@@ -189,7 +234,6 @@ public class SpectrobePiece extends AbstractWidget {
         }
 
         SpectrobeIconInfo iconInfo = spectrobe.getIcon();
-
         int drawWidth = getScaledIconWidth(iconInfo);
         int drawHeight = getScaledIconHeight(iconInfo);
 
@@ -213,17 +257,38 @@ public class SpectrobePiece extends AbstractWidget {
     }
 
     private int getScaledIconWidth(SpectrobeIconInfo iconInfo) {
-        float scaleX = iconInfo.getWidth() <= SLOT_SIZE ? 1.0F : (float) SLOT_SIZE / (float) iconInfo.getWidth();
-        return Math.round(iconInfo.getWidth() * scaleX);
+        float scale = getIconScale(iconInfo);
+        return Math.round(iconInfo.getWidth() * scale);
     }
 
     private int getScaledIconHeight(SpectrobeIconInfo iconInfo) {
-        float scaleY = iconInfo.getHeight() <= SLOT_SIZE ? 1.0F : (float) SLOT_SIZE / (float) iconInfo.getHeight();
-        return Math.round(iconInfo.getHeight() * scaleY);
+        float scale = getIconScale(iconInfo);
+        return Math.round(iconInfo.getHeight() * scale);
     }
 
-    public void setSelected(boolean selected) {
-        this.selected = selected;
+    private float getIconScale(SpectrobeIconInfo iconInfo) {
+        int maxDimension = Math.max(iconInfo.getWidth(), iconInfo.getHeight());
+
+        if (maxDimension <= SLOT_SIZE) {
+            return 1.0F;
+        }
+
+        return (float) SLOT_SIZE / (float) maxDimension;
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (!this.active || !this.visible || !this.isValidClickButton(button) || !this.clicked(mouseX, mouseY)) {
+            return false;
+        }
+
+        this.playDownSound(Minecraft.getInstance().getSoundManager());
+
+        if (pressHandler != null) {
+            pressHandler.accept(this);
+        }
+
+        return true;
     }
 
     @Override

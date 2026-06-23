@@ -6,8 +6,8 @@ import net.minecraft.network.chat.Component;
 
 public class MenuButton extends Button {
 
-    public MenuButton(int xIn, int yIn, int width, int height, String text, Button.OnPress onPress) {
-        super(xIn, yIn, width, height, Component.literal(text), onPress, DEFAULT_NARRATION);
+    public MenuButton(int x, int y, int width, int height, String text, Button.OnPress onPress) {
+        super(x, y, width, height, Component.literal(text), onPress, DEFAULT_NARRATION);
     }
 
     @Override
