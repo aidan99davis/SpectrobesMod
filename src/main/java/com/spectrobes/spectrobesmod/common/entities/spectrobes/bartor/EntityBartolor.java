@@ -9,25 +9,37 @@ import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesFossilsRegis
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.builder.ILoopType;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 public class EntityBartolor extends EntityMammalSpectrobe {
+    private static final RawAnimation WALK_ANIMATION =
+            RawAnimation.begin().thenLoop("animation.bartolor.walk");
 
-    public EntityBartolor(EntityType<EntityBartolor> entityTypeIn, Level worldIn) {
-        super(entityTypeIn, worldIn);
+    private static final RawAnimation SITTING_ANIMATION =
+            RawAnimation.begin()
+                    .thenPlay("animation.bartolor.sitting")
+                    .thenLoop("animation.bartolor.sit");
+
+    private static final RawAnimation ATTACK_ANIMATION =
+            RawAnimation.begin().thenLoop("animation.bartolor.attack");
+
+    private static final RawAnimation IDLE_ANIMATION =
+            RawAnimation.begin().thenLoop("animation.bartolor.idle");
+
+    public EntityBartolor(EntityType<EntityBartolor> entityType, Level level) {
+        super(entityType, level);
     }
 
+    @Override
     public Spectrobe GetNewSpectrobeInstance() {
         return SpectrobeRegistry.Bartolor.copy(false);
     }
 
     @Override
     public EntityType<? extends EntitySpectrobe> getEvolutionRegistry() {
-//        return SpectrobesEntities.ENTITY_BARTOLOR.get();
+        // return SpectrobesEntities.ENTITY_BARTOLOR.get();
         return null;
     }
 
@@ -37,6 +49,7 @@ public class EntityBartolor extends EntityMammalSpectrobe {
     }
 
     @Override
+    @SuppressWarnings("rawtypes")
     public Class getSpectrobeClass() {
         return EntityBartolor.class;
     }
@@ -47,31 +60,22 @@ public class EntityBartolor extends EntityMammalSpectrobe {
     }
 
     @Override
-    public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event) {
-        if(event.isMoving())
-        {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.bartolor.walk", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
-        }
-        else if(event.getAnimatable().isOrderedToSit()) {
-            event.getController().setAnimation(new AnimationBuilder()
-                    .addAnimation("animation.bartolor.sitting", ILoopType.EDefaultLoopTypes.PLAY_ONCE)
-                    .addAnimation("animation.bartolor.sit", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
-        } else if(event.getAnimatable().isAttacking()) {
-            event.getController().setAnimation(new AnimationBuilder()
-                    .addAnimation("animation.bartolor.attack", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
-        } else {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.bartolor.idle", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
-        }
-    }
+    public PlayState moveController(AnimationState<EntitySpectrobe> animationState) {
+        EntitySpectrobe spectrobe = animationState.getAnimatable();
 
+        if (animationState.isMoving()) {
+            return animationState.setAndContinue(WALK_ANIMATION);
+        }
 
-    @Override
-    public AnimationFactory getFactory() {
-        return animationControllers;
+        if (spectrobe.isOrderedToSit()) {
+            return animationState.setAndContinue(SITTING_ANIMATION);
+        }
+
+        if (spectrobe.isAttacking()) {
+            return animationState.setAndContinue(ATTACK_ANIMATION);
+        }
+
+        return animationState.setAndContinue(IDLE_ANIMATION);
     }
 
     @Override
@@ -82,5 +86,10 @@ public class EntityBartolor extends EntityMammalSpectrobe {
     @Override
     public int getLitterSize() {
         return 3;
+    }
+
+    @Override
+    public double getTick(Object object) {
+        return this.tickCount;
     }
 }

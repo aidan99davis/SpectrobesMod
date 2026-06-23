@@ -9,19 +9,20 @@ import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesFossilsRegis
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.builder.ILoopType;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 public class EntityKomanoto extends EntityMammalSpectrobe {
-
+    private static final RawAnimation WALK_ANIM = RawAnimation.begin().thenLoop("animation.komanoto.walk");
+    private static final RawAnimation SIT_ANIM = RawAnimation.begin().thenPlay("animation.komanoto.sit");
+    private static final RawAnimation ATTACK_ANIM = RawAnimation.begin().thenLoop("animation.komanoto.attack");
 
     public EntityKomanoto(EntityType<EntityKomanoto> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
     }
 
+    @Override
     public Spectrobe GetNewSpectrobeInstance() {
         return SpectrobeRegistry.Komanoto.copy(false);
     }
@@ -37,7 +38,7 @@ public class EntityKomanoto extends EntityMammalSpectrobe {
     }
 
     @Override
-    public Class getSpectrobeClass() {
+    public Class<? extends EntitySpectrobe> getSpectrobeClass() {
         return EntityKomanoto.class;
     }
 
@@ -47,28 +48,19 @@ public class EntityKomanoto extends EntityMammalSpectrobe {
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return animationControllers;
-    }
+    public PlayState moveController(AnimationState<EntitySpectrobe> animationState) {
+        if (animationState.isMoving()) {
+            return animationState.setAndContinue(WALK_ANIM);
+        }
 
-    @Override
-    public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event)
-    {
-        moveAnimationController.transitionLengthTicks = 2;
-        if(event.isMoving())
-        {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.komanoto.walk", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
+        if (animationState.getAnimatable().isOrderedToSit()) {
+            return animationState.setAndContinue(SIT_ANIM);
         }
-        else if(event.getAnimatable().isOrderedToSit()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.komanoto.sit", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
-            return PlayState.CONTINUE;
-        } else {
-            if(this.IsAttacking()) {
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.komanoto.attack", ILoopType.EDefaultLoopTypes.LOOP));
-                return PlayState.CONTINUE;
-            }
+
+        if (this.isAttacking()) {
+            return animationState.setAndContinue(ATTACK_ANIM);
         }
+
         return PlayState.STOP;
     }
 

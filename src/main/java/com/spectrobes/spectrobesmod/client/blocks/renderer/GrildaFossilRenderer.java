@@ -5,17 +5,17 @@ import com.spectrobes.spectrobesmod.client.blocks.model.GrildaFossilModel;
 import com.spectrobes.spectrobesmod.common.blocks.fossils.tile.GrildaFossilBlockTileEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
+import software.bernie.geckolib.renderer.GeoBlockRenderer;
 
 public class GrildaFossilRenderer extends GeoBlockRenderer<GrildaFossilBlockTileEntity> {
 
     public GrildaFossilRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
-        super(rendererDispatcherIn, new GrildaFossilModel());
+        super(new GrildaFossilModel());
     }
 
     @Override
-    public void render(GrildaFossilBlockTileEntity tile, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+    public void render(GrildaFossilBlockTileEntity tile, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
         poseStack.scale(0.9f, 0.9f, 0.9f);
-        super.render(tile, partialTick, poseStack, bufferSource, packedLight);
+        super.render(tile, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
     }
 }

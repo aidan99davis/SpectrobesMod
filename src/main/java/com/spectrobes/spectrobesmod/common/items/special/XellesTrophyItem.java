@@ -4,8 +4,7 @@ import com.spectrobes.spectrobesmod.client.items.renderer.XellesTrophyItemRender
 import com.spectrobes.spectrobesmod.common.items.AnimatableBlockItem;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import net.minecraftforge.common.util.NonNullLazy;
+import software.bernie.geckolib.animatable.client.GeoRenderProvider;
 
 import java.util.function.Consumer;
 
@@ -15,17 +14,20 @@ public class XellesTrophyItem extends AnimatableBlockItem {
         super(block, properties);
     }
 
+
     @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-        consumer.accept(new IClientItemExtensions()
-        {
-            private final NonNullLazy<BlockEntityWithoutLevelRenderer> ister = NonNullLazy.of(() -> new XellesTrophyItemRenderer());
+    public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
+        consumer.accept(new GeoRenderProvider() {
+            private XellesTrophyItemRenderer renderer;
 
             @Override
-            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                return ister.get();
+            public BlockEntityWithoutLevelRenderer getGeoItemRenderer() {
+                if (this.renderer == null) {
+                    this.renderer = new XellesTrophyItemRenderer();
+                }
+
+                return this.renderer;
             }
         });
     }
-
 }

@@ -1,6 +1,6 @@
 package com.spectrobes.spectrobesmod.client.gui.cyrus_shop;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractScrollWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
@@ -14,39 +14,34 @@ public class ShopScrollList extends AbstractScrollWidget {
     private final CyrusShopScreen parent;
     private final int columns = 9;
 
-    public ShopScrollList(CyrusShopScreen parent, int pX, int pY, int pWidth, int pHeight, Component pMessage) {
-        super(pX, pY, pWidth, pHeight, pMessage);
+    public ShopScrollList(CyrusShopScreen parent, int x, int y, int width, int height, Component message) {
+        super(x, y, width, height, message);
         this.parent = parent;
     }
 
     public void addMineralToSell(Item mineralItem) {
-        int xPos = (getNextColumn() * 32) + x;
-        int yPos = (getNextRow() * 52) + y;
-        BuySellItemWidget buySellWidget =
-                new BuySellItemWidget(parent, xPos, yPos, 32, 52, mineralItem);
+        int xPos = (getNextColumn() * 32) + getX();
+        int yPos = (getNextRow() * 52) + getY();
+
+        BuySellItemWidget buySellWidget = new BuySellItemWidget(parent, xPos, yPos, 32, 52, mineralItem);
         mineralsToSell.add(buySellWidget);
     }
 
     @Override
-    public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-        mineralsToSell.forEach(buySellItemWidget -> buySellItemWidget.mouseClicked(pMouseX, pMouseY + scrollAmount(), pButton));
-        return super.mouseClicked(pMouseX, pMouseY, pButton);
-    }
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        double adjustedMouseY = mouseY + scrollAmount();
 
-    @Override
-    public boolean isMouseOver(double pMouseX, double pMouseY) {
-        mineralsToSell.forEach(buySellItemWidget -> buySellItemWidget.isMouseOver(pMouseX, pMouseY + scrollAmount()));
-        return super.isMouseOver(pMouseX, pMouseY);
+        for (BuySellItemWidget buySellItemWidget : mineralsToSell) {
+            if (buySellItemWidget.mouseClicked(mouseX, adjustedMouseY, button)) {
+                return true;
+            }
+        }
+
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     protected int getNextRow() {
-        int numMinerals = mineralsToSell.size();
-        int rows = 0;
-        while(numMinerals >= columns) {
-            rows++;
-            numMinerals = numMinerals - columns;
-        }
-        return rows;
+        return mineralsToSell.size() / columns;
     }
 
     protected int getNextColumn() {
@@ -55,7 +50,8 @@ public class ShopScrollList extends AbstractScrollWidget {
 
     @Override
     protected int getInnerHeight() {
-        return 52 * getNextRow() + 52;
+        int rows = (int) Math.ceil(mineralsToSell.size() / (double) columns);
+        return Math.max(52, rows * 52);
     }
 
     @Override
@@ -69,15 +65,15 @@ public class ShopScrollList extends AbstractScrollWidget {
     }
 
     @Override
-    protected void renderContents(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-        mineralsToSell.forEach(buySellItemWidget -> {
-            buySellItemWidget.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
-            buySellItemWidget.isMouseOver(pMouseX, pMouseY + scrollAmount());
-        });
+    protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        int adjustedMouseY = (int) (mouseY + scrollAmount());
+
+        for (BuySellItemWidget buySellItemWidget : mineralsToSell) {
+            buySellItemWidget.render(guiGraphics, mouseX, adjustedMouseY, partialTick);
+        }
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput pNarrationElementOutput) {
-
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
     }
 }

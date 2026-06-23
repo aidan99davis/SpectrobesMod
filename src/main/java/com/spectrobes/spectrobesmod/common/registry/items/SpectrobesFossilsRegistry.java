@@ -1,161 +1,138 @@
 package com.spectrobes.spectrobesmod.common.registry.items;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.common.items.SpectrobesItemGroups;
 import com.spectrobes.spectrobesmod.common.items.fossils.*;
 import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesBlocks;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Supplier;
 
 public class SpectrobesFossilsRegistry {
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, SpectrobesInfo.MOD_ID);
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(Registries.ITEM, SpectrobesInfo.MOD_ID);
 
     private static final List<Item> all_fossils = new ArrayList<>();
     private static final List<Item> flash_fossils = new ArrayList<>();
     private static final List<Item> aurora_fossils = new ArrayList<>();
     private static final List<Item> corona_fossils = new ArrayList<>();
 
-
-    public static final RegistryObject<BlockItem> grilda_fossil_item =
+    public static final Supplier<BlockItem> grilda_fossil_item =
             ITEMS.register("grilda_fossil_item",
                     () -> new GrildaFossilItem(SpectrobesBlocks.grilda_fossil.get(),
-                            new Item.Properties().tab(SpectrobesItemGroups.SpectrobesFossilsItemGroup.Instance)));
+                            new Item.Properties()));
 
-    public static final RegistryObject<BlockItem> danawa_fossil_item =
+    public static final Supplier<BlockItem> danawa_fossil_item =
             ITEMS.register("danawa_fossil_item",
                     () -> new DanawaFossilItem(SpectrobesBlocks.danawa_fossil.get(),
-                            new Item.Properties()
-                                    .tab(SpectrobesItemGroups.SpectrobesFossilsItemGroup.Instance)));
+                            new Item.Properties()));
 
-    public static final RegistryObject<BlockItem> gejio_fossil_item =
+    public static final Supplier<BlockItem> gejio_fossil_item =
             ITEMS.register("gejio_fossil_item",
                     () -> new GejioFossilItem(SpectrobesBlocks.gejio_fossil.get(),
-                            new Item.Properties()
-                                    .tab(SpectrobesItemGroups.SpectrobesFossilsItemGroup.Instance)));
+                            new Item.Properties()));
 
-    public static final RegistryObject<BlockItem> mesa_fossil_item =
+    public static final Supplier<BlockItem> mesa_fossil_item =
             ITEMS.register("mesa_fossil_item",
                     () -> new MesaFossilItem(SpectrobesBlocks.mesa_fossil.get(),
-                            new Item.Properties()
-                                    .tab(SpectrobesItemGroups.SpectrobesFossilsItemGroup.Instance)));
+                            new Item.Properties()));
 
-    public static final RegistryObject<BlockItem> aoi_fossil_item =
+    public static final Supplier<BlockItem> aoi_fossil_item =
             ITEMS.register("aoi_fossil_item",
                     () -> new AoiFossilItem(SpectrobesBlocks.aoi_fossil.get(),
-                            new Item.Properties()
-                                    .tab(SpectrobesItemGroups.SpectrobesFossilsItemGroup.Instance)));
+                            new Item.Properties()));
 
-    public static final RegistryObject<BlockItem> inkana_fossil_item =
+    public static final Supplier<BlockItem> inkana_fossil_item =
             ITEMS.register("inkana_fossil_item",
                     () -> new InkanaFossilItem(SpectrobesBlocks.inkana_fossil.get(),
-                            new Item.Properties()
-                                    .tab(SpectrobesItemGroups.SpectrobesFossilsItemGroup.Instance)));
+                            new Item.Properties()));
 
-    public static final RegistryObject<BlockItem> bartor_fossil_item =
+    public static final Supplier<BlockItem> bartor_fossil_item =
             ITEMS.register("bartor_fossil_item",
                     () -> new BartorFossilItem(SpectrobesBlocks.bartor_fossil.get(),
-                            new Item.Properties()
-                                    .tab(SpectrobesItemGroups.SpectrobesFossilsItemGroup.Instance)));
+                            new Item.Properties()));
 
 
-    public static final RegistryObject<BlockItem> harumi_fossil_item =
+    public static final Supplier<BlockItem> harumi_fossil_item =
             ITEMS.register("harumi_fossil_item",
                     () -> new HarumiFossilItem(SpectrobesBlocks.harumi_fossil.get(),
-                            new Item.Properties()
-                                    .tab(SpectrobesItemGroups.SpectrobesFossilsItemGroup.Instance)));
+                            new Item.Properties()));
 
-    public static final RegistryObject<BlockItem> komainu_fossil_item =
+    public static final Supplier<BlockItem> komainu_fossil_item =
             ITEMS.register("komainu_fossil_item",
                     () -> new KomainuFossilItem(SpectrobesBlocks.komainu_fossil.get(),
-                            new Item.Properties()
-                                    .tab(SpectrobesItemGroups.SpectrobesFossilsItemGroup.Instance)));
+                            new Item.Properties()));
 
-    public static final RegistryObject<BlockItem> dongor_fossil_item =
+    public static final Supplier<BlockItem> dongor_fossil_item =
             ITEMS.register("dongor_fossil_item",
                     () -> new DongorFossilItem(SpectrobesBlocks.dongor_fossil.get(),
-                            new Item.Properties()
-                                    .tab(SpectrobesItemGroups.SpectrobesFossilsItemGroup.Instance)));
+                            new Item.Properties()));
 
-    public static final RegistryObject<BlockItem> kubaku_fossil_item =
+    public static final Supplier<BlockItem> kubaku_fossil_item =
             ITEMS.register("kubaku_fossil_item",
                     () -> new KubakuFossilItem(SpectrobesBlocks.kubaku_fossil.get(),
-                            new Item.Properties()
-                                    .tab(SpectrobesItemGroups.SpectrobesFossilsItemGroup.Instance)));
+                            new Item.Properties()));
 
-    public static final RegistryObject<BlockItem> nagu_fossil_item =
+    public static final Supplier<BlockItem> nagu_fossil_item =
             ITEMS.register("nagu_fossil_item",
                     () -> new NaguFossilItem(SpectrobesBlocks.nagu_fossil.get(),
-                            new Item.Properties()
-                                    .tab(SpectrobesItemGroups.SpectrobesFossilsItemGroup.Instance)));
+                            new Item.Properties()));
 
-    public static final RegistryObject<BlockItem> samukabu_fossil_item =
+    public static final Supplier<BlockItem> samukabu_fossil_item =
             ITEMS.register("samukabu_fossil_item",
                     () -> new SamukabuFossilItem(SpectrobesBlocks.samukabu_fossil.get(),
-                            new Item.Properties()
-                                    .tab(SpectrobesItemGroups.SpectrobesFossilsItemGroup.Instance)));
+                            new Item.Properties()));
 
-    public static final RegistryObject<BlockItem> segu_fossil_item =
+    public static final Supplier<BlockItem> segu_fossil_item =
             ITEMS.register("segu_fossil_item",
                     () -> new SeguFossilItem(SpectrobesBlocks.segu_fossil.get(),
-                            new Item.Properties()
-                                    .tab(SpectrobesItemGroups.SpectrobesFossilsItemGroup.Instance)));
+                            new Item.Properties()));
 
-    public static final RegistryObject<BlockItem> shakin_fossil_item =
+    public static final Supplier<BlockItem> shakin_fossil_item =
             ITEMS.register("shakin_fossil_item",
                     () -> new ShakinFossilItem(SpectrobesBlocks.shakin_fossil.get(),
-                            new Item.Properties()
-                                    .tab(SpectrobesItemGroups.SpectrobesFossilsItemGroup.Instance)));
+                            new Item.Properties()));
 
-    public static final RegistryObject<BlockItem> spiko_fossil_item =
+    public static final Supplier<BlockItem> spiko_fossil_item =
             ITEMS.register("spiko_fossil_item",
                     () -> new SpikoFossilItem(SpectrobesBlocks.spiko_fossil.get(),
-                            new Item.Properties()
-                                    .tab(SpectrobesItemGroups.SpectrobesFossilsItemGroup.Instance)));
+                            new Item.Properties()));
 
-    public static final RegistryObject<BlockItem> vilar_fossil_item =
+    public static final Supplier<BlockItem> vilar_fossil_item =
             ITEMS.register("vilar_fossil_item",
                     () -> new VilarFossilItem(SpectrobesBlocks.vilar_fossil.get(),
-                            new Item.Properties()
-                                    .tab(SpectrobesItemGroups.SpectrobesFossilsItemGroup.Instance)));
+                            new Item.Properties()));
 
-    public static final RegistryObject<BlockItem> zoza_fossil_item =
+    public static final Supplier<BlockItem> zoza_fossil_item =
             ITEMS.register("zoza_fossil_item",
                     () -> new ZozaFossilItem(SpectrobesBlocks.zoza_fossil.get(),
-                            new Item.Properties()
-                                    .tab(SpectrobesItemGroups.SpectrobesFossilsItemGroup.Instance)));
+                            new Item.Properties()));
 
-    public static final RegistryObject<BlockItem> mossari_fossil_item =
+    public static final Supplier<BlockItem> mossari_fossil_item =
             ITEMS.register("mossari_fossil_item",
                     () -> new MossariFossilItem(SpectrobesBlocks.mossari_fossil.get(),
-                            new Item.Properties()
-                                    .tab(SpectrobesItemGroups.SpectrobesFossilsItemGroup.Instance)));
+                            new Item.Properties()));
 
-    public static final RegistryObject<BlockItem> masetto_fossil_item =
+    public static final Supplier<BlockItem> masetto_fossil_item =
             ITEMS.register("masetto_fossil_item",
                     () -> new MasettoFossilItem(SpectrobesBlocks.masetto_fossil.get(),
-                            new Item.Properties()
-                                    .tab(SpectrobesItemGroups.SpectrobesFossilsItemGroup.Instance)));
+                            new Item.Properties()));
 
-    public static final RegistryObject<BlockItem> tenkro_fossil_item =
+    public static final Supplier<BlockItem> tenkro_fossil_item =
             ITEMS.register("tenkro_fossil_item",
                     () -> new TenkroFossilItem(SpectrobesBlocks.tenkro_fossil.get(),
-                            new Item.Properties()
-                                    .tab(SpectrobesItemGroups.SpectrobesFossilsItemGroup.Instance)));
+                            new Item.Properties()));
 
-    public static final RegistryObject<BlockItem> kasumi_fossil_item =
+    public static final Supplier<BlockItem> kasumi_fossil_item =
             ITEMS.register("kasumi_fossil_item",
                     () -> new KasumiFossilItem(SpectrobesBlocks.kasumi_fossil.get(),
-                            new Item.Properties()
-                                    .tab(SpectrobesItemGroups.SpectrobesFossilsItemGroup.Instance)));
+                            new Item.Properties()));
 
     private static void init() {
         flash_fossils.add(harumi_fossil_item.get());

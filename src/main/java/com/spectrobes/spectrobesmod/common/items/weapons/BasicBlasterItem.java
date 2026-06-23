@@ -1,14 +1,14 @@
 package com.spectrobes.spectrobesmod.common.items.weapons;
 
 import com.spectrobes.spectrobesmod.client.items.weapons.renderer.BasicBlasterItemRenderer;
+import com.spectrobes.spectrobesmod.client.items.weapons.renderer.BasicGloveItemRenderer;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import com.spectrobes.spectrobesmod.util.WeaponStats;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import net.minecraftforge.common.util.NonNullLazy;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.manager.AnimationData;
+import software.bernie.geckolib.animatable.client.GeoRenderProvider;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
 
 import java.util.function.Consumer;
 
@@ -18,21 +18,24 @@ public class BasicBlasterItem extends SpectrobesRangedWeapon {
     }
 
     @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-        consumer.accept(new IClientItemExtensions()
-        {
-            private final NonNullLazy<BlockEntityWithoutLevelRenderer> ister = NonNullLazy.of(() -> new BasicBlasterItemRenderer());
-
-            @Override
-            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                return ister.get();
-            }
-        });
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+        data.add(new AnimationController(this, getControllerName(), 1, super::predicate));
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, getControllerName(), 1, super::predicate));
+    public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
+        consumer.accept(new GeoRenderProvider() {
+            private BasicBlasterItemRenderer renderer;
+
+            @Override
+            public BlockEntityWithoutLevelRenderer getGeoItemRenderer() {
+                if (this.renderer == null) {
+                    this.renderer = new BasicBlasterItemRenderer();
+                }
+
+                return this.renderer;
+            }
+        });
     }
 
     @Override

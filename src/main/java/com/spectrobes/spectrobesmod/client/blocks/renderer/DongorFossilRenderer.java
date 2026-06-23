@@ -5,17 +5,17 @@ import com.spectrobes.spectrobesmod.client.blocks.model.DongorFossilModel;
 import com.spectrobes.spectrobesmod.common.blocks.fossils.tile.DongorFossilBlockTileEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
+import software.bernie.geckolib.renderer.GeoBlockRenderer;
 
 public class DongorFossilRenderer extends GeoBlockRenderer<DongorFossilBlockTileEntity> {
 
     public DongorFossilRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
-        super(rendererDispatcherIn, new DongorFossilModel());
+        super(new DongorFossilModel());
     }
 
     @Override
-    public void render(DongorFossilBlockTileEntity tile, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+    public void render(DongorFossilBlockTileEntity animatable, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
         poseStack.scale(0.33f, 0.33f, 0.33f);
-        super.render(tile, partialTick, poseStack, bufferSource, packedLight);
+        super.render(animatable, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
     }
 }

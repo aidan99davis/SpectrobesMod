@@ -2,6 +2,7 @@ package com.spectrobes.spectrobesmod.common.save_data;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -10,20 +11,29 @@ import net.minecraft.world.level.saveddata.SavedData;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class SpectrobesWorldSaveData extends SavedData {
 
-    public static final String name = SpectrobesInfo.MOD_ID + "_data";
+    public static final String NAME = SpectrobesInfo.MOD_ID + "_data";
+
+    // Kept for compatibility if other code still references SpectrobesWorldSaveData.name.
+    public static final String name = NAME;
+
+    private static final double NEST_MIN_DISTANCE = 2000.0D;
+
+    private static final SavedData.Factory<SpectrobesWorldSaveData> FACTORY =
+            new SavedData.Factory<>(SpectrobesWorldSaveData::new, SpectrobesWorldSaveData::load);
 
     private final List<KrawlNest> nests = new ArrayList<>();
 
-    public SpectrobesWorldSaveData() { super(); }
+    public SpectrobesWorldSaveData() {
+        super();
+    }
 
-    //remember to call data.setDirty() so it knows to update and sync.
-    public static SpectrobesWorldSaveData getWorldData(ServerLevel world) {
-        return world.getDataStorage().computeIfAbsent(SpectrobesWorldSaveData::load, SpectrobesWorldSaveData::new, SpectrobesWorldSaveData.name);
+    // Remember to call setDirty() whenever this data changes.
+    public static SpectrobesWorldSaveData getWorldData(ServerLevel level) {
+        return level.getDataStorage().computeIfAbsent(FACTORY, NAME);
     }
 
     public void addNest(KrawlNest nest) {
@@ -33,42 +43,63 @@ public class SpectrobesWorldSaveData extends SavedData {
 
     public boolean canSpawnNest(BlockPos position) {
         for (KrawlNest krawlNest : nests) {
-            if (position.closerThan(krawlNest.position, 2000)) {
+            if (position.closerThan(krawlNest.position, NEST_MIN_DISTANCE)) {
                 return false;
             }
         }
+
         return true;
     }
 
-    public List<KrawlNest> getNests() { return nests; }
-    public List<KrawlNest> getNestsAlive() { return nests.stream().filter(KrawlNest::isAlive).collect(Collectors.toList()); }
-    public List<KrawlNest> getNestsDead() { return nests.stream().filter(krawlNest -> !krawlNest.isAlive()).collect(Collectors.toList()); }
+    public List<KrawlNest> getNests() {
+        return nests;
+    }
+
+    public List<KrawlNest> getNestsAlive() {
+        return nests.stream()
+                .filter(KrawlNest::isAlive)
+                .collect(Collectors.toList());
+    }
+
+    public List<KrawlNest> getNestsDead() {
+        return nests.stream()
+                .filter(krawlNest -> !krawlNest.isAlive())
+                .collect(Collectors.toList());
+    }
 
     public KrawlNest getNest(BlockPos position) {
         for (KrawlNest krawlNest : nests) {
-            if (position.closerThan(krawlNest.position, 2000)) {
+            if (position.closerThan(krawlNest.position, NEST_MIN_DISTANCE)) {
                 return krawlNest;
             }
         }
+
         return null;
     }
 
-    public static SpectrobesWorldSaveData load(CompoundTag nbt) {
+    public static SpectrobesWorldSaveData load(CompoundTag tag, HolderLookup.Provider provider) {
         SpectrobesWorldSaveData data = new SpectrobesWorldSaveData();
-        ListTag nbtNestList = ((ListTag) Objects.requireNonNull(nbt.get("nests")));
-        for (Tag inbt : nbtNestList) {
+
+        ListTag nestList = tag.getList("nests", Tag.TAG_COMPOUND);
+
+        for (Tag nestTag : nestList) {
             KrawlNest nest = new KrawlNest();
-            nest.deserializeNBT(inbt);
-            data.addNest(nest);
+            nest.deserializeNBT(provider, nestTag);
+            data.nests.add(nest);
         }
+
         return data;
     }
 
     @Override
-    public CompoundTag save(CompoundTag nbt) {
-        ListTag nbtList = new ListTag();
-        nests.forEach(krawlNest -> nbtList.add(krawlNest.serializeNBT()));
-        nbt.put("nests", nbtList);
-        return nbt;
+    public CompoundTag save(CompoundTag tag, HolderLookup.Provider provider) {
+        ListTag nestList = new ListTag();
+
+        for (KrawlNest krawlNest : nests) {
+            nestList.add(krawlNest.serializeNBT(provider));
+        }
+
+        tag.put("nests", nestList);
+        return tag;
     }
 }

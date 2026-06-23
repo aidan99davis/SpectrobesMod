@@ -3,7 +3,7 @@
   "render_type": "cutout",
   "textures": {
     "particle": "block/sculk_vein",
-    "krawl_fiber": "spectrobesmod:blocks/krawl_fiber"
+    "krawl_fiber": "spectrobesmod:block/krawl_fiber"
   },
   "elements": [
     {

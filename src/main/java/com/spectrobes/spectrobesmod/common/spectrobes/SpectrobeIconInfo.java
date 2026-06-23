@@ -1,5 +1,6 @@
 package com.spectrobes.spectrobesmod.common.spectrobes;
 
+import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import net.minecraft.resources.ResourceLocation;
 
 public class SpectrobeIconInfo {
@@ -8,7 +9,7 @@ public class SpectrobeIconInfo {
     private int height;
 
     public SpectrobeIconInfo(String name, int width, int height) {
-        iconRl = new ResourceLocation("spectrobesmod:textures/gui/" + name + ".png");
+        iconRl = ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "textures/gui/" + name + ".png");
         this.height = height;
         this.width = width;
     }

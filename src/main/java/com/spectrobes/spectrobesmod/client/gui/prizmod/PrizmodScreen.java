@@ -1,116 +1,130 @@
 package com.spectrobes.spectrobesmod.client.gui.prizmod;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.container.PrizmodContainer;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.Pages.LineUpPage;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.Pages.PrizmodPage;
-
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-
-import java.util.List;
 
 public class PrizmodScreen extends AbstractContainerScreen<PrizmodContainer> {
-    public static final ResourceLocation texture = new ResourceLocation("spectrobesmod:textures/gui/prizmod_background.png");
-    public static final ResourceLocation SPECTROBE_SLOT_TEXTURE = new ResourceLocation("spectrobesmod:textures/gui/spectrobe_slot.png");
-    public static final ResourceLocation SPECTROBE_SLOT_SELECTED_TEXTURE = new ResourceLocation("spectrobesmod:textures/gui/spectrobe_slot_selected.png");
 
-    public Player player;
-    public int pageX = imageWidth / 3;
-    public int pageY = (int) (imageHeight * 0.65);
+    public static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(
+            SpectrobesInfo.MOD_ID,
+            "textures/gui/prizmod_background.png"
+    );
+
+    public static final ResourceLocation SPECTROBE_SLOT_TEXTURE = ResourceLocation.fromNamespaceAndPath(
+            SpectrobesInfo.MOD_ID,
+            "textures/gui/spectrobe_slot.png"
+    );
+
+    public static final ResourceLocation SPECTROBE_SLOT_SELECTED_TEXTURE = ResourceLocation.fromNamespaceAndPath(
+            SpectrobesInfo.MOD_ID,
+            "textures/gui/spectrobe_slot_selected.png"
+    );
+
+    public final Player player;
+
+    public int pageX;
+    public int pageY;
+
     private PrizmodPage prizmodPage;
 
-    public PrizmodScreen(PrizmodContainer container, Inventory playerInv, Component text) {
-        super(container, playerInv, text);
-        this.player = playerInv.player;
-        this.imageWidth = Minecraft.getInstance().getWindow().getGuiScaledWidth();
-        this.imageHeight = Minecraft.getInstance().getWindow().getGuiScaledHeight();
+    public PrizmodScreen(PrizmodContainer container, Inventory playerInventory, Component title) {
+        super(container, playerInventory, title);
+        this.player = playerInventory.player;
     }
 
     @Override
-    public void resize(Minecraft mc, int p_resize_2_, int p_resize_3_) {
-        super.resize(mc, p_resize_2_, p_resize_3_);
-        this.imageWidth = mc.getWindow().getGuiScaledWidth();
-        this.imageHeight = mc.getWindow().getGuiScaledHeight();
+    protected void init() {
+        super.init();
+
+        this.imageWidth = this.width;
+        this.imageHeight = this.height;
+        this.leftPos = 0;
+        this.topPos = 0;
+
+        updatePagePosition();
+        setMenuPage(new LineUpPage(this));
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int partialTicks) {
-        super.mouseClicked(mouseX, mouseY, partialTicks);
-        return false;
+    public void resize(Minecraft minecraft, int width, int height) {
+        super.resize(minecraft, width, height);
+
+        this.imageWidth = width;
+        this.imageHeight = height;
+        this.leftPos = 0;
+        this.topPos = 0;
+
+        updatePagePosition();
+    }
+
+    private void updatePagePosition() {
+        this.pageX = this.imageWidth / 3;
+        this.pageY = (int) (this.imageHeight * 0.65D);
     }
 
     @Override
-    public void init() {
-        this.changeFocus(true);
-        this.prizmodPage = new LineUpPage(this);
-        this.prizmodPage.init();
-        this.prizmodPage.changeFocus(true);
-        this.addRenderableWidget(this.prizmodPage);
-    }
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        super.render(guiGraphics, mouseX, mouseY, partialTicks);
 
+        guiGraphics.drawCenteredString(
+                this.font,
+                "Gura Balance: " + getMenu().getGuraBalance(),
+                this.width / 2,
+                this.height / 10,
+                0x00A0A0A0
+        );
 
-    @Override
-    public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-        super.render(stack, mouseX, mouseY,partialTicks);
-        drawCenteredString(stack, font, "Gura Balance: " + getMenu().getGuraBalance(), this.width / 2, height / 10, 10526880);
-        this.prizmodPage.render(stack, mouseX,mouseY,partialTicks);
+        this.renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
     @Override
-    protected void renderLabels(PoseStack p_230451_1_, int p_230451_2_, int p_230451_3_) {
-//
-//        this.font.draw(pMatrixStack, this.title, (float)this.titleLabelX, (float)this.titleLabelY, 4210752);
-//        this.font.draw(pMatrixStack, this.inventory.getDisplayName(), (float)this.inventoryLabelX, (float)this.inventoryLabelY, 4210752);
+    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        // Intentionally blank. This screen draws labels in render().
     }
 
-    /**
-     * Draws the background layer of this container (behind the items).
-     *
-     * @param partialTicks
-     * @param mouseX
-     * @param mouseY
-     */
     @Override
-    protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
-        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-        RenderSystem.setShaderTexture(0, texture);
-        blit(stack, 0, 0, 0, 0, 600, 400, imageWidth, imageHeight);
+    protected void renderBg(GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY) {
+        guiGraphics.blit(
+                TEXTURE,
+                0,
+                0,
+                0,
+                0,
+                this.width,
+                this.height,
+                this.width,
+                this.height
+        );
     }
 
     public void setMenuPage(PrizmodPage prizmodPage) {
-        this.clearWidgets();
+        clearWidgets();
+
         this.prizmodPage = prizmodPage;
         this.prizmodPage.init();
-        this.prizmodPage.changeFocus(true);
-        this.addRenderableWidget(this.prizmodPage);
+
+        addRenderableWidget(this.prizmodPage);
+        setFocused(this.prizmodPage);
+        this.prizmodPage.setFocused(true);
     }
 
     @Override
-    public void containerTick() {
-        this.prizmodPage.tick();
+    protected void containerTick() {
+        super.containerTick();
+
+        if (this.prizmodPage != null) {
+            this.prizmodPage.tick();
+        }
+
         this.getMenu().tick();
-    }
-
-    public void addButtons(List<AbstractWidget> buttonList) {
-        buttonList.forEach(b -> {
-            this.addRenderableWidget(b);
-        });
-    }
-
-    public void removeButtons(List<AbstractWidget> buttonList) {
-        buttonList.forEach(b -> {
-            b.visible = false;
-            b.active = false;
-            this.removeWidget(b);
-        });
     }
 }

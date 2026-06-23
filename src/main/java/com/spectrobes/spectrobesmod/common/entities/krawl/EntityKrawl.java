@@ -12,9 +12,11 @@ import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import com.spectrobes.spectrobesmod.util.DamageUtils;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerEntity;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -24,21 +26,20 @@ import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.network.NetworkHooks;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import static com.spectrobes.spectrobesmod.util.DamageUtils.getTypeBonus;
 
-public abstract class EntityKrawl extends Monster implements IAnimatable, IHasNature {
+public abstract class EntityKrawl extends Monster implements GeoAnimatable, IHasNature {
     public KrawlProperties krawlProperties;
-    public AnimationFactory animationControllers = GeckoLibUtil.createFactory(this);
-    protected AnimationController<EntityKrawl> moveController = new AnimationController<>(this, "moveAnimationController", 10F, this::moveController);
+    public AnimatableInstanceCache animationControllers = GeckoLibUtil.createInstanceCache(this);
+    protected AnimationController<EntityKrawl> moveController = new AnimationController<>(this, "moveAnimationController", 10, this::moveController);
 
     private static final EntityDataAccessor<Boolean> IS_ATTACKING =
             SynchedEntityData.defineId(EntityKrawl.class,
@@ -50,14 +51,9 @@ public abstract class EntityKrawl extends Monster implements IAnimatable, IHasNa
         updateEntityAttributes();
     }
 
-    @Override
-    public boolean canBreatheUnderwater() {
-        return true;
-    }
-
     public abstract KrawlProperties GetKrawlProperties();
 
-    public boolean IsAttacking() {
+    public boolean isAttacking() {
         return entityData.get(IS_ATTACKING);
     }
     public void setIsAttacking(boolean attacking) {
@@ -135,15 +131,16 @@ public abstract class EntityKrawl extends Monster implements IAnimatable, IHasNa
         super.aiStep();
 
         if(this.isSunBurnTick()) {
-            this.setSecondsOnFire(8);
+            this.setRemainingFireTicks(8);
         }
-        if((getLastHurtByMobTimestamp() - this.tickCount) > 2000) this.setHealth(getHealth() + (getHealth() / 100));
+        if (this.tickCount - getLastHurtByMobTimestamp() > 2000) this.setHealth(getHealth() + (getHealth() / 100));
     }
 
     @Override
     protected void registerGoals()
     {
 //        this.goalSelector.addGoal(5, new BreedGoal(this,10)); todo: Make krawl eat mass and duplicate?
+        this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new AttackSpectrobeGoal(this, true, true));
         this.goalSelector.addGoal(2, new RestrictSunGoal(this));
         this.goalSelector.addGoal(3, new FleeSunGoal(this, 1.0D));
@@ -160,9 +157,9 @@ public abstract class EntityKrawl extends Monster implements IAnimatable, IHasNa
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        entityData.define(IS_ATTACKING, false);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(IS_ATTACKING, false);
     }
 
     public static AttributeSupplier.Builder setCustomAttributes() {
@@ -185,23 +182,22 @@ public abstract class EntityKrawl extends Monster implements IAnimatable, IHasNa
     }
 
     //Networking
-    @Override
-    public Packet<?> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
+//    @Override
+//    public Packet<?> getAddEntityPacket() {
+//        return NetworkHooks.getEntitySpawningPacket(this);
+//    }
 
     //Animation
-    public abstract <ENTITY extends EntityKrawl> PlayState moveController(AnimationEvent<ENTITY> entityAnimationTestEvent);
+    public abstract PlayState moveController(AnimationState<EntityKrawl> event);
 
     @Override
-    public AnimationFactory getFactory() {
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
         return animationControllers;
     }
 
     @Override
-    public void registerControllers(AnimationData data)
-    {
-        data.addAnimationController(new AnimationController<>(this, "controller", 0, this::moveController));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "controller", 0, this::moveController));
     }
 
     @Override
@@ -212,5 +208,10 @@ public abstract class EntityKrawl extends Monster implements IAnimatable, IHasNa
     public void setGlowing(boolean glowing) {
         this.setGlowingTag(glowing);
 //        this.setSharedFlag(6, glowing);
+    }
+
+    @Override
+    public double getTick(Object object) {
+        return this.tickCount;
     }
 }

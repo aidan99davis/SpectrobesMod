@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "spectrobesmod:items/prizmod_item"
+    "layer0": "spectrobesmod:item/prizmod_item"
   }
 }

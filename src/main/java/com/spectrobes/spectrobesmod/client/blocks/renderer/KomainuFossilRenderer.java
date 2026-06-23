@@ -5,17 +5,17 @@ import com.spectrobes.spectrobesmod.client.blocks.model.KomainuFossilModel;
 import com.spectrobes.spectrobesmod.common.blocks.fossils.tile.KomainuFossilBlockTileEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
+import software.bernie.geckolib.renderer.GeoBlockRenderer;
 
 public class KomainuFossilRenderer extends GeoBlockRenderer<KomainuFossilBlockTileEntity> {
 
     public KomainuFossilRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
-        super(rendererDispatcherIn, new KomainuFossilModel());
+        super(new KomainuFossilModel());
     }
 
     @Override
-    public void render(KomainuFossilBlockTileEntity tile, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+    public void render(KomainuFossilBlockTileEntity animatable, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
         poseStack.scale(1.25f, 1.25f, 1.25f);
-        super.render(tile, partialTick, poseStack, bufferSource, packedLight);
+        super.render(animatable, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
     }
 }

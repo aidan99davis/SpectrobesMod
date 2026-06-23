@@ -5,17 +5,17 @@ import com.spectrobes.spectrobesmod.client.blocks.model.ZozaFossilModel;
 import com.spectrobes.spectrobesmod.common.blocks.fossils.tile.ZozaFossilBlockTileEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
+import software.bernie.geckolib.renderer.GeoBlockRenderer;
 
 public class ZozaFossilRenderer extends GeoBlockRenderer<ZozaFossilBlockTileEntity> {
 
     public ZozaFossilRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
-        super(rendererDispatcherIn, new ZozaFossilModel());
+        super(new ZozaFossilModel());
     }
 
     @Override
-    public void render(ZozaFossilBlockTileEntity tile, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+    public void render(ZozaFossilBlockTileEntity animatable, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
         poseStack.scale(0.75f, 0.75f, 0.75f);
-        super.render(tile, partialTick, poseStack, bufferSource, packedLight);
+        super.render(animatable, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
     }
 }

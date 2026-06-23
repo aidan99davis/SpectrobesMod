@@ -10,6 +10,6 @@
 //
 //    private static <FC extends IFeatureConfig> ConfiguredFeature<FC, ?> register(String key, ConfiguredFeature<FC, ?> feature)
 //    {
-//        return Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(SpectrobesInfo.MOD_ID, key), feature);
+//        return Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, key), feature);
 //    }
 //}

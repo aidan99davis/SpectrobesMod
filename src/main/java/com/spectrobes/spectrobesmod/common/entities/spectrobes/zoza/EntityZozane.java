@@ -9,19 +9,19 @@ import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesFossilsRegis
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.builder.ILoopType;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 public class EntityZozane extends EntityMammalSpectrobe {
-
+    private static final RawAnimation ATTACK_ANIM = RawAnimation.begin().thenLoop("animation.zozane.attack");
+    private static final RawAnimation WALK_ANIM = RawAnimation.begin().thenLoop("animation.zozane.walk");
 
     public EntityZozane(EntityType<EntityZozane> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
     }
 
+    @Override
     public Spectrobe GetNewSpectrobeInstance() {
         return SpectrobeRegistry.Zozane.copy(false);
     }
@@ -37,7 +37,7 @@ public class EntityZozane extends EntityMammalSpectrobe {
     }
 
     @Override
-    public Class getSpectrobeClass() {
+    public Class<? extends EntitySpectrobe> getSpectrobeClass() {
         return EntityZozane.class;
     }
 
@@ -47,24 +47,16 @@ public class EntityZozane extends EntityMammalSpectrobe {
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return animationControllers;
-    }
+    public PlayState moveController(AnimationState<EntitySpectrobe> animationState) {
+        if (animationState.getAnimatable().isAttacking()) {
+            return animationState.setAndContinue(ATTACK_ANIM);
+        }
 
-    @Override
-    public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event)
-    {
-        if(event.getAnimatable().isAttacking()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.zozane.attack", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
+        if (animationState.isMoving()) {
+            return animationState.setAndContinue(WALK_ANIM);
         }
-        if(event.isMoving())
-        {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.zozane.walk", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
-        } else {
-            return PlayState.STOP;
-        }
+
+        return PlayState.STOP;
     }
 
     @Override

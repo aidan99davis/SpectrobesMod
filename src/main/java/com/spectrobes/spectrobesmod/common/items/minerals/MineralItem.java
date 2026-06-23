@@ -1,6 +1,5 @@
 package com.spectrobes.spectrobesmod.common.items.minerals;
 
-import com.spectrobes.spectrobesmod.common.items.SpectrobesItemGroups;
 import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesMineralsRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 
@@ -10,14 +9,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 
 public class MineralItem extends Item implements IWorthGura {
     public Mineral mineral;
 
     public MineralItem(Mineral mineral) {
-        super(new Item.Properties()
-                .tab(SpectrobesItemGroups.SpectrobesMineralItemGroup.Instance));
+        super(new Item.Properties());
         this.mineral = mineral;
 
         List<Item> list = SpectrobesMineralsRegistry.all_minerals.get(mineral.rarity);
@@ -35,7 +32,8 @@ public class MineralItem extends Item implements IWorthGura {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, tooltip, tooltipFlag);
         MineralProperties mineralProperties = mineral.properties;
         if(mineralProperties.getNature() != SpectrobeProperties.Nature.OTHER) {
             switch(mineralProperties.getNature()) {
@@ -48,7 +46,7 @@ public class MineralItem extends Item implements IWorthGura {
                 case FLASH:
                     tooltip.add(Component.literal("\u00A71" + "Flash" + "\u00A71"));
                     break;
-                    default:break;
+                default:break;
             }
         }
         if(mineralProperties.getHpOffset() != 0)

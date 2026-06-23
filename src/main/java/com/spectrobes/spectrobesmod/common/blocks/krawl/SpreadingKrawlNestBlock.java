@@ -8,10 +8,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.SculkShriekerBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluids;
@@ -34,7 +32,7 @@ public class SpreadingKrawlNestBlock extends SpectrobesBlock implements KrawlBeh
                     BlockPos blockpos1 = blockpos.above();
                     BlockState blockstate = this.getRandomGrowthState(pLevel, blockpos1, pRandom, pSpreader.isWorldGeneration());
                     pLevel.setBlock(blockpos1, blockstate, 3);
-                    pLevel.playSound((Player)null, blockpos, blockstate.getSoundType().getPlaceSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
+                    pLevel.playSound(null, blockpos, blockstate.getSoundType().getPlaceSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
                 }
 
                 return Math.max(0, i - j);
@@ -67,7 +65,7 @@ public class SpreadingKrawlNestBlock extends SpectrobesBlock implements KrawlBeh
 
             for(BlockPos blockpos : BlockPos.betweenClosed(pPos.offset(-4, 0, -4), pPos.offset(4, 2, 4))) {
                 BlockState blockstate1 = pLevel.getBlockState(blockpos);
-                if (blockstate1.is(Blocks.SCULK_SENSOR) || blockstate1.is(Blocks.SCULK_SHRIEKER)) {
+                if (blockstate1.is(SpectrobesBlocks.mini_xelles_block.get())) {
                     ++i;
                 }
 

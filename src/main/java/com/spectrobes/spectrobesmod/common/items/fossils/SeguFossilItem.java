@@ -1,13 +1,12 @@
 package com.spectrobes.spectrobesmod.common.items.fossils;
 
+import com.spectrobes.spectrobesmod.client.items.renderer.KomainuFossilItemRenderer;
 import com.spectrobes.spectrobesmod.client.items.renderer.SeguFossilItemRenderer;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
-
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import net.minecraftforge.common.util.NonNullLazy;
+import software.bernie.geckolib.animatable.client.GeoRenderProvider;
 
 import java.util.function.Consumer;
 
@@ -18,14 +17,17 @@ public class SeguFossilItem extends FossilBlockItem {
     }
 
     @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-        consumer.accept(new IClientItemExtensions()
-        {
-            private final NonNullLazy<BlockEntityWithoutLevelRenderer> ister = NonNullLazy.of(() -> new SeguFossilItemRenderer());
+    public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
+        consumer.accept(new GeoRenderProvider() {
+            private SeguFossilItemRenderer renderer;
 
             @Override
-            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                return ister.get();
+            public BlockEntityWithoutLevelRenderer getGeoItemRenderer() {
+                if (this.renderer == null) {
+                    this.renderer = new SeguFossilItemRenderer();
+                }
+
+                return this.renderer;
             }
         });
     }

@@ -1,35 +1,41 @@
 package com.spectrobes.spectrobesmod.common.entities.spectrobes;
 
-import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.SpectrobeFindWaterGoal;
-import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.SpectrobeRandomStrollGoal;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.movement.SpectrobeFindWaterGoal;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.movement.SpectrobeRandomStrollGoal;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.movement.SpectrobeWaterAvoidingRandomStrollGoal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobType;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.LookControl;
 import net.minecraft.world.entity.ai.control.MoveControl;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.RandomSwimmingGoal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.List;
 import java.util.Random;
 
-
 public abstract class EntityCrustaceanSpectrobe extends EntitySpectrobe {
+
     public EntityCrustaceanSpectrobe(EntityType<? extends EntitySpectrobe> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
-        this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
-        this.setPathfindingMalus(BlockPathTypes.WALKABLE, 0.0F);
-        this.moveControl = new MoveHelperController(this);
+        this.setPathfindingMalus(PathType.WATER, 0.0F);
+        this.setPathfindingMalus(PathType.WALKABLE, 0.0F);
+        this.moveControl = new CrustaceanMoveController(this);
         this.lookControl = new LookControl(this);
     }
+
+    // -------------------------------------------------------------------------
+    // Classification / fluid
+    // -------------------------------------------------------------------------
 
     @Override
     public boolean isPushedByFluid() {
@@ -37,68 +43,87 @@ public abstract class EntityCrustaceanSpectrobe extends EntitySpectrobe {
     }
 
     @Override
-    public MobType getMobType() {
-        return MobType.WATER;
+    public MobCategory getClassification(boolean forSpawnCount) {
+        return MobCategory.WATER_CREATURE;
     }
 
-    @Override
-    public void aiStep() {
-        super.aiStep();
-    }
+    // -------------------------------------------------------------------------
+    // Goals
+    //
+    // Crustaceans are semi-aquatic — equally comfortable on land and in water.
+    // Tamed spectrobes follow their master on foot; wild ones seek water and
+    // swim/scuttle freely.
+    //
+    //   0  FloatGoal          — prevents drowning at the surface
+    //   2  FindWater (wild)   — wild crustaceans actively seek water
+    //   7  RandomSwimming     — wild aquatic roaming
+    //   7  RandomStroll       — ground roaming, both tamed & wild
+    //                          (overridden by FollowMaster at priority 3)
+    //   9  LookAround         — idle behaviour
+    // -------------------------------------------------------------------------
 
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(2, new SpectrobeFindWaterGoal(this));
-        this.goalSelector.addGoal(9, new RandomLookAroundGoal(this));
+
+        this.goalSelector.addGoal(0, new FloatGoal(this));
+
+        // Wild-only water-seeking
+        this.goalSelector.addGoal(2, new SpectrobeFindWaterGoal(this) {
+            @Override public boolean canUse() { return !isTame() && super.canUse(); }
+        });
+
+        // Wild-only swimming
+        this.goalSelector.addGoal(7, new RandomSwimmingGoal(this, 1, 10) {
+            @Override public boolean canUse() { return !isTame() && super.canUse(); }
+        });
+
+        // Ground stroll — available to all, but superseded by FollowMaster
         this.goalSelector.addGoal(7, new SpectrobeRandomStrollGoal(this, 1));
-        this.goalSelector.addGoal(7, new RandomSwimmingGoal(this, 1, 10));
+
+        this.goalSelector.addGoal(9, new RandomLookAroundGoal(this));
     }
 
-    @Override
-    public boolean canBreatheUnderwater() {
-        return true;
-    }
+    // -------------------------------------------------------------------------
+    // Breeding
+    // -------------------------------------------------------------------------
 
     @Override
     public void mate() {
-        List<? extends EntityCrustaceanSpectrobe> mates
-                = level.getEntitiesOfClass(getSpectrobeClass(),
-                this.getBoundingBox()
-                        .inflate(10, 10, 10));
-        if(mates.isEmpty() || mates.size() == 1) {
+        List<? extends EntityCrustaceanSpectrobe> mates =
+                level().getEntitiesOfClass(this.getClass(),
+                        this.getBoundingBox().inflate(10, 10, 10));
+
+        if (mates.isEmpty() || mates.size() == 1) {
             this.setTicksTillMate(16000);
             return;
         }
 
         EntityCrustaceanSpectrobe mate = null;
-
         for (EntityCrustaceanSpectrobe spec : mates) {
-            if(mate == null) {
-                if(spec.getTicksTillMate() <= 0) {
-                    mate = spec;
-                }
+            if (mate == null && spec.getTicksTillMate() <= 0) {
+                mate = spec;
             }
         }
 
-        if(mate == null) {
+        if (mate == null) {
             this.setTicksTillMate(16000);
             return;
         }
 
         this.entityData.set(HAS_MATED, true);
-
+        this.setTicksTillMate(16000);
         mate.setTicksTillMate(16000);
-        Random random = new Random();
-        int litterSize = random.nextInt(getMaxLitterSize());
 
-        for(int i = 0; i < litterSize; i++) {
-            EntitySpectrobe spectrobe = getChildForLineage()
-                    .create(level);
-            this.level.addFreshEntity(spectrobe);
-            spectrobe.teleportTo(getX(), getY(), getZ());
+        Random random = new Random();
+        int litterSize = random.nextInt(getMaxLitterSize()) + 1;
+        for (int i = 0; i < litterSize; i++) {
+            EntitySpectrobe child = getChildForLineage().create(level());
+            if (child != null) {
+                this.level().addFreshEntity(child);
+                child.teleportTo(getX(), getY(), getZ());
+            }
         }
-        //todo: aquatic breeding. eggs? livebirth? - livebirth for now, with a litter size.
     }
 
     @Override
@@ -108,83 +133,97 @@ public abstract class EntityCrustaceanSpectrobe extends EntitySpectrobe {
 
     protected abstract int getMaxLitterSize();
 
-    static class MoveHelperController extends MoveControl {
-        private final EntityCrustaceanSpectrobe fish;
+    // -------------------------------------------------------------------------
+    // Move controller
+    //
+    // Crustaceans walk and can swim when in water.  Unlike the original, all
+    // position components use double precision to avoid the float-cast loss that
+    // caused jerky movement in the previous version.
+    //
+    // Zones:
+    //   IN WATER  — gentle upward buoyancy nudge; can float and steer vertically
+    //   ON GROUND — walk/jump using the standard MoveControl path
+    //   IDLE      — speed zeroed
+    // -------------------------------------------------------------------------
 
-        MoveHelperController(EntityCrustaceanSpectrobe p_i48857_1_) {
-            super(p_i48857_1_);
-            this.fish = p_i48857_1_;
+    static class CrustaceanMoveController extends MoveControl {
+
+        private final EntityCrustaceanSpectrobe crustacean;
+
+        CrustaceanMoveController(EntityCrustaceanSpectrobe entity) {
+            super(entity);
+            this.crustacean = entity;
         }
 
+        @Override
         public void tick() {
-            if (this.fish.isInWater()) {
-                if(this.fish.getTarget() != null && this.fish.getTarget().getY() > this.fish.getY()) {
-                    this.fish.getNavigation().setCanFloat(true);
+            // Buoyancy in water — same nudge used by vanilla aquatic mobs
+            if (crustacean.isInWater()) {
+                if (crustacean.getTarget() != null
+                        && crustacean.getTarget().getY() > crustacean.getY()) {
+                    crustacean.getNavigation().setCanFloat(true);
                 } else {
-                    this.fish.getNavigation().setCanFloat(false);
+                    crustacean.getNavigation().setCanFloat(false);
                 }
-                this.fish.setDeltaMovement(this.fish.getDeltaMovement().add(0.0D, 0.005D, 0.0D));
+                crustacean.setDeltaMovement(
+                        crustacean.getDeltaMovement().add(0.0D, 0.005D, 0.0D));
             }
 
-            if (this.operation == MoveControl.Operation.MOVE_TO && !this.fish.getNavigation().isDone()) {
-                float d0 = (float) this.wantedX - (float) this.fish.getX();
-                float d1 = (float) this.wantedY - (float) this.fish.getY();
-                float d2 = (float) this.wantedZ - (float) this.fish.getZ();
-                float lvt_7_1_ = Mth.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
+            if (this.operation == Operation.MOVE_TO && !crustacean.getNavigation().isDone()) {
+
+                // Use double throughout — the original code cast to float here,
+                // causing precision loss that showed up as jittery turns
+                double d0 = this.wantedX - crustacean.getX();
+                double d1 = this.wantedY - crustacean.getY();
+                double d2 = this.wantedZ - crustacean.getZ();
+                double dist = Math.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
+
+                if (dist < 1.0E-4D) {
+                    crustacean.setSpeed(0.0F);
+                    return;
+                }
+
                 BlockPos blockpos = this.mob.blockPosition();
-                BlockState blockstate = this.mob.level.getBlockState(blockpos);
-                VoxelShape voxelshape = blockstate.getCollisionShape(this.mob.level, blockpos);
-                if (d1 > (double)this.mob.getStepHeight() && d0 * d0 + d2 * d2 < (double)Math.max(1.0F, this.mob.getBbWidth()) || !voxelshape.isEmpty() && this.mob.getY() < voxelshape.max(Direction.Axis.Y) + (double)blockpos.getY() && !blockstate.is(BlockTags.DOORS) && !blockstate.is(BlockTags.FENCES)) {
+                BlockState blockstate = this.mob.level().getBlockState(blockpos);
+                VoxelShape voxelshape = blockstate.getCollisionShape(this.mob.level(), blockpos);
+
+                boolean needsJump = d1 > (double) this.mob.maxUpStep()
+                        && d0 * d0 + d2 * d2 < (double) Math.max(1.0F, this.mob.getBbWidth());
+                boolean insideShape = !voxelshape.isEmpty()
+                        && this.mob.getY() < voxelshape.max(Direction.Axis.Y) + blockpos.getY()
+                        && !blockstate.is(BlockTags.DOORS)
+                        && !blockstate.is(BlockTags.FENCES);
+
+                if (needsJump || insideShape) {
                     this.mob.getJumpControl().jump();
-                    this.operation = MoveControl.Operation.JUMPING;
+                    this.operation = Operation.JUMPING;
                 }
-                d1 /= lvt_7_1_;
-                float lvt_9_1_ = (float) (Mth.atan2(d2, d0) * 57.2957763671875D) - 90.0F;
-                this.fish.setYRot(this.rotlerp(this.fish.yRotO, lvt_9_1_, 90.0F));
-                this.fish.yBodyRot = this.fish.getYRot();
-                float lvt_10_1_ = (float) (this.speedModifier * this.fish.getAttribute(Attributes.MOVEMENT_SPEED).getValue());
-                this.fish.setSpeed(Mth.lerp(0.125F, this.fish.getSpeed(), lvt_10_1_));
-                this.fish.setDeltaMovement(this.fish.getDeltaMovement().add(0.0D, (double) this.fish.getSpeed() * d1 * 0.1D, 0.0D));
-            } else if (this.operation == MoveControl.Operation.JUMPING) {
-                this.mob.setSpeed((float)(this.speedModifier * this.mob.getAttributeValue(Attributes.MOVEMENT_SPEED)));
-                if (this.mob.isOnGround()) {
-                    this.operation = MoveControl.Operation.WAIT;
+
+                double normD1 = d1 / dist;
+                float yaw = (float) (Mth.atan2(d2, d0) * (180D / Math.PI)) - 90.0F;
+                crustacean.setYRot(this.rotlerp(crustacean.yRotO, yaw, 90.0F));
+                crustacean.yBodyRot = crustacean.getYRot();
+
+                float targetSpeed = (float) (this.speedModifier
+                        * crustacean.getAttribute(Attributes.MOVEMENT_SPEED).getValue());
+                crustacean.setSpeed(Mth.lerp(0.125F, crustacean.getSpeed(), targetSpeed));
+
+                // Vertical speed component applies in both water and air/ground
+                crustacean.setDeltaMovement(
+                        crustacean.getDeltaMovement()
+                                .add(0.0D, crustacean.getSpeed() * normD1 * 0.1D, 0.0D));
+
+            } else if (this.operation == Operation.JUMPING) {
+                this.mob.setSpeed(
+                        (float) (this.speedModifier
+                                * this.mob.getAttributeValue(Attributes.MOVEMENT_SPEED)));
+                if (this.mob.onGround()) {
+                    this.operation = Operation.WAIT;
                 }
+            } else {
+                // WAIT — zero speed so the entity doesn't drift after stopping
+                crustacean.setSpeed(0.0F);
             }
         }
     }
-
-//    private static class SpectrobeLookController extends LookControl {
-//        private final int maxYRotFromCenter;
-//
-//        public SpectrobeLookController(Mob p_i48942_1_, int p_i48942_2_) {
-//            super(p_i48942_1_);
-//            this.maxYRotFromCenter = p_i48942_2_;
-//        }
-//
-//        /**
-//         * Updates look
-//         */
-//        public void tick() {
-//            if (this.hasWanted) {
-//                this.hasWanted = false;
-//                this.mob.yHeadRot = this.rotateTowards(this.mob.yHeadRot, this.getYRotD() + 20.0F, this.yMaxRotSpeed);
-//                this.mob.xRot = this.rotateTowards(this.mob.xRot, this.getXRotD() + 10.0F, this.xMaxRotAngle);
-//            } else {
-//                if (this.mob.getNavigation().isDone()) {
-//                    this.mob.xRot = this.rotateTowards(this.mob.xRot, 0.0F, 5.0F);
-//                }
-//
-//                this.mob.yHeadRot = this.rotateTowards(this.mob.yHeadRot, this.mob.yBodyRot, this.yMaxRotSpeed);
-//            }
-//
-////            float f = MathHelper.wrapDegrees(this.mob.yHeadRot - this.mob.yBodyRot);
-////            if (f < (float)(-this.maxYRotFromCenter)) {
-////                this.mob.yBodyRot -= 4.0F;
-////            } else if (f > (float)this.maxYRotFromCenter) {
-////                this.mob.yBodyRot += 4.0F;
-////            }
-//
-//        }
-//    }
 }

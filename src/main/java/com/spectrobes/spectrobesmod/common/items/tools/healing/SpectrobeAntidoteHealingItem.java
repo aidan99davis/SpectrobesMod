@@ -1,48 +1,60 @@
 package com.spectrobes.spectrobesmod.common.items.tools.healing;
 
 import com.spectrobes.spectrobesmod.client.items.healing.renderer.AntidoteItemRenderer;
-import com.spectrobes.spectrobesmod.client.items.healing.renderer.SerumItemRenderer;
+import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.items.minerals.IWorthGura;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.CSyncSpectrobeMasterPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.client.CSyncSpectrobeMasterPacket;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import net.minecraftforge.common.util.NonNullLazy;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.builder.ILoopType;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.animatable.client.GeoRenderProvider;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
 import java.util.function.Consumer;
 
-public class SpectrobeAntidoteHealingItem extends Item implements IAnimatable, IWorthGura {
-    public AnimationFactory animationControllers = GeckoLibUtil.createFactory(this);
+public class SpectrobeAntidoteHealingItem extends Item implements GeoItem, IWorthGura {
+    private static final RawAnimation PARTICLE_ANIMATION =
+            RawAnimation.begin().thenLoop("animation.serum.particle");
 
-    private int healAmount;
-    private int guraWorth;
-    private int tier;
+    private final AnimatableInstanceCache animationCache = GeckoLibUtil.createInstanceCache(this);
 
-    public int getSpectrobeHealAmount() {
-        return healAmount;
+    private final int healAmount;
+    private final int guraWorth;
+    private final int tier;
+
+    public SpectrobeAntidoteHealingItem(int healAmount, int guraWorth, int tier, Properties properties) {
+        super(properties);
+
+        this.healAmount = healAmount;
+        this.guraWorth = guraWorth;
+        this.tier = tier;
     }
 
+    public int getSpectrobeHealAmount() {
+        return this.healAmount;
+    }
+
+    @Override
     public int getGuraWorth() {
-        return guraWorth;
+        return this.guraWorth;
     }
 
     @Override
@@ -53,68 +65,80 @@ public class SpectrobeAntidoteHealingItem extends Item implements IAnimatable, I
     }
 
     public int getTier() {
-        return tier;
-    }
-
-    public SpectrobeAntidoteHealingItem(int healAmount, int guraWorth, int tier, Properties pProperties) {
-        super(pProperties);
-        this.healAmount = healAmount;
-        this.guraWorth = guraWorth;
-        this.tier = tier;
+        return this.tier;
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
-        if(pPlayer.level.isClientSide()) {
-            pPlayer.getCapability(SpectrobeMaster.INSTANCE).ifPresent(playerSpectrobeMaster -> {
-                playerSpectrobeMaster.getCurrentTeamUuids().forEach((integer, uuid) -> {
-                    if(uuid != null) {
-                        Spectrobe spectrobe = playerSpectrobeMaster.getSpectrobeByUuid(uuid);
-                        if(spectrobe != null) spectrobe.addHealth(getSpectrobeHealAmount());
-                        if(playerSpectrobeMaster.getCurrentTeamMember() != null && playerSpectrobeMaster.getCurrentTeamMember().active) {
-                            List<EntitySpectrobe> spectrobes = pPlayer.level.getEntitiesOfClass(EntitySpectrobe.class, pPlayer.getBoundingBox().inflate(15));
-                            if(spectrobes.size() > 0) {
-                                spectrobes.forEach(entitySpectrobe -> {
-                                    if(entitySpectrobe.getOwner().getUUID().equals(pPlayer.getUUID())) {
-                                        entitySpectrobe.healSpectrobe(getSpectrobeHealAmount());
-                                    }
-                                });
-                            }
-                        }
-                    }
-                });
-                SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket(playerSpectrobeMaster));
-            });
-
-        }
-        return InteractionResultHolder.consume(pPlayer.getItemInHand(pUsedHand));
-    }
-
-    @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-        consumer.accept(new IClientItemExtensions()
-        {
-            private final NonNullLazy<BlockEntityWithoutLevelRenderer> ister = NonNullLazy.of(AntidoteItemRenderer::new);
+    public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
+        consumer.accept(new GeoRenderProvider() {
+            private AntidoteItemRenderer renderer;
 
             @Override
-            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                return ister.get();
+            public BlockEntityWithoutLevelRenderer getGeoItemRenderer() {
+                if (this.renderer == null) {
+                    this.renderer = new AntidoteItemRenderer();
+                }
+
+                return this.renderer;
             }
         });
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 0, this::controller));
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
+        ItemStack stack = player.getItemInHand(usedHand);
+
+        if (!level.isClientSide()) {
+            PlayerSpectrobeMaster playerSpectrobeMaster = player.getCapability(SpectrobeMaster.INSTANCE);
+
+            if (playerSpectrobeMaster != null) {
+                playerSpectrobeMaster.getCurrentTeamUuids().forEach((slot, uuid) -> {
+                    if (uuid == null) {
+                        return;
+                    }
+
+                    Spectrobe spectrobe = playerSpectrobeMaster.getSpectrobeByUuid(uuid);
+
+                    if (spectrobe != null) {
+                        spectrobe.addHealth(getSpectrobeHealAmount());
+                    }
+
+                    if (playerSpectrobeMaster.getCurrentTeamMember() != null
+                            && playerSpectrobeMaster.getCurrentTeamMember().active) {
+                        List<EntitySpectrobe> spectrobeEntities = level.getEntitiesOfClass(
+                                EntitySpectrobe.class,
+                                player.getBoundingBox().inflate(15.0D)
+                        );
+
+                        for (EntitySpectrobe entitySpectrobe : spectrobeEntities) {
+                            LivingEntity owner = entitySpectrobe.getOwner();
+
+                            if (owner != null && owner.getUUID().equals(player.getUUID())) {
+                                entitySpectrobe.healSpectrobe(getSpectrobeHealAmount());
+                            }
+                        }
+                    }
+                });
+
+                SpectrobesNetwork.sendToClient(new CSyncSpectrobeMasterPacket(playerSpectrobeMaster), (ServerPlayer) player);
+            }
+        }
+
+        return InteractionResultHolder.consume(stack);
     }
 
-    private PlayState controller(AnimationEvent animationEvent) {
-        animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.serum.particle", ILoopType.EDefaultLoopTypes.LOOP));
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "controller", 0, this::controller));
+    }
+
+    private PlayState controller(AnimationState<SpectrobeAntidoteHealingItem> animationState) {
+        animationState.setAnimation(PARTICLE_ANIMATION);
         return PlayState.CONTINUE;
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return animationControllers;
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.animationCache;
     }
 }

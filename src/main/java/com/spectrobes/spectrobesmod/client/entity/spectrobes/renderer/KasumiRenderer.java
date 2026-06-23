@@ -7,7 +7,7 @@ import com.spectrobes.spectrobesmod.common.entities.spectrobes.kasumi.EntityKasu
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
+import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 import javax.annotation.Nullable;
 
@@ -22,9 +22,9 @@ public class KasumiRenderer extends GeoEntityRenderer<EntityKasumi> {
     public ResourceLocation getTextureLocation(EntityKasumi entity)
     {
         return switch (entity.getSpectrobeData().Variant) {
-            case 1 -> new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/kasumi_1.png");
-            case 2 -> new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/kasumi_2.png");
-            default -> new ResourceLocation(SpectrobesInfo.MOD_ID + ":textures/models/spectrobe/kasumi_0.png");
+            case 1 -> ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "textures/models/spectrobe/kasumi_1.png");
+            case 2 -> ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "textures/models/spectrobe/kasumi_2.png");
+            default -> ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "textures/models/spectrobe/kasumi_0.png");
         };
     }
 

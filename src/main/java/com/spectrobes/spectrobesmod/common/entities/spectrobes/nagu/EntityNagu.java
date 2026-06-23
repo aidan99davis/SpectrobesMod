@@ -9,18 +9,18 @@ import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesFossilsRegis
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.builder.ILoopType;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 public class EntityNagu extends EntityMammalSpectrobe {
+    private static final RawAnimation IDLE_ANIM = RawAnimation.begin().thenLoop("animation.nagu.idle");
 
     public EntityNagu(EntityType<EntityNagu> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
     }
 
+    @Override
     public Spectrobe GetNewSpectrobeInstance() {
         return SpectrobeRegistry.Nagu.copy(false);
     }
@@ -36,7 +36,7 @@ public class EntityNagu extends EntityMammalSpectrobe {
     }
 
     @Override
-    public Class getSpectrobeClass() {
+    public Class<? extends EntitySpectrobe> getSpectrobeClass() {
         return EntityNagu.class;
     }
 
@@ -46,20 +46,12 @@ public class EntityNagu extends EntityMammalSpectrobe {
     }
 
     @Override
-    public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event) {
-        if(event.isMoving())
-        {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.nagu.idle", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
-        } else {
-            return PlayState.STOP;
+    public PlayState moveController(AnimationState<EntitySpectrobe> animationState) {
+        if (animationState.isMoving()) {
+            return animationState.setAndContinue(IDLE_ANIM);
         }
-    }
 
-
-    @Override
-    public AnimationFactory getFactory() {
-        return animationControllers;
+        return PlayState.STOP;
     }
 
     @Override

@@ -23,7 +23,7 @@ public class HealKrawlGoal extends Goal {
     public void start() {
         super.start();
 
-        List<EntityKrawl> nearbyKrawl = owner.level.getEntitiesOfClass(EntityKrawl.class, owner.getBoundingBox().inflate(10, 2, 10));
+        List<EntityKrawl> nearbyKrawl = owner.level().getEntitiesOfClass(EntityKrawl.class, owner.getBoundingBox().inflate(10, 2, 10));
 
         List<EntityKrawl> filteredKrawl = nearbyKrawl.stream().filter(entityKrawl -> !entityKrawl.isVortex() && !(entityKrawl instanceof EntityXelles)).collect(Collectors.toList());
 

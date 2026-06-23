@@ -9,19 +9,18 @@ import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesFossilsRegis
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.builder.ILoopType;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 public class EntitySamurite extends EntityMammalSpectrobe {
-
+    private static final RawAnimation WALK_ANIM = RawAnimation.begin().thenLoop("animation.samurite.walk");
 
     public EntitySamurite(EntityType<EntitySamurite> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
     }
 
+    @Override
     public Spectrobe GetNewSpectrobeInstance() {
         return SpectrobeRegistry.Samurite.copy(false);
     }
@@ -37,7 +36,7 @@ public class EntitySamurite extends EntityMammalSpectrobe {
     }
 
     @Override
-    public Class getSpectrobeClass() {
+    public Class<? extends EntitySpectrobe> getSpectrobeClass() {
         return EntitySamurite.class;
     }
 
@@ -47,19 +46,11 @@ public class EntitySamurite extends EntityMammalSpectrobe {
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return animationControllers;
-    }
-
-    @Override
-    public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event)
-    {
-        event.getController().transitionLengthTicks = 2;
-        if(event.isMoving())
-        {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.samurite.walk", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
+    public PlayState moveController(AnimationState<EntitySpectrobe> animationState) {
+        if (animationState.isMoving()) {
+            return animationState.setAndContinue(WALK_ANIM);
         }
+
         return PlayState.STOP;
     }
 

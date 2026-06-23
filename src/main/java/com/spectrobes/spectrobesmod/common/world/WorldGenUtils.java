@@ -4,13 +4,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 public class WorldGenUtils {
@@ -121,6 +121,20 @@ public class WorldGenUtils {
                         world.setBlock(position.offset(x, z, 0), Blocks.AIR.defaultBlockState(), 3);
                     }
                 }
+            }
+        }
+    }
+
+    public static void generateDome(Level world, RandomSource rand, BlockPos position, int size, int height, BlockState fill) {
+        int i2 = size;
+        int ySize = rand.nextInt(2);
+        int j = i2 + rand.nextInt(2);
+        int k = height + ySize;
+        int l = i2 + rand.nextInt(2);
+        float f = (j + k + l) * 0.333F;
+        for (BlockPos blockpos : BlockPos.betweenClosedStream(position.offset(-j, -k, -l), position.offset(j, k, l)).map(BlockPos::immutable).collect(Collectors.toSet())) {
+            if (blockpos.distSqr(position) <= f * f && blockpos.getY() >= position.getY() && !world.getBlockState(blockpos).isAir()) {
+                world.setBlock(blockpos, fill, 3);
             }
         }
     }

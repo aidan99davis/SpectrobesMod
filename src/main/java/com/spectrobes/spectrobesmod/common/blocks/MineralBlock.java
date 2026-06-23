@@ -1,21 +1,24 @@
 package com.spectrobes.spectrobesmod.common.blocks;
 
+import com.mojang.serialization.MapCodec;
 import com.spectrobes.spectrobesmod.common.items.minerals.Mineral;
 import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesMineralsRegistry;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class MineralBlock extends SpectrobesBlock {
-    private static final Properties props = Properties.of(Material.STONE)
+
+    public static final MapCodec<MineralBlock> CODEC = MapCodec.unit(MineralBlock::new);
+
+    private static final Properties props = Properties.of()
             .requiresCorrectToolForDrops()
-            .strength(1.5f)
+            .isValidSpawn((state, level, pos, entityType) -> false)
+            .strength(1.5F)
             .sound(SoundType.STONE);
 
     public MineralBlock() {
@@ -23,14 +26,18 @@ public class MineralBlock extends SpectrobesBlock {
     }
 
     @Override
-    @SuppressWarnings({"deprecation"})
-    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-        Random random = new Random();
+    protected MapCodec<? extends MineralBlock> codec() {
+        return CODEC;
+    }
+
+    @Override
+    protected List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
+        RandomSource random = builder.getLevel().getRandom();
 
         int rarityInt = random.nextInt(10);
         Mineral.MineralRarity rarity;
 
-        switch(rarityInt) {
+        switch (rarityInt) {
             case 9:
                 rarity = Mineral.MineralRarity.Rare;
                 break;
@@ -43,10 +50,7 @@ public class MineralBlock extends SpectrobesBlock {
                 rarity = Mineral.MineralRarity.Common;
                 break;
         }
-        ItemStack mineralItem = SpectrobesMineralsRegistry.getRandomMineral(rarity);
-        ArrayList<ItemStack> minerals = new ArrayList<>();
-        minerals.add(mineralItem);
 
-        return minerals;
+        return List.of(SpectrobesMineralsRegistry.getRandomMineral(rarity));
     }
 }

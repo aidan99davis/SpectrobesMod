@@ -4,24 +4,29 @@ import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesTileRegistr
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class FossilBlockTileEntity extends BlockEntity implements IAnimatable {
-    public final AnimationFactory factory = GeckoLibUtil.createFactory(this);
+public class FossilBlockTileEntity extends BlockEntity implements GeoAnimatable {
+    public final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public FossilBlockTileEntity(BlockPos pos, BlockState state) {
         super(SpectrobesTileRegistry.FOSSIL_TILE.get(), pos, state);
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
 
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return factory;
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
+    }
+
+    @Override
+    public double getTick(Object object) {
+        return 0;
     }
 }

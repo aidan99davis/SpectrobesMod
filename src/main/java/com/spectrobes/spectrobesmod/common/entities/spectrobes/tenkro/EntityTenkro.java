@@ -9,25 +9,28 @@ import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesFossilsRegis
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.builder.ILoopType;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 public class EntityTenkro extends EntityMammalSpectrobe {
+    private static final RawAnimation WALK_ANIM = RawAnimation.begin().thenLoop("animation.tenkro.walk");
+    private static final RawAnimation SIT_ANIM = RawAnimation.begin()
+            .thenPlay("animation.tenkro.sitting")
+            .thenLoop("animation.tenkro.sit");
+    private static final RawAnimation IDLE_ANIM = RawAnimation.begin().thenLoop("animation.tenkro.idle");
 
     public EntityTenkro(EntityType<EntityTenkro> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
     }
 
+    @Override
     public Spectrobe GetNewSpectrobeInstance() {
         return SpectrobeRegistry.Tenkro.copy(false);
     }
 
     @Override
     public EntityType<? extends EntitySpectrobe> getEvolutionRegistry() {
-//        return SpectrobesEntities.ENTITY_MESABONE.get();
         return null;
     }
 
@@ -37,7 +40,7 @@ public class EntityTenkro extends EntityMammalSpectrobe {
     }
 
     @Override
-    public Class getSpectrobeClass() {
+    public Class<? extends EntitySpectrobe> getSpectrobeClass() {
         return EntityTenkro.class;
     }
 
@@ -47,27 +50,16 @@ public class EntityTenkro extends EntityMammalSpectrobe {
     }
 
     @Override
-    public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event) {
-        if(event.isMoving())
-        {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.tenkro.walk", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
+    public PlayState moveController(AnimationState<EntitySpectrobe> animationState) {
+        if (animationState.isMoving()) {
+            return animationState.setAndContinue(WALK_ANIM);
         }
-        else if(event.getAnimatable().isOrderedToSit()) {
-            event.getController().setAnimation(new AnimationBuilder()
-                    .addAnimation("animation.tenkro.sitting", ILoopType.EDefaultLoopTypes.PLAY_ONCE)
-                    .addAnimation("animation.tenkro.sit", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
-        } else {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.tenkro.idle", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
+
+        if (animationState.getAnimatable().isOrderedToSit()) {
+            return animationState.setAndContinue(SIT_ANIM);
         }
-    }
 
-
-    @Override
-    public AnimationFactory getFactory() {
-        return animationControllers;
+        return animationState.setAndContinue(IDLE_ANIM);
     }
 
     @Override

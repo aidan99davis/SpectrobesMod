@@ -1,8 +1,8 @@
 {
   "parent": "minecraft:block/slab_top",
   "textures": {
-    "bottom": "spectrobesmod:blocks/titanium_block",
-    "top": "spectrobesmod:blocks/titanium_block",
-    "side": "spectrobesmod:blocks/titanium_block"
+    "bottom": "spectrobesmod:block/titanium_block",
+    "top": "spectrobesmod:block/titanium_block",
+    "side": "spectrobesmod:block/titanium_block"
   }
 }

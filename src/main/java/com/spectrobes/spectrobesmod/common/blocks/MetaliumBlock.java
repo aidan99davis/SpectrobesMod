@@ -9,7 +9,6 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.material.Material;
 
 import javax.annotation.Nullable;
 
@@ -18,7 +17,7 @@ public class MetaliumBlock extends Block {
 
     public MetaliumBlock()
     {
-        super(BlockBehaviour.Properties.of(Material.METAL)
+        super(BlockBehaviour.Properties.of()
                 .strength(3f)
                 .sound(SoundType.METAL));
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));

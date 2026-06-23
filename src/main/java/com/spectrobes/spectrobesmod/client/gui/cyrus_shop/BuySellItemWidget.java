@@ -1,68 +1,104 @@
 package com.spectrobes.spectrobesmod.client.gui.cyrus_shop;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.spectrobes.spectrobesmod.common.items.minerals.IWorthGura;
-import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
-import software.bernie.geckolib3.core.util.Color;
 
-public class BuySellItemWidget extends GuiComponent implements Widget, GuiEventListener {
-    private final MineralPreviewSlot ItemPreview;
-    private final ShopButton BuyItemButton;
-    private final ShopButton SellItemButton;
+public class BuySellItemWidget implements Renderable, GuiEventListener {
+    private static final int SUCCESS_COLOUR = 0xFF55FF55;
+    private static final int FAILURE_COLOUR = 0xFFFF5555;
 
-    public BuySellItemWidget(CyrusShopScreen parent, int pX, int pY, int pWidth, int pHeight, Item mineralItem) {
-        super();
-        ItemPreview = new MineralPreviewSlot(mineralItem, parent.getMenu(), pX, pY);
+    private final MineralPreviewSlot itemPreview;
+    private final ShopButton buyItemButton;
+    private final ShopButton sellItemButton;
 
-        BuyItemButton = new ShopButton(((IWorthGura)mineralItem).getGuraWorth(), true, pX, pY + 32, pWidth, 10,
-                Component.empty(), pButton -> {
-            if(!parent.getMenu().buyMineral((IWorthGura) mineralItem)) {
-                this.setFontColour(true, Color.RED.hashCode());
-            } else {
-                this.setFontColour(true, Color.GREEN.hashCode());
-            }
-        });
-        SellItemButton = new ShopButton((((IWorthGura)mineralItem).getGuraWorth() / 3), false, pX, pY + 42, pWidth, 10,
-                Component.empty(), pButton -> {
-            if(!parent.getMenu().sellMineral(mineralItem)) {
-                this.setFontColour(false, Color.RED.hashCode());
-            } else {
-                this.setFontColour(false, Color.GREEN.hashCode());
-            }
-        });
+    private boolean focused;
+
+    public BuySellItemWidget(CyrusShopScreen parent, int x, int y, int width, int height, Item mineralItem) {
+        IWorthGura worthGura = (IWorthGura) mineralItem;
+
+        this.itemPreview = new MineralPreviewSlot(mineralItem, parent.getMenu(), x, y);
+
+        this.buyItemButton = new ShopButton(
+                worthGura.getGuraWorth(),
+                true,
+                x,
+                y + 32,
+                width,
+                10,
+                Component.empty(),
+                button -> {
+                    if (!parent.getMenu().buyMineral(worthGura)) {
+                        this.setFontColour(true, FAILURE_COLOUR);
+                    } else {
+                        this.setFontColour(true, SUCCESS_COLOUR);
+                    }
+                }
+        );
+
+        this.sellItemButton = new ShopButton(
+                worthGura.getGuraWorth() / 3,
+                false,
+                x,
+                y + 42,
+                width,
+                10,
+                Component.empty(),
+                button -> {
+                    if (!parent.getMenu().sellMineral(mineralItem)) {
+                        this.setFontColour(false, FAILURE_COLOUR);
+                    } else {
+                        this.setFontColour(false, SUCCESS_COLOUR);
+                    }
+                }
+        );
     }
 
     @Override
-    public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-        BuyItemButton.mouseClicked(pMouseX, pMouseY, pButton);
-        SellItemButton.mouseClicked(pMouseX, pMouseY, pButton);
-        return GuiEventListener.super.mouseClicked(pMouseX, pMouseY, pButton);
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (this.buyItemButton.mouseClicked(mouseX, mouseY, button)) {
+            return true;
+        }
+
+        if (this.sellItemButton.mouseClicked(mouseX, mouseY, button)) {
+            return true;
+        }
+
+        return false;
     }
 
     @Override
-    public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-//        super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
-        SellItemButton.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
-        BuyItemButton.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
-        ItemPreview.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        this.sellItemButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        this.buyItemButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        this.itemPreview.render(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override
-    public boolean isMouseOver(double pMouseX, double pMouseY) {
-        SellItemButton.isMouseOver(pMouseX, pMouseY);
-        BuyItemButton.isMouseOver(pMouseX, pMouseY);
-        return GuiEventListener.super.isMouseOver(pMouseX, pMouseY);
+    public boolean isMouseOver(double mouseX, double mouseY) {
+        return this.sellItemButton.isMouseOver(mouseX, mouseY)
+                || this.buyItemButton.isMouseOver(mouseX, mouseY)
+                || this.itemPreview.isMouseOver(mouseX, mouseY);
     }
 
     public void setFontColour(boolean isBuyButton, int fontColour) {
-        if(isBuyButton) {
-            this.BuyItemButton.setFontColour(fontColour);
+        if (isBuyButton) {
+            this.buyItemButton.setFontColour(fontColour);
         } else {
-            this.SellItemButton.setFontColour(fontColour);
+            this.sellItemButton.setFontColour(fontColour);
         }
+    }
+
+    @Override
+    public boolean isFocused() {
+        return focused;
+    }
+
+    @Override
+    public void setFocused(boolean focused) {
+        this.focused = focused;
     }
 }

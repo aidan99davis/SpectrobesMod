@@ -1,28 +1,33 @@
 package com.spectrobes.spectrobesmod.common.packets.networking.packets;
 
+import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobePacketHandler;
-import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-import java.util.function.Supplier;
+public class SOpenPrizmodPacket implements CustomPacketPayload {
 
-public class SOpenPrizmodPacket {
+    public static final SOpenPrizmodPacket INSTANCE = new SOpenPrizmodPacket();
+
+    public static final Type<SOpenPrizmodPacket> TYPE = new Type<>(
+            ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "open_prizmod")
+    );
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, SOpenPrizmodPacket> STREAM_CODEC =
+            StreamCodec.unit(INSTANCE);
 
     public SOpenPrizmodPacket() {
-
     }
 
-    public void toBytes(FriendlyByteBuf buf) {
-
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 
-    public static SOpenPrizmodPacket fromBytes(FriendlyByteBuf buf) {
-        return new SOpenPrizmodPacket();
-    }
-
-    public boolean handle(Supplier<NetworkEvent.Context> ctx) {
-        return SpectrobePacketHandler.handlePacket(this, ctx);
-
+    public static void handle(SOpenPrizmodPacket packet, IPayloadContext context) {
+        context.enqueueWork(() -> SpectrobePacketHandler.handlePacket(packet, context));
     }
 }

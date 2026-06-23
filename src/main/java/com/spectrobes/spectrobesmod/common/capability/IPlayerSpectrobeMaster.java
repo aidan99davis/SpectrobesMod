@@ -2,14 +2,12 @@ package com.spectrobes.spectrobesmod.common.capability;
 
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraftforge.common.capabilities.AutoRegisterCapability;
-import net.minecraftforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.common.util.INBTSerializable;
 
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-@AutoRegisterCapability
 public interface IPlayerSpectrobeMaster extends INBTSerializable<CompoundTag> {
     Spectrobe getCurrentTeamMember();
     void changeSelected(int direction);

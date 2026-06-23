@@ -16,9 +16,9 @@ public abstract class SpecialMineralItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flag) {
-
-        tooltip.add(Component.literal("Effect: " + getMineralEffectDescription()));
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+        tooltipComponents.add(Component.literal("Effect: " + getMineralEffectDescription()));
     }
 
     protected abstract String getMineralEffectDescription();
