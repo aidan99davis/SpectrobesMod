@@ -71,7 +71,7 @@ public class EntityShakor extends EntityAquaticSpectrobe {
             return animationState.setAndContinue(WALK_ANIM);
         }
 
-        if (this.IsAttacking()) {
+        if (this.isAttacking()) {
             return animationState.setAndContinue(ATTACK_ANIM);
         }
 

@@ -5,17 +5,17 @@ import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.entities.IHasNature;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
-import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.AttackKrawlGoal;
-import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.AvoidKrawlGoal;
-import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.ChildFormSearchGoal;
-import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.FindMineralsGoal;
-import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.FollowMasterGoal;
-import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.MasterHurtByTargetGoal;
-import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.MasterHurtTargetGoal;
-import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.SpectrobeFollowLeaderGoal;
-import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.SpectrobeHurtByTargetGoal;
-import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.SpectrobeRandomLookAroundGoal;
-import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.TargetKrawlGoal;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.combat.AttackKrawlGoal;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.child.AvoidKrawlGoal;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.child.ChildFormSearchGoal;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.child.FindMineralsGoal;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.movement.FollowMasterGoal;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.combat.MasterHurtByTargetGoal;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.combat.MasterHurtTargetGoal;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.child.SpectrobeFollowLeaderGoal;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.combat.SpectrobeHurtByTargetGoal;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.movement.SpectrobeRandomLookAroundGoal;
+import com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.combat.TargetKrawlGoal;
 import com.spectrobes.spectrobesmod.common.items.fossils.FossilBlockItem;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
 import com.spectrobes.spectrobesmod.common.items.minerals.SpecialMineralItem;
@@ -371,10 +371,6 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityWi
         updateEntityAttributes();
     }
 
-    public boolean IsAttacking() {
-        return this.entityData.get(IS_ATTACKING);
-    }
-
     public void setIsAttacking(boolean attacking) {
         this.entityData.set(IS_ATTACKING, attacking);
     }
@@ -403,15 +399,6 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityWi
     }
 
     @Override
-    public Vec3 getDeltaMovement() {
-        if (isOrderedToSit()) {
-            return Vec3.ZERO;
-        }
-
-        return super.getDeltaMovement();
-    }
-
-    @Override
     public void aiStep() {
         super.aiStep();
 
@@ -427,8 +414,10 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityWi
             this.recentInteract = false;
         }
 
+        // Passive regen for wild spectrobes — heal by 1% of max health per
+        // tick after 10 seconds without taking damage (200 ticks).
         if (getOwner() == null && this.tickCount - getLastHurtByMobTimestamp() > 200) {
-            this.healSpectrobe(Math.round(getHealth() + (getHealth() / 100.0F)));
+            this.healSpectrobe(Math.max(1, Math.round(getMaxHealth() / 100.0F)));
         }
 
         tryEvolve();
@@ -470,7 +459,7 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityWi
 
     public void tryMate() {
         if (getStage() != Stage.CHILD && getOwner() == null && !this.entityData.get(HAS_MATED)) {
-            if (getTicksTillMate() == 0) {
+            if (getTicksTillMate() <= 0) {
                 mate();
             } else {
                 setTicksTillMate(getTicksTillMate() - 1);
@@ -512,18 +501,16 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityWi
                 return;
             }
 
-            evolution.moveTo(getX(), getY(), getZ(), 0.0F, 0.0F);
-            this.level().addFreshEntity(evolution);
-            evolution.setPos(getX(), getY(), getZ());
-
             spectrobeInstance.evolve(evolution.getSpectrobeData());
             evolution.setSpectrobeData(spectrobeInstance);
             evolution.setCustomName(Component.literal(spectrobeInstance.name));
-            updateEntityAttributes();
+            evolution.updateEntityAttributes(); // was incorrectly called on `this`
 
             LivingEntity owner = getOwner();
 
             if (owner != null) {
+                // Owned spectrobe: update the prizmod and send it back —
+                // do NOT add the evolution to the world, just update the data.
                 evolution.setOwnerUUID(getOwnerUUID());
 
                 PlayerSpectrobeMaster spectrobeMaster = owner.getCapability(SpectrobeMaster.INSTANCE);
@@ -534,9 +521,11 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityWi
                     if (owner instanceof ServerPlayer serverPlayer) {
                         SpectrobesNetwork.sendToClient(new CSyncSpectrobeMasterPacket(spectrobeMaster), serverPlayer);
                     }
-
-                    evolution.despawn();
                 }
+            } else {
+                // Wild spectrobe: spawn the evolution in the world
+                this.level().addFreshEntity(evolution);
+                evolution.moveTo(getX(), getY(), getZ(), 0.0F, 0.0F);
             }
         } else {
             LivingEntity owner = getOwner();

@@ -52,7 +52,7 @@ public class EntityKuganon extends EntityMammalSpectrobe {
             return animationState.setAndContinue(WALK_ANIM);
         }
 
-        if (this.IsAttacking()) {
+        if (this.isAttacking()) {
             return animationState.setAndContinue(ATTACK_ANIM);
         }
 

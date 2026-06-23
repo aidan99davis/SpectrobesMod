@@ -1,11 +1,10 @@
-package com.spectrobes.spectrobesmod.common.entities.spectrobes.goals;
+package com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.child;
 
 import com.mojang.datafixers.DataFixUtils;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.world.entity.ai.goal.Goal;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
 

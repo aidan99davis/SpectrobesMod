@@ -3,7 +3,7 @@
 // (powered by Fernflower decompiler)
 //
 
-package com.spectrobes.spectrobesmod.common.entities.spectrobes.goals;
+package com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.movement;
 
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import net.minecraft.core.BlockPos;

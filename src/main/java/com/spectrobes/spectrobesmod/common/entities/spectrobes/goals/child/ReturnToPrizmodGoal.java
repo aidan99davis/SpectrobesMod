@@ -1,4 +1,4 @@
-package com.spectrobes.spectrobesmod.common.entities.spectrobes.goals;
+package com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.child;
 
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
@@ -20,20 +20,14 @@ public class ReturnToPrizmodGoal extends Goal {
      */
     @Override
     public boolean canUse() {
+        if((goalOwner).getStage() != SpectrobeProperties.Stage.CHILD) return false;
+
         List<EntityKrawl> nearbyKrawl =
                 goalOwner.level().getEntitiesOfClass(EntityKrawl.class,
                         goalOwner.getBoundingBox()
                                 .inflate(10, 10, 5));
-        if((goalOwner).getStage() == SpectrobeProperties.Stage.CHILD ) {
-            if(!nearbyKrawl.isEmpty()) {
-                return true;
-            }
-        } else {
-            if(nearbyKrawl.isEmpty()) {
-                return true;
-            }
-        }
-        return false;
+
+        return !nearbyKrawl.isEmpty();
     }
 
     @Override

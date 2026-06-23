@@ -57,7 +57,7 @@ public class EntityKomanoto extends EntityMammalSpectrobe {
             return animationState.setAndContinue(SIT_ANIM);
         }
 
-        if (this.IsAttacking()) {
+        if (this.isAttacking()) {
             return animationState.setAndContinue(ATTACK_ANIM);
         }
 

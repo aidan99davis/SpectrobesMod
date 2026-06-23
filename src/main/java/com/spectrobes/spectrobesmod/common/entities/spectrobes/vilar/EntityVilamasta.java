@@ -57,7 +57,7 @@ public class EntityVilamasta extends EntityMammalSpectrobe {
             return animationState.setAndContinue(IDLE_ANIM);
         }
 
-        if (this.IsAttacking()) {
+        if (this.isAttacking()) {
             return animationState.setAndContinue(ATTACK_ANIM);
         }
 
