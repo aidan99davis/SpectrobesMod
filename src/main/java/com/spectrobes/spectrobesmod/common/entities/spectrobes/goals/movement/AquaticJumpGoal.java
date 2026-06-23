@@ -18,6 +18,7 @@ public class AquaticJumpGoal extends JumpGoal {
 
     public AquaticJumpGoal(EntityAquaticSpectrobe p_i50329_1_, int p_i50329_2_) {
         this.spectrobe = p_i50329_1_;
+        this.spectrobe.getNavigation().setCanFloat(true);
         this.interval = p_i50329_2_;
     }
 

@@ -16,64 +16,86 @@ public class SpectrobeFollowLeaderGoal extends Goal {
         this.mob = pFish;
     }
 
-    /**
-     * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
-     * method as well.
-     */
+    @Override
     public boolean canUse() {
-        if(this.mob.getStage() != SpectrobeProperties.Stage.CHILD) {
+        if (this.mob.getStage() != SpectrobeProperties.Stage.CHILD) {
             return false;
-        }else if (this.mob.hasFollowers()) {
+        } else if (this.mob.hasFollowers()) {
             return false;
         } else if (this.mob.isFollower()) {
             return true;
-        } else {
-            Predicate<EntitySpectrobe> predicate = (p_25258_) -> p_25258_.canBeFollowed() || !p_25258_.isFollower();
-            EntitySpectrobe adult = this.mob.getEvolutionRegistry() == null? null : this.mob.getEvolutionRegistry().create(mob.level());
-            EntitySpectrobe evolved = null;//adult.getEvolutionRegistry().create(mob.level);
+        }
 
-            if(evolved != null) {
-                List<? extends EntitySpectrobe> list2 = this.mob.level().getEntitiesOfClass(evolved.getSpectrobeClass(), this.mob.getBoundingBox().inflate(8.0D, 8.0D, 8.0D), predicate);
-                EntitySpectrobe abstractschoolingfish = DataFixUtils.orElse(list2.stream().filter(EntitySpectrobe::canBeFollowed).findAny(), null);
-                if(abstractschoolingfish == null) return false;
-                this.mob.startFollowing(abstractschoolingfish);
-                return this.mob.isFollower();
-            }
-            if(adult != null) {
-                List<? extends EntitySpectrobe> list = this.mob.level().getEntitiesOfClass(adult.getSpectrobeClass(), this.mob.getBoundingBox().inflate(16.0D, 16.0D, 16.0D), predicate);
-                EntitySpectrobe abstractschoolingfish = DataFixUtils.orElse(list.stream().filter(EntitySpectrobe::canBeFollowed).findAny(), null);
-                if(abstractschoolingfish == null) return false;
-                this.mob.startFollowing(abstractschoolingfish);
-                return this.mob.isFollower();
-            }
+        if (this.mob.getEvolutionRegistry() == null) {
             return false;
         }
+
+        Predicate<EntitySpectrobe> canFollow =
+                s -> s.canBeFollowed() || !s.isFollower();
+
+        // Look for the evolved (adult) form first, then the direct evolution
+        // as the leader. Both queries use getSpectrobeClass() to avoid spawning.
+        EntitySpectrobe evolutionInstance =
+                this.mob.getEvolutionRegistry().create(this.mob.level());
+        if (evolutionInstance == null) {
+            return false;
+        }
+
+        // Check for a twice-evolved leader (fully adult form)
+        if (evolutionInstance.getEvolutionRegistry() != null) {
+            EntitySpectrobe fullyEvolvedInstance =
+                    evolutionInstance.getEvolutionRegistry().create(this.mob.level());
+            if (fullyEvolvedInstance != null) {
+                List<? extends EntitySpectrobe> adults =
+                        this.mob.level().getEntitiesOfClass(
+                                fullyEvolvedInstance.getSpectrobeClass(),
+                                this.mob.getBoundingBox().inflate(8.0D, 8.0D, 8.0D),
+                                canFollow);
+                // Immediately discard the temporary instance — do not add to world
+                fullyEvolvedInstance.discard();
+                EntitySpectrobe leader = DataFixUtils.orElse(
+                        adults.stream().filter(EntitySpectrobe::canBeFollowed).findAny(), null);
+                if (leader != null) {
+                    evolutionInstance.discard();
+                    this.mob.startFollowing(leader);
+                    return this.mob.isFollower();
+                }
+            }
+        }
+
+        // Fall back to direct evolution as leader
+        List<? extends EntitySpectrobe> nearAdults =
+                this.mob.level().getEntitiesOfClass(
+                        evolutionInstance.getSpectrobeClass(),
+                        this.mob.getBoundingBox().inflate(16.0D, 16.0D, 16.0D),
+                        canFollow);
+        evolutionInstance.discard();
+
+        EntitySpectrobe leader = DataFixUtils.orElse(
+                nearAdults.stream().filter(EntitySpectrobe::canBeFollowed).findAny(), null);
+        if (leader == null) {
+            return false;
+        }
+        this.mob.startFollowing(leader);
+        return this.mob.isFollower();
     }
 
-    /**
-     * Returns whether an in-progress EntityAIBase should continue executing
-     */
+    @Override
     public boolean canContinueToUse() {
         return this.mob.isFollower() && this.mob.inRangeOfLeader();
     }
 
-    /**
-     * Execute a one shot task or start executing a continuous task
-     */
+    @Override
     public void start() {
         this.timeToRecalcPath = 0;
     }
 
-    /**
-     * Reset the task's internal state. Called when this task is interrupted by another one
-     */
+    @Override
     public void stop() {
         this.mob.stopFollowing();
     }
 
-    /**
-     * Keep ticking a continuous task that has already been started
-     */
+    @Override
     public void tick() {
         if (--this.timeToRecalcPath <= 0) {
             this.timeToRecalcPath = this.adjustedTickDelay(10);

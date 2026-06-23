@@ -19,6 +19,7 @@ public class TargetKrawlGoal extends NearestAttackableTargetGoal {
 
     @Override
     public boolean canContinueToUse() {
-        return this.targetConditions.test(this.mob, this.target);
+        return this.target != null && this.target.isAlive()
+                && this.targetConditions.test(this.mob, this.target);
     }
 }

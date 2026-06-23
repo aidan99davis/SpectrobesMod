@@ -3,63 +3,185 @@ package com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.child;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.phys.Vec3;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.EnumSet;
 
 public class ChildFormSearchGoal extends Goal {
+    private static final int SEARCH_RADIUS = 8;
+    private static final int WANDER_HORIZONTAL_RANGE = 12;
+    private static final int WANDER_VERTICAL_RANGE = 6;
+
+    private static final int SCAN_INTERVAL_TICKS = 20;
+    private static final int WANDER_REPATH_INTERVAL_TICKS = 60;
+
+    private static final double MOVE_SPEED = 0.5D;
+    private static final double REACHED_TARGET_DISTANCE_SQR = 2.0D;
 
     private final EntitySpectrobe entity;
+
     private BlockPos target;
+    private int scanCooldown;
+    private int wanderCooldown;
 
     public ChildFormSearchGoal(EntitySpectrobe spectrobe) {
         this.entity = spectrobe;
+        this.setFlags(EnumSet.of(Goal.Flag.MOVE));
     }
 
+    @Override
     public boolean canUse() {
-        if (entity.getStage() != SpectrobeProperties.Stage.CHILD || !entity.isSearching()) {
-            entity.setState(0);
-            return false;
-        } else {
-            List<BlockPos> blocks = getMineralBlocksInArea();
-            return !blocks.isEmpty();
-        }
+        return entity.getStage() == SpectrobeProperties.Stage.CHILD && entity.isSearching();
     }
 
+    @Override
+    public boolean canContinueToUse() {
+        return entity.getStage() == SpectrobeProperties.Stage.CHILD && entity.isSearching();
+    }
+
+    @Override
     public void start() {
-        List<BlockPos> blocks = getMineralBlocksInArea();
-        if (!blocks.isEmpty()) {
-            target = getClosestMineral(blocks);
-            this.entity.getMoveControl().setWantedPosition(target.getX(), target.getY(), target.getZ(), 1.0D);
+        target = null;
+        scanCooldown = 0;
+        wanderCooldown = 0;
+
+        findTargetOrWander();
+    }
+
+    @Override
+    public void stop() {
+        target = null;
+        scanCooldown = 0;
+        wanderCooldown = 0;
+        entity.getNavigation().stop();
+    }
+
+    @Override
+    public void tick() {
+        if (!entity.isSearching()) {
+            return;
         }
-        entity.setState(0);
-    }
 
-    private List<BlockPos> getMineralBlocksInArea() {
-        Iterable<BlockPos> blocks = BlockPos.betweenClosed((int)entity.getX() - 8, (int)entity.getY() - 8, (int)entity.getZ() - 8, (int)entity.getX() + 8, (int)entity.getY() + 8, (int)entity.getZ() + 8);
+        if (target != null) {
+            if (entity.distanceToSqr(target.getX(), target.getY(), target.getZ()) < REACHED_TARGET_DISTANCE_SQR) {
+                target = null;
+                entity.getNavigation().stop();
 
-        List<BlockPos> mineralBlocks = new ArrayList<>();
-
-        blocks.forEach((pos) -> {
-            Block block = entity.level().getBlockState(pos).getBlock();
-            if(block.getName().toString().contains("mineral_block")
-                    || block.getName().toString().contains("fossil_block")
-                    || block.getName().toString().contains("marble_ore")
-                    || block.getName().toString().contains("metalium_ore")
-                    || block.getName().toString().contains("titanium_ore")) {
-                mineralBlocks.add(pos.immutable());
+                // Reached the target block — sit and wait for the player.
+                entity.getOwner().sendSystemMessage(Component.literal("Your spectrobe has found something!"));
+                entity.setState(1);
+                return;
             }
-        });
-        return mineralBlocks;
+
+            if (entity.getNavigation().isDone()) {
+                moveToTarget();
+            }
+
+            return;
+        }
+
+        if (scanCooldown > 0) {
+            scanCooldown--;
+        }
+
+        if (wanderCooldown > 0) {
+            wanderCooldown--;
+        }
+
+        if (scanCooldown <= 0) {
+            BlockPos foundTarget = getClosestMineralBlockInArea();
+
+            scanCooldown = SCAN_INTERVAL_TICKS;
+
+            if (foundTarget != null) {
+                target = foundTarget;
+                moveToTarget();
+                return;
+            }
+        }
+
+        if (entity.getNavigation().isDone() || wanderCooldown <= 0) {
+            wanderToRandomPosition();
+        }
     }
 
-    private BlockPos getClosestMineral(List<BlockPos> lvt_1_1_) {
-        BlockPos closest = lvt_1_1_.get(0).immutable();
+    private void findTargetOrWander() {
+        target = getClosestMineralBlockInArea();
+        scanCooldown = SCAN_INTERVAL_TICKS;
 
-        for (BlockPos pos : lvt_1_1_) {
-            if(entity.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) < entity.distanceToSqr(closest.getX(), closest.getY(), closest.getZ())) {
+        if (target != null) {
+            moveToTarget();
+        } else {
+            wanderToRandomPosition();
+        }
+    }
+
+    private void moveToTarget() {
+        if (target == null) {
+            return;
+        }
+
+        entity.getNavigation().moveTo(
+                target.getX() + 0.5D,
+                target.getY(),
+                target.getZ() + 0.5D,
+                MOVE_SPEED
+        );
+    }
+
+    private void wanderToRandomPosition() {
+        Vec3 wanderTarget = DefaultRandomPos.getPos(
+                entity,
+                WANDER_HORIZONTAL_RANGE,
+                WANDER_VERTICAL_RANGE
+        );
+
+        wanderCooldown = WANDER_REPATH_INTERVAL_TICKS;
+
+        if (wanderTarget == null) {
+            return;
+        }
+
+        entity.getNavigation().moveTo(
+                wanderTarget.x,
+                wanderTarget.y,
+                wanderTarget.z,
+                MOVE_SPEED
+        );
+    }
+
+    private BlockPos getClosestMineralBlockInArea() {
+        BlockPos entityPos = entity.blockPosition();
+
+        Iterable<BlockPos> blocks = BlockPos.betweenClosed(
+                entityPos.getX() - SEARCH_RADIUS,
+                entityPos.getY() - SEARCH_RADIUS,
+                entityPos.getZ() - SEARCH_RADIUS,
+                entityPos.getX() + SEARCH_RADIUS,
+                entityPos.getY() + SEARCH_RADIUS,
+                entityPos.getZ() + SEARCH_RADIUS
+        );
+
+        BlockPos closest = null;
+        double closestDistance = Double.MAX_VALUE;
+
+        for (BlockPos pos : blocks) {
+            Block block = entity.level().getBlockState(pos).getBlock();
+
+            if (!isSearchTargetBlock(block)) {
+                continue;
+            }
+
+            double distance = entity.distanceToSqr(pos.getX(), pos.getY(), pos.getZ());
+
+            if (distance < closestDistance) {
+                closestDistance = distance;
                 closest = pos.immutable();
             }
         }
@@ -67,24 +189,14 @@ public class ChildFormSearchGoal extends Goal {
         return closest;
     }
 
-    @Override
-    public boolean canContinueToUse() {
-        if(target != null) {
-            if(this.entity.distanceToSqr(target.getX(), target.getY(), target.getZ()) < 2) {
-                target = null;
-                entity.setState(1);
-                return false;
-            }
-            return true;
-        } else {
-            entity.setState(0);
-            return false;
-        }
-    }
+    private boolean isSearchTargetBlock(Block block) {
+        ResourceLocation blockId = BuiltInRegistries.BLOCK.getKey(block);
+        String path = blockId.getPath();
 
-    public void tick() {
-        if(target != null) {
-            this.entity.getMoveControl().setWantedPosition(target.getX(), target.getY(), target.getZ(), 1.0D);
-        }
+        return path.contains("mineral_block")
+                || path.contains("fossil_block")
+                || path.contains("marble_ore")
+                || path.contains("metalium_ore")
+                || path.contains("titanium_ore");
     }
 }

@@ -1,8 +1,3 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by Fernflower decompiler)
-//
-
 package com.spectrobes.spectrobesmod.common.entities.spectrobes.goals.movement;
 
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
@@ -32,8 +27,18 @@ public class FollowMasterGoal extends Goal {
     private final float stopDistance;
     private final float startDistance;
     private final boolean canFly;
+    // True for aquatic/crustacean types that can safely teleport into water
+    private final boolean allowsWater;
 
-    public FollowMasterGoal(TamableAnimal entity, double followSpeed, float minDist, float maxDist, boolean canFly) {
+    /**
+     * @param allowsWater Whether the spectrobe is comfortable in water and may
+     *                    be teleported into a water block when catching up to
+     *                    its master. Pass true for aquatic and crustacean types,
+     *                    false for mammals and avians.
+     */
+    public FollowMasterGoal(TamableAnimal entity, double followSpeed,
+                            float minDist, float maxDist,
+                            boolean canFly, boolean allowsWater) {
         this.tamable = entity;
         this.level = entity.level();
         this.speedModifier = followSpeed;
@@ -41,68 +46,64 @@ public class FollowMasterGoal extends Goal {
         this.startDistance = minDist;
         this.stopDistance = maxDist;
         this.canFly = canFly;
+        this.allowsWater = allowsWater;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
         if (!(entity.getNavigation() instanceof GroundPathNavigation)
                 && !(entity.getNavigation() instanceof FlyingPathNavigation)
                 && !(entity.getNavigation() instanceof AmphibiousPathNavigation)) {
-            throw new IllegalArgumentException("Unsupported navigation type for FollowMasterGoal");
+            throw new IllegalArgumentException(
+                    "Unsupported navigation type for FollowMasterGoal");
         }
     }
+
+    /** Convenience overload: non-aquatic, non-flying (mammals). */
+    public FollowMasterGoal(TamableAnimal entity, double followSpeed,
+                            float minDist, float maxDist, boolean canFly) {
+        this(entity, followSpeed, minDist, maxDist, canFly, false);
+    }
+
+    @Override
     public boolean canUse() {
         LivingEntity livingentity = this.tamable.getOwner();
-        if (livingentity == null) {
-            return false;
-        } else if (livingentity.isSpectator()) {
-            return false;
-        } else if (this.tamable.isOrderedToSit()) {
-            return false;
-        } else if (this.tamable.getTarget() != null) {
-            return false;
-        } else if (this.tamable.distanceToSqr(livingentity) < (double)(this.startDistance * this.startDistance)) {
-            return false;
-        } else {
-            this.owner = livingentity;
-            return ((EntitySpectrobe)this.tamable).getState() == 0 && !((EntitySpectrobe) this.tamable).isAttacking();
-        }
+        if (livingentity == null) return false;
+        if (livingentity.isSpectator()) return false;
+        if (this.tamable.isOrderedToSit()) return false;
+        if (this.tamable.getTarget() != null) return false;
+        if (this.tamable.distanceToSqr(livingentity)
+                < (double) (this.startDistance * this.startDistance)) return false;
+
+        this.owner = livingentity;
+        return ((EntitySpectrobe) this.tamable).getState() == 0
+                && !((EntitySpectrobe) this.tamable).isAttacking();
     }
 
-    /**
-     * Returns whether an in-progress EntityAIBase should continue executing
-     */
+    @Override
     public boolean canContinueToUse() {
-        if (this.navigation.isDone()) {
-            return false;
-        } else if (this.tamable.isOrderedToSit()) {
-            return false;
-        } else if (this.tamable.getTarget() != null) {
-            return false;
-        } else {
-            return !(this.tamable.distanceToSqr(this.owner) <= (double)(this.stopDistance * this.stopDistance));
-        }
+        if (this.navigation.isDone()) return false;
+        if (this.tamable.isOrderedToSit()) return false;
+        if (this.tamable.getTarget() != null) return false;
+        return !(this.tamable.distanceToSqr(this.owner)
+                <= (double) (this.stopDistance * this.stopDistance));
     }
 
-    /**
-     * Execute a one shot task or start executing a continuous task
-     */
+    @Override
     public void start() {
         this.timeToRecalcPath = 0;
         this.tamable.setPathfindingMalus(PathType.WATER, 0.0F);
     }
 
-    /**
-     * Reset the task's internal state. Called when this task is interrupted by another one
-     */
+    @Override
     public void stop() {
         this.owner = null;
         this.navigation.stop();
-        this.tamable.setPathfindingMalus(PathType.WATER, 0.0f);
+        this.tamable.setPathfindingMalus(PathType.WATER, 0.0F);
     }
 
-    /**
-     * Keep ticking a continuous task that has already been started
-     */
+    @Override
     public void tick() {
-        this.tamable.getLookControl().setLookAt(this.owner, 10.0F, (float)this.tamable.getMaxHeadXRot());
+        this.tamable.getLookControl().setLookAt(
+                this.owner, 10.0F, (float) this.tamable.getMaxHeadXRot());
+
         if (--this.timeToRecalcPath <= 0) {
             this.timeToRecalcPath = 10;
             if (!this.tamable.isLeashed() && !this.tamable.isPassenger()) {
@@ -111,51 +112,52 @@ public class FollowMasterGoal extends Goal {
                 } else {
                     this.navigation.moveTo(this.owner, this.speedModifier);
                 }
-
             }
         }
     }
 
     private void teleportToOwner() {
         BlockPos blockpos = this.owner.blockPosition();
-
-        for(int i = 0; i < 10; ++i) {
+        for (int i = 0; i < 10; ++i) {
             int j = this.randomIntInclusive(-3, 3);
             int k = this.randomIntInclusive(-1, 1);
             int l = this.randomIntInclusive(-3, 3);
-            boolean flag = this.maybeTeleportTo(blockpos.getX() + j, blockpos.getY() + k, blockpos.getZ() + l);
-            if (flag) {
+            if (this.maybeTeleportTo(blockpos.getX() + j, blockpos.getY() + k, blockpos.getZ() + l)) {
                 return;
             }
         }
-
     }
 
     private boolean maybeTeleportTo(int pX, int pY, int pZ) {
-        if (Math.abs((double)pX - this.owner.getX()) < 2.0D && Math.abs((double)pZ - this.owner.getZ()) < 2.0D) {
+        if (Math.abs((double) pX - this.owner.getX()) < 2.0D
+                && Math.abs((double) pZ - this.owner.getZ()) < 2.0D) {
             return false;
-        } else if (!this.canTeleportTo(new BlockPos(pX, pY, pZ))) {
-            return false;
-        } else {
-            this.tamable.moveTo((double)pX + 0.5D, pY, (double)pZ + 0.5D, this.tamable.yRotO, this.tamable.xRotO);
-            this.navigation.stop();
-            return true;
         }
+        if (!this.canTeleportTo(new BlockPos(pX, pY, pZ))) {
+            return false;
+        }
+        this.tamable.moveTo((double) pX + 0.5D, pY, (double) pZ + 0.5D,
+                this.tamable.yRotO, this.tamable.xRotO);
+        this.navigation.stop();
+        return true;
     }
 
     private boolean canTeleportTo(BlockPos pPos) {
-        PathType pathnodetype = WalkNodeEvaluator.getPathTypeStatic(this.tamable, pPos.mutable());
-        if (pathnodetype != PathType.WALKABLE && pathnodetype != PathType.WATER) {
+        PathType pathnodetype = WalkNodeEvaluator.getPathTypeStatic(
+                this.tamable, pPos.mutable());
+
+        // WALKABLE is always acceptable.
+        // WATER is only acceptable for spectrobes that can handle being in water.
+        if (pathnodetype == PathType.WATER && !this.allowsWater) return false;
+        if (pathnodetype != PathType.WALKABLE && pathnodetype != PathType.WATER) return false;
+
+        BlockState blockstate = this.level.getBlockState(pPos.below());
+        if (!this.canFly && blockstate.getBlock() instanceof LeavesBlock) {
             return false;
-        } else {
-            BlockState blockstate = this.level.getBlockState(pPos.below());
-            if (!this.canFly && blockstate.getBlock() instanceof LeavesBlock) {
-                return false;
-            } else {
-                BlockPos blockpos = pPos.subtract(this.tamable.blockPosition());
-                return this.level.noCollision(this.tamable, this.tamable.getBoundingBox().move(blockpos));
-            }
         }
+        BlockPos blockpos = pPos.subtract(this.tamable.blockPosition());
+        return this.level.noCollision(this.tamable,
+                this.tamable.getBoundingBox().move(blockpos));
     }
 
     private int randomIntInclusive(int pMin, int pMax) {

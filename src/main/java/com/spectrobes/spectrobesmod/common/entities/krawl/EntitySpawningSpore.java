@@ -12,10 +12,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.control.FlyingMoveControl;
-import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.PathType;
@@ -28,7 +25,7 @@ import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class EntitySpawningSpore extends Monster implements GeoEntity, FlyingAnimal {
+public class EntitySpawningSpore extends Monster implements GeoEntity {
     private static final String TAG_BOSS_SPORE = "BOSS_SPORE";
     private static final String TAG_AGE_TICKS = "AGE_TICKS";
 
@@ -47,17 +44,17 @@ public class EntitySpawningSpore extends Monster implements GeoEntity, FlyingAni
 
     public EntitySpawningSpore(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
-
-        this.moveControl = new FlyingMoveControl(this, 10, false);
+        // No FlyingMoveControl — spores should fall to the ground under gravity
+        // and stay there. FlyingMoveControl disabled gravity; removing it lets
+        // the standard physics tick handle descent naturally.
         this.setPathfindingMalus(PathType.OPEN, 0.0F);
         this.setPathfindingMalus(PathType.WATER, 0.0F);
     }
 
     @Override
     protected PathNavigation createNavigation(Level level) {
-        FlyingPathNavigation navigation = new FlyingPathNavigation(this, level);
-        navigation.setCanFloat(true);
-        return navigation;
+        // Ground navigation — spores don't fly, they land and pulse.
+        return super.createNavigation(level);
     }
 
     @Override
@@ -143,7 +140,6 @@ public class EntitySpawningSpore extends Monster implements GeoEntity, FlyingAni
         return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 20.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.5D)
-                .add(Attributes.FLYING_SPEED, 0.5D)
                 .add(Attributes.ATTACK_DAMAGE, 0.0D);
     }
 
@@ -161,8 +157,4 @@ public class EntitySpawningSpore extends Monster implements GeoEntity, FlyingAni
         return this.animationCache;
     }
 
-    @Override
-    public boolean isFlying() {
-        return !this.onGround();
-    }
 }

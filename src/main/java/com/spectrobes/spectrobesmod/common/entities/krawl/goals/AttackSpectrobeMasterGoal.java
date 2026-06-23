@@ -6,41 +6,30 @@ import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class AttackSpectrobeMasterGoal extends TargetGoal {
     Player target;
     boolean tryKill;
-
 
     public AttackSpectrobeMasterGoal(Mob mobIn, boolean checkSight, boolean toKill) {
         super(mobIn, checkSight, false);
         tryKill = toKill;
     }
 
-    /**
-     * Returns whether the EntityAIBase should begin execution.
-     */
     @Override
     public boolean canUse() {
-        if(!(mob instanceof EntityKrawl))
-            return false;
+        if (!(mob instanceof EntityKrawl)) return false;
 
-        List<Player> nearbyPlayers = mob.level().getEntitiesOfClass(Player.class, mob.getBoundingBox().inflate(20, 20, 20));
+        List<Player> nearbyPlayers = mob.level().getEntitiesOfClass(
+                Player.class, mob.getBoundingBox().inflate(20, 20, 20));
 
-        AtomicReference<Player> toAttack = new AtomicReference<>();
-        toAttack.set(null);
-
-        for(Player player : nearbyPlayers) {
-            if (toAttack.get() != null || player.isCreative()) {
-                break;
-            }
-            toAttack.set(player);
-
-        }
-
-        if (toAttack.get() != null) {
-            this.target = toAttack.get();
+        // AtomicReference was previously used here for no reason in a
+        // single-threaded context. It also broke on creative players: the old
+        // `break` fired on the first creative player encountered, skipping any
+        // valid non-creative players that appeared later in the list.
+        for (Player player : nearbyPlayers) {
+            if (player.isCreative() || player.isSpectator()) continue;
+            this.target = player;
             return true;
         }
         return false;
@@ -48,13 +37,23 @@ public class AttackSpectrobeMasterGoal extends TargetGoal {
 
     @Override
     public boolean canContinueToUse() {
-        if(tryKill) {
+        if (tryKill) {
             return super.canContinueToUse();
-        } else {
-            //spectrobe v spectrobe fights should culminate when one reaches 20% health,
-            // as its more a territory fight than a death brawl.
-            return target.getHealth() / target.getMaxHealth() > 0.2f && super.canContinueToUse();
         }
+        return target != null
+                && target.isAlive()
+                && target.getHealth() / target.getMaxHealth() > 0.2f
+                && super.canContinueToUse();
+    }
+
+    @Override
+    public void tick() {
+        if (this.target != null && this.target.isAlive()) {
+            this.mob.setTarget(this.target);
+            this.mob.getNavigation().moveTo(
+                    this.mob.getNavigation().createPath(this.target, 1), 0.5);
+        }
+        super.tick();
     }
 
     @Override
@@ -64,5 +63,12 @@ public class AttackSpectrobeMasterGoal extends TargetGoal {
         this.mob.getNavigation().moveTo(this.mob.getNavigation().createPath(this.target, 1), 0.5);
         this.mob.setAggressive(true);
         super.start();
+    }
+
+    @Override
+    public void stop() {
+        super.stop();
+        ((EntityKrawl)this.mob).setIsAttacking(false);
+        this.mob.setAggressive(false);
     }
 }

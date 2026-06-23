@@ -47,11 +47,30 @@ public class AttackSpectrobeGoal extends TargetGoal {
     }
 
     @Override
+    public void tick() {
+        // Track the target as it moves — without this, the Krawl only moves
+        // toward the spectrobe's position at the moment start() was called.
+        if (this.target != null && this.target.isAlive()) {
+            this.mob.setTarget(this.target);
+            this.mob.getNavigation().moveTo(
+                    this.mob.getNavigation().createPath(this.target, 1), 0.5);
+        }
+        super.tick();
+    }
+
+    @Override
     public void start() {
         this.mob.setTarget(this.target);
         ((EntityKrawl)this.mob).setIsAttacking(true);
         this.mob.getNavigation().moveTo(this.mob.getNavigation().createPath(this.target, 1), 0.5);
         this.mob.setAggressive(true);
         super.start();
+    }
+
+    @Override
+    public void stop() {
+        super.stop();
+        ((EntityKrawl)this.mob).setIsAttacking(false);
+        this.mob.setAggressive(false);
     }
 }

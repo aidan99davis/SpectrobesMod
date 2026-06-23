@@ -15,17 +15,14 @@ public class ReturnToPrizmodGoal extends Goal {
         this.goalOwner = goalOwner;
     }
 
-    /**
-     * Returns whether the EntityAIBase should begin execution.
-     */
     @Override
     public boolean canUse() {
-        if((goalOwner).getStage() != SpectrobeProperties.Stage.CHILD) return false;
+        if (goalOwner.getOwner() == null) return false;
+        if (goalOwner.getStage() != SpectrobeProperties.Stage.CHILD) return false;
 
         List<EntityKrawl> nearbyKrawl =
                 goalOwner.level().getEntitiesOfClass(EntityKrawl.class,
-                        goalOwner.getBoundingBox()
-                                .inflate(10, 10, 5));
+                        goalOwner.getBoundingBox().inflate(10, 10, 5));
 
         return !nearbyKrawl.isEmpty();
     }

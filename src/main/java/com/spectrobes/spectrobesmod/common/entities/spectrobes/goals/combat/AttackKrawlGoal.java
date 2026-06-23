@@ -48,14 +48,15 @@ public class AttackKrawlGoal extends TargetGoal {
         }
     }
 
-//    @Override
-//    public void tick() {
-//        super.tick();
-//        this.mob.setTarget(this.target);
-//        ((EntitySpectrobe)this.mob).setIsAttacking(true);
-//        this.mob.getMoveControl().setWantedPosition(this.target.getX(), this.target.getY(), this.target.getZ(), 1);
-//        this.mob.setAggressive(true);
-//    }
+    @Override
+    public void tick() {
+        if (this.target != null && this.target.isAlive()) {
+            this.mob.setTarget(this.target);
+            this.mob.getMoveControl().setWantedPosition(
+                    this.target.getX(), this.target.getY(), this.target.getZ(), 1);
+        }
+        super.tick();
+    }
 
     @Override
     public void start() {

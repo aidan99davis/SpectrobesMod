@@ -13,6 +13,7 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.control.SmoothSwimmingLookControl;
+import net.minecraft.world.entity.ai.goal.BreathAirGoal;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.navigation.AmphibiousPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
@@ -20,6 +21,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.neoforged.neoforge.fluids.FluidType;
 
 import java.util.List;
 import java.util.Random;
@@ -44,6 +46,11 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
     }
 
     @Override
+    public boolean canDrownInFluidType(FluidType type) {
+        return false;
+    }
+
+    @Override
     public MobCategory getClassification(boolean forSpawnCount) {
         return MobCategory.WATER_CREATURE;
     }
@@ -59,40 +66,25 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
 
     protected abstract boolean isShallowSwimmer();
 
-    // -------------------------------------------------------------------------
-    // Goals
-    //
-    // Priority order (lower number = higher priority):
-    //   Base class handles: 1 combat/follow/leader, 3 FollowMaster, 8 LookAt
-    //
-    //   0  FloatGoal          — keeps the entity from sinking when it surfaces
-    //   4  FindWater          — wild & tamed; being near water is healthy
-    //   5  AquaticJump        — wild only; breaching is a wild behaviour
-    //   7  RandomSwimming     — wild only; free-roam in water
-    //   8  RandomStroll       — wild only; ground movement when beached
-    // -------------------------------------------------------------------------
-
     @Override
     protected void registerGoals() {
         super.registerGoals();
 
         // Float goal applies to all — prevents drowning on surface
-        this.goalSelector.addGoal(0, new FloatGoal(this));
+//        this.goalSelector.addGoal(0, new FloatGoal(this));
 
-        // Wild-only aquatic behaviour — guarded so tamed spectrobes don't
-        // randomly swim away from their master or beach themselves jumping
         this.goalSelector.addGoal(4, new SpectrobeFindWaterGoal(this) {
-            @Override public boolean canUse() { return !isTame() && super.canUse(); }
-        });
-        this.goalSelector.addGoal(5, new AquaticJumpGoal(this, 10) {
             @Override public boolean canUse() { return !isTame() && super.canUse(); }
         });
         this.goalSelector.addGoal(7, new SpectrobeRandomSwimmingGoal(this, 1D, 10) {
             @Override public boolean canUse() { return !isTame() && super.canUse(); }
         });
-        // Ground stroll fallback — lets both tamed and wild navigate on land,
-        // but is overridden by FollowMasterGoal (priority 3) when tamed
+
         this.goalSelector.addGoal(8, new SpectrobeWaterAvoidingRandomStrollGoal(this, 0.5D));
+
+        this.goalSelector.addGoal(9, new AquaticJumpGoal(this, 10) {
+            @Override public boolean canUse() { return !isTame() && super.canUse(); }
+        });
     }
 
     // -------------------------------------------------------------------------
@@ -165,12 +157,12 @@ public abstract class EntityAquaticSpectrobe extends EntitySpectrobe {
 
         @Override
         public void tick() {
-            // Buoyancy — applied unconditionally in water so the entity
-            // naturally floats upward rather than sinking passively.
-            if (spectrobe.isInWater()) {
-                spectrobe.setDeltaMovement(
-                        spectrobe.getDeltaMovement().add(0.0D, 0.005D, 0.0D));
-            }
+//            // Buoyancy — applied unconditionally in water so the entity
+//            // naturally floats upward rather than sinking passively.
+//            if (spectrobe.isInWater()) {
+//                spectrobe.setDeltaMovement(
+//                        spectrobe.getDeltaMovement().add(0.0D, 0.005D, 0.0D));
+//            }
 
             if (this.operation == Operation.MOVE_TO && !spectrobe.getNavigation().isDone()) {
                 double d0 = this.wantedX - spectrobe.getX();

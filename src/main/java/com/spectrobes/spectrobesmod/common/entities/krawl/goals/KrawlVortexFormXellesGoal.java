@@ -28,12 +28,17 @@ public class KrawlVortexFormXellesGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        SpectrobesWorldSaveData worldData = (SpectrobesWorldSaveData.getWorldData((ServerLevel) vortex.level()));
+        // World save data is server-only — casting level() to ServerLevel on the
+        // client throws a ClassCastException
+        if (vortex.level().isClientSide()) return false;
 
-        return vortex.getAge() >= 0 //TODO: Make this configurable
-                && ((worldData.canSpawnNest((vortex.blockPosition()))
+        SpectrobesWorldSaveData worldData =
+                SpectrobesWorldSaveData.getWorldData((ServerLevel) vortex.level());
+
+        return vortex.getAge() >= 0
+                && (worldData.canSpawnNest(vortex.blockPosition())
                 || (worldData.getNest(vortex.blockPosition()) != null
-                && worldData.getNest(vortex.blockPosition()).stage == 1)));
+                && worldData.getNest(vortex.blockPosition()).stage == 1));
     }
 
     @Override

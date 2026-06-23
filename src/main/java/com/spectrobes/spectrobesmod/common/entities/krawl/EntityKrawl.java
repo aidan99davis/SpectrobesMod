@@ -53,7 +53,7 @@ public abstract class EntityKrawl extends Monster implements GeoAnimatable, IHas
 
     public abstract KrawlProperties GetKrawlProperties();
 
-    public boolean IsAttacking() {
+    public boolean isAttacking() {
         return entityData.get(IS_ATTACKING);
     }
     public void setIsAttacking(boolean attacking) {
@@ -133,13 +133,14 @@ public abstract class EntityKrawl extends Monster implements GeoAnimatable, IHas
         if(this.isSunBurnTick()) {
             this.setRemainingFireTicks(8);
         }
-        if((getLastHurtByMobTimestamp() - this.tickCount) > 2000) this.setHealth(getHealth() + (getHealth() / 100));
+        if (this.tickCount - getLastHurtByMobTimestamp() > 2000) this.setHealth(getHealth() + (getHealth() / 100));
     }
 
     @Override
     protected void registerGoals()
     {
 //        this.goalSelector.addGoal(5, new BreedGoal(this,10)); todo: Make krawl eat mass and duplicate?
+        this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new AttackSpectrobeGoal(this, true, true));
         this.goalSelector.addGoal(2, new RestrictSunGoal(this));
         this.goalSelector.addGoal(3, new FleeSunGoal(this, 1.0D));

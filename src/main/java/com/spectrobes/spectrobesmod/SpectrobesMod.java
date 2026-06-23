@@ -10,7 +10,6 @@ import com.spectrobes.spectrobesmod.common.registry.*;
 import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesBlocks;
 import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesTileRegistry;
 import com.spectrobes.spectrobesmod.common.registry.items.*;
-import com.spectrobes.spectrobesmod.common.world.SpectrobesOreGen;
 import net.minecraft.world.entity.SpawnPlacementTypes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -58,9 +57,6 @@ public class SpectrobesMod {
         DataSerializerRegistry.SERIALIZERS.register(modEventBus);
         Containers.CONTAINERS.register(modEventBus);
         Containers.init();
-
-        SpectrobesOreGen.register(modEventBus);
-
     }
 
     private void setup(final FMLCommonSetupEvent event) {

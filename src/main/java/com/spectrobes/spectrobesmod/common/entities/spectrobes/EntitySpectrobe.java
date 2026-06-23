@@ -1,5 +1,6 @@
 package com.spectrobes.spectrobesmod.common.entities.spectrobes;
 
+import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.gui.SpectrobeGuiHandler;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
@@ -158,8 +159,21 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityWi
         return this.entityData.get(STATE) == 1;
     }
 
+    @Override
+    public void setOrderedToSit(boolean orderedToSit) {
+        if (orderedToSit) {
+            this.entityData.set(STATE, 1);
+        } else if (this.entityData.get(STATE) == 1) {
+            this.entityData.set(STATE, 0);
+        }
+
+        super.setOrderedToSit(orderedToSit);
+    }
+
     public void setState(int state) {
         this.entityData.set(STATE, state);
+        SpectrobesInfo.LOGGER.info("SETTING STATE: " + state);
+        super.setOrderedToSit(state == 1);
     }
 
     public int getState() {
@@ -174,48 +188,93 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityWi
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
 
-        if (getSpectrobeData() != null) {
-            if (!recentInteract && itemStack.isEmpty()) {
-                if (player.getUUID().equals(getOwnerUUID()) && player.isShiftKeyDown()) {
+        Spectrobe spectrobeData = getSpectrobeData();
+
+        if (spectrobeData == null) {
+            return super.mobInteract(player, hand);
+        }
+
+        if (itemStack.isEmpty()) {
+            if (player.getUUID().equals(getOwnerUUID()) && player.isShiftKeyDown()) {
+                if (!this.level().isClientSide()) {
                     cycleState(player);
-                } else {
-                    printSpectrobeToChat(player);
                 }
-            } else if (itemStack.getItem() instanceof SpectrobeSerumHealingItem serum) {
+
+                return InteractionResult.sidedSuccess(this.level().isClientSide());
+            }
+
+            if (!this.level().isClientSide()) {
+                printSpectrobeToChat(player);
+            }
+
+            return InteractionResult.sidedSuccess(this.level().isClientSide());
+        }
+
+        if (itemStack.getItem() instanceof SpectrobeSerumHealingItem serum) {
+            if (!this.level().isClientSide()) {
                 healSpectrobe(serum.getSpectrobeHealAmount());
 
                 if (!player.getAbilities().instabuild) {
                     itemStack.shrink(1);
                 }
+            }
 
-                return InteractionResult.sidedSuccess(this.level().isClientSide());
-            } else if (itemStack.getItem() instanceof SpecialMineralItem mineralItem) {
+            return InteractionResult.sidedSuccess(this.level().isClientSide());
+        }
+
+        if (itemStack.getItem() instanceof SpecialMineralItem mineralItem) {
+            if (!this.level().isClientSide()) {
                 applySpecialMineral(mineralItem);
 
                 if (!player.getAbilities().instabuild) {
                     itemStack.shrink(1);
                 }
+            }
 
-                return InteractionResult.sidedSuccess(this.level().isClientSide());
-            } else if (itemStack.getItem() instanceof MineralItem mineralItem) {
+            return InteractionResult.sidedSuccess(this.level().isClientSide());
+        }
+
+        if (itemStack.getItem() instanceof MineralItem mineralItem) {
+            if (!this.level().isClientSide()) {
                 applyMineral(mineralItem);
 
                 if (!player.getAbilities().instabuild) {
                     itemStack.shrink(1);
                 }
-
-                return InteractionResult.sidedSuccess(this.level().isClientSide());
-            } else if (itemStack.getItem() instanceof PrizmodItem) {
-                if (player.isShiftKeyDown() && player.level().isClientSide()) {
-                    SpectrobeGuiHandler.openDetails(getSpectrobeData());
-                    return InteractionResult.SUCCESS;
-                }
             }
+
+            return InteractionResult.sidedSuccess(this.level().isClientSide());
         }
 
-        recentInteract = true;
-        ticksTillInteract = 15;
+        if (itemStack.getItem() instanceof PrizmodItem) {
+            if (player.isShiftKeyDown() && this.level().isClientSide()) {
+                SpectrobeGuiHandler.openDetails(getSpectrobeData());
+                return InteractionResult.SUCCESS;
+            }
+
+            return InteractionResult.sidedSuccess(this.level().isClientSide());
+        }
+
         return super.mobInteract(player, hand);
+    }
+
+    private void cycleState(Player player) {
+        int oldState = this.entityData.get(STATE);
+        int newState = oldState + 1;
+
+        if ((getStage() != Stage.CHILD && newState > 1) || newState > 2) {
+            newState = 0;
+        }
+
+        setState(newState);
+
+        switch (newState) {
+            case 0 -> player.sendSystemMessage(Component.literal("Your spectrobe is now following."));
+            case 1 -> player.sendSystemMessage(Component.literal("Your spectrobe is now sitting."));
+            case 2 -> player.sendSystemMessage(Component.literal("Your spectrobe is now searching."));
+            default -> {
+            }
+        }
     }
 
     public void healSpectrobe(int spectrobeHealAmount) {
@@ -230,7 +289,9 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityWi
                 spectrobeMaster.updateSpectrobe(specData);
 
                 if (!this.level().isClientSide()) {
-                    SpectrobesNetwork.sendToServer(new CSyncSpectrobeMasterPacket(spectrobeMaster));
+                    SpectrobesNetwork.sendToClient(
+                            new CSyncSpectrobeMasterPacket(spectrobeMaster),
+                            (ServerPlayer) level().getPlayerByUUID(getOwnerUUID()));
                     owner.sendSystemMessage(Component.literal("Your spectrobe has been healed: " + spectrobeHealAmount + " HP Points."));
                 }
             }
@@ -238,29 +299,6 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityWi
             Spectrobe specData = getSpectrobeData();
             specData.addHealth(spectrobeHealAmount);
             setSpectrobeData(specData);
-        }
-    }
-
-    private void cycleState(Player player) {
-        int oldState = this.entityData.get(STATE);
-        int newState = oldState + 1;
-
-        // First check prevents non-child forms from searching.
-        // Second check cycles fully for children.
-        if ((getStage() != Stage.CHILD && newState > 1) || newState > 2) {
-            newState = 0;
-        }
-
-        this.entityData.set(STATE, newState);
-
-        if (this.level().isClientSide()) {
-            switch (newState) {
-                case 0 -> player.sendSystemMessage(Component.literal("Your spectrobe is now following."));
-                case 1 -> player.sendSystemMessage(Component.literal("Your spectrobe is now sitting."));
-                case 2 -> player.sendSystemMessage(Component.literal("Your spectrobe is now searching."));
-                default -> {
-                }
-            }
         }
     }
 
@@ -345,6 +383,10 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityWi
             setSpectrobeData(GetNewSpectrobeInstance());
         }
 
+        if (compound.contains("SpectrobeState")) {
+            setState(compound.getInt("SpectrobeState"));
+        }
+
         this.entityData.set(HAS_MATED, compound.getBoolean("sterile"));
         updateEntityAttributes();
     }
@@ -358,7 +400,7 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityWi
         if (spectrobeData != null) {
             compound.put("SpectrobeData", spectrobeData.write());
         }
-
+        compound.putInt("SpectrobeState", this.entityData.get(STATE));
         compound.putBoolean("sterile", this.entityData.get(HAS_MATED));
     }
 

@@ -35,17 +35,18 @@ public class SpawnWaveGoal extends TargetGoal {
 
     @Override
     public boolean canContinueToUse() {
-        if (!(mob instanceof EntityVortex vortex)) {
-            return false;
-        }
+        if (!(mob instanceof EntityVortex vortex)) return false;
 
-        boolean shouldContinue = vortex.getWaves() > 0;
+        return vortex.getWaves() > 0;
+    }
 
-        if (!shouldContinue) {
+    @Override
+    public void stop() {
+        super.stop();
+        // Vortex exhausted its waves — remove it
+        if (mob instanceof EntityVortex vortex && vortex.getWaves() <= 0) {
             mob.kill();
         }
-
-        return shouldContinue;
     }
 
     @Override
@@ -72,15 +73,13 @@ public class SpawnWaveGoal extends TargetGoal {
     }
 
     private void spawnWave(EntityVortex vortex) {
-        if (!(mob.level() instanceof ServerLevel serverLevel)) {
-            return;
-        }
+        if (!(mob.level() instanceof ServerLevel serverLevel)) return;
 
         RandomSource random = mob.getRandom();
-
         int levelToSpawnAt = 1;
 
-        SpectrobesWorldSaveData spectrobesWorldSaveData = SpectrobesWorldSaveData.getWorldData(serverLevel);
+        SpectrobesWorldSaveData spectrobesWorldSaveData =
+                SpectrobesWorldSaveData.getWorldData(serverLevel);
         KrawlNest nest = spectrobesWorldSaveData.getNest(mob.blockPosition());
 
         if (nest != null && nest.isAlive()) {
@@ -94,19 +93,18 @@ public class SpawnWaveGoal extends TargetGoal {
         }
 
         if (mob.getTarget() instanceof Player player) {
-            PlayerSpectrobeMaster playerSpectrobeMaster = player.getCapability(SpectrobeMaster.INSTANCE);
-
-            if (playerSpectrobeMaster != null && playerSpectrobeMaster.getLevel() > levelToSpawnAt) {
-                levelToSpawnAt = playerSpectrobeMaster.getLevel();
+            PlayerSpectrobeMaster pMaster = player.getCapability(SpectrobeMaster.INSTANCE);
+            if (pMaster != null && pMaster.getLevel() > levelToSpawnAt) {
+                levelToSpawnAt = pMaster.getLevel();
             }
         }
 
         if (mob.getTarget() instanceof EntitySpectrobe spectrobeTarget) {
             if (spectrobeTarget.getOwner() != null) {
-                PlayerSpectrobeMaster playerSpectrobeMaster = spectrobeTarget.getOwner().getCapability(SpectrobeMaster.INSTANCE);
-
-                if (playerSpectrobeMaster != null && playerSpectrobeMaster.getLevel() > levelToSpawnAt) {
-                    levelToSpawnAt = playerSpectrobeMaster.getLevel();
+                PlayerSpectrobeMaster pMaster =
+                        spectrobeTarget.getOwner().getCapability(SpectrobeMaster.INSTANCE);
+                if (pMaster != null && pMaster.getLevel() > levelToSpawnAt) {
+                    levelToSpawnAt = pMaster.getLevel();
                 }
             } else if (spectrobeTarget.getSpectrobeLevel() > levelToSpawnAt) {
                 levelToSpawnAt = spectrobeTarget.getSpectrobeLevel();
@@ -116,10 +114,22 @@ public class SpawnWaveGoal extends TargetGoal {
         int krawlInWave = random.nextInt(2) + 1;
 
         for (int i = 0; i < krawlInWave; i++) {
-            EntityType<? extends EntityKrawl> krawlType = KrawlEntities.getByLevel(levelToSpawnAt, serverLevel);
+            EntityType<? extends EntityKrawl> krawlType =
+                    KrawlEntities.getByLevel(levelToSpawnAt, serverLevel);
             EntityKrawl krawl = krawlType.create(serverLevel);
 
             if (krawl != null) {
+                // Spawn near the vortex with a small random offset so krawl
+                // don't all stack on the same block.
+                double offsetX = (random.nextDouble() - 0.5D) * 4.0D;
+                double offsetZ = (random.nextDouble() - 0.5D) * 4.0D;
+                krawl.moveTo(
+                        mob.getX() + offsetX,
+                        mob.getY(),
+                        mob.getZ() + offsetZ,
+                        random.nextFloat() * 360.0F, 0.0F);
+
+                serverLevel.addFreshEntity(krawl);
                 vortex.addKrawl(krawl);
             }
         }
