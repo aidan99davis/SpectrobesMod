@@ -172,7 +172,6 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityWi
 
     public void setState(int state) {
         this.entityData.set(STATE, state);
-        SpectrobesInfo.LOGGER.info("SETTING STATE: " + state);
         super.setOrderedToSit(state == 1);
     }
 
