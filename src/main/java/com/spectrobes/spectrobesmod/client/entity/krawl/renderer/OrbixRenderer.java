@@ -5,9 +5,7 @@ import com.spectrobes.spectrobesmod.client.entity.krawl.model.OrbixModel;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityOrbix;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
+import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class OrbixRenderer extends GeoEntityRenderer<EntityOrbix> {
 

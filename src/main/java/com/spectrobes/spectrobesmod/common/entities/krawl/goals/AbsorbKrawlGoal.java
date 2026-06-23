@@ -25,15 +25,21 @@ public class AbsorbKrawlGoal extends Goal {
     @Override
     public void tick() {
         super.tick();
-        List<EntityKrawl> nearbyKrawl = owner.level.getEntitiesOfClass(EntityKrawl.class, owner.getBoundingBox().inflate(10, 2, 10));
-        List<EntityKrawl> filteredKrawl = nearbyKrawl.stream().filter(entityKrawl -> entityKrawl.isVortex() && !(entityKrawl instanceof EntityXelles)).collect(Collectors.toList());
+        // World save data only exists on the server — guard before casting
+        if (owner.level().isClientSide()) return;
 
-        if(filteredKrawl.size() > 0) {
-            SpectrobesWorldSaveData worldData = SpectrobesWorldSaveData.getWorldData((ServerLevel) owner.level);
+        List<EntityKrawl> nearbyKrawl = owner.level().getEntitiesOfClass(
+                EntityKrawl.class, owner.getBoundingBox().inflate(10, 2, 10));
+        List<EntityKrawl> filteredKrawl = nearbyKrawl.stream()
+                .filter(e -> e.isVortex() && !(e instanceof EntityXelles))
+                .collect(Collectors.toList());
+
+        if (!filteredKrawl.isEmpty()) {
+            SpectrobesWorldSaveData worldData =
+                    SpectrobesWorldSaveData.getWorldData((ServerLevel) owner.level());
             worldData.getNest(owner.blockPosition()).absorbVortexes(filteredKrawl.size());
             worldData.setDirty();
-
-            filteredKrawl.forEach(entityKrawl -> entityKrawl.remove(Entity.RemovalReason.DISCARDED));
+            filteredKrawl.forEach(e -> e.remove(Entity.RemovalReason.DISCARDED));
         }
     }
 }

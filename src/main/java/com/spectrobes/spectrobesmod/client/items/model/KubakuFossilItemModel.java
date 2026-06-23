@@ -3,18 +3,18 @@ package com.spectrobes.spectrobesmod.client.items.model;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.items.fossils.KubakuFossilItem;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.model.GeoModel;
 
-public class KubakuFossilItemModel extends AnimatedGeoModel<KubakuFossilItem> {
+public class KubakuFossilItemModel extends GeoModel<KubakuFossilItem> {
 
     @Override
     public ResourceLocation getModelResource(KubakuFossilItem grildaFossilBlock) {
-        return new ResourceLocation(SpectrobesInfo.MOD_ID, "geo/blocks/kubaku.geo.json");
+        return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "geo/blocks/kubaku.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(KubakuFossilItem grildaFossilBlock) {
-        return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/blocks/fossil.png");
+        return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "textures/models/blocks/fossil.png");
     }
 
     @Override

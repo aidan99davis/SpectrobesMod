@@ -3,18 +3,18 @@ package com.spectrobes.spectrobesmod.client.blocks.model;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.blocks.fossils.tile.XellesTrophyBlockTileEntity;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.model.GeoModel;
 
-public class XellesTrophyBlockModel extends AnimatedGeoModel<XellesTrophyBlockTileEntity> {
+public class XellesTrophyBlockModel extends GeoModel<XellesTrophyBlockTileEntity> {
 
     @Override
     public ResourceLocation getModelResource(XellesTrophyBlockTileEntity grildaFossilBlock) {
-        return new ResourceLocation(SpectrobesInfo.MOD_ID, "geo/xelles.geo.json");
+        return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "geo/xelles.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(XellesTrophyBlockTileEntity grildaFossilBlock) {
-        return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/blocks/xelles_dead.png");
+        return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "textures/models/blocks/xelles_dead.png");
     }
 
     @Override

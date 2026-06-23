@@ -1,28 +1,27 @@
 package com.spectrobes.spectrobesmod.common.registry.items;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.common.items.SpectrobesItemGroups;
-import com.spectrobes.spectrobesmod.common.items.special.XellesTrophyItem;
-import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesBlocks;
-import net.minecraft.world.item.BlockItem;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
+import net.neoforged.neoforge.registries.DeferredRegister;
+
+import java.util.function.Supplier;
 
 public class SpectrobesItemsRegistry {
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, SpectrobesInfo.MOD_ID);
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(Registries.ITEM, SpectrobesInfo.MOD_ID);
 
-    public static final RegistryObject<Item> metalium = 
+    public static final Supplier<Item> metalium =
     		ITEMS.register("metalium",
-    				() -> new Item(new Item.Properties().tab(SpectrobesItemGroups.SpectrobesMineralItemGroup.Instance)));
+    				() -> new Item(new Item.Properties()));
     
-    public static final RegistryObject<Item> titanium = 
+    public static final Supplier<Item> titanium =
     		ITEMS.register("titanium",
-    				() -> new Item(new Item.Properties().tab(SpectrobesItemGroups.SpectrobesMineralItemGroup.Instance)));
+    				() -> new Item(new Item.Properties()));
     
-    public static final RegistryObject<Item> marble = 
+    public static final Supplier<Item> marble =
     		ITEMS.register("marble",
-    				() -> new Item(new Item.Properties().tab(SpectrobesItemGroups.SpectrobesMineralItemGroup.Instance)));
+    				() -> new Item(new Item.Properties()));
 
 }

@@ -9,21 +9,22 @@ import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesFossilsRegis
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.builder.ILoopType;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 public class EntitySegulos extends EntityMammalSpectrobe {
-
+    private static final RawAnimation BODY_IDLE_ANIM = RawAnimation.begin().thenLoop("animation.segulos.idle");
+    private static final RawAnimation ATTACK_ANIM = RawAnimation.begin().thenLoop("animation.segulos.attack");
+    private static final RawAnimation WALK_ANIM = RawAnimation.begin().thenLoop("animation.segulos.walk");
 
     public EntitySegulos(EntityType<EntitySegulos> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
     }
 
+    @Override
     public Spectrobe GetNewSpectrobeInstance() {
         return SpectrobeRegistry.Segulos.copy(false);
     }
@@ -39,7 +40,7 @@ public class EntitySegulos extends EntityMammalSpectrobe {
     }
 
     @Override
-    public Class getSpectrobeClass() {
+    public Class<? extends EntitySpectrobe> getSpectrobeClass() {
         return EntitySegulos.class;
     }
 
@@ -48,39 +49,27 @@ public class EntitySegulos extends EntityMammalSpectrobe {
         return SpectrobesEntities.ENTITY_SEGU.get();
     }
 
-    public <ENTITY extends EntitySpectrobe> PlayState bodyController(AnimationEvent<ENTITY> event) {
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.segulos.idle", ILoopType.EDefaultLoopTypes.LOOP));
-        return PlayState.CONTINUE;
+    public PlayState bodyController(AnimationState<EntitySpectrobe> animationState) {
+        return animationState.setAndContinue(BODY_IDLE_ANIM);
     }
 
-    protected AnimationController bodyAnimationController = new AnimationController(this, "bodyAnimationController", 10F, this::bodyController);
-
     @Override
-    public void registerControllers(AnimationData data)
-    {
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         super.registerControllers(data);
-        data.addAnimationController(bodyAnimationController);
+        data.add(new AnimationController<>(this, "bodyAnimationController", 10, this::bodyController));
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return animationControllers;
-    }
+    public PlayState moveController(AnimationState<EntitySpectrobe> animationState) {
+        if (animationState.getAnimatable().isAttacking()) {
+            return animationState.setAndContinue(ATTACK_ANIM);
+        }
 
-    @Override
-    public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event)
-    {
-        if(event.getAnimatable().isAttacking()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.segulos.attack", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
+        if (animationState.isMoving()) {
+            return animationState.setAndContinue(WALK_ANIM);
         }
-        if(event.isMoving())
-        {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.segulos.walk", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
-        } else {
-            return PlayState.STOP;
-        }
+
+        return PlayState.STOP;
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.spectrobes.spectrobesmod.client.items.machines.renderer;
 
 import com.spectrobes.spectrobesmod.client.items.machines.model.CyrusShopBlockItemModel;
 import com.spectrobes.spectrobesmod.common.items.machines.CyrusShopBlockItem;
-import software.bernie.geckolib3.renderers.geo.GeoItemRenderer;
+import software.bernie.geckolib.renderer.GeoItemRenderer;
 
 public class CyrusShopBlockItemRenderer extends GeoItemRenderer<CyrusShopBlockItem> {
 

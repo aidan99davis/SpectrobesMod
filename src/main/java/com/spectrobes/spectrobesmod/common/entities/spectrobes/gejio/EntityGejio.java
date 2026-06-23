@@ -9,25 +9,34 @@ import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesFossilsRegis
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.builder.ILoopType;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 public class EntityGejio extends EntityMammalSpectrobe {
+    private static final RawAnimation WALK_ANIMATION =
+            RawAnimation.begin().thenLoop("animation.gejio.walk");
 
-    public EntityGejio(EntityType<EntityGejio> entityTypeIn, Level worldIn) {
-        super(entityTypeIn, worldIn);
+    private static final RawAnimation SITTING_ANIMATION =
+            RawAnimation.begin()
+                    .thenPlay("animation.gejio.sitting")
+                    .thenLoop("animation.gejio.sit");
+
+    private static final RawAnimation IDLE_ANIMATION =
+            RawAnimation.begin().thenLoop("animation.gejio.idle");
+
+    public EntityGejio(EntityType<EntityGejio> entityType, Level level) {
+        super(entityType, level);
     }
 
+    @Override
     public Spectrobe GetNewSpectrobeInstance() {
         return SpectrobeRegistry.Gejio.copy(false);
     }
 
     @Override
     public EntityType<? extends EntitySpectrobe> getEvolutionRegistry() {
-//        return SpectrobesEntities.ENTITY_GEJIGEN.get();
+        // return SpectrobesEntities.ENTITY_GEJIGEN.get();
         return null;
     }
 
@@ -37,6 +46,7 @@ public class EntityGejio extends EntityMammalSpectrobe {
     }
 
     @Override
+    @SuppressWarnings("rawtypes")
     public Class getSpectrobeClass() {
         return EntityGejio.class;
     }
@@ -47,27 +57,18 @@ public class EntityGejio extends EntityMammalSpectrobe {
     }
 
     @Override
-    public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event) {
-        if(event.isMoving())
-        {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.gejio.walk", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
-        }
-        else if(event.getAnimatable().isOrderedToSit()) {
-            event.getController().setAnimation(new AnimationBuilder()
-                    .addAnimation("animation.gejio.sitting", ILoopType.EDefaultLoopTypes.PLAY_ONCE)
-                    .addAnimation("animation.gejio.sit", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
-        } else {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.gejio.idle", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
-        }
-    }
+    public PlayState moveController(AnimationState<EntitySpectrobe> animationState) {
+        EntitySpectrobe spectrobe = animationState.getAnimatable();
 
+        if (animationState.isMoving()) {
+            return animationState.setAndContinue(WALK_ANIMATION);
+        }
 
-    @Override
-    public AnimationFactory getFactory() {
-        return animationControllers;
+        if (spectrobe.isOrderedToSit()) {
+            return animationState.setAndContinue(SITTING_ANIMATION);
+        }
+
+        return animationState.setAndContinue(IDLE_ANIMATION);
     }
 
     @Override

@@ -8,26 +8,31 @@ import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
 import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesFossilsRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.builder.ILoopType;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 public class EntityAoi extends EntityAvianSpectrobe {
+    private static final RawAnimation SIT_ANIMATION =
+            RawAnimation.begin().thenLoop("animation.aoi.sit");
 
-    public EntityAoi(EntityType<EntityAoi> entityTypeIn, Level worldIn) {
-        super(entityTypeIn, worldIn);
+    private static final RawAnimation IDLE_ANIMATION =
+            RawAnimation.begin().thenLoop("animation.aoi.idle");
+
+    public EntityAoi(EntityType<EntityAoi> entityType, Level level) {
+        super(entityType, level);
     }
 
+    @Override
     public Spectrobe GetNewSpectrobeInstance() {
         return SpectrobeRegistry.Aoi.copy(false);
     }
 
     @Override
     public EntityType<? extends EntitySpectrobe> getEvolutionRegistry() {
-//        return SpectrobesEntities.ENTITY_AOBA.get();
+        // return SpectrobesEntities.ENTITY_AOBA.get();
         return null;
     }
 
@@ -37,6 +42,7 @@ public class EntityAoi extends EntityAvianSpectrobe {
     }
 
     @Override
+    @SuppressWarnings("rawtypes")
     public Class getSpectrobeClass() {
         return EntityAoi.class;
     }
@@ -47,23 +53,16 @@ public class EntityAoi extends EntityAvianSpectrobe {
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return animationControllers;
-    }
+    public PlayState moveController(AnimationState<EntitySpectrobe> animationState) {
+        EntitySpectrobe spectrobe = animationState.getAnimatable();
 
-    @Override
-    public <ENTITY extends EntitySpectrobe> PlayState moveController(AnimationEvent<ENTITY> event) {
-        if(event.getAnimatable().isOrderedToSit())
-        {
-            event.getController().setAnimationSpeed(2);
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.aoi.sit", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
-        } else {
-            event.getController().setAnimationSpeed(5);
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.aoi.idle", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
+        if (spectrobe.isOrderedToSit()) {
+            animationState.getController().setAnimationSpeed(2.0D);
+            return animationState.setAndContinue(SIT_ANIMATION);
         }
 
+        animationState.getController().setAnimationSpeed(5.0D);
+        return animationState.setAndContinue(IDLE_ANIMATION);
     }
 
     @Override

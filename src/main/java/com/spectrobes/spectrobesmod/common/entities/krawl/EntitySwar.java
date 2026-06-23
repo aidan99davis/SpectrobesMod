@@ -4,38 +4,38 @@ import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import com.spectrobes.spectrobesmod.common.registry.KrawlRegistry;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.builder.ILoopType;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 
 public class EntitySwar extends EntityKrawl {
-    public EntitySwar(EntityType<? extends EntityKrawl> type, Level worldIn) {
-        super(type, worldIn);
+    private static final RawAnimation WALK_ANIMATION =
+            RawAnimation.begin().thenLoop("animation.swar.walk");
+
+    public EntitySwar(EntityType<? extends EntityKrawl> entityType, Level level) {
+        super(entityType, level);
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return animationControllers;
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.animationControllers;
     }
 
     @Override
-    public <ENTITY extends EntityKrawl> PlayState moveController(AnimationEvent<ENTITY> event) {
-        event.getController().transitionLengthTicks = 2;
-        if(event.isMoving()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.swar.walk", ILoopType.EDefaultLoopTypes.LOOP));
-            return PlayState.CONTINUE;
+    public PlayState moveController(AnimationState<EntityKrawl> animationState) {
+        animationState.getController().setAnimationSpeed(1.0D);
+        animationState.getController().transitionLength(2);
 
-        } else {
-//            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.swar.attack", true));
-            return PlayState.STOP;
+        if (animationState.isMoving()) {
+            return animationState.setAndContinue(WALK_ANIMATION);
         }
+
+        return PlayState.STOP;
     }
 
     @Override
     public KrawlProperties GetKrawlProperties() {
         return KrawlRegistry.Swar_Properties.copy();
     }
-
 }

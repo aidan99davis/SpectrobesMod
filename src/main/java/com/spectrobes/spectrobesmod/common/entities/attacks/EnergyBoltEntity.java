@@ -3,22 +3,22 @@ package com.spectrobes.spectrobesmod.common.entities.attacks;
 import com.spectrobes.spectrobesmod.common.entities.IHasNature;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraftforge.network.NetworkHooks;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.animatable.GeoAnimatable;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class EnergyBoltEntity extends ThrowableProjectile implements IHasNature, IAnimatable {
+public class EnergyBoltEntity extends ThrowableProjectile implements IHasNature, GeoAnimatable {
     public int AtkDamage;
     public SpectrobeProperties.Nature Nature;
 
-    public AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    public AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private int life = 0;
 
     public EnergyBoltEntity(EntityType<? extends ThrowableProjectile> type, Level worldIn) {
@@ -26,8 +26,8 @@ public class EnergyBoltEntity extends ThrowableProjectile implements IHasNature,
     }
 
     @Override
-    protected float getGravity() {
-        return 0;
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+
     }
 
     @Override
@@ -50,28 +50,27 @@ public class EnergyBoltEntity extends ThrowableProjectile implements IHasNature,
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
+    protected void onHitEntity(EntityHitResult result) {
+        super.onHitEntity(result);
+
+        result.getEntity().hurt(
+                this.level().damageSources().thrown(this, this.getOwner()),
+                AtkDamage
+        );
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return factory;
-    }
-
-    @Override
-    protected void defineSynchedData() {
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
 
     }
 
     @Override
-    protected void onHitEntity(EntityHitResult pResult) {
-        super.onHitEntity(pResult);
-        pResult.getEntity().hurt(DamageSource.thrown(this, this.getOwner()), AtkDamage);
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return cache;
     }
 
-
     @Override
-    public Packet<?> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
+    public double getTick(Object object) {
+        return 0;
     }
 }

@@ -4,33 +4,47 @@ import com.spectrobes.spectrobesmod.client.items.healing.renderer.SerumItemRende
 import com.spectrobes.spectrobesmod.common.items.minerals.IWorthGura;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import net.minecraftforge.common.util.NonNullLazy;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.builder.ILoopType;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
+import software.bernie.geckolib.animatable.client.GeoRenderProvider;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.function.Consumer;
 
-public class SpectrobeSerumHealingItem extends Item implements IAnimatable, IWorthGura {
-    public AnimationFactory animationControllers = GeckoLibUtil.createFactory(this);
+public class SpectrobeSerumHealingItem extends Item implements GeoItem, IWorthGura {
 
-    private int healAmount;
-    private int guraWorth;
-    private int tier;
+    private static final RawAnimation SERUM_PARTICLE_ANIMATION =
+            RawAnimation.begin().thenLoop("animation.serum.particle");
 
-    public int getSpectrobeHealAmount() {
-        return healAmount;
+    private final AnimatableInstanceCache animationControllers = GeckoLibUtil.createInstanceCache(this);
+
+    private final int healAmount;
+    private final int guraWorth;
+    private final int tier;
+
+    public SpectrobeSerumHealingItem(int healAmount, int guraWorth, int tier, Item.Properties properties) {
+        super(properties);
+
+        this.healAmount = healAmount;
+        this.guraWorth = guraWorth;
+        this.tier = tier;
+
+        SingletonGeoAnimatable.registerSyncedAnimatable(this);
     }
 
+    public int getSpectrobeHealAmount() {
+        return this.healAmount;
+    }
+
+    @Override
     public int getGuraWorth() {
-        return guraWorth;
+        return this.guraWorth;
     }
 
     @Override
@@ -41,41 +55,36 @@ public class SpectrobeSerumHealingItem extends Item implements IAnimatable, IWor
     }
 
     public int getTier() {
-        return tier;
-    }
-
-    public SpectrobeSerumHealingItem(int healAmount, int guraWorth, int tier, Item.Properties pProperties) {
-        super(pProperties);
-        this.healAmount = healAmount;
-        this.guraWorth = guraWorth;
-        this.tier = tier;
+        return this.tier;
     }
 
     @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-        consumer.accept(new IClientItemExtensions()
-        {
-            private final NonNullLazy<BlockEntityWithoutLevelRenderer> ister = NonNullLazy.of(SerumItemRenderer::new);
+    public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {
+        consumer.accept(new GeoRenderProvider() {
+            private SerumItemRenderer renderer;
 
             @Override
-            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                return ister.get();
+            public BlockEntityWithoutLevelRenderer getGeoItemRenderer() {
+                if (this.renderer == null) {
+                    this.renderer = new SerumItemRenderer();
+                }
+
+                return this.renderer;
             }
         });
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 0, this::controller));
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "controller", 0, this::controller));
     }
 
-    private PlayState controller(AnimationEvent animationEvent) {
-        animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("animation.serum.particle", ILoopType.EDefaultLoopTypes.LOOP));
-        return PlayState.CONTINUE;
+    private PlayState controller(AnimationState<SpectrobeSerumHealingItem> animationState) {
+        return animationState.setAndContinue(SERUM_PARTICLE_ANIMATION);
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return animationControllers;
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.animationControllers;
     }
 }

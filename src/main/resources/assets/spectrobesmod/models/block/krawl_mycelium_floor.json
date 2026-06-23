@@ -1,12 +1,12 @@
 {
 	"parent": "block/cube_all",
 	"textures": {
-		"up": "spectrobesmod:blocks/krawl_mycelium_top",
-		"down": "spectrobesmod:blocks/krawl_mycelium_bottom",
-		"north":"spectrobesmod:blocks/krawl_mycelium_side",
-		"east":"spectrobesmod:blocks/krawl_mycelium_side",
-		"south":"spectrobesmod:blocks/krawl_mycelium_side",
-		"west":"spectrobesmod:blocks/krawl_mycelium_side",
-		"particle": "spectrobesmod:blocks/krawl_mycelium_top"
+		"up": "spectrobesmod:block/krawl_mycelium_top",
+		"down": "spectrobesmod:block/krawl_mycelium_bottom",
+		"north":"spectrobesmod:block/krawl_mycelium_side",
+		"east":"spectrobesmod:block/krawl_mycelium_side",
+		"south":"spectrobesmod:block/krawl_mycelium_side",
+		"west":"spectrobesmod:block/krawl_mycelium_side",
+		"particle": "spectrobesmod:block/krawl_mycelium_top"
 	}
 }

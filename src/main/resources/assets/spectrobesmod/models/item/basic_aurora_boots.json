@@ -2,6 +2,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "spectrobesmod:items/basic_aurora_boots"
+    "layer0": "spectrobesmod:item/basic_aurora_boots"
   }
 }

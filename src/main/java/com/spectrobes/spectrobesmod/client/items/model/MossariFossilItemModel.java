@@ -3,18 +3,18 @@ package com.spectrobes.spectrobesmod.client.items.model;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.items.fossils.MossariFossilItem;
 import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib.model.GeoModel;
 
-public class MossariFossilItemModel extends AnimatedGeoModel<MossariFossilItem> {
+public class MossariFossilItemModel extends GeoModel<MossariFossilItem> {
 
     @Override
     public ResourceLocation getModelResource(MossariFossilItem grildaFossilBlock) {
-        return new ResourceLocation(SpectrobesInfo.MOD_ID, "geo/blocks/mossari.geo.json");
+        return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "geo/blocks/mossari.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(MossariFossilItem grildaFossilBlock) {
-        return new ResourceLocation(SpectrobesInfo.MOD_ID, "textures/models/blocks/fossil.png");
+        return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "textures/models/blocks/fossil.png");
     }
 
     @Override

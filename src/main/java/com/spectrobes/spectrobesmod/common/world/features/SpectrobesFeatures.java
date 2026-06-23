@@ -16,7 +16,7 @@
 //
 //    private static <C extends IFeatureConfig, F extends Feature<C>> F register(String key, F value)
 //    {
-//        value.setRegistryName(new ResourceLocation(SpectrobesInfo.MOD_ID, key));
+//        value.setRegistryName(ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, key));
 //        ForgeRegistries.FEATURES.register(value);
 //        return value;
 //    }

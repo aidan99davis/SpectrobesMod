@@ -1,54 +1,80 @@
 package com.spectrobes.spectrobesmod.common.packets.networking.packets;
 
-import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
+import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
-import net.minecraft.network.FriendlyByteBuf;
+import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
+import net.minecraft.core.UUIDUtil;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
-import java.util.function.Supplier;
 
-public class SUpdateSpectrobeSlotPacket {
+public class SUpdateSpectrobeSlotPacket implements CustomPacketPayload {
 
-    private int slot;
+    public static final Type<SUpdateSpectrobeSlotPacket> TYPE = new Type<>(
+            ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "s_update_spectrobe_slot")
+    );
 
-    private UUID spectrobeUUID;
+    public static final StreamCodec<RegistryFriendlyByteBuf, SUpdateSpectrobeSlotPacket> STREAM_CODEC =
+            StreamCodec.ofMember(SUpdateSpectrobeSlotPacket::write, SUpdateSpectrobeSlotPacket::new);
 
-    public SUpdateSpectrobeSlotPacket(int slot, UUID spectrobeUUID) {
+    private final int slot;
+
+    @Nullable
+    private final UUID spectrobeUUID;
+
+    public SUpdateSpectrobeSlotPacket(int slot, @Nullable UUID spectrobeUUID) {
         this.slot = slot;
         this.spectrobeUUID = spectrobeUUID;
-//        SpectrobesInfo.LOGGER.info("instantiated packet with SpectrobeUUID: " + spectrobeUUID.toString());
     }
 
-    public void toBytes(FriendlyByteBuf buf) {
-        if(spectrobeUUID != null)
-            buf.writeUUID(spectrobeUUID);
-        buf.writeInt(slot);
+    private SUpdateSpectrobeSlotPacket(RegistryFriendlyByteBuf buffer) {
+        this.slot = ByteBufCodecs.VAR_INT.decode(buffer);
+        this.spectrobeUUID = buffer.readBoolean() ? UUIDUtil.STREAM_CODEC.decode(buffer) : null;
     }
 
-    public static SUpdateSpectrobeSlotPacket fromBytes(FriendlyByteBuf buf) {
-        int slot = buf.readInt();
-        UUID spectrobeUUID;
-        try {
-            spectrobeUUID = buf.readUUID();
-        } catch(Exception ex) {
-            spectrobeUUID = null;
+    private void write(RegistryFriendlyByteBuf buffer) {
+        ByteBufCodecs.VAR_INT.encode(buffer, this.slot);
+        buffer.writeBoolean(this.spectrobeUUID != null);
+
+        if (this.spectrobeUUID != null) {
+            UUIDUtil.STREAM_CODEC.encode(buffer, this.spectrobeUUID);
         }
-
-        return new SUpdateSpectrobeSlotPacket(slot, spectrobeUUID);
     }
 
-    public boolean handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            ServerPlayer player = ctx.get().getSender();
+    public int getSlot() {
+        return slot;
+    }
 
-            PlayerSpectrobeMaster serverCap = (PlayerSpectrobeMaster) player
-                    .getCapability(SpectrobeMaster.INSTANCE)
-                    .orElseThrow(IllegalStateException::new);
-            serverCap.setTeamMember(slot, spectrobeUUID);
-//            SpectrobesNetwork.sendToClient(new SSyncSpectrobeMasterPacket(serverCap), player);
+    @Nullable
+    public UUID getSpectrobeUUID() {
+        return spectrobeUUID;
+    }
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
+    }
+
+    public static void handle(SUpdateSpectrobeSlotPacket packet, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            if (!(context.player() instanceof ServerPlayer player)) {
+                return;
+            }
+
+            PlayerSpectrobeMaster serverCap = player.getCapability(SpectrobeMaster.INSTANCE);
+
+            if (serverCap == null) {
+                return;
+            }
+
+            serverCap.setTeamMember(packet.slot, packet.spectrobeUUID);
         });
-        return true;
     }
 }

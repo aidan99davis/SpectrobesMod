@@ -1,6 +1,5 @@
 package com.spectrobes.spectrobesmod.common.items.minerals.chroma;
 
-import com.spectrobes.spectrobesmod.common.items.SpectrobesItemGroups;
 import com.spectrobes.spectrobesmod.common.items.minerals.IWorthGura;
 import com.spectrobes.spectrobesmod.common.items.minerals.SpecialMineralItem;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
@@ -12,7 +11,7 @@ public class ChromaMineralItem extends SpecialMineralItem implements IWorthGura 
     private final int variantNumber;
 
     public ChromaMineralItem(int variantNumber) {
-        super(new Item.Properties().tab(SpectrobesItemGroups.SpectrobesMineralItemGroup.Instance));
+        super(new Item.Properties());
         this.variantNumber = variantNumber;
     }
 

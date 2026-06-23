@@ -1,9 +1,10 @@
 package com.spectrobes.spectrobesmod.common.save_data;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
-import net.minecraftforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.common.util.INBTSerializable;
 
 public class KrawlNest implements INBTSerializable {
     public BlockPos position;
@@ -35,7 +36,7 @@ public class KrawlNest implements INBTSerializable {
     }
 
     @Override
-    public Tag serializeNBT() {
+    public Tag serializeNBT(HolderLookup.Provider var1) {
         CompoundTag nbtObj = new CompoundTag();
         nbtObj.putString("dimension", dimension);
         nbtObj.putInt("stage", stage);
@@ -48,7 +49,7 @@ public class KrawlNest implements INBTSerializable {
     }
 
     @Override
-    public void deserializeNBT(Tag nbt) {
+    public void deserializeNBT(HolderLookup.Provider var1, Tag nbt) {
         dimension = ((CompoundTag)nbt).getString("dimension");
         stage = ((CompoundTag)nbt).getInt("stage");
         vortex_absorbed = ((CompoundTag)nbt).getInt("vortex_absorbed");

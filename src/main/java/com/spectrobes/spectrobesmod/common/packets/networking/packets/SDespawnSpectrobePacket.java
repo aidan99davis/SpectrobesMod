@@ -1,53 +1,80 @@
 package com.spectrobes.spectrobesmod.common.packets.networking.packets;
 
+import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.List;
-import java.util.function.Supplier;
+import java.util.UUID;
 
-public class SDespawnSpectrobePacket {
+public class SDespawnSpectrobePacket implements CustomPacketPayload {
+
+    public static final Type<SDespawnSpectrobePacket> TYPE = new Type<>(
+            ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "despawn_spectrobe")
+    );
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, SDespawnSpectrobePacket> STREAM_CODEC =
+            StreamCodec.ofMember(SDespawnSpectrobePacket::write, SDespawnSpectrobePacket::new);
 
     @Nullable
-    private BlockPos playerPos;
+    private final BlockPos playerPos;
 
-    public SDespawnSpectrobePacket(BlockPos player) {
-        this.playerPos = player;
+    public SDespawnSpectrobePacket(@Nullable BlockPos playerPos) {
+        this.playerPos = playerPos;
     }
 
-    public void toBytes(FriendlyByteBuf buf) {
-        if(playerPos != null) {
-            buf.writeInt(playerPos.getX());
-            buf.writeInt(playerPos.getY());
-            buf.writeInt(playerPos.getZ());
+    private SDespawnSpectrobePacket(RegistryFriendlyByteBuf buffer) {
+        this.playerPos = buffer.readBoolean() ? buffer.readBlockPos() : null;
+    }
+
+    private void write(RegistryFriendlyByteBuf buffer) {
+        buffer.writeBoolean(this.playerPos != null);
+
+        if (this.playerPos != null) {
+            buffer.writeBlockPos(this.playerPos);
         }
     }
 
-    public static SDespawnSpectrobePacket fromBytes(FriendlyByteBuf buf) {
-        int x = buf.readInt();
-        int y = buf.readInt();
-        int z = buf.readInt();
-        return new SDespawnSpectrobePacket(new BlockPos(x, y, z));
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 
-    public boolean handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            Level world = ctx.get().getSender().level;
+    @Nullable
+    public BlockPos getPlayerPos() {
+        return playerPos;
+    }
 
-            List<EntitySpectrobe> spectrobes = world
-                    .getEntitiesOfClass(EntitySpectrobe.class, ctx.get().getSender().getBoundingBox().inflate(30, 30, 30));
-            for(EntitySpectrobe spectrobe : spectrobes) {
-                if(spectrobe.getOwner() != null && spectrobe.getOwnerUUID()
-                        .equals(ctx.get().getSender().getUUID())) {
-                    spectrobe.despawn();
-                }
+    public static void handle(SDespawnSpectrobePacket packet, IPayloadContext context) {
+        if (!(context.player() instanceof ServerPlayer player)) {
+            return;
+        }
+
+        Level level = player.level();
+        AABB searchBox = player.getBoundingBox().inflate(30.0D, 30.0D, 30.0D);
+
+        List<EntitySpectrobe> spectrobes = level.getEntitiesOfClass(
+                EntitySpectrobe.class,
+                searchBox
+        );
+
+        UUID playerUUID = player.getUUID();
+
+        for (EntitySpectrobe spectrobe : spectrobes) {
+            UUID ownerUUID = spectrobe.getOwnerUUID();
+
+            if (ownerUUID != null && ownerUUID.equals(playerUUID)) {
+                spectrobe.despawn();
             }
-        });
-        return true;
+        }
     }
 }

@@ -14,7 +14,7 @@
 //
 //    private static <C extends ISurfaceBuilderConfig, F extends SurfaceBuilder<C>> F register(String key, F builder)
 //    {
-//        builder.setRegistryName(new ResourceLocation(SpectrobesInfo.MOD_ID, key));
+//        builder.setRegistryName(ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, key));
 //        ForgeRegistries.SURFACE_BUILDERS.register(builder);
 //        return builder;
 //    }

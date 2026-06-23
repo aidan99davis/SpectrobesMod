@@ -1,11 +1,13 @@
 package com.spectrobes.spectrobesmod.client.gui.prizmod.Pages;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.spectrobes.spectrobesmod.client.gui.prizmod.Components.*;
+import com.spectrobes.spectrobesmod.client.gui.prizmod.Components.AllSpectrobesList;
+import com.spectrobes.spectrobesmod.client.gui.prizmod.Components.SpectrobePiece;
+import com.spectrobes.spectrobesmod.client.gui.prizmod.Components.TeamSpectrobesList;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.SSpawnSpectrobePacket;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -15,156 +17,235 @@ import java.util.UUID;
 
 public class LineUpPage extends PrizmodPage {
 
-    private final AllSpectrobesList AllSpectrobesGrid;
-    private final TeamSpectrobesList TeamSpectrobesGrid;
-    private SpectrobeButton selectedButton;
+    private final AllSpectrobesList allSpectrobesGrid;
+    private final TeamSpectrobesList teamSpectrobesGrid;
+
+    private SpectrobePiece selectedSlot;
 
     public LineUpPage(PrizmodScreen parent) {
         super(parent);
-        AllSpectrobesGrid = new AllSpectrobesList(this);
-        TeamSpectrobesGrid = new TeamSpectrobesList(this);
-    }
 
-    @Override
-    public void tick() {
-        this.changeFocus(true);
-    }
-
-    @Override
-    public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-        super.render(stack, mouseX, mouseY, partialTicks);
-        if(selectedButton != null) {
-            selectedButton.piece.drawAdditionalAtCursor(stack, mouseX, mouseY);
-        }
+        this.allSpectrobesGrid = new AllSpectrobesList(this, this::onAllSpectrobeSlotPressed);
+        this.teamSpectrobesGrid = new TeamSpectrobesList(this, this::onTeamSpectrobeSlotPressed);
     }
 
     @Override
     public void init() {
-        buttons.clear();
-//        this.addButton(new MenuButton(parent.width / 2 - 30, 25, 60, 20, "Menu", button -> {
-//            parent.setMenuPage(new MenuPage(parent));
-//        }));
-
-        this.addButton(new Button(parent.width / 2 - 60, 45, 60, 20, Component.literal("Prev"), button -> {
-            this.AllSpectrobesGrid.previousPage();
-            this.parent.removeButtons(getButtons());
-            this.init();
-            this.changeFocus(true);
-        }));
-
-        this.addButton(new Button(parent.width / 2, 45, 60, 20, Component.literal("Next"), button -> {
-            this.AllSpectrobesGrid.nextPage();
-            this.parent.removeButtons(getButtons());
-            this.init();
-            this.changeFocus(true);
-        }));
-
-        populateGrid();
-
         super.init();
-    }
 
-    private void populateGrid() {
-        this.TeamSpectrobesGrid.clear();
-        this.AllSpectrobesGrid.clear();
-        Map<Integer, UUID> teamUuids =  parent.getMenu().getCurrentTeamUUIDs();
-        for(Spectrobe s : parent.getMenu().getOwnedSpectrobes()) {
-            boolean dontAdd = false;
-            for (int i = 0; i < 7; i++) {
-                if(teamUuids.get(i) != null && teamUuids.get(i).equals(s.SpectrobeUUID)) {
-                    if(teamUuids.get(i).equals(parent.getMenu().getCurrentSelectedUUID())) {
-                        TeamSpectrobesGrid.setSlotCurrent(i);
-                    }
-                    TeamSpectrobesGrid.populateSlot(i, s);
-                    dontAdd = true;
-                }
-            }
-            if(!dontAdd) {
-                AllSpectrobesGrid.addSpectrobe(s);
-            }
-        }
+        this.selectedSlot = null;
+        this.clearButtons();
 
-        for (SpectrobePiece sp : TeamSpectrobesGrid.getAll()) {
-            addButton(addSpectrobeButton(sp, true));
-        }
+        this.addButton(this.allSpectrobesGrid);
+        this.addButton(this.teamSpectrobesGrid);
 
-        for(SpectrobePiece sp : AllSpectrobesGrid.getAll()) {
-            addButton(addSpectrobeButton(sp, false));
-        }
-    }
+        this.addButton(
+                Button.builder(Component.literal("Prev"), button -> {
+                            this.allSpectrobesGrid.previousPage();
+                            clearSelection();
+                        })
+                        .bounds(this.parent.width / 2 - 60, 45, 60, 20)
+                        .build()
+        );
 
-    private SpectrobeButton addSpectrobeButton(SpectrobePiece sp, boolean teamSpectrobe) {
-        return new SpectrobeButton(this.parent, sp,
-                onClick -> {
-                    if(Screen.hasShiftDown() && !teamSpectrobe) {
-                        if(sp.spectrobe != null && !sp.spectrobe.active) {
-                            if(parent.player.level.isClientSide()) {
-                                Spectrobe spectrobe = sp.spectrobe;
-                                SpectrobesNetwork.sendToServer(new SSpawnSpectrobePacket(spectrobe));
-                                parent.getMenu().spawnSpectrobe(spectrobe);
-                            }
-                        }
-                    } else if (Screen.hasAltDown() && !teamSpectrobe) {
-                        if(sp.spectrobe != null) {
-                            if(parent.player.level.isClientSide()) {
-                                Spectrobe spectrobe = sp.spectrobe;
-                                parent.getMenu().releaseSpectrobe(spectrobe);
-                                populateGrid();
-                            }
-                        }
-                    } else {
-                        setSelectedSpectrobe(((SpectrobeButton)onClick));
-                    }
+        this.addButton(
+                Button.builder(Component.literal("Next"), button -> {
+                            this.allSpectrobesGrid.nextPage();
+                            clearSelection();
+                        })
+                        .bounds(this.parent.width / 2, 45, 60, 20)
+                        .build()
+        );
 
-                });
-    }
-
-    private void setSelectedSpectrobe(SpectrobeButton button) {
-        if(selectedButton != null) {
-            selectedButton.setSelected(false);
-            if(AllSpectrobesGrid.getAll().contains(selectedButton.piece)
-                    && TeamSpectrobesGrid.getAll().contains(button.piece)) {
-
-                if(TeamSpectrobesGrid.addSpectrobe(
-                        TeamSpectrobesGrid.getAll().indexOf(button.piece),
-                        selectedButton.piece.spectrobe)) {
-                    populateGrid();
-                }
-
-                selectedButton = null;
-                return;
-            } else if(TeamSpectrobesGrid.getAll().contains(selectedButton.piece)
-                    && TeamSpectrobesGrid.getAll().contains(button.piece)) {
-                if(TeamSpectrobesGrid.swapSpectrobes(
-                        TeamSpectrobesGrid.getAll().indexOf(button.piece),
-                        TeamSpectrobesGrid.getAll().indexOf(selectedButton.piece))) {
-                    populateGrid();
-                }
-
-                selectedButton = null;
-                return;
-            } else if(TeamSpectrobesGrid.getAll().contains(selectedButton.piece)
-                        && AllSpectrobesGrid.getAll().contains(button.piece)) {
-                if(TeamSpectrobesGrid.addSpectrobe(
-                        TeamSpectrobesGrid.getAll().indexOf(selectedButton.piece),
-                        button.piece.spectrobe)) {
-
-                    populateGrid();
-                    selectedButton = null;
-                    return;
-                }
-            }
-        }
-        if(button.piece.spectrobe != null) {
-            selectedButton = button;
-            selectedButton.setSelected(true);
-            return;
-        }
-        selectedButton = null;
+        refreshLineUpData();
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        return AllSpectrobesGrid.mouseClicked(mouseX,mouseY,mouseButton);
+    public void tick() {
+        setFocused(true);
+    }
+
+    @Override
+    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        super.renderWidget(guiGraphics, mouseX, mouseY, partialTicks);
+
+        if (this.selectedSlot != null) {
+            this.selectedSlot.drawAdditionalAtCursor(guiGraphics, mouseX, mouseY);
+        }
+    }
+
+    private void refreshLineUpData() {
+        this.allSpectrobesGrid.rebuildPages(this.parent.getMenu().getOwnedSpectrobesCount());
+        this.teamSpectrobesGrid.clear();
+        this.allSpectrobesGrid.clear();
+
+        Map<Integer, UUID> teamUuids = this.parent.getMenu().getCurrentTeamUUIDs();
+        UUID currentSelectedUuid = this.parent.getMenu().getCurrentSelectedUUID();
+
+        for (Spectrobe spectrobe : this.parent.getMenu().getOwnedSpectrobes()) {
+            int teamIndex = getTeamIndex(teamUuids, spectrobe.SpectrobeUUID);
+
+            if (teamIndex >= 0) {
+                SpectrobePiece teamSlot = this.teamSpectrobesGrid.getSlot(teamIndex);
+                teamSlot.setSpectrobe(spectrobe);
+                teamSlot.setCurrent(spectrobe.SpectrobeUUID.equals(currentSelectedUuid));
+            } else {
+                this.allSpectrobesGrid.addSpectrobe(spectrobe);
+            }
+        }
+    }
+
+    private int getTeamIndex(Map<Integer, UUID> teamUuids, UUID spectrobeUuid) {
+        for (int i = 0; i < TeamSpectrobesList.GRID_SIZE; i++) {
+            UUID teamUuid = teamUuids.get(i);
+
+            if (teamUuid != null && teamUuid.equals(spectrobeUuid)) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    private void onAllSpectrobeSlotPressed(SpectrobePiece slot) {
+        if (Screen.hasShiftDown()) {
+            spawnSpectrobe(slot);
+            return;
+        }
+
+        if (Screen.hasAltDown()) {
+            releaseSpectrobe(slot);
+            return;
+        }
+
+        handleSlotPressed(slot);
+    }
+
+    private void onTeamSpectrobeSlotPressed(SpectrobePiece slot) {
+        handleSlotPressed(slot);
+    }
+
+    private void spawnSpectrobe(SpectrobePiece slot) {
+        Spectrobe spectrobe = slot.getSpectrobe();
+
+        if (spectrobe == null || spectrobe.active || !this.parent.player.level().isClientSide()) {
+            return;
+        }
+
+        SpectrobesNetwork.sendToServer(new SSpawnSpectrobePacket(spectrobe));
+        this.parent.getMenu().spawnSpectrobe(spectrobe);
+        clearSelection();
+    }
+
+    private void releaseSpectrobe(SpectrobePiece slot) {
+        Spectrobe spectrobe = slot.getSpectrobe();
+
+        if (spectrobe == null || !this.parent.player.level().isClientSide()) {
+            return;
+        }
+
+        this.parent.getMenu().releaseSpectrobe(spectrobe);
+        clearSelection();
+        refreshLineUpData();
+    }
+
+    private void handleSlotPressed(SpectrobePiece targetSlot) {
+        if (selectedSlot == null) {
+            selectSlot(targetSlot);
+            return;
+        }
+
+        if (selectedSlot == targetSlot) {
+            clearSelection();
+            return;
+        }
+
+        SpectrobePiece sourceSlot = selectedSlot;
+        clearSelection();
+
+        if (tryMoveOrSwap(sourceSlot, targetSlot)) {
+            refreshLineUpData();
+            return;
+        }
+
+        selectSlot(targetSlot);
+    }
+
+    private boolean tryMoveOrSwap(SpectrobePiece sourceSlot, SpectrobePiece targetSlot) {
+        if (this.allSpectrobesGrid.contains(sourceSlot) && this.teamSpectrobesGrid.contains(targetSlot)) {
+            return moveAllSlotToTeamSlot(sourceSlot, targetSlot);
+        }
+
+        if (this.teamSpectrobesGrid.contains(sourceSlot) && this.teamSpectrobesGrid.contains(targetSlot)) {
+            return swapTeamSlots(sourceSlot, targetSlot);
+        }
+
+        if (this.teamSpectrobesGrid.contains(sourceSlot) && this.allSpectrobesGrid.contains(targetSlot)) {
+            return replaceTeamSlotFromAllSlot(sourceSlot, targetSlot);
+        }
+
+        return false;
+    }
+
+    private boolean moveAllSlotToTeamSlot(SpectrobePiece sourceSlot, SpectrobePiece targetSlot) {
+        int targetIndex = this.teamSpectrobesGrid.indexOf(targetSlot);
+        Spectrobe spectrobe = sourceSlot.getSpectrobe();
+
+        if (spectrobe == null || !this.teamSpectrobesGrid.canAccept(targetIndex, spectrobe)) {
+            return false;
+        }
+
+        setTeamMember(targetIndex, spectrobe);
+        return true;
+    }
+
+    private boolean swapTeamSlots(SpectrobePiece sourceSlot, SpectrobePiece targetSlot) {
+        int sourceIndex = this.teamSpectrobesGrid.indexOf(sourceSlot);
+        int targetIndex = this.teamSpectrobesGrid.indexOf(targetSlot);
+
+        if (!this.teamSpectrobesGrid.canSwap(sourceIndex, targetIndex)) {
+            return false;
+        }
+
+        Spectrobe sourceSpectrobe = sourceSlot.getSpectrobe();
+        Spectrobe targetSpectrobe = targetSlot.getSpectrobe();
+
+        setTeamMember(sourceIndex, targetSpectrobe);
+        setTeamMember(targetIndex, sourceSpectrobe);
+        return true;
+    }
+
+    private boolean replaceTeamSlotFromAllSlot(SpectrobePiece sourceSlot, SpectrobePiece targetSlot) {
+        int sourceIndex = this.teamSpectrobesGrid.indexOf(sourceSlot);
+        Spectrobe replacement = targetSlot.getSpectrobe();
+
+        if (!this.teamSpectrobesGrid.canAccept(sourceIndex, replacement)) {
+            return false;
+        }
+
+        setTeamMember(sourceIndex, replacement);
+        return true;
+    }
+
+    private void setTeamMember(int index, Spectrobe spectrobe) {
+        this.parent.getMenu().setTeamMember(index, spectrobe == null ? null : spectrobe.SpectrobeUUID);
+    }
+
+    private void selectSlot(SpectrobePiece slot) {
+        clearSelection();
+
+        if (slot.getSpectrobe() == null) {
+            return;
+        }
+
+        this.selectedSlot = slot;
+        this.selectedSlot.setSelected(true);
+    }
+
+    private void clearSelection() {
+        if (this.selectedSlot != null) {
+            this.selectedSlot.setSelected(false);
+            this.selectedSlot = null;
+        }
     }
 }

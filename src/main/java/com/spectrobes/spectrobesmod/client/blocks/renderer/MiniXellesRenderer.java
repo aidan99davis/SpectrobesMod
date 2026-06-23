@@ -9,17 +9,17 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
+import software.bernie.geckolib.renderer.GeoBlockRenderer;
 
 public class MiniXellesRenderer extends GeoBlockRenderer<MiniXellesBlockEntity> {
 
     public MiniXellesRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
-        super(rendererDispatcherIn, new MiniXellesBlockModel());
+        super(new MiniXellesBlockModel());
     }
 
     @Override
-    public void render(MiniXellesBlockEntity tile, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+    public void render(MiniXellesBlockEntity animatable, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
         poseStack.scale(0.7f,0.7f, 0.7f);
-        super.render(tile, partialTick, poseStack, bufferSource, packedLight);
+        super.render(animatable, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
     }
 }

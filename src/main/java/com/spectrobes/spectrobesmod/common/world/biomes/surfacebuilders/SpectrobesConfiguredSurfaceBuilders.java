@@ -10,6 +10,6 @@
 //
 //    private static <C extends ISurfaceBuilderConfig, F extends ConfiguredSurfaceBuilder<C>> F register(String key, F builder)
 //    {
-//        return Registry.register(WorldGenRegistry.CONFIGURED_SURFACE_BUILDER, new ResourceLocation(SpectrobesInfo.MOD_ID, key), builder);
+//        return Registry.register(WorldGenRegistry.CONFIGURED_SURFACE_BUILDER, ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, key), builder);
 //    }
 //}

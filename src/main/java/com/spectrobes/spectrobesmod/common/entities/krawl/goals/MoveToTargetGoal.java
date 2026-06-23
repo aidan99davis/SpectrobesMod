@@ -30,9 +30,12 @@ public class MoveToTargetGoal extends Goal {
     public void tick() {
         super.tick();
         LivingEntity target = owner.getTarget();
-        owner.getMoveControl().setWantedPosition(target.getX(),
-                target.getY(),
-                target.getZ(),
-                0.5);
+        // Target can be cleared between canUse() and tick() if it dies or is
+        // discarded — guard here to avoid NPE
+        if (target == null || !target.isAlive()) {
+            return;
+        }
+        owner.getMoveControl().setWantedPosition(
+                target.getX(), target.getY(), target.getZ(), 0.5);
     }
 }

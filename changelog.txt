@@ -420,7 +420,7 @@ Build: 1.15.2-31.1.50 - Sat Apr 25 21:55:22 GMT 2020
 =========
 Build: 1.15.2-31.1.49 - Sat Apr 25 02:19:14 GMT 2020
 	lex:
-		Fix potential NPEs in RegistryObject.orElseThrow/isPresent/ifPresent Closes #6647
+		Fix potential NPEs in DeferredHolder.orElseThrow/isPresent/ifPresent Closes #6647
 
 =========
 Build: 1.15.2-31.1.48 - Thu Apr 23 12:57:42 GMT 2020
@@ -490,7 +490,7 @@ Build: 1.15.2-31.1.39 - Wed Apr 08 01:45:04 GMT 2020
 =========
 Build: 1.15.2-31.1.37 - Sun Apr 05 04:50:22 GMT 2020
 	tterrag:
-		Fix Tag serializing empty optionals, improve RegistryObject error msg
+		Fix Tag serializing empty optionals, improve DeferredHolder error msg
 
 =========
 Build: 1.15.2-31.1.36 - Sat Apr 04 19:36:37 GMT 2020

@@ -10,14 +10,15 @@ import com.spectrobes.spectrobesmod.common.registry.KrawlRegistry;
 import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesMineralsRegistry;
 import com.spectrobes.spectrobesmod.common.save_data.SpectrobesWorldSaveData;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
-import net.minecraft.data.worldgen.features.VegetationFeatures;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.SpawnGroupData;
@@ -29,32 +30,32 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.Biomes;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.builder.ILoopType;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class EntityVortex extends EntityKrawl {
     private static final EntityDataAccessor<Integer> WAVES_REMAINING =
-            SynchedEntityData.defineId(EntityKrawl.class,
-                    EntityDataSerializers.INT);
+            SynchedEntityData.defineId(EntityVortex.class, EntityDataSerializers.INT);
 
     private static final EntityDataAccessor<Integer> AGE_IN_TICKS =
-            SynchedEntityData.defineId(EntityKrawl.class,
-                    EntityDataSerializers.INT);
+            SynchedEntityData.defineId(EntityVortex.class, EntityDataSerializers.INT);
 
-    private final List<EntityKrawl> children;
+    private static final RawAnimation SPIN_ANIMATION =
+            RawAnimation.begin().thenLoop("animation.vortex.spin");
 
-    public EntityVortex(EntityType<? extends Monster> type, Level worldIn) {
-        super(type, worldIn);
-        children = new ArrayList<>();
+    private final AnimatableInstanceCache animationCache = GeckoLibUtil.createInstanceCache(this);
+    private final List<EntityKrawl> children = new ArrayList<>();
+
+    public EntityVortex(EntityType<? extends Monster> type, Level level) {
+        super(type, level);
     }
 
     @Override
@@ -63,43 +64,45 @@ public class EntityVortex extends EntityKrawl {
         this.goalSelector.addGoal(0, new AttackSpectrobeGoal(this, true, true));
         this.goalSelector.addGoal(1, new SpawnWaveGoal(this));
         this.goalSelector.addGoal(1, new KrawlVortexFormXellesGoal(this));
-        this.goalSelector.addGoal(2, new RandomStrollGoal(this, 0.5d));
+        this.goalSelector.addGoal(2, new RandomStrollGoal(this, 0.5D));
         this.goalSelector.addGoal(3, new FleeSunGoal(this, 1.0D));
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        entityData.define(WAVES_REMAINING, calculateKrawlWaves());
-        entityData.define(AGE_IN_TICKS, 0);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+
+        builder.define(WAVES_REMAINING, calculateKrawlWaves());
+        builder.define(AGE_IN_TICKS, 0);
     }
 
     @Override
-    public boolean isPersistenceRequired() {
-        if(!level.isClientSide()) {
-            SpectrobesWorldSaveData worldData = (SpectrobesWorldSaveData.getWorldData((ServerLevel) level));
+    public boolean requiresCustomPersistence() {
+        if (this.level() instanceof ServerLevel serverLevel) {
+            SpectrobesWorldSaveData worldData = SpectrobesWorldSaveData.getWorldData(serverLevel);
             return worldData.canSpawnNest(blockPosition());
         }
-        return super.isPersistenceRequired();
-    }
 
-    @Override
-    public void checkDespawn() {
-        super.checkDespawn();
+        return super.requiresCustomPersistence();
     }
 
     @Override
     public void tick() {
         super.tick();
 
-        if(this.isOnFire()) this.remove(RemovalReason.KILLED);
+        if (this.isOnFire()) {
+            this.remove(RemovalReason.KILLED);
+            return;
+        }
 
-        entityData.set(AGE_IN_TICKS, entityData.get(AGE_IN_TICKS) + 1);
+        this.entityData.set(AGE_IN_TICKS, this.entityData.get(AGE_IN_TICKS) + 1);
     }
 
-    //returns the vortex's age in days.
+    /**
+     * Returns the vortex age in Minecraft days.
+     */
     public int getAge() {
-        return entityData.get(AGE_IN_TICKS) / 24000;
+        return this.entityData.get(AGE_IN_TICKS) / 24000;
     }
 
     @Override
@@ -108,72 +111,81 @@ public class EntityVortex extends EntityKrawl {
     }
 
     public List<EntityKrawl> getKrawlWave() {
-        return children;
+        return this.children;
     }
 
-
-    //cant be seen once its spawned krawl.
+    /**
+     * The vortex cannot be seen once it has spawned krawl.
+     */
     @Override
     public boolean isInvisible() {
-        return !children.isEmpty();
+        return !this.children.isEmpty();
     }
 
-    //can only be "killed" by defeating all waves of krawl.
+    /**
+     * The vortex should only be killed by the intended magic kill path.
+     */
     @Override
-    public boolean isInvulnerable() {
+    public boolean isInvulnerableTo(DamageSource source) {
+        if (source.is(DamageTypes.MAGIC)) {
+            return super.isInvulnerableTo(source);
+        }
+
         return true;
     }
 
-
-
     @Nullable
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
-        calculateKrawlWaves();
+    public SpawnGroupData finalizeSpawn(
+            ServerLevelAccessor level,
+            DifficultyInstance difficulty,
+            MobSpawnType reason,
+            @Nullable SpawnGroupData spawnData
+    ) {
+        this.entityData.set(WAVES_REMAINING, calculateKrawlWaves());
         setNatureByBiome();
-        return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+
+        return super.finalizeSpawn(level, difficulty, reason, spawnData);
     }
 
     private void setNatureByBiome() {
         List<SpectrobeProperties.Nature> possibleNatures = new ArrayList<>();
-        Biome biome = level.getBiome(blockPosition()).value();
+        Biome biome = this.level().getBiome(blockPosition()).value();
+        Biome.Precipitation precipitation = biome.getPrecipitationAt(blockPosition());
 
-        if(biome.getPrecipitation().equals(Biome.Precipitation.RAIN)
-                || biome.getPrecipitation().equals(Biome.Precipitation.SNOW)) {
+        if (precipitation == Biome.Precipitation.RAIN || precipitation == Biome.Precipitation.SNOW) {
             possibleNatures.add(SpectrobeProperties.Nature.FLASH);
         }
-        if(biome.getBaseTemperature() >= 0.5f
-                || biome.getPrecipitation().equals(Biome.Precipitation.NONE)
-                || biome.warmEnoughToRain(getOnPos())
-                || biome.shouldSnowGolemBurn(getOnPos())) {
+
+        if (biome.getBaseTemperature() >= 0.5F
+                || precipitation == Biome.Precipitation.NONE
+                || biome.warmEnoughToRain(blockPosition())) {
             possibleNatures.add(SpectrobeProperties.Nature.CORONA);
         }
-        if(biome.getGenerationSettings().getFlowerFeatures().size() > 0) {
+
+        if (!biome.getGenerationSettings().getFlowerFeatures().isEmpty()) {
             possibleNatures.add(SpectrobeProperties.Nature.AURORA);
         }
 
         possibleNatures.add(SpectrobeProperties.Nature.OTHER);
 
-        SpectrobeProperties.Nature nature = possibleNatures.get(random.nextInt(possibleNatures.size()));
-        //TODO: MAKE SURE THIS STILL WORKS
-
-        krawlProperties.setNature(nature);
+        SpectrobeProperties.Nature nature = possibleNatures.get(this.random.nextInt(possibleNatures.size()));
+        this.krawlProperties.setNature(nature);
     }
 
     private int calculateKrawlWaves() {
-        Random random = new Random();
-
+        RandomSource random = this.level() != null ? this.level().getRandom() : RandomSource.create();
         return random.nextInt(3) + 1;
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return animationControllers;
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.animationCache;
     }
 
     @Override
-    public <ENTITY extends EntityKrawl> PlayState moveController(AnimationEvent<ENTITY> event) {
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.vortex.spin", ILoopType.EDefaultLoopTypes.LOOP));
+    public PlayState moveController(AnimationState<EntityKrawl> event) {
+        event.setAnimation(SPIN_ANIMATION);
         return PlayState.CONTINUE;
     }
 
@@ -184,57 +196,63 @@ public class EntityVortex extends EntityKrawl {
 
     @Override
     public void die(DamageSource source) {
-        if(source == DamageSource.MAGIC) {
-            super.die(source);
+        if (!source.is(DamageTypes.MAGIC)) {
+            return;
         }
-        Random random = new Random();
+
+        if (!this.level().isClientSide()) {
+            dropMineralReward();
+        }
+
+        super.die(source);
+    }
+
+    private void dropMineralReward() {
+        RandomSource random = this.level().getRandom();
+
         int rarityInt = random.nextInt(10);
         Mineral.MineralRarity rarity;
 
-        switch(rarityInt) {
-            case 9:
-                rarity = Mineral.MineralRarity.Rare;
-                break;
-            case 8:
-            case 7:
-            case 6:
-                rarity = Mineral.MineralRarity.Uncommon;
-                break;
-            default:
-                rarity = Mineral.MineralRarity.Common;
-                break;
+        switch (rarityInt) {
+            case 9 -> rarity = Mineral.MineralRarity.Rare;
+            case 8, 7, 6 -> rarity = Mineral.MineralRarity.Uncommon;
+            default -> rarity = Mineral.MineralRarity.Common;
         }
 
         ItemStack mineralStack = SpectrobesMineralsRegistry.getRandomMineral(rarity);
-        if(rarity != Mineral.MineralRarity.Rare) {
+
+        if (rarity != Mineral.MineralRarity.Rare) {
             int mineralCount = random.nextInt(3);
             mineralStack.grow(mineralCount);
         }
 
-        ItemEntity lvt_10_1_ = new ItemEntity(level,
+        ItemEntity itemEntity = new ItemEntity(
+                this.level(),
                 this.getX() + 0.5D,
-                (this.getY() + 1),
-                this.getZ() + 0.5D, mineralStack);
-        lvt_10_1_.setDefaultPickUpDelay();
-        level.addFreshEntity(lvt_10_1_);
-        super.die(source);
+                this.getY() + 1.0D,
+                this.getZ() + 0.5D,
+                mineralStack
+        );
+
+        itemEntity.setDefaultPickUpDelay();
+        this.level().addFreshEntity(itemEntity);
     }
 
     public int getWaves() {
-        return entityData.get(WAVES_REMAINING);
+        return this.entityData.get(WAVES_REMAINING);
     }
 
     public void validateWave() {
-        children.removeIf(entityKrawl -> entityKrawl.getHealth() <= 0);
+        this.children.removeIf(entityKrawl -> !entityKrawl.isAlive() || entityKrawl.getHealth() <= 0.0F);
 
-        if(children.isEmpty()) {
-            entityData.set(WAVES_REMAINING, getWaves() - 1);
+        if (this.children.isEmpty()) {
+            this.entityData.set(WAVES_REMAINING, getWaves() - 1);
         }
     }
 
     public void addKrawl(EntityKrawl entityKrawl) {
-        this.level.addFreshEntity(entityKrawl);
+        this.level().addFreshEntity(entityKrawl);
         entityKrawl.teleportTo(getX(), getY(), getZ());
-        children.add(entityKrawl);
+        this.children.add(entityKrawl);
     }
 }

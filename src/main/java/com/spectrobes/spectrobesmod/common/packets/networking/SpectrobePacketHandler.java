@@ -9,17 +9,18 @@ import com.spectrobes.spectrobesmod.client.gui.spectrobes_details.SpectrobeDetai
 import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.*;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.client.COpenCyrusShopPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.client.CSyncSpectrobeMasterPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.client.CUpdateSpectrobeSlotPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.network.NetworkEvent;
-
-import java.util.function.Supplier;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class SpectrobePacketHandler {
 
-    public static boolean handlePacket(SOpenSpectrobeDetailsScreenPacket packet, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
+    public static boolean handlePacket(SOpenSpectrobeDetailsScreenPacket packet, IPayloadContext ctx) {
+        ctx.enqueueWork(() -> {
             Player player = Minecraft.getInstance().player;
             Minecraft.getInstance()
                     .setScreen(
@@ -33,8 +34,8 @@ public class SpectrobePacketHandler {
         });
         return true;
     }
-    public static boolean handlePacket(SOpenPrizmodPacket packet, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
+    public static boolean handlePacket(SOpenPrizmodPacket packet, IPayloadContext ctx) {
+        ctx.enqueueWork(() -> {
             Player player = Minecraft.getInstance().player;
             Minecraft.getInstance()
                     .setScreen(
@@ -48,8 +49,8 @@ public class SpectrobePacketHandler {
         });
         return true;
     }
-    public static boolean handlePacket(SOpenCyrusShopPacket packet, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
+    public static boolean handlePacket(COpenCyrusShopPacket packet, IPayloadContext ctx) {
+        ctx.enqueueWork(() -> {
             Player player = Minecraft.getInstance().player;
             Minecraft.getInstance()
                     .setScreen(
@@ -64,24 +65,20 @@ public class SpectrobePacketHandler {
         return true;
     }
 
-    public static boolean handlePacket(SSyncSpectrobeMasterPacket packet, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
+    public static boolean handlePacket(CSyncSpectrobeMasterPacket packet, IPayloadContext ctx) {
+        ctx.enqueueWork(() -> {
             Player player = Minecraft.getInstance().player;
-            PlayerSpectrobeMaster clientCap = (PlayerSpectrobeMaster) player
-                    .getCapability(SpectrobeMaster.INSTANCE)
-                    .orElseThrow(IllegalStateException::new);
-            clientCap.deserializeNBT(packet.capability.serializeNBT());
+            PlayerSpectrobeMaster clientCap = player.getCapability(SpectrobeMaster.INSTANCE);
+            clientCap.deserializeNBT(null, packet.capability.serializeNBT(null));
 
         });
         return true;
     }
 
-    public static boolean handlePacket(CUpdateSpectrobeSlotPacket packet, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
+    public static boolean handlePacket(CUpdateSpectrobeSlotPacket packet, IPayloadContext ctx) {
+        ctx.enqueueWork(() -> {
             Player player = Minecraft.getInstance().player;
-            PlayerSpectrobeMaster clientCap = (PlayerSpectrobeMaster) player
-                    .getCapability(SpectrobeMaster.INSTANCE)
-                    .orElseThrow(IllegalStateException::new);
+            PlayerSpectrobeMaster clientCap = player.getCapability(SpectrobeMaster.INSTANCE);
             clientCap.setTeamMember(packet.slot, packet.spectrobeUUID);
 
         });

@@ -5,11 +5,9 @@ import com.spectrobes.spectrobesmod.client.entity.attacks.model.EnergyBoltModel;
 import com.spectrobes.spectrobesmod.common.entities.attacks.EnergyBoltEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import software.bernie.geckolib3.renderers.geo.GeoProjectilesRenderer;
+import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class EnergyBoltRenderer extends GeoProjectilesRenderer<EnergyBoltEntity> {
+public class EnergyBoltRenderer extends GeoEntityRenderer<EnergyBoltEntity> {
 
     public EnergyBoltRenderer(EntityRendererProvider.Context renderManagerIn) {
         super(renderManagerIn, new EnergyBoltModel());

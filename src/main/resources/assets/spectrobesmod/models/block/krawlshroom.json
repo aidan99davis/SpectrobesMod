@@ -1,6 +1,6 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "all": "spectrobesmod:blocks/krawlshroom_top"
+    "all": "spectrobesmod:block/krawlshroom_top"
   }
 }
