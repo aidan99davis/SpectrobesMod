@@ -1,4 +1,4 @@
-package com.spectrobes.spectrobesmod.common.packets.networking;
+package com.spectrobes.spectrobesmod.common.packets.networking.packets.client;
 
 import com.spectrobes.spectrobesmod.client.container.CyrusShopContainer;
 import com.spectrobes.spectrobesmod.client.container.PrizmodContainer;
@@ -9,9 +9,6 @@ import com.spectrobes.spectrobesmod.client.gui.spectrobes_details.SpectrobeDetai
 import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.*;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.client.COpenCyrusShopPacket;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.client.CSyncSpectrobeMasterPacket;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.client.CUpdateSpectrobeSlotPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;

@@ -31,7 +31,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.biome.Biome;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
@@ -101,7 +100,7 @@ public class EntityVortex extends EntityKrawl {
     /**
      * Returns the vortex age in Minecraft days.
      */
-    public int getAge() {
+    public float getAge() {
         return this.entityData.get(AGE_IN_TICKS) / 24000;
     }
 
@@ -254,5 +253,21 @@ public class EntityVortex extends EntityKrawl {
         this.level().addFreshEntity(entityKrawl);
         entityKrawl.teleportTo(getX(), getY(), getZ());
         this.children.add(entityKrawl);
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+
+        compound.putInt("waves_remaining", getWaves());
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+
+        if(compound.contains("waves_remaining")) {
+            this.entityData.set(WAVES_REMAINING, compound.getInt("waves_remaining"));
+        }
     }
 }

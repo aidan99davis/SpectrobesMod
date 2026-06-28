@@ -84,7 +84,7 @@ public class SpectrobesWorldSaveData extends SavedData {
 
         for (Tag nestTag : nestList) {
             KrawlNest nest = new KrawlNest();
-            nest.deserializeNBT(provider, nestTag);
+            nest.deserializeNBT(provider, (CompoundTag) nestTag);
             data.nests.add(nest);
         }
 

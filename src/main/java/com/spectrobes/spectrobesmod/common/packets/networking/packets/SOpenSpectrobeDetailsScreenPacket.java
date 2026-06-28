@@ -1,7 +1,7 @@
 package com.spectrobes.spectrobesmod.common.packets.networking.packets;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobePacketHandler;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.client.SpectrobePacketHandler;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;

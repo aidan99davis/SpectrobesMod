@@ -20,6 +20,7 @@ import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
 
 public class EntityOrbix extends EntityBossKrawl {
+    private static final int DESPAWN_AFTER_UNATTACKED_TICKS = 20 * 180; // 3 minutes
     private static final String TAG_LAST_HURT_TICKS = "LAST_HURT_TICKS";
 
     private static final RawAnimation IDLE_ANIMATION =
@@ -39,6 +40,25 @@ public class EntityOrbix extends EntityBossKrawl {
     public EntityOrbix(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
         this.setPersistenceRequired();
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        if (!this.level().isClientSide()) {
+            this.entityData.set(LAST_HURT_TICKS, this.entityData.get(LAST_HURT_TICKS) + 1);
+        }
+        int lastHurtTicks = Math.min(
+                this.entityData.get(LAST_HURT_TICKS) + 1,
+                DESPAWN_AFTER_UNATTACKED_TICKS
+        );
+
+        this.entityData.set(LAST_HURT_TICKS, lastHurtTicks);
+
+        if (lastHurtTicks >= DESPAWN_AFTER_UNATTACKED_TICKS) {
+            this.discard();
+        }
     }
 
     @Override

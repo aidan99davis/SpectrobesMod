@@ -10,7 +10,6 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -26,14 +25,16 @@ import java.util.List;
 public class EntityOtorso extends EntityBossKrawl {
     private static final String TAG_LAST_HURT_TICKS = "LAST_HURT_TICKS";
 
+    private static final EntityDataAccessor<Integer> LAST_HURT_TICKS =
+            SynchedEntityData.defineId(EntityOtorso.class, EntityDataSerializers.INT);
+
+    private static final int DESPAWN_AFTER_UNATTACKED_TICKS = 20 * 180; // 3 minutes
+
     private static final RawAnimation WALK_ANIMATION =
             RawAnimation.begin().thenLoop("animation.otorso.walk");
 
     private static final RawAnimation ATTACK_ANIMATION =
             RawAnimation.begin().thenLoop("animation.otorso.attack");
-
-    private static final EntityDataAccessor<Integer> LAST_HURT_TICKS =
-            SynchedEntityData.defineId(EntityOtorso.class, EntityDataSerializers.INT);
 
     private static final EntityDataAccessor<Boolean> IS_ATTACKING =
             SynchedEntityData.defineId(EntityOtorso.class, EntityDataSerializers.BOOLEAN);
@@ -41,6 +42,25 @@ public class EntityOtorso extends EntityBossKrawl {
     public EntityOtorso(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
         this.setPersistenceRequired();
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        if (!this.level().isClientSide()) {
+            this.entityData.set(LAST_HURT_TICKS, this.entityData.get(LAST_HURT_TICKS) + 1);
+        }
+        int lastHurtTicks = Math.min(
+                this.entityData.get(LAST_HURT_TICKS) + 1,
+                DESPAWN_AFTER_UNATTACKED_TICKS
+        );
+
+        this.entityData.set(LAST_HURT_TICKS, lastHurtTicks);
+
+        if (lastHurtTicks >= DESPAWN_AFTER_UNATTACKED_TICKS) {
+            this.discard();
+        }
     }
 
     @Override
@@ -52,8 +72,8 @@ public class EntityOtorso extends EntityBossKrawl {
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
-        builder.define(LAST_HURT_TICKS, 1000);
         builder.define(IS_ATTACKING, false);
+        builder.define(LAST_HURT_TICKS, 1000);
     }
 
     @Override
@@ -68,25 +88,6 @@ public class EntityOtorso extends EntityBossKrawl {
         this.entityData.set(LAST_HURT_TICKS, compound.getInt(TAG_LAST_HURT_TICKS));
     }
 
-    @Override
-    protected void actuallyHurt(DamageSource damageSource, float damageAmount) {
-        if (damageSource.is(DamageTypes.CRAMMING)) {
-            return;
-        }
-
-        super.actuallyHurt(damageSource, damageAmount);
-        this.entityData.set(LAST_HURT_TICKS, 0);
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-
-        if (!this.level().isClientSide()) {
-            this.entityData.set(LAST_HURT_TICKS, this.entityData.get(LAST_HURT_TICKS) + 1);
-        }
-    }
-
     public boolean isAttacking() {
         return this.entityData.get(IS_ATTACKING);
     }
@@ -95,6 +96,13 @@ public class EntityOtorso extends EntityBossKrawl {
     public void setIsAttacking(boolean attacking) {
         this.entityData.set(IS_ATTACKING, attacking);
         super.setIsAttacking(attacking);
+    }
+
+    @Override
+    protected void actuallyHurt(DamageSource damageSrc, float damageAmount) {
+        super.actuallyHurt(damageSrc, damageAmount);
+
+        this.entityData.set(LAST_HURT_TICKS, 0);
     }
 
     public int lastHurtTicksAgo() {

@@ -1,6 +1,5 @@
 package com.spectrobes.spectrobesmod.common.entities.spectrobes;
 
-import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.gui.SpectrobeGuiHandler;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
@@ -31,7 +30,7 @@ import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties.Nature;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties.Stage;
 import com.spectrobes.spectrobesmod.util.DamageUtils;
-import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -60,7 +59,6 @@ import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.DirectionalPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
@@ -106,6 +104,7 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityWi
 
     private boolean recentInteract = false;
     private int ticksTillInteract = 0;
+    private boolean applyingSpectrobeDataName = false;
 
     @Nullable
     private EntitySpectrobe leader;
@@ -409,7 +408,79 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityWi
 
     public void setSpectrobeData(Spectrobe spectrobe) {
         this.entityData.set(SPECTROBE_DATA, spectrobe);
+        applySpectrobeNameToEntity(spectrobe);
         updateEntityAttributes();
+    }
+
+    @Override
+    public void setCustomName(@Nullable Component name) {
+        super.setCustomName(name);
+
+        if (this.applyingSpectrobeDataName || this.level().isClientSide()) {
+            return;
+        }
+
+        persistCustomNameToSpectrobeData();
+    }
+
+    private void persistCustomNameToSpectrobeData() {
+        Spectrobe currentData = this.getSpectrobeData();
+        Component customName = this.getCustomName();
+
+        if (currentData == null || customName == null) {
+            return;
+        }
+
+        String newName = customName.getString();
+
+        if (newName.isBlank() || newName.equals(currentData.custom_name)) {
+            return;
+        }
+
+        Spectrobe updatedData = currentData.copy(true);
+        updatedData.custom_name = newName;
+
+        this.entityData.set(SPECTROBE_DATA, updatedData);
+        updateEntityAttributes();
+        updateOwnerSpectrobeData(updatedData);
+    }
+
+    private void updateOwnerSpectrobeData(Spectrobe spectrobeData) {
+        LivingEntity owner = this.getOwner();
+        spectrobeData.active = true;
+
+        if (owner == null) {
+            return;
+        }
+
+        PlayerSpectrobeMaster spectrobeMaster = owner.getCapability(SpectrobeMaster.INSTANCE);
+
+        if (spectrobeMaster == null) {
+            return;
+        }
+
+        spectrobeMaster.updateSpectrobe(spectrobeData);
+
+        if (owner instanceof ServerPlayer serverPlayer) {
+            SpectrobesNetwork.sendToClient(new CSyncSpectrobeMasterPacket(spectrobeMaster), serverPlayer);
+        }
+    }
+
+    private void applySpectrobeNameToEntity(@Nullable Spectrobe spectrobe) {
+        if (spectrobe == null || spectrobe.custom_name == null || spectrobe.custom_name.isBlank()) {
+            super.setCustomName(Component.literal(spectrobe.name));
+            this.setCustomNameVisible(true);
+            return;
+        }
+
+        this.applyingSpectrobeDataName = true;
+
+        try {
+            super.setCustomName(Component.literal(spectrobe.custom_name));
+            this.setCustomNameVisible(true);
+        } finally {
+            this.applyingSpectrobeDataName = false;
+        }
     }
 
     public void setIsAttacking(boolean attacking) {
@@ -615,18 +686,39 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityWi
 
             despawn();
         } else {
-            getFossil().place(
-                    new DirectionalPlaceContext(
-                            this.level(),
-                            getOnPos(),
-                            Direction.UP,
-                            new ItemStack(getFossil()),
-                            Direction.UP
-                    )
-            );
+            if (!this.level().isClientSide()) {
+                placeDeathFossil();
+            }
 
             super.die(cause);
         }
+    }
+
+    private void placeDeathFossil() {
+        BlockPos pos = this.blockPosition();
+
+        if (!canReplaceAt(pos)) {
+            pos = this.getOnPos().above();
+        }
+
+        if (!canReplaceAt(pos)) {
+            pos = this.blockPosition().above();
+        }
+
+        if (!canReplaceAt(pos)) {
+            return;
+        }
+
+        this.level().setBlock(
+                pos,
+                getFossil().getBlock().defaultBlockState(),
+                3
+        );
+    }
+
+    private boolean canReplaceAt(BlockPos pos) {
+        return this.level().getBlockState(pos).canBeReplaced()
+                && this.level().getFluidState(pos).isEmpty();
     }
 
     public void setGlowing(boolean glowing) {

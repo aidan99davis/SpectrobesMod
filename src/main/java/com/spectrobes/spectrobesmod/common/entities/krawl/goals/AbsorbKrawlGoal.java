@@ -19,7 +19,8 @@ public class AbsorbKrawlGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        return owner.getStage() == 1;
+        return true;
+//        return owner.getStage() == 1;
     }
 
     @Override

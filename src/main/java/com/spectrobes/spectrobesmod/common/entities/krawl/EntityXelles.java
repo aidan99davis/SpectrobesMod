@@ -106,7 +106,7 @@ public class EntityXelles extends EntityBossKrawl {
     ) {
         if (reason == MobSpawnType.COMMAND && level instanceof ServerLevel serverLevel) {
             SpectrobesWorldSaveData worldData = SpectrobesWorldSaveData.getWorldData(serverLevel);
-            worldData.addNest(new KrawlNest(blockPosition(), level().dimension().location().toString()));
+            worldData.addNest(new KrawlNest(blockPosition(), level().dimension().location().toString(), getUUID()));
         }
 
         spawnMiniXelles(level);
@@ -196,6 +196,7 @@ public class EntityXelles extends EntityBossKrawl {
         super.readAdditionalSaveData(compound);
         entityData.set(AGE_IN_TICKS, compound.getInt("AGE_IN_TICKS"));
         entityData.set(STAGE, compound.getInt("STAGE"));
+        refreshBossBarName();
         entityData.set(LAST_SPAWNED_SUMMONING_SPORES_TICKS, compound.getInt("LAST_SPAWNED_SUMMONING_SPORES_TICKS"));
         entityData.set(LAST_SPAWNED_HEALING_SPORES_TICKS, compound.getInt("LAST_SPAWNED_HEALING_SPORES_TICKS"));
         entityData.set(LAST_SPAWNED_BOSS_SUMMONING_SPORE_TICKS, compound.getInt("LAST_SPAWNED_BOSS_SPORES_TICKS"));
@@ -247,17 +248,17 @@ public class EntityXelles extends EntityBossKrawl {
             return;
         }
 
-        entityData.set(STAGE, nest.stage);
+        setStage(nest.stage);
 
         if (getStage() == 1 && (nest.vortex_absorbed > 5 || getAge() >= 5)) {
             nest.stage = 2;
-            entityData.set(STAGE, 2);
+            setStage(2);
             worldData.setDirty();
         }
 
         if (getAge() >= 3 && nest.stage == 2) {
             nest.stage = 3;
-            entityData.set(STAGE, 3);
+            setStage(3);
             worldData.setDirty();
         }
 
@@ -270,6 +271,23 @@ public class EntityXelles extends EntityBossKrawl {
             );
 
             nearbyVortex.forEach(entityVortex -> entityVortex.remove(RemovalReason.DISCARDED));
+        }
+    }
+
+    private void setStage(int stage) {
+        int oldStage = entityData.get(STAGE);
+
+        if (oldStage == stage) {
+            return;
+        }
+
+        entityData.set(STAGE, stage);
+        refreshBossBarName();
+    }
+
+    private void refreshBossBarName() {
+        if (!level().isClientSide()) {
+            updateBossBarName(getDisplayName());
         }
     }
 

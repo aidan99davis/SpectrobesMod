@@ -1,4 +1,4 @@
-package com.spectrobes.spectrobesmod.common.packets.networking.packets;
+package com.spectrobes.spectrobesmod.common.packets.networking.packets.server;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
@@ -8,7 +8,6 @@ import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
@@ -18,23 +17,23 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.Nullable;
 
-public class SReleaseSpectrobePacket implements CustomPacketPayload {
+public class SSpawnSpectrobePacket implements CustomPacketPayload {
 
-    public static final Type<SReleaseSpectrobePacket> TYPE = new Type<>(
-            ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "release_spectrobe")
+    public static final Type<SSpawnSpectrobePacket> TYPE = new Type<>(
+            ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "spawn_spectrobe")
     );
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, SReleaseSpectrobePacket> STREAM_CODEC =
-            StreamCodec.ofMember(SReleaseSpectrobePacket::write, SReleaseSpectrobePacket::new);
+    public static final StreamCodec<RegistryFriendlyByteBuf, SSpawnSpectrobePacket> STREAM_CODEC =
+            StreamCodec.ofMember(SSpawnSpectrobePacket::write, SSpawnSpectrobePacket::new);
 
     @Nullable
     private final Spectrobe spectrobe;
 
-    public SReleaseSpectrobePacket(@Nullable Spectrobe spectrobe) {
+    public SSpawnSpectrobePacket(@Nullable Spectrobe spectrobe) {
         this.spectrobe = spectrobe;
     }
 
-    private SReleaseSpectrobePacket(RegistryFriendlyByteBuf buffer) {
+    private SSpawnSpectrobePacket(RegistryFriendlyByteBuf buffer) {
         CompoundTag tag = buffer.readNbt();
         this.spectrobe = tag == null ? null : Spectrobe.read(tag);
     }
@@ -53,7 +52,7 @@ public class SReleaseSpectrobePacket implements CustomPacketPayload {
         return spectrobe;
     }
 
-    public static void handle(SReleaseSpectrobePacket packet, IPayloadContext context) {
+    public static void handle(SSpawnSpectrobePacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
             if (!(context.player() instanceof ServerPlayer player)) {
                 return;
@@ -86,6 +85,7 @@ public class SReleaseSpectrobePacket implements CustomPacketPayload {
 //                        true,
 //                        true
 //                );
+
                 EntitySpectrobe spawnedSpectrobe = SpectrobesEntities.getByName(spectrobe.name).spawn(
                         serverLevel,
                         player.blockPosition(),
@@ -97,7 +97,10 @@ public class SReleaseSpectrobePacket implements CustomPacketPayload {
                 }
 
                 spawnedSpectrobe.setSpectrobeData(spectrobe);
-                serverCap.releaseSpectrobe(spectrobe);
+                spawnedSpectrobe.setOwnerUUID(player.getUUID());
+
+                serverCap.spawnSpectrobe(spectrobe);
+
             } catch (ClassNotFoundException exception) {
                 SpectrobesInfo.LOGGER.info(
                         "Couldn't find Spectrobe registry for '{}'. {}",

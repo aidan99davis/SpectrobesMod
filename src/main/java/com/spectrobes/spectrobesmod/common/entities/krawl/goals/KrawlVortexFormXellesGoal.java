@@ -1,22 +1,12 @@
 package com.spectrobes.spectrobesmod.common.entities.krawl.goals;
 
-import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityVortex;
-import com.spectrobes.spectrobesmod.common.save_data.KrawlNest;
+import com.spectrobes.spectrobesmod.common.krawl.KrawlInfectionManager;
 import com.spectrobes.spectrobesmod.common.save_data.SpectrobesWorldSaveData;
-import com.spectrobes.spectrobesmod.common.world.WorldGenUtils;
-import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 
 import java.util.EnumSet;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class KrawlVortexFormXellesGoal extends Goal {
     EntityVortex vortex;
@@ -28,63 +18,17 @@ public class KrawlVortexFormXellesGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        // World save data is server-only — casting level() to ServerLevel on the
-        // client throws a ClassCastException
         if (vortex.level().isClientSide()) return false;
 
         SpectrobesWorldSaveData worldData =
                 SpectrobesWorldSaveData.getWorldData((ServerLevel) vortex.level());
 
-        return vortex.getAge() >= 0
-                && (worldData.canSpawnNest(vortex.blockPosition())
-                || (worldData.getNest(vortex.blockPosition()) != null
-                && worldData.getNest(vortex.blockPosition()).stage == 1));
+        return vortex.getAge() >= 1
+                && (worldData.canSpawnNest(vortex.blockPosition()));
     }
 
     @Override
     public void tick() {
-        List<EntityVortex> nearbyMobs = vortex.level().getEntitiesOfClass(EntityVortex.class, vortex.getBoundingBox().inflate(15, 3, 15));
-        List<EntityVortex> nestingVortexes = nearbyMobs.stream().filter(v -> v.getAge() >= 0).collect(Collectors.toList());
-
-        if (!nestingVortexes.isEmpty()) {
-
-            if(nestingVortexes.size() >= 3) {
-
-                int extraVortexes = nestingVortexes.size() - 3;
-                //delete the vortexes.
-                BlockPos vortexPos = vortex.blockPosition();
-                Level level = vortex.level();
-                if (!level.isClientSide() && level instanceof ServerLevel) {
-                    if(SpectrobesWorldSaveData.getWorldData((ServerLevel) level).canSpawnNest((vortexPos))) {
-
-                        nestingVortexes.forEach(entityVortex -> entityVortex.remove(Entity.RemovalReason.DISCARDED));
-//                        if(vortexPos.getY() < 10) vortexPos.offset(0, 10 - vortexPos.getY(), 0);
-
-                        SpectrobesWorldSaveData data = SpectrobesWorldSaveData.getWorldData((ServerLevel) level);
-
-                        while(level.getBlockState(vortexPos.below()).isAir()) {
-                            vortexPos = vortexPos.below();
-                        }
-
-                        //create xelle mob.
-                        WorldGenUtils.generateDome(level, RandomSource.create(), vortexPos, 9, 8, Blocks.AIR.defaultBlockState());
-                        KrawlEntities.ENTITY_XELLES.get()
-                                .spawn((ServerLevel) level,
-                                        null,
-                                        null,
-                                        vortexPos,
-                                        MobSpawnType.MOB_SUMMONED,
-                                        false,
-                                        false);
-                        data.addNest(new KrawlNest(vortexPos, level.dimension().toString()));
-                        data.getNest(vortexPos).absorbVortexes(extraVortexes);
-                        data.setDirty();
-                    }
-                }
-            } else {
-                EntityVortex nearbyVortex = nestingVortexes.get(0);
-                this.vortex.getMoveControl().setWantedPosition(nearbyVortex.getX(), nearbyVortex.getY(), nearbyVortex.getZ(), 1);
-            }
-        }
+        KrawlInfectionManager.tryCreateNestFromVortexCluster(vortex);
     }
 }
