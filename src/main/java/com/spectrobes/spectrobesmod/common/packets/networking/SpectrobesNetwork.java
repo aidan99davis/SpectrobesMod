@@ -8,13 +8,13 @@ import com.spectrobes.spectrobesmod.common.packets.networking.packets.server.SCo
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.server.SDespawnSpectrobePacket;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.server.SGiveMineralPacket;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.client.COpenCyrusShopPacket;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.SOpenPrizmodPacket;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.SOpenSpectrobeDetailsScreenPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.client.COpenPrizmodPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.client.COpenSpectrobeDetailsScreenPacket;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.server.SReleaseSpectrobePacket;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.server.SBuyMineralPacket;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.server.SSpawnSpectrobePacket;
 import com.spectrobes.spectrobesmod.common.packets.networking.packets.client.CSyncSpectrobeMasterPacket;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.SUpdateSpectrobeSlotPacket;
+import com.spectrobes.spectrobesmod.common.packets.networking.packets.server.SUpdateSpectrobeSlotPacket;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -78,18 +78,18 @@ public final class SpectrobesNetwork {
         );
 
         registrar.playToClient(
-                SOpenPrizmodPacket.TYPE,
-                SOpenPrizmodPacket.STREAM_CODEC,
-                SOpenPrizmodPacket::handle
+                COpenPrizmodPacket.TYPE,
+                COpenPrizmodPacket.STREAM_CODEC,
+                COpenPrizmodPacket::handle
         );
 
         registrar.playToClient(
-                SOpenSpectrobeDetailsScreenPacket.TYPE,
-                SOpenSpectrobeDetailsScreenPacket.STREAM_CODEC,
-                SOpenSpectrobeDetailsScreenPacket::handle
+                COpenSpectrobeDetailsScreenPacket.TYPE,
+                COpenSpectrobeDetailsScreenPacket.STREAM_CODEC,
+                COpenSpectrobeDetailsScreenPacket::handle
         );
 
-        registrar.playToClient(
+        registrar.playToServer(
                 SGiveMineralPacket.TYPE,
                 SGiveMineralPacket.STREAM_CODEC,
                 SGiveMineralPacket::handle
@@ -107,7 +107,7 @@ public final class SpectrobesNetwork {
                 SSellMineralPacket::handle
         );
 
-        registrar.playToClient(
+        registrar.playToServer(
                 SConsumeMineralPacket.TYPE,
                 SConsumeMineralPacket.STREAM_CODEC,
                 SConsumeMineralPacket::handle

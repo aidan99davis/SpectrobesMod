@@ -47,6 +47,6 @@ public class CSyncSpectrobeMasterPacket implements CustomPacketPayload {
     }
 
     public static void handle(CSyncSpectrobeMasterPacket packet, IPayloadContext context) {
-        context.enqueueWork(() -> SpectrobePacketHandler.handlePacket(packet, context));
+        context.enqueueWork(() -> ClientPacketHandler.handlePacket(packet, context));
     }
 }

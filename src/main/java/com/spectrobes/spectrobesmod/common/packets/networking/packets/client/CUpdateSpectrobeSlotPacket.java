@@ -44,6 +44,6 @@ public class CUpdateSpectrobeSlotPacket implements CustomPacketPayload {
     }
 
     public static void handle(CUpdateSpectrobeSlotPacket packet, IPayloadContext context) {
-        SpectrobePacketHandler.handlePacket(packet, context);
+        ClientPacketHandler.handlePacket(packet, context);
     }
 }

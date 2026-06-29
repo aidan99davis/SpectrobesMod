@@ -8,15 +8,14 @@ import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
 import com.spectrobes.spectrobesmod.client.gui.spectrobes_details.SpectrobeDetailsScreen;
 import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.capability.PlayerSpectrobeMaster;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public class SpectrobePacketHandler {
+public class ClientPacketHandler {
 
-    public static boolean handlePacket(SOpenSpectrobeDetailsScreenPacket packet, IPayloadContext ctx) {
+    public static boolean handlePacket(COpenSpectrobeDetailsScreenPacket packet, IPayloadContext ctx) {
         ctx.enqueueWork(() -> {
             Player player = Minecraft.getInstance().player;
             Minecraft.getInstance()
@@ -31,7 +30,7 @@ public class SpectrobePacketHandler {
         });
         return true;
     }
-    public static boolean handlePacket(SOpenPrizmodPacket packet, IPayloadContext ctx) {
+    public static boolean handlePacket(COpenPrizmodPacket packet, IPayloadContext ctx) {
         ctx.enqueueWork(() -> {
             Player player = Minecraft.getInstance().player;
             Minecraft.getInstance()

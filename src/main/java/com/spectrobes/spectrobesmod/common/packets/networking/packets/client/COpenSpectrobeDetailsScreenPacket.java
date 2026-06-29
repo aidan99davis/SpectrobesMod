@@ -1,7 +1,6 @@
-package com.spectrobes.spectrobesmod.common.packets.networking.packets;
+package com.spectrobes.spectrobesmod.common.packets.networking.packets.client;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.client.SpectrobePacketHandler;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -10,22 +9,22 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public class SOpenSpectrobeDetailsScreenPacket implements CustomPacketPayload {
+public class COpenSpectrobeDetailsScreenPacket implements CustomPacketPayload {
 
-    public static final Type<SOpenSpectrobeDetailsScreenPacket> TYPE = new Type<>(
+    public static final Type<COpenSpectrobeDetailsScreenPacket> TYPE = new Type<>(
             ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "open_spectrobe_details_screen")
     );
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, SOpenSpectrobeDetailsScreenPacket> STREAM_CODEC =
-            StreamCodec.ofMember(SOpenSpectrobeDetailsScreenPacket::write, SOpenSpectrobeDetailsScreenPacket::new);
+    public static final StreamCodec<RegistryFriendlyByteBuf, COpenSpectrobeDetailsScreenPacket> STREAM_CODEC =
+            StreamCodec.ofMember(COpenSpectrobeDetailsScreenPacket::write, COpenSpectrobeDetailsScreenPacket::new);
 
     public final Spectrobe spectrobe;
 
-    public SOpenSpectrobeDetailsScreenPacket(Spectrobe spectrobe) {
+    public COpenSpectrobeDetailsScreenPacket(Spectrobe spectrobe) {
         this.spectrobe = spectrobe;
     }
 
-    private SOpenSpectrobeDetailsScreenPacket(RegistryFriendlyByteBuf buffer) {
+    private COpenSpectrobeDetailsScreenPacket(RegistryFriendlyByteBuf buffer) {
         CompoundTag tag = buffer.readNbt();
 
         if (tag == null) {
@@ -44,7 +43,7 @@ public class SOpenSpectrobeDetailsScreenPacket implements CustomPacketPayload {
         return TYPE;
     }
 
-    public static void handle(SOpenSpectrobeDetailsScreenPacket packet, IPayloadContext context) {
-        context.enqueueWork(() -> SpectrobePacketHandler.handlePacket(packet, context));
+    public static void handle(COpenSpectrobeDetailsScreenPacket packet, IPayloadContext context) {
+        context.enqueueWork(() -> ClientPacketHandler.handlePacket(packet, context));
     }
 }
