@@ -1,6 +1,6 @@
 package com.spectrobes.spectrobesmod.common.world.teleporters;
 
-import com.spectrobes.spectrobesmod.common.blocks.PlanetaryTeleporterBlock;
+import com.spectrobes.spectrobesmod.common.blocks.machines.PlanetaryTeleporterBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;

@@ -1,6 +1,6 @@
 package com.spectrobes.spectrobesmod.common.blocks.krawl;
 
-import com.spectrobes.spectrobesmod.common.blocks.SpectrobesBlock;
+import com.spectrobes.spectrobesmod.common.blocks.api.SpectrobesBlock;
 import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesBlocks;
 import com.spectrobes.spectrobesmod.common.world.krawl.KrawlBehaviour;
 import com.spectrobes.spectrobesmod.common.world.krawl.KrawlSpreader;

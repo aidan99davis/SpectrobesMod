@@ -2,13 +2,9 @@ package com.spectrobes.spectrobesmod.common.spectrobes;
 
 import com.spectrobes.spectrobesmod.common.entities.IHasNature;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralProperties;
-import com.spectrobes.spectrobesmod.common.registry.IconRegistry;
+import com.spectrobes.spectrobesmod.common.registry.gui.IconRegistry;
 import com.spectrobes.spectrobesmod.util.SpectrobeBuilder;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.syncher.EntityDataSerializer;
 import org.apache.logging.log4j.core.config.plugins.validation.constraints.Required;
 import org.apache.logging.log4j.core.util.UuidUtil;
 

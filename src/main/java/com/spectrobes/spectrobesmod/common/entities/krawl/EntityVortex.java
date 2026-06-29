@@ -6,7 +6,7 @@ import com.spectrobes.spectrobesmod.common.entities.krawl.goals.KrawlVortexFormX
 import com.spectrobes.spectrobesmod.common.entities.krawl.goals.SpawnWaveGoal;
 import com.spectrobes.spectrobesmod.common.items.minerals.Mineral;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
-import com.spectrobes.spectrobesmod.common.registry.KrawlRegistry;
+import com.spectrobes.spectrobesmod.common.registry.data.KrawlRegistry;
 import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesMineralsRegistry;
 import com.spectrobes.spectrobesmod.common.save_data.SpectrobesWorldSaveData;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;

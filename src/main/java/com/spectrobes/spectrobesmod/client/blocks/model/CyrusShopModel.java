@@ -1,7 +1,7 @@
 package com.spectrobes.spectrobesmod.client.blocks.model;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.common.blocks.machines.entity.CyrusShopBlockEntity;
+import com.spectrobes.spectrobesmod.common.blocks.machines.shop.CyrusShopBlockEntity;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 

@@ -1,6 +1,7 @@
 package com.spectrobes.spectrobesmod.common.blocks;
 
 import com.mojang.serialization.MapCodec;
+import com.spectrobes.spectrobesmod.common.blocks.api.SpectrobesTileEntityBlock;
 import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesTileRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.SoundType;

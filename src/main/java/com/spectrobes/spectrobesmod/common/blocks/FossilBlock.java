@@ -1,6 +1,7 @@
 package com.spectrobes.spectrobesmod.common.blocks;
 
 import com.mojang.serialization.MapCodec;
+import com.spectrobes.spectrobesmod.common.blocks.api.SpectrobesTileEntityBlock;
 import com.spectrobes.spectrobesmod.common.blocks.fossils.tile.FossilBlockTileEntity;
 import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesFossilsRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;

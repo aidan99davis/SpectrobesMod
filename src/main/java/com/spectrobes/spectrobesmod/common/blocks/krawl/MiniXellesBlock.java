@@ -1,7 +1,7 @@
 package com.spectrobes.spectrobesmod.common.blocks.krawl;
 
 import com.mojang.serialization.MapCodec;
-import com.spectrobes.spectrobesmod.common.blocks.SpectrobesTileEntityBlock;
+import com.spectrobes.spectrobesmod.common.blocks.api.SpectrobesTileEntityBlock;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
 import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesBlocks;
 import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesTileRegistry;

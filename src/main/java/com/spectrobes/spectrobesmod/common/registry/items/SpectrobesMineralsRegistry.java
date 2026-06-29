@@ -4,16 +4,10 @@ import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.items.minerals.Mineral;
 import com.spectrobes.spectrobesmod.common.items.minerals.MineralItem;
 import com.spectrobes.spectrobesmod.common.items.minerals.chroma.ChromaMineralItem;
-import com.spectrobes.spectrobesmod.common.registry.MineralRegistry;
-import com.spectrobes.spectrobesmod.common.registry.SpectrobesItemGroupsRegistry;
+import com.spectrobes.spectrobesmod.common.registry.data.MineralRegistry;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
-import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.ArrayList;
@@ -23,7 +17,7 @@ import java.util.Random;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static com.spectrobes.spectrobesmod.common.registry.MineralRegistry.*;
+import static com.spectrobes.spectrobesmod.common.registry.data.MineralRegistry.*;
 
 public class SpectrobesMineralsRegistry {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(Registries.ITEM, SpectrobesInfo.MOD_ID);

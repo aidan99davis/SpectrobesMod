@@ -4,8 +4,8 @@ import com.spectrobes.spectrobesmod.client.gui.prizmod.Components.AllSpectrobesL
 import com.spectrobes.spectrobesmod.client.gui.prizmod.Components.SpectrobePiece;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.Components.TeamSpectrobesList;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.PrizmodScreen;
-import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.server.SSpawnSpectrobePacket;
+import com.spectrobes.spectrobesmod.common.networking.SpectrobesNetwork;
+import com.spectrobes.spectrobesmod.common.networking.server.SSpawnSpectrobePacket;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;

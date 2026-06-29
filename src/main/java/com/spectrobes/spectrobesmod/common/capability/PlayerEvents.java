@@ -1,8 +1,8 @@
 package com.spectrobes.spectrobesmod.common.capability;
 
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
-import com.spectrobes.spectrobesmod.common.packets.networking.SpectrobesNetwork;
-import com.spectrobes.spectrobesmod.common.packets.networking.packets.client.CSyncSpectrobeMasterPacket;
+import com.spectrobes.spectrobesmod.common.networking.SpectrobesNetwork;
+import com.spectrobes.spectrobesmod.common.networking.client.CSyncSpectrobeMasterPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
