@@ -1,7 +1,6 @@
 package com.spectrobes.spectrobesmod.common.items.weapons;
 
 import com.spectrobes.spectrobesmod.client.items.weapons.renderer.BasicBlasterItemRenderer;
-import com.spectrobes.spectrobesmod.client.items.weapons.renderer.BasicGloveItemRenderer;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import com.spectrobes.spectrobesmod.util.WeaponStats;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;

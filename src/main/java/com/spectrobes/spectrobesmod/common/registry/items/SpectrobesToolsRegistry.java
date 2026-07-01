@@ -1,19 +1,12 @@
 package com.spectrobes.spectrobesmod.common.registry.items;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.client.items.healing.renderer.AntidoteItemRenderer;
-import com.spectrobes.spectrobesmod.client.items.healing.renderer.SerumItemRenderer;
-import com.spectrobes.spectrobesmod.client.items.weapons.renderer.BasicBlasterItemRenderer;
 import com.spectrobes.spectrobesmod.common.items.tools.PrizmodItem;
 import com.spectrobes.spectrobesmod.common.items.tools.healing.SpectrobeAntidoteHealingItem;
 import com.spectrobes.spectrobesmod.common.items.tools.healing.SpectrobeSerumHealingItem;
 import com.spectrobes.spectrobesmod.common.items.weapons.*;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.Item;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
-import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
@@ -46,4 +39,9 @@ public class SpectrobesToolsRegistry {
             ITEMS.register("basic_antidote",
                     () -> new SpectrobeAntidoteHealingItem(50, 2000, 1,
                             new Item.Properties()));
+
+    // = = = TESTING = = =
+    public static final Supplier<WeaponBasicBlasterItem> weapon_basic_blaster_item =
+            ITEMS.register("weapon_basic_blaster_item",
+                    () -> new WeaponBasicBlasterItem(new Item.Properties()));
 }
