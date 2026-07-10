@@ -1,8 +1,8 @@
 package com.spectrobes.spectrobesmod.common.items.weapons;
 
 import com.spectrobes.spectrobesmod.client.entity.attacks.AttackEntities;
-import com.spectrobes.spectrobesmod.common.entities.attacks.BasicBlasterEnergyBoltEntity;
-import com.spectrobes.spectrobesmod.common.entities.attacks.EnergyBoltEntity;
+import com.spectrobes.spectrobesmod.common.entities.attacks.AbstractEnergyBoltEntity;
+import com.spectrobes.spectrobesmod.common.entities.attacks.BasicEnergyBoltEntity;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import com.spectrobes.spectrobesmod.util.WeaponStats;
 import net.minecraft.network.chat.Component;
@@ -15,8 +15,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.EventHooks;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -27,8 +25,6 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
 import java.util.Random;
-
-import static net.minecraft.world.item.BowItem.getPowerForTime;
 
 public abstract class AbstractSpectrobesRangedWeapon extends Item implements GeoItem, ISpectrobeWeapon {
 
@@ -75,30 +71,48 @@ public abstract class AbstractSpectrobesRangedWeapon extends Item implements Geo
 //        float power = getPowerForTime(charge); // BowItem
 //        if ((double)power < 0.1D) return; // Speed determined by charge power
 //        if (projectileSpeed < 0.1D) return; // Set speed
-        if (!pLevel.isClientSide) {
-            BasicBlasterEnergyBoltEntity projectile = new BasicBlasterEnergyBoltEntity(AttackEntities.ENTITY_PROJECTILE_BASIC_BLASTER.get(), pLevel);
+        fireProjectile(pLevel, player);
 
-            projectile.setOwner(player);
-            projectile.setPos(player.getX(), player.getY() + 1.5D, player.getZ());
-            projectile.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, projectileSpeed, 1.0F);
-            projectile.setAtkDamage(GetWeaponStats().AtkDamage);
-            projectile.setNature(GetWeaponStats().Nature);
-
-            projectile.shootFromRotation(player, player.xRotO, player.yRotO, 0.0F, projectileSpeed, 1.0F);
-            pLevel.addFreshEntity(projectile);
-        }
-
-        pLevel.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ARROW_SHOOT, SoundSource.PLAYERS, 1.0F, 1.0F / (new Random().nextFloat() * 0.4F + 1.2F) + projectileSpeed * 0.5F);
         player.awardStat(Stats.ITEM_USED.get(this));
+    }
+
+    /** Override this to replace the projectile that this weapon shoots. */
+    protected AbstractEnergyBoltEntity createProjectile(Level pLevel) {
+        return new BasicEnergyBoltEntity(AttackEntities.ENTITY_PROJECTILE_BASIC.get(), pLevel);
+    }
+
+    /** Firing behavior + setting projectile stats. */
+    protected void fireProjectile(Level pLevel, Player player) {
+        // Safety - Return if not on server
+        if (pLevel.isClientSide) return;
+
+        // Create Projectile
+        AbstractEnergyBoltEntity projectile = createProjectile(pLevel);
+
+        // Set Projectile Stats
+        projectile.setOwner(player);
+        projectile.setPos(player.getX(), player.getY() + 1.5D, player.getZ());
+        projectile.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, projectileSpeed, 1.0F);
+        projectile.setAtkDamage(GetWeaponStats().AtkDamage);
+        projectile.setNature(GetWeaponStats().Nature);
+
+        // Spawn Projectile
+        projectile.shootFromRotation(player, player.xRotO, player.yRotO, 0.0F, projectileSpeed, 1.0F);
+        pLevel.addFreshEntity(projectile);
+
+        // Firing SFX
+        pLevel.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ARROW_SHOOT, SoundSource.PLAYERS, 1.0F, 1.0F / (new Random().nextFloat() * 0.4F + 1.2F) + projectileSpeed * 0.5F);
     }
 
     // = = = OTHER, MANDATORY METHODS = = =
     @Override public abstract void registerControllers(AnimatableManager.ControllerRegistrar controllers);
     @Override public AnimatableInstanceCache getAnimatableInstanceCache() { return this.cache; }
     @Override public UseAnim getUseAnimation(ItemStack pStack) { return UseAnim.BOW; }
-    public abstract WeaponStats GetWeaponStats();
+
     public abstract String getControllerName();
+    public abstract WeaponStats GetWeaponStats();
     public SpectrobeProperties.Nature getNature() { return GetWeaponStats().Nature; }
+//    @Override public Predicate<ItemStack> getAllSupportedProjectiles() { return stack -> false; }
     public PlayState predicate(AnimationState animationState) {
         return animationState.isMoving() ? PlayState.CONTINUE : PlayState.STOP;
     }

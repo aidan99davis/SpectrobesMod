@@ -26,7 +26,7 @@ public abstract class AbstractEnergyBoltEntity extends AbstractHurtingProjectile
 
     public AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     protected int lifetime = 0;
-    protected int maxLifetime = 100; // Default (Plz set in constructor of child classes)
+    protected int maxLifetime = 50; // Default (Plz set in constructor of child classes)
 
     protected AbstractEnergyBoltEntity(EntityType<? extends AbstractHurtingProjectile> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);

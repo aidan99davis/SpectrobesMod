@@ -7,6 +7,5 @@ import software.bernie.geckolib.renderer.GeoItemRenderer;
 public class WeaponBasicBlasterItemRenderer extends GeoItemRenderer<WeaponBasicBlasterItem> {
     public WeaponBasicBlasterItemRenderer() {
         super(new WeaponBasicBlasterItemModel());
-        System.out.println("WeaponBasicBlasterItemRenderer created");
     }
 }

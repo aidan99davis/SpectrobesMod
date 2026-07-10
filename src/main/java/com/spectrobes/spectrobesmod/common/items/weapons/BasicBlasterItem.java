@@ -39,7 +39,7 @@ public class BasicBlasterItem extends SpectrobesRangedWeapon {
 
     @Override
     public WeaponStats GetWeaponStats() {
-        return new WeaponStats(20, 1, 1, true, false, SpectrobeProperties.Nature.OTHER);
+        return new WeaponStats(20, 1, 1, WeaponStats.WeaponType.BLASTER, SpectrobeProperties.Nature.OTHER);
     }
 
     @Override
