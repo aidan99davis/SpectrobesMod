@@ -13,7 +13,6 @@ public class AttackRendererManager {
     @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(AttackEntities.ENTITY_ENERGY_BOLT.get(), manager -> new EnergyBoltRenderer(manager));
-        event.registerEntityRenderer(AttackEntities.ENTITY_PROJECTILE_BASIC_BLASTER.get(), BasicBlasterEnergyBoltRenderer::new);
-
+        event.registerEntityRenderer(AttackEntities.ENTITY_PROJECTILE_BASIC_BLASTER.get(), manager -> new BasicBlasterEnergyBoltRenderer(manager));
     }
 }

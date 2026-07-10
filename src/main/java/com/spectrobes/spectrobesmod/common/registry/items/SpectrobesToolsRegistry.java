@@ -41,7 +41,7 @@ public class SpectrobesToolsRegistry {
                             new Item.Properties()));
 
     // = = = TESTING = = =
-    public static final Supplier<WeaponBasicBlasterItem> weapon_basic_blaster_item =
+    public static final Supplier<AbstractSpectrobesRangedWeapon> WEAPON_BASIC_BLASTER_ITEM =
             ITEMS.register("weapon_basic_blaster_item",
                     () -> new WeaponBasicBlasterItem(new Item.Properties()));
 }

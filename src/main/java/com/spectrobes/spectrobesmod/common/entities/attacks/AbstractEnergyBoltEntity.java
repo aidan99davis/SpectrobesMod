@@ -17,6 +17,9 @@ import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+// TODO: The projectile seems to fly the same speed regardless of what velocity it is shot at.
+//      May have to Override assignDirectionalMovement() to make the projectile travel at a constant speed?
+//      Idk how the acceleration math goes.
 public abstract class AbstractEnergyBoltEntity extends AbstractHurtingProjectile implements IHasNature, GeoAnimatable {
     private int AtkDamage;
     private SpectrobeProperties.Nature Nature;

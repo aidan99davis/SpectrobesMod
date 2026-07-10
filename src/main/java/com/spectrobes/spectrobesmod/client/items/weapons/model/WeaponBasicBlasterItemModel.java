@@ -9,7 +9,8 @@ public class WeaponBasicBlasterItemModel extends GeoModel<WeaponBasicBlasterItem
 
     @Override
     public ResourceLocation getModelResource(WeaponBasicBlasterItem aoiFossilItem) {
-        return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "geo/weapons/basic_blaster.geo.json");
+        System.out.println("getModelResource called");
+        return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "geo/weapons/weapon_basic_blaster.geo.json");
     }
 
     @Override

@@ -26,8 +26,7 @@ public class AttackEntities {
 
     public static final Supplier<EntityType<BasicBlasterEnergyBoltEntity>> ENTITY_PROJECTILE_BASIC_BLASTER
             = ENTITY_TYPES.register("entity_basic_blaster_shot",
-            () -> EntityType.Builder.of(BasicBlasterEnergyBoltEntity::new,
-                            MobCategory.MISC)
+            () -> EntityType.Builder.of(BasicBlasterEnergyBoltEntity::new, MobCategory.MISC)
                     .sized(1f, 1f)
                     .build(ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "basic_blaster_shot").toString()));
 }
