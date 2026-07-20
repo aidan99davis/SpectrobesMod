@@ -30,7 +30,11 @@ public abstract class AbstractSpectrobesRangedWeapon extends Item implements Geo
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    protected float projectileSpeed = 0.01F;
+    // Controls how much the projectile's trajectory will depend on player movement.
+    // 0 = Will just fly in direction player is moving (if they are moving)
+    // 1 = Will fly in direction the player is facing
+    // This is a gradient, but should be kept closer to 1 cause it's hard to hit stuff beyond 5 blocks otherwise.
+    protected float projectileSpeed = 1F;
 
     public AbstractSpectrobesRangedWeapon(Properties pProperties) {
         super(pProperties);
@@ -92,11 +96,11 @@ public abstract class AbstractSpectrobesRangedWeapon extends Item implements Geo
         // Set Projectile Stats
         projectile.setOwner(player);
         projectile.setPos(player.getX(), player.getY() + 1.5D, player.getZ());
-        projectile.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, projectileSpeed, 1.0F);
         projectile.setAtkDamage(GetWeaponStats().AtkDamage);
         projectile.setNature(GetWeaponStats().Nature);
 
         // Spawn Projectile
+//        projectile.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, projectileSpeed, 1.0F);
         projectile.shootFromRotation(player, player.xRotO, player.yRotO, 0.0F, projectileSpeed, 1.0F);
         pLevel.addFreshEntity(projectile);
 
