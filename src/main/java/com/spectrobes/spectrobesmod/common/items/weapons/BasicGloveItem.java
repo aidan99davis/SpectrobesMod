@@ -63,7 +63,7 @@ public class BasicGloveItem extends SpectrobesWeapon {
 
     @Override
     public WeaponStats GetWeaponStats() {
-        return new WeaponStats(5, 1, 1, false, true, SpectrobeProperties.Nature.OTHER);
+        return new WeaponStats(5, 1, 1, WeaponStats.WeaponType.GLOVE, SpectrobeProperties.Nature.OTHER);
     }
 
     @Override

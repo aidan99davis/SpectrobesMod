@@ -1,6 +1,7 @@
 package com.spectrobes.spectrobesmod.client.entity.attacks;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
+import com.spectrobes.spectrobesmod.client.entity.attacks.renderer.BasicEnergyBoltRenderer;
 import com.spectrobes.spectrobesmod.client.entity.attacks.renderer.EnergyBoltRenderer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -12,6 +13,7 @@ public class AttackRendererManager {
     @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(AttackEntities.ENTITY_ENERGY_BOLT.get(), manager -> new EnergyBoltRenderer(manager));
-
+        event.registerEntityRenderer(AttackEntities.ENTITY_PROJECTILE_BASIC.get(), manager -> new BasicEnergyBoltRenderer(manager));
+        event.registerEntityRenderer(AttackEntities.ENTITY_PROJECTILE_HOMING.get(), manager -> new BasicEnergyBoltRenderer(manager));
     }
 }

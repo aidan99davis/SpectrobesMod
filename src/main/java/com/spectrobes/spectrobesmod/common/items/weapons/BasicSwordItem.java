@@ -39,7 +39,7 @@ public class BasicSwordItem extends SpectrobesWeapon {
 
     @Override
     public WeaponStats GetWeaponStats() {
-        return new WeaponStats(15, 1, 1, false, false, SpectrobeProperties.Nature.OTHER);
+        return new WeaponStats(15, 1, 1, WeaponStats.WeaponType.SWORD, SpectrobeProperties.Nature.OTHER);
     }
 
     @Override
