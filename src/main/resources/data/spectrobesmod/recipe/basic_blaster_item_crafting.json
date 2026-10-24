@@ -19,7 +19,7 @@
   },
   "result":
   {
-    "item": "spectrobesmod:basic_blaster_item",
+    "id": "spectrobesmod:basic_blaster_item",
     "count": 1
   }
 }

@@ -23,7 +23,7 @@
   },
   "result":
   {
-    "item": "spectrobesmod:healer_block_item",
+    "id": "spectrobesmod:healer_block_item",
     "count": 1
   }
 }

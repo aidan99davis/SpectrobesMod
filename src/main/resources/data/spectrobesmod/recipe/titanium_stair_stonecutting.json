@@ -3,6 +3,5 @@
   "ingredient": {
     "item": "spectrobesmod:titanium_block"
   },
-  "result": "spectrobesmod:titanium_stairs",
-  "count": 1
+  "result": { "id": "spectrobesmod:titanium_stairs", "count": 1 }
 }

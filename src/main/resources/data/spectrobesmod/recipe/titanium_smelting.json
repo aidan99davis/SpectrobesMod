@@ -3,7 +3,7 @@
 	"ingredient":{ 
 		"item":"spectrobesmod:titanium_ore"
 	},
-	"result":"spectrobesmod:titanium",
+	"result":{"id":"spectrobesmod:titanium"},
 	"experience":0.2,
 	"cookingtime":200
 }

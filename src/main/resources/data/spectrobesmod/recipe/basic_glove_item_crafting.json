@@ -19,7 +19,7 @@
   },
   "result":
   {
-    "item": "spectrobesmod:basic_glove_item",
+    "id": "spectrobesmod:basic_glove_item",
     "count": 1
   }
 }

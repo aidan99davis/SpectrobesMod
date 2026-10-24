@@ -3,7 +3,7 @@
 	"ingredient":{ 
 		"item":"spectrobesmod:metalium_ore"
 	},
-	"result":"spectrobesmod:metalium",
+	"result":{"id":"spectrobesmod:metalium"},
 	"experience":0.2,
 	"cookingtime":200
 }

@@ -19,7 +19,7 @@
   },
   "result":
   {
-    "item": "spectrobesmod:prizmod_item",
+    "id": "spectrobesmod:prizmod_item",
     "count": 1
   }
 }

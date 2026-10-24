@@ -19,7 +19,7 @@
   },
   "result":
   {
-    "item": "spectrobesmod:basic_sword_item",
+    "id": "spectrobesmod:basic_sword_item",
     "count": 1
   }
 }

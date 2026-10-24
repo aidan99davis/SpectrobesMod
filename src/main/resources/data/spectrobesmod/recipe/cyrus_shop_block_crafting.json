@@ -23,7 +23,7 @@
   },
   "result":
   {
-    "item": "spectrobesmod:cyrus_shop_block_item",
+    "id": "spectrobesmod:cyrus_shop_block_item",
     "count": 1
   }
 }
