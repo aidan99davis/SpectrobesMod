@@ -2,7 +2,7 @@ package com.spectrobes.spectrobesmod.client.entity.krawl.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.spectrobes.spectrobesmod.client.entity.krawl.model.XellesSpawningSporeModel;
-import com.spectrobes.spectrobesmod.common.entities.krawl.EntitySpawningSpore;
+import com.spectrobes.spectrobesmod.common.entities.krawl.moves.EntitySpawningSpore;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;

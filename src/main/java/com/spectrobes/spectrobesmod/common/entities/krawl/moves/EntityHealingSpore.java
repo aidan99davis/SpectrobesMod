@@ -1,5 +1,6 @@
-package com.spectrobes.spectrobesmod.common.entities.krawl;
+package com.spectrobes.spectrobesmod.common.entities.krawl.moves;
 
+import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
 import com.spectrobes.spectrobesmod.common.entities.krawl.goals.MoveToTargetGoal;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;

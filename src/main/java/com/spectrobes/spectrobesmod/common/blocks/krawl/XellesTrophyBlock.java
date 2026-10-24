@@ -1,4 +1,4 @@
-package com.spectrobes.spectrobesmod.common.blocks;
+package com.spectrobes.spectrobesmod.common.blocks.krawl;
 
 import com.mojang.serialization.MapCodec;
 import com.spectrobes.spectrobesmod.common.blocks.api.SpectrobesTileEntityBlock;

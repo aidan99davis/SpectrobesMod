@@ -44,12 +44,6 @@ public final class KrawlInfectionManager {
 
         SpectrobesWorldSaveData data = SpectrobesWorldSaveData.getWorldData(level);
 
-        /*
-         * Rename this if your SpectrobesWorldSaveData accessor has a different name.
-         *
-         * Expected:
-         * public List<KrawlNest> getNests()
-         */
         List<KrawlNest> nests = data.getNests();
 
         if (nests == null || nests.isEmpty()) {
@@ -75,19 +69,19 @@ public final class KrawlInfectionManager {
         }
     }
 
-    public static boolean tryCreateNestFromVortexCluster(EntityVortex sourceVortex) {
+    public static void tryCreateNestFromVortexCluster(EntityVortex sourceVortex) {
         if (sourceVortex == null || sourceVortex.level().isClientSide()) {
-            return false;
+            return;
         }
 
         if (!(sourceVortex.level() instanceof ServerLevel level)) {
-            return false;
+            return;
         }
 
         SpectrobesWorldSaveData data = SpectrobesWorldSaveData.getWorldData(level);
 
         if (!data.canSpawnNest(sourceVortex.blockPosition())) {
-            return false;
+            return;
         }
 
         AABB searchBox = sourceVortex.getBoundingBox().inflate(15.0D, 3.0D, 15.0D);
@@ -102,7 +96,7 @@ public final class KrawlInfectionManager {
 
         if (eligibleVortexes.size() < 3) {
             moveTowardNearestEligibleVortex(sourceVortex, eligibleVortexes);
-            return false;
+            return;
         }
 
         EntityVortex leader = eligibleVortexes.stream()
@@ -110,13 +104,13 @@ public final class KrawlInfectionManager {
                 .orElse(null);
 
         if (leader != sourceVortex) {
-            return false;
+            return;
         }
 
         BlockPos nestPos = findGroundPosition(level, sourceVortex.blockPosition());
 
         if (!data.canSpawnNest(nestPos)) {
-            return false;
+            return;
         }
 
         int extraVortexes = Math.max(0, eligibleVortexes.size() - 3);
@@ -124,6 +118,15 @@ public final class KrawlInfectionManager {
         for (EntityVortex vortex : eligibleVortexes) {
             vortex.remove(Entity.RemovalReason.DISCARDED);
         }
+
+        WorldGenUtils.generateDome(
+                level,
+                RandomSource.create(),
+                nestPos,
+                10,
+                9,
+                SpectrobesBlocks.krawl_mud.get().defaultBlockState()
+        );
 
         WorldGenUtils.generateDome(
                 level,
@@ -149,8 +152,6 @@ public final class KrawlInfectionManager {
 
         data.addNest(nest);
         data.setDirty();
-
-        return xelles != null;
     }
 
     private static boolean tickNest(ServerLevel level, SpectrobesWorldSaveData data, KrawlNest nest, long gameTime) {
@@ -169,15 +170,6 @@ public final class KrawlInfectionManager {
         return dirty;
     }
 
-    /**
-     * KrawlInfectionManager.tickLevel only processes nests once every NEST_TICK_INTERVAL ticks.
-     *
-     * Because of that, exact modulo checks are unsafe unless the nest offset happens
-     * to align with the outer tick cadence.
-     *
-     * This method gives each nest a deterministic offset, but accepts any tick inside
-     * the current manager tick window.
-     */
     private static boolean shouldRunNestInterval(KrawlNest nest, long gameTime, int interval) {
         if (interval <= 0) {
             return false;

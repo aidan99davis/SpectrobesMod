@@ -2,7 +2,7 @@ package com.spectrobes.spectrobesmod.common.world.structures.krawl_nest;
 
 import com.mojang.serialization.Codec;
 import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
-import com.spectrobes.spectrobesmod.common.entities.krawl.EntityXelles;
+import com.spectrobes.spectrobesmod.common.entities.krawl.bosses.EntityXelles;
 import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

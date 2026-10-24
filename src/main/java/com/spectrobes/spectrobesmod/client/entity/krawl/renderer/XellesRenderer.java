@@ -2,7 +2,7 @@ package com.spectrobes.spectrobesmod.client.entity.krawl.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.spectrobes.spectrobesmod.client.entity.krawl.model.XellesModel;
-import com.spectrobes.spectrobesmod.common.entities.krawl.EntityXelles;
+import com.spectrobes.spectrobesmod.common.entities.krawl.bosses.EntityXelles;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;

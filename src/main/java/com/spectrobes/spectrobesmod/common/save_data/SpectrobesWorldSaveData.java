@@ -17,9 +17,6 @@ public class SpectrobesWorldSaveData extends SavedData {
 
     public static final String NAME = SpectrobesInfo.MOD_ID + "_data";
 
-    // Kept for compatibility if other code still references SpectrobesWorldSaveData.name.
-    public static final String name = NAME;
-
     private static final double NEST_MIN_DISTANCE = 2000.0D;
 
     private static final SavedData.Factory<SpectrobesWorldSaveData> FACTORY =

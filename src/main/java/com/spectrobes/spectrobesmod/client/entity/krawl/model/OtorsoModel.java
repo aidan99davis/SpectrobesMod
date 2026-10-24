@@ -1,7 +1,7 @@
 package com.spectrobes.spectrobesmod.client.entity.krawl.model;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.common.entities.krawl.EntityOtorso;
+import com.spectrobes.spectrobesmod.common.entities.krawl.bosses.EntityOtorso;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 

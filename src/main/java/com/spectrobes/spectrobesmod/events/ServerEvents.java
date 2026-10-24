@@ -49,6 +49,7 @@ public class ServerEvents {
         }
 
         int currentHealth = spectrobeMaster.getCurrentHealth();
+
         spectrobeMaster.setMaxHealth(200);
         spectrobeMaster.setCurrentHealth(currentHealth);
 

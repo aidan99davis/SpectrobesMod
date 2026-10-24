@@ -1,6 +1,7 @@
-package com.spectrobes.spectrobesmod.common.entities.krawl;
+package com.spectrobes.spectrobesmod.common.entities.krawl.bosses;
 
 import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
+import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import com.spectrobes.spectrobesmod.common.registry.data.KrawlRegistry;
 import net.minecraft.nbt.CompoundTag;

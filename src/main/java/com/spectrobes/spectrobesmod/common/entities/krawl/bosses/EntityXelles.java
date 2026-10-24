@@ -1,6 +1,10 @@
-package com.spectrobes.spectrobesmod.common.entities.krawl;
+package com.spectrobes.spectrobesmod.common.entities.krawl.bosses;
 
 import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
+import com.spectrobes.spectrobesmod.common.entities.krawl.moves.EntityHealingSpore;
+import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
+import com.spectrobes.spectrobesmod.common.entities.krawl.moves.EntitySpawningSpore;
+import com.spectrobes.spectrobesmod.common.entities.krawl.EntityVortex;
 import com.spectrobes.spectrobesmod.common.entities.krawl.goals.AbsorbKrawlGoal;
 import com.spectrobes.spectrobesmod.common.entities.krawl.goals.AttackSpectrobeGoal;
 import com.spectrobes.spectrobesmod.common.entities.krawl.goals.AttackSpectrobeMasterGoal;
@@ -43,8 +47,6 @@ import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
 
 import java.util.List;
-
-import static com.spectrobes.spectrobesmod.common.entities.krawl.EntitySpawningSpore.BOSS_SPORE;
 
 public class EntityXelles extends EntityBossKrawl {
 
@@ -547,7 +549,7 @@ public class EntityXelles extends EntityBossKrawl {
                         );
 
                 if (spore != null) {
-                    spore.getEntityData().set(BOSS_SPORE, true);
+                    spore.setBossSpore(true);
                     spore.setDeltaMovement(0.0D, 0.5D, 0.0D);
                 }
 

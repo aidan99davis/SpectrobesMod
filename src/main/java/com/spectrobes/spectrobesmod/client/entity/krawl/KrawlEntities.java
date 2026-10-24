@@ -2,6 +2,12 @@ package com.spectrobes.spectrobesmod.client.entity.krawl;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.entities.krawl.*;
+import com.spectrobes.spectrobesmod.common.entities.krawl.bosses.EntityOrbix;
+import com.spectrobes.spectrobesmod.common.entities.krawl.bosses.EntityOrbux;
+import com.spectrobes.spectrobesmod.common.entities.krawl.bosses.EntityOtorso;
+import com.spectrobes.spectrobesmod.common.entities.krawl.bosses.EntityXelles;
+import com.spectrobes.spectrobesmod.common.entities.krawl.moves.EntityHealingSpore;
+import com.spectrobes.spectrobesmod.common.entities.krawl.moves.EntitySpawningSpore;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;

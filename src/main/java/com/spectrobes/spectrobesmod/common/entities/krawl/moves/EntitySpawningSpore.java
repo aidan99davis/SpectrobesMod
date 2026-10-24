@@ -1,6 +1,7 @@
-package com.spectrobes.spectrobesmod.common.entities.krawl;
+package com.spectrobes.spectrobesmod.common.entities.krawl.moves;
 
 import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
+import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -34,7 +35,7 @@ public class EntitySpawningSpore extends Monster implements GeoEntity {
     private static final RawAnimation IDLE_ANIMATION =
             RawAnimation.begin().thenLoop("animation.xelles_spore_spawn.idle");
 
-    protected static final EntityDataAccessor<Boolean> BOSS_SPORE =
+    public static final EntityDataAccessor<Boolean> BOSS_SPORE =
             SynchedEntityData.defineId(EntitySpawningSpore.class, EntityDataSerializers.BOOLEAN);
 
     private static final EntityDataAccessor<Integer> AGE_TICKS =

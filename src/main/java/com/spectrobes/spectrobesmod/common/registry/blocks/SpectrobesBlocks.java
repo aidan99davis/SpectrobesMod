@@ -2,7 +2,7 @@ package com.spectrobes.spectrobesmod.common.registry.blocks;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.blocks.*;
-import com.spectrobes.spectrobesmod.common.blocks.XellesTrophyBlock;
+import com.spectrobes.spectrobesmod.common.blocks.krawl.XellesTrophyBlock;
 
 import com.spectrobes.spectrobesmod.common.blocks.api.MultiTextureBlock;
 import com.spectrobes.spectrobesmod.common.blocks.api.SpectrobesBlock;
@@ -12,7 +12,7 @@ import com.spectrobes.spectrobesmod.common.blocks.krawl.MiniXellesBlock;
 import com.spectrobes.spectrobesmod.common.blocks.krawl.SpreadingKrawlNestBlock;
 import com.spectrobes.spectrobesmod.common.blocks.machines.HealerBlock;
 import com.spectrobes.spectrobesmod.common.blocks.machines.shop.CyrusShopBlock;
-import com.spectrobes.spectrobesmod.common.blocks.FossilBlock;
+import com.spectrobes.spectrobesmod.common.blocks.fossils.blocks.FossilBlock;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.*;

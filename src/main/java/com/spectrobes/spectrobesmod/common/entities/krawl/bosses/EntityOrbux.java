@@ -1,4 +1,4 @@
-package com.spectrobes.spectrobesmod.common.entities.krawl;
+package com.spectrobes.spectrobesmod.common.entities.krawl.bosses;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Monster;

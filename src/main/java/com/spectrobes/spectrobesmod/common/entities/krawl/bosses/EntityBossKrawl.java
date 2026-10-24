@@ -1,5 +1,6 @@
-package com.spectrobes.spectrobesmod.common.entities.krawl;
+package com.spectrobes.spectrobesmod.common.entities.krawl.bosses;
 
+import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.SynchedEntityData;

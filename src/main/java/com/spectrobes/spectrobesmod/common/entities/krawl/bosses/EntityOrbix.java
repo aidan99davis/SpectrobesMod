@@ -1,5 +1,6 @@
-package com.spectrobes.spectrobesmod.common.entities.krawl;
+package com.spectrobes.spectrobesmod.common.entities.krawl.bosses;
 
+import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
 import com.spectrobes.spectrobesmod.common.entities.krawl.goals.AttackSpectrobeGoal;
 import com.spectrobes.spectrobesmod.common.entities.krawl.goals.AttackSpectrobeMasterGoal;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
