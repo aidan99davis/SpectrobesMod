@@ -3,345 +3,399 @@ package com.spectrobes.spectrobesmod.common.save_data;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
+/**
+ * A krawl nest tracked in world save data. The nest is the "mycelium network": it owns its mini xelles,
+ * the chambers it has carved, the construction job in progress and the Xelles boss state.
+ */
 public class KrawlNest implements INBTSerializable<CompoundTag> {
-    public BlockPos position;
-    public String dimension;
 
-    public int vortex_absorbed;
+    public enum State { ACTIVE, INACTIVE }
 
-    /**
-     * 0 = dormant / dead
-     * 1 = young nest
-     * 2 = mature nest
-     * 3 = hive nest
-     */
-    public int stage;
+    public enum BossState { NONE, ALIVE, DEFEATED }
 
-    public boolean alive;
+    public UUID id;
+    public BlockPos heart;
+    public State state;
+    public double biomass;
+    public double totalBiomass;
+    public long createdTime;
 
-    public int ageTicks;
-    public int biomass;
-    public int radius;
+    public final Map<BlockPos, MiniXellesRecord> miniXelles = new LinkedHashMap<>();
+    public final List<Chamber> chambers = new ArrayList<>();
 
-    public int growthCooldown;
-    public int spawnCooldown;
+    /** Deepest tier whose access shaft has been finished (0 = none yet). */
+    public int shaftTier;
+    /** Floor centre of the chamber the most recently finished shaft leads to. */
+    @Nullable
+    public BlockPos nextChamberCenter;
+    /** Where that shaft's corridor meets the chamber's edge. */
+    @Nullable
+    public BlockPos nextChamberEntry;
+    @Nullable
+    public NestJob job;
 
-    public UUID xellesUuid;
+    public BossState bossState = BossState.NONE;
+    @Nullable
+    public UUID bossUuid;
 
     public KrawlNest() {
-        this.position = BlockPos.ZERO;
-        this.dimension = "";
-        this.stage = 0;
-        this.vortex_absorbed = 0;
-        this.alive = false;
-
-        this.ageTicks = 0;
-        this.biomass = 0;
-        this.radius = 0;
-        this.growthCooldown = 0;
-        this.spawnCooldown = 0;
-        this.xellesUuid = null;
+        this.id = UUID.randomUUID();
+        this.heart = BlockPos.ZERO;
+        this.state = State.INACTIVE;
     }
 
-    public KrawlNest(BlockPos position, String dimension, UUID xellesUuid) {
-        this.position = position;
-        this.dimension = dimension;
-
-        this.stage = 1;
-        this.vortex_absorbed = 0;
-        this.alive = true;
-
-        this.ageTicks = 0;
-        this.biomass = 100;
-        this.radius = 12;
-        this.growthCooldown = 200;
-        this.spawnCooldown = 600;
-        this.xellesUuid = xellesUuid;
+    public KrawlNest(BlockPos heart, long gameTime) {
+        this.id = UUID.randomUUID();
+        this.heart = heart.immutable();
+        this.state = State.ACTIVE;
+        this.createdTime = gameTime;
     }
 
-    public void tickAge() {
-        if (!alive) {
-            return;
-        }
-
-        ageTicks++;
-        recalculateStageAndRadius();
+    public boolean isActive() {
+        return state == State.ACTIVE;
     }
 
-    public void absorbVortexes(int vortexes) {
-        if (vortexes <= 0 || !alive) {
-            return;
-        }
-
-        this.vortex_absorbed += vortexes;
-        this.biomass += vortexes * 40;
-
-        recalculateStageAndRadius();
-    }
-
-    public void addBiomass(int amount) {
-        if (amount <= 0 || !alive) {
-            return;
-        }
-
-        this.biomass += amount;
-        recalculateStageAndRadius();
-    }
-
-    public void removeBiomass(int amount) {
+    public void addBiomass(double amount) {
         if (amount <= 0) {
             return;
         }
 
-        this.biomass = Math.max(0, this.biomass - amount);
-
-        if (this.biomass <= 0) {
-            setDead();
-        } else {
-            recalculateStageAndRadius();
-        }
+        biomass += amount;
+        totalBiomass += amount;
     }
 
-    public int getAbsorbedVortexes() {
-        return this.vortex_absorbed;
-    }
-
-    public int getRadius() {
-        return radius;
-    }
-
-    public int getRadiusSqr() {
-        return radius * radius;
-    }
-
-    public boolean contains(BlockPos pos) {
-        if (position == null || pos == null) {
+    public boolean trySpend(double amount) {
+        if (biomass < amount) {
             return false;
         }
 
-        return position.distSqr(pos) <= getRadiusSqr();
+        biomass -= amount;
+        return true;
     }
 
-    public boolean isInDimension(String dimension) {
-        return this.dimension != null && this.dimension.equals(dimension);
-    }
+    public int getDeepestChamberTier() {
+        int deepest = 0;
 
-    public void setStage(int stage) {
-        this.stage = clamp(stage, 0, 3);
-        recalculateStageAndRadius();
-    }
-
-    public void setXellesUuid(UUID xellesUuid) {
-        this.xellesUuid = xellesUuid;
-    }
-
-    public boolean hasXellesUuid() {
-        return xellesUuid != null;
-    }
-
-    public boolean shouldGrowThisTick() {
-        if (!alive) {
-            return false;
+        for (Chamber chamber : chambers) {
+            deepest = Math.max(deepest, chamber.tier);
         }
 
-        if (growthCooldown > 0) {
-            growthCooldown--;
-            return false;
+        return deepest;
+    }
+
+    @Nullable
+    public Chamber getChamber(int tier) {
+        for (Chamber chamber : chambers) {
+            if (chamber.tier == tier) {
+                return chamber;
+            }
+        }
+
+        return null;
+    }
+
+    @Nullable
+    public Chamber getGrandChamber() {
+        for (Chamber chamber : chambers) {
+            if (chamber.grand) {
+                return chamber;
+            }
+        }
+
+        return null;
+    }
+
+    public boolean allMiniXellesDead() {
+        for (MiniXellesRecord record : miniXelles.values()) {
+            if (!record.dead) {
+                return false;
+            }
         }
 
         return true;
     }
 
-    public void resetGrowthCooldown() {
-        this.growthCooldown = switch (stage) {
-            case 1 -> 240;
-            case 2 -> 160;
-            case 3 -> 100;
-            default -> 300;
-        };
-    }
+    public int aliveMiniXelles() {
+        int alive = 0;
 
-    public boolean shouldSpawnThisTick() {
-        if (!alive) {
-            return false;
+        for (MiniXellesRecord record : miniXelles.values()) {
+            if (!record.dead) {
+                alive++;
+            }
         }
 
-        if (spawnCooldown > 0) {
-            spawnCooldown--;
-            return false;
-        }
-
-        return true;
-    }
-
-    public void resetSpawnCooldown() {
-        this.spawnCooldown = switch (stage) {
-            case 1 -> 900;
-            case 2 -> 600;
-            case 3 -> 360;
-            default -> 1200;
-        };
-    }
-
-    public int getGrowthAttempts() {
-        return switch (stage) {
-            case 1 -> 4;
-            case 2 -> 8;
-            case 3 -> 14;
-            default -> 0;
-        };
-    }
-
-    public int getSpawnAttempts() {
-        return switch (stage) {
-            case 1 -> 1;
-            case 2 -> 2;
-            case 3 -> 4;
-            default -> 0;
-        };
-    }
-
-    public float getInfectionStrengthAt(BlockPos pos) {
-        if (!alive || position == null || pos == null || radius <= 0) {
-            return 0.0F;
-        }
-
-        double distance = Math.sqrt(position.distSqr(pos));
-
-        if (distance >= radius) {
-            return 0.0F;
-        }
-
-        double falloff = 1.0D - distance / radius;
-        return (float) ((stage + 1) * falloff);
-    }
-
-    public void setDead() {
-        this.alive = false;
-        this.stage = 0;
-        this.radius = 0;
-        this.growthCooldown = 0;
-        this.spawnCooldown = 0;
-        this.xellesUuid = null;
-    }
-
-    public boolean isAlive() {
         return alive;
     }
 
-    private void recalculateStageAndRadius() {
-        if (!alive) {
-            this.stage = 0;
-            this.radius = 0;
-            return;
+    /** Positions infection and protection radiate from: the heart plus every chamber centre. */
+    public List<BlockPos> getAnchors() {
+        List<BlockPos> anchors = new ArrayList<>();
+        anchors.add(heart);
+
+        for (Chamber chamber : chambers) {
+            anchors.add(chamber.center);
         }
 
-        int calculatedStage = 1;
-
-        if (biomass >= 350 || vortex_absorbed >= 5 || ageTicks >= 24000 * 3) {
-            calculatedStage = 2;
-        }
-
-        if (biomass >= 900 || vortex_absorbed >= 12 || ageTicks >= 24000 * 7) {
-            calculatedStage = 3;
-        }
-
-        this.stage = Math.max(this.stage, calculatedStage);
-
-        int calculatedRadius = switch (stage) {
-            case 1 -> 12 + biomass / 80;
-            case 2 -> 24 + biomass / 70;
-            case 3 -> 40 + biomass / 60;
-            default -> 0;
-        };
-
-        this.radius = clamp(calculatedRadius, 0, 96);
+        return anchors;
     }
 
     @Override
     public CompoundTag serializeNBT(HolderLookup.Provider provider) {
-        CompoundTag nbtObj = new CompoundTag();
+        CompoundTag tag = new CompoundTag();
 
-        BlockPos safePos = position == null ? BlockPos.ZERO : position;
+        tag.putUUID("id", id);
+        tag.put("heart", NbtUtils.writeBlockPos(heart));
+        tag.putString("state", state.name());
+        tag.putDouble("biomass", biomass);
+        tag.putDouble("total_biomass", totalBiomass);
+        tag.putLong("created", createdTime);
+        tag.putInt("shaft_tier", shaftTier);
 
-        nbtObj.putString("dimension", dimension == null ? "" : dimension);
-        nbtObj.putInt("stage", stage);
-        nbtObj.putInt("position_x", safePos.getX());
-        nbtObj.putInt("position_y", safePos.getY());
-        nbtObj.putInt("position_z", safePos.getZ());
-        nbtObj.putInt("vortex_absorbed", vortex_absorbed);
-        nbtObj.putBoolean("alive", alive);
-
-        nbtObj.putInt("age_ticks", ageTicks);
-        nbtObj.putInt("biomass", biomass);
-        nbtObj.putInt("radius", radius);
-        nbtObj.putInt("growth_cooldown", growthCooldown);
-        nbtObj.putInt("spawn_cooldown", spawnCooldown);
-
-        if (xellesUuid != null) {
-            nbtObj.putString("xelles_uuid", xellesUuid.toString());
+        if (nextChamberCenter != null) {
+            tag.put("next_chamber_center", NbtUtils.writeBlockPos(nextChamberCenter));
         }
 
-        return nbtObj;
+        if (nextChamberEntry != null) {
+            tag.put("next_chamber_entry", NbtUtils.writeBlockPos(nextChamberEntry));
+        }
+
+        ListTag miniXellesList = new ListTag();
+        for (MiniXellesRecord record : miniXelles.values()) {
+            miniXellesList.add(record.save());
+        }
+        tag.put("mini_xelles", miniXellesList);
+
+        ListTag chamberList = new ListTag();
+        for (Chamber chamber : chambers) {
+            chamberList.add(chamber.save());
+        }
+        tag.put("chambers", chamberList);
+
+        if (job != null) {
+            tag.put("job", job.save());
+        }
+
+        tag.putString("boss_state", bossState.name());
+        if (bossUuid != null) {
+            tag.putUUID("boss_uuid", bossUuid);
+        }
+
+        return tag;
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
-        dimension = nbt.getString("dimension");
-        stage = nbt.getInt("stage");
-        vortex_absorbed = nbt.getInt("vortex_absorbed");
-        alive = nbt.getBoolean("alive");
+    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag tag) {
+        id = tag.getUUID("id");
+        heart = NbtUtils.readBlockPos(tag, "heart").orElse(BlockPos.ZERO);
+        state = parseEnum(State.class, tag.getString("state"), State.INACTIVE);
+        biomass = tag.getDouble("biomass");
+        totalBiomass = tag.getDouble("total_biomass");
+        createdTime = tag.getLong("created");
+        shaftTier = tag.getInt("shaft_tier");
+        nextChamberCenter = NbtUtils.readBlockPos(tag, "next_chamber_center").orElse(null);
+        nextChamberEntry = NbtUtils.readBlockPos(tag, "next_chamber_entry").orElse(null);
 
-        int position_x = nbt.getInt("position_x");
-        int position_y = nbt.getInt("position_y");
-        int position_z = nbt.getInt("position_z");
-        position = new BlockPos(position_x, position_y, position_z);
-
-        ageTicks = nbt.contains("age_ticks") ? nbt.getInt("age_ticks") : 0;
-        biomass = nbt.contains("biomass") ? nbt.getInt("biomass") : getFallbackBiomass();
-        radius = nbt.contains("radius") ? nbt.getInt("radius") : getFallbackRadius();
-        growthCooldown = nbt.contains("growth_cooldown") ? nbt.getInt("growth_cooldown") : 200;
-        spawnCooldown = nbt.contains("spawn_cooldown") ? nbt.getInt("spawn_cooldown") : 600;
-
-        xellesUuid = null;
-
-        if (nbt.contains("xelles_uuid")) {
-            try {
-                xellesUuid = UUID.fromString(nbt.getString("xelles_uuid"));
-            } catch (IllegalArgumentException ignored) {
-                xellesUuid = null;
-            }
+        miniXelles.clear();
+        for (Tag entry : tag.getList("mini_xelles", Tag.TAG_COMPOUND)) {
+            MiniXellesRecord record = MiniXellesRecord.load((CompoundTag) entry);
+            miniXelles.put(record.pos, record);
         }
 
-        recalculateStageAndRadius();
-    }
-
-    private int getFallbackBiomass() {
-        if (!alive) {
-            return 0;
+        chambers.clear();
+        for (Tag entry : tag.getList("chambers", Tag.TAG_COMPOUND)) {
+            chambers.add(Chamber.load((CompoundTag) entry));
         }
 
-        return 100 + vortex_absorbed * 40;
+        job = tag.contains("job", Tag.TAG_COMPOUND) ? NestJob.load(tag.getCompound("job")) : null;
+
+        bossState = parseEnum(BossState.class, tag.getString("boss_state"), BossState.NONE);
+        bossUuid = tag.hasUUID("boss_uuid") ? tag.getUUID("boss_uuid") : null;
     }
 
-    private int getFallbackRadius() {
-        if (!alive) {
-            return 0;
+    /** Nests saved by the old infection system have no id; they are dropped on load. */
+    public static boolean isLegacyTag(CompoundTag tag) {
+        return !tag.hasUUID("id");
+    }
+
+    private static <E extends Enum<E>> E parseEnum(Class<E> type, String name, E fallback) {
+        try {
+            return Enum.valueOf(type, name);
+        } catch (IllegalArgumentException e) {
+            return fallback;
+        }
+    }
+
+    public static class MiniXellesRecord {
+        public BlockPos pos;
+        public int tier;
+        public boolean dead;
+        public long reviveAt;
+
+        public MiniXellesRecord(BlockPos pos, int tier) {
+            this.pos = pos.immutable();
+            this.tier = tier;
         }
 
-        return switch (stage) {
-            case 1 -> 12;
-            case 2 -> 24;
-            case 3 -> 40;
-            default -> 0;
-        };
+        CompoundTag save() {
+            CompoundTag tag = new CompoundTag();
+            tag.put("pos", NbtUtils.writeBlockPos(pos));
+            tag.putInt("tier", tier);
+            tag.putBoolean("dead", dead);
+            tag.putLong("revive_at", reviveAt);
+            return tag;
+        }
+
+        static MiniXellesRecord load(CompoundTag tag) {
+            MiniXellesRecord record = new MiniXellesRecord(NbtUtils.readBlockPos(tag, "pos").orElse(BlockPos.ZERO), tag.getInt("tier"));
+            record.dead = tag.getBoolean("dead");
+            record.reviveAt = tag.getLong("revive_at");
+            return record;
+        }
     }
 
-    private static int clamp(int value, int min, int max) {
-        return Math.max(min, Math.min(max, value));
+    /** A carved chamber. {@code center} is the centre of its floor. */
+    public static class Chamber {
+        public int tier;
+        public BlockPos center;
+        public int radius;
+        public int height;
+        public boolean grand;
+        /** Where the corridor from the tier above enters; the shaft down leaves from the opposite side. */
+        public BlockPos entry;
+
+        public Chamber(int tier, BlockPos center, int radius, int height, boolean grand, BlockPos entry) {
+            this.tier = tier;
+            this.center = center.immutable();
+            this.radius = radius;
+            this.height = height;
+            this.grand = grand;
+            this.entry = entry.immutable();
+        }
+
+        CompoundTag save() {
+            CompoundTag tag = new CompoundTag();
+            tag.putInt("tier", tier);
+            tag.put("center", NbtUtils.writeBlockPos(center));
+            tag.putInt("radius", radius);
+            tag.putInt("height", height);
+            tag.putBoolean("grand", grand);
+            tag.put("entry", NbtUtils.writeBlockPos(entry));
+            return tag;
+        }
+
+        static Chamber load(CompoundTag tag) {
+            return new Chamber(
+                    tag.getInt("tier"),
+                    NbtUtils.readBlockPos(tag, "center").orElse(BlockPos.ZERO),
+                    tag.getInt("radius"),
+                    tag.getInt("height"),
+                    tag.getBoolean("grand"),
+                    NbtUtils.readBlockPos(tag, "entry").orElse(BlockPos.ZERO));
+        }
+    }
+
+    /**
+     * A construction job. The block operations are regenerated deterministically from these fields, so only
+     * the progress index needs saving.
+     */
+    public static class NestJob {
+        public enum Type { SHAFT, CHAMBER }
+
+        public Type type;
+        public int tier;
+        /** SHAFT: helix axis at the top floor height. CHAMBER: floor centre. */
+        public BlockPos origin;
+        /** SHAFT: floor height the helix ends at. CHAMBER: unused. */
+        public int bottomY;
+        /** SHAFT: angle (radians) of the helix's top step around the axis. */
+        public float angle;
+        /** SHAFT: whether a corridor leads into the top of the helix from the chamber above. */
+        public boolean topCorridor;
+        /** CHAMBER: radius, height and whether it is the grand chamber. SHAFT: radius of the chamber it leads to. */
+        public int radius;
+        public int height;
+        public boolean grand;
+        /** CHAMBER: where the corridor enters, so carving spreads outward from it. SHAFT: start of the top corridor. */
+        public BlockPos entry;
+        public int progress;
+
+        /** Transient: generated operations. */
+        @Nullable
+        public transient List<NestOp> ops;
+
+        public static NestJob shaft(int tier, BlockPos axisTop, int bottomY, float angle, int nextRadius,
+                                    @Nullable BlockPos corridorStart) {
+            NestJob job = new NestJob();
+            job.type = Type.SHAFT;
+            job.tier = tier;
+            job.origin = axisTop.immutable();
+            job.bottomY = bottomY;
+            job.angle = angle;
+            job.radius = nextRadius;
+            job.topCorridor = corridorStart != null;
+            job.entry = corridorStart != null ? corridorStart.immutable() : axisTop.immutable();
+            return job;
+        }
+
+        public static NestJob chamber(int tier, BlockPos floorCenter, int radius, int height, boolean grand, BlockPos entry) {
+            NestJob job = new NestJob();
+            job.type = Type.CHAMBER;
+            job.tier = tier;
+            job.origin = floorCenter.immutable();
+            job.radius = radius;
+            job.height = height;
+            job.grand = grand;
+            job.entry = entry.immutable();
+            return job;
+        }
+
+        CompoundTag save() {
+            CompoundTag tag = new CompoundTag();
+            tag.putString("type", type.name());
+            tag.putInt("tier", tier);
+            tag.put("origin", NbtUtils.writeBlockPos(origin));
+            tag.putInt("bottom_y", bottomY);
+            tag.putFloat("angle", angle);
+            tag.putBoolean("top_corridor", topCorridor);
+            tag.putInt("radius", radius);
+            tag.putInt("height", height);
+            tag.putBoolean("grand", grand);
+            tag.put("entry", NbtUtils.writeBlockPos(entry));
+            tag.putInt("progress", progress);
+            return tag;
+        }
+
+        static NestJob load(CompoundTag tag) {
+            NestJob job = new NestJob();
+            job.type = parseEnum(Type.class, tag.getString("type"), Type.SHAFT);
+            job.tier = tag.getInt("tier");
+            job.origin = NbtUtils.readBlockPos(tag, "origin").orElse(BlockPos.ZERO);
+            job.bottomY = tag.getInt("bottom_y");
+            job.angle = tag.getFloat("angle");
+            job.topCorridor = tag.getBoolean("top_corridor");
+            job.radius = tag.getInt("radius");
+            job.height = tag.getInt("height");
+            job.grand = tag.getBoolean("grand");
+            job.entry = NbtUtils.readBlockPos(tag, "entry").orElse(job.origin);
+            job.progress = tag.getInt("progress");
+            return job;
+        }
+    }
+
+    /** One block change in a construction job. */
+    public record NestOp(BlockPos pos, Kind kind) {
+        public enum Kind { CARVE, FLOOR, WALL }
     }
 }

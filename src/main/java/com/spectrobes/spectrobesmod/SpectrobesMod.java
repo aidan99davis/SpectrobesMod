@@ -5,6 +5,7 @@ import com.spectrobes.spectrobesmod.client.entity.krawl.KrawlEntities;
 import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.common.capability.PlayerEvents;
 import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
+import com.spectrobes.spectrobesmod.common.config.KrawlConfig;
 import com.spectrobes.spectrobesmod.common.registry.SpectrobesItemGroupsRegistry;
 import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesBlocks;
 import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesTileRegistry;
@@ -16,7 +17,9 @@ import net.minecraft.world.entity.SpawnPlacementTypes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
@@ -25,8 +28,10 @@ import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 
 @Mod(SpectrobesInfo.MOD_ID)
 public class SpectrobesMod {
-    public SpectrobesMod(IEventBus modEventBus) {
+    public SpectrobesMod(IEventBus modEventBus, ModContainer modContainer) {
         SpectrobesMineralsRegistry.init();
+
+        modContainer.registerConfig(ModConfig.Type.SERVER, KrawlConfig.SPEC);
 
         modEventBus.addListener(this::setup);
         modEventBus.addListener(this::registerSpawnPlacements);

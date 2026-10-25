@@ -96,6 +96,26 @@ public class SpectrobesBlockItemsRegistry {
             () -> new BlockItem(SpectrobesBlocks.krawl_mud.get(),
                     new Item.Properties()));
 
+    public static final Supplier<BlockItem> krawl_crust = ITEMS.register("krawl_crust",
+            () -> new BlockItem(SpectrobesBlocks.krawl_crust.get(),
+                    new Item.Properties()));
+
+    public static final Supplier<BlockItem> krawl_flesh = ITEMS.register("krawl_flesh",
+            () -> new BlockItem(SpectrobesBlocks.krawl_flesh.get(),
+                    new Item.Properties()));
+
+    public static final Supplier<BlockItem> krawl_membrane = ITEMS.register("krawl_membrane",
+            () -> new BlockItem(SpectrobesBlocks.krawl_membrane.get(),
+                    new Item.Properties()));
+
+    public static final Supplier<BlockItem> krawl_vein = ITEMS.register("krawl_vein",
+            () -> new BlockItem(SpectrobesBlocks.krawl_vein.get(),
+                    new Item.Properties()));
+
+    public static final Supplier<BlockItem> krawl_heart = ITEMS.register("krawl_heart",
+            () -> new BlockItem(SpectrobesBlocks.krawl_heart.get(),
+                    new Item.Properties()));
+
     public static final Supplier<BlockItem> snag_log = ITEMS.register("snag_log",
             () -> new BlockItem(SpectrobesBlocks.snag_log.get(),
                     new Item.Properties()));

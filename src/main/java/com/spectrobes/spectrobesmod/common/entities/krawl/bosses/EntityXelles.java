@@ -5,7 +5,6 @@ import com.spectrobes.spectrobesmod.common.entities.krawl.moves.EntityHealingSpo
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
 import com.spectrobes.spectrobesmod.common.entities.krawl.moves.EntitySpawningSpore;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityVortex;
-import com.spectrobes.spectrobesmod.common.entities.krawl.goals.AbsorbKrawlGoal;
 import com.spectrobes.spectrobesmod.common.entities.krawl.goals.AttackSpectrobeGoal;
 import com.spectrobes.spectrobesmod.common.entities.krawl.goals.AttackSpectrobeMasterGoal;
 import com.spectrobes.spectrobesmod.common.entities.krawl.goals.HealKrawlGoal;
@@ -13,8 +12,7 @@ import com.spectrobes.spectrobesmod.common.items.minerals.Mineral;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
 import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesBlocks;
 import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesMineralsRegistry;
-import com.spectrobes.spectrobesmod.common.save_data.KrawlNest;
-import com.spectrobes.spectrobesmod.common.save_data.SpectrobesWorldSaveData;
+import com.spectrobes.spectrobesmod.common.krawl.KrawlInfectionManager;
 import com.spectrobes.spectrobesmod.util.KrawlPropertiesBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -47,6 +45,7 @@ import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
 
 import java.util.List;
+import java.util.UUID;
 
 public class EntityXelles extends EntityBossKrawl {
 
@@ -83,6 +82,10 @@ public class EntityXelles extends EntityBossKrawl {
     private static final EntityDataAccessor<Boolean> IS_SPAWNING_SPORES =
             SynchedEntityData.defineId(EntityXelles.class, EntityDataSerializers.BOOLEAN);
 
+    /** The nest whose grand chamber this Xelles guards, if any. */
+    @Nullable
+    private UUID nestId;
+
     public EntityXelles(EntityType<? extends Monster> type, Level level) {
         super(type, level);
         setPersistenceRequired();
@@ -95,78 +98,10 @@ public class EntityXelles extends EntityBossKrawl {
         this.goalSelector.addGoal(1, new HealKrawlGoal(this));
         this.goalSelector.addGoal(1, new XellesSpawnKrawlGroupGoal(this));
         this.goalSelector.addGoal(1, new XellesSpawnKrawlBossGoal(this));
-        this.goalSelector.addGoal(1, new AbsorbKrawlGoal(this));
     }
 
-    @Nullable
-    @Override
-    public SpawnGroupData finalizeSpawn(
-            ServerLevelAccessor level,
-            DifficultyInstance difficulty,
-            MobSpawnType reason,
-            @Nullable SpawnGroupData spawnData
-    ) {
-        if (reason == MobSpawnType.COMMAND && level instanceof ServerLevel serverLevel) {
-            SpectrobesWorldSaveData worldData = SpectrobesWorldSaveData.getWorldData(serverLevel);
-            worldData.addNest(new KrawlNest(blockPosition(), level().dimension().location().toString(), getUUID()));
-        }
-
-        spawnMiniXelles(level);
-
-        return super.finalizeSpawn(level, difficulty, reason, spawnData);
-    }
-
-    private void spawnMiniXelles(ServerLevelAccessor level) {
-        int xellesToCreate = getRandom().nextIntBetweenInclusive(2, 4);
-
-        for (Direction direction : Direction.allShuffled(getRandom())) {
-            if (xellesToCreate <= 0) {
-                return;
-            }
-
-            if (direction == Direction.UP || direction == Direction.DOWN) {
-                continue;
-            }
-
-            BlockPos initialPosition = blockPosition()
-                    .relative(direction, getRandom().nextIntBetweenInclusive(6, 10))
-                    .immutable();
-
-            BlockPos placementPosition = findMiniXellesPlacement(level, initialPosition);
-
-            if (placementPosition == null) {
-                continue;
-            }
-
-            level.setBlock(
-                    placementPosition,
-                    SpectrobesBlocks.mini_xelles_block.get().defaultBlockState(),
-                    3
-            );
-
-            xellesToCreate--;
-        }
-    }
-
-    @Nullable
-    private BlockPos findMiniXellesPlacement(ServerLevelAccessor level, BlockPos initialPosition) {
-        for (int yOffset = 6; yOffset >= -6; yOffset--) {
-            BlockPos potentialPosition = initialPosition.offset(0, yOffset, 0);
-
-            if (canPlaceMiniXellesAt(level, potentialPosition)) {
-                return potentialPosition.immutable();
-            }
-        }
-
-        return null;
-    }
-
-    private boolean canPlaceMiniXellesAt(ServerLevelAccessor level, BlockPos position) {
-        BlockPos below = position.below();
-
-        return level.getBlockState(position).isAir()
-                && level.getBlockState(position.above()).isAir()
-                && level.getBlockState(below).isFaceSturdy(level, below, Direction.UP);
+    public void bindToNest(UUID nestId) {
+        this.nestId = nestId;
     }
 
     @Override
@@ -191,6 +126,10 @@ public class EntityXelles extends EntityBossKrawl {
         compound.putInt("LAST_SPAWNED_BOSS_SPORES_TICKS", entityData.get(LAST_SPAWNED_BOSS_SUMMONING_SPORE_TICKS));
         compound.putInt("LAST_HURT_TICKS", entityData.get(LAST_HURT_TICKS));
         compound.putBoolean("IS_SPAWNING_SPORES", entityData.get(IS_SPAWNING_SPORES));
+
+        if (nestId != null) {
+            compound.putUUID("NEST_ID", nestId);
+        }
     }
 
     @Override
@@ -204,6 +143,7 @@ public class EntityXelles extends EntityBossKrawl {
         entityData.set(LAST_SPAWNED_BOSS_SUMMONING_SPORE_TICKS, compound.getInt("LAST_SPAWNED_BOSS_SPORES_TICKS"));
         entityData.set(LAST_HURT_TICKS, compound.getInt("LAST_HURT_TICKS"));
         entityData.set(IS_SPAWNING_SPORES, compound.getBoolean("IS_SPAWNING_SPORES"));
+        nestId = compound.hasUUID("NEST_ID") ? compound.getUUID("NEST_ID") : null;
     }
 
     @Override
@@ -243,36 +183,11 @@ public class EntityXelles extends EntityBossKrawl {
             return;
         }
 
-        SpectrobesWorldSaveData worldData = SpectrobesWorldSaveData.getWorldData((ServerLevel) level());
-        KrawlNest nest = worldData.getNest(blockPosition());
+        // Xelles grows stronger with age: stage 2 after one day, stage 3 after three.
+        int ageStage = getAge() >= 3 ? 3 : getAge() >= 1 ? 2 : 1;
 
-        if (nest == null) {
-            return;
-        }
-
-        setStage(nest.stage);
-
-        if (getStage() == 1 && (nest.vortex_absorbed > 5 || getAge() >= 5)) {
-            nest.stage = 2;
-            setStage(2);
-            worldData.setDirty();
-        }
-
-        if (getAge() >= 3 && nest.stage == 2) {
-            nest.stage = 3;
-            setStage(3);
-            worldData.setDirty();
-        }
-
-        if (getAge() >= 3) {
-            AABB bounds = getBoundingBox().inflate(40.0D, 40.0D, 40.0D);
-            List<EntityVortex> nearbyVortex = level().getEntities(
-                    KrawlEntities.ENTITY_VORTEX.get(),
-                    bounds,
-                    entityVortex -> true
-            );
-
-            nearbyVortex.forEach(entityVortex -> entityVortex.remove(RemovalReason.DISCARDED));
+        if (ageStage > getStage()) {
+            setStage(ageStage);
         }
     }
 
@@ -303,13 +218,7 @@ public class EntityXelles extends EntityBossKrawl {
         super.die(cause);
 
         if (!level().isClientSide()) {
-            SpectrobesWorldSaveData saveData = SpectrobesWorldSaveData.getWorldData((ServerLevel) level());
-            KrawlNest nest = saveData.getNest(blockPosition());
-
-            if (nest != null) {
-                nest.setDead();
-                saveData.setDirty();
-            }
+            KrawlInfectionManager.onBossDied((ServerLevel) level(), nestId);
         }
 
         if (getStage() == 3) {

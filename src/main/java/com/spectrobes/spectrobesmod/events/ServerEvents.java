@@ -3,6 +3,7 @@ package com.spectrobes.spectrobesmod.events;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.capability.IPlayerSpectrobeMaster;
 import com.spectrobes.spectrobesmod.common.capability.SpectrobeMaster;
+import com.spectrobes.spectrobesmod.common.commands.KrawlNestCommand;
 import com.spectrobes.spectrobesmod.common.entities.IHasNature;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
@@ -19,6 +20,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
@@ -34,6 +36,11 @@ public class ServerEvents {
         for (ServerLevel level : event.getServer().getAllLevels()) {
             KrawlInfectionManager.tickLevel(level);
         }
+    }
+
+    @SubscribeEvent
+    public static void OnRegisterCommands(RegisterCommandsEvent event) {
+        KrawlNestCommand.register(event.getDispatcher());
     }
 
     @SubscribeEvent

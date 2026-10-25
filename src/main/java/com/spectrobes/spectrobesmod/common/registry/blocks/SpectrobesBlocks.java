@@ -87,6 +87,18 @@ public class SpectrobesBlocks {
     		() -> new MultiTextureBlock(BlockBehaviour.Properties.of().strength(1F).sound(SoundType.WET_GRASS)));
     public static final Supplier<SpectrobesBlock> krawl_mud = BLOCKS.register("krawl_mud",
     		() -> new SpreadingKrawlNestBlock(BlockBehaviour.Properties.of().strength(1F).sound(SoundType.SOUL_SAND)));
+    public static final Supplier<SpectrobesBlock> krawl_crust = BLOCKS.register("krawl_crust",
+            () -> new SpectrobesBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PURPLE).strength(3F).sound(SoundType.DEEPSLATE)));
+    public static final Supplier<SpectrobesBlock> krawl_flesh = BLOCKS.register("krawl_flesh",
+            () -> new SpectrobesBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_MAGENTA).strength(1.5F).sound(SoundType.MUD)));
+    public static final Supplier<SpectrobesBlock> krawl_membrane = BLOCKS.register("krawl_membrane",
+            () -> new SpectrobesBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PURPLE).strength(1F).sound(SoundType.SCULK)));
+    public static final Supplier<SpectrobesBlock> krawl_vein = BLOCKS.register("krawl_vein",
+            () -> new SpectrobesBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PINK).strength(1.5F).sound(SoundType.SCULK)
+                    .lightLevel(state -> 12)));
+    public static final Supplier<SpectrobesBlock> krawl_heart = BLOCKS.register("krawl_heart",
+            () -> new SpectrobesBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_RED).strength(4F).sound(SoundType.SCULK_CATALYST)
+                    .lightLevel(state -> 8)));
     public static final Supplier<Block> snag_log = BLOCKS.register("snag_log",
             () -> new RotatedPillarBlock(BlockBehaviour.Properties.of()
                     .mapColor(state -> state.getValue(RotatedPillarBlock.AXIS) == Direction.Axis.Y
