@@ -1,6 +1,7 @@
 package com.spectrobes.spectrobesmod.common.blocks;
 
 import com.mojang.serialization.MapCodec;
+import com.spectrobes.spectrobesmod.common.blocks.api.SpectrobesBlock;
 import com.spectrobes.spectrobesmod.common.items.minerals.Mineral;
 import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesMineralsRegistry;
 import net.minecraft.util.RandomSource;

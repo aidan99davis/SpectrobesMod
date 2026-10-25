@@ -3,7 +3,7 @@ package com.spectrobes.spectrobesmod.common.registry.blocks;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.blocks.fossils.tile.*;
 import com.spectrobes.spectrobesmod.common.blocks.krawl.MiniXellesBlockEntity;
-import com.spectrobes.spectrobesmod.common.blocks.machines.entity.CyrusShopBlockEntity;
+import com.spectrobes.spectrobesmod.common.blocks.machines.shop.CyrusShopBlockEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.neoforge.registries.DeferredRegister;
