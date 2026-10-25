@@ -2,13 +2,15 @@ package com.spectrobes.spectrobesmod.common.entities.krawl;
 
 import com.spectrobes.spectrobesmod.common.entities.krawl.goals.AttackSpectrobeGoal;
 import com.spectrobes.spectrobesmod.common.entities.krawl.goals.AttackSpectrobeMasterGoal;
-import com.spectrobes.spectrobesmod.common.entities.krawl.goals.KrawlVortexFormXellesGoal;
+import com.spectrobes.spectrobesmod.common.entities.krawl.goals.VortexForageGoal;
+import com.spectrobes.spectrobesmod.common.entities.krawl.goals.VortexMigrateGoal;
 import com.spectrobes.spectrobesmod.common.entities.krawl.goals.SpawnWaveGoal;
 import com.spectrobes.spectrobesmod.common.items.minerals.Mineral;
 import com.spectrobes.spectrobesmod.common.krawl.KrawlProperties;
-import com.spectrobes.spectrobesmod.common.registry.KrawlRegistry;
+import com.spectrobes.spectrobesmod.common.registry.data.KrawlRegistry;
 import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesMineralsRegistry;
-import com.spectrobes.spectrobesmod.common.save_data.SpectrobesWorldSaveData;
+import com.spectrobes.spectrobesmod.common.config.KrawlConfig;
+import com.spectrobes.spectrobesmod.common.krawl.KrawlInfectionManager;
 import com.spectrobes.spectrobesmod.common.spectrobes.SpectrobeProperties;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -31,7 +33,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.biome.Biome;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.animation.RawAnimation;
@@ -53,6 +54,10 @@ public class EntityVortex extends EntityKrawl {
 
     private final AnimatableInstanceCache animationCache = GeckoLibUtil.createInstanceCache(this);
     private final List<EntityKrawl> children = new ArrayList<>();
+    private boolean waveInProgress;
+
+    /** Biomass gathered by consuming mobs, carried to a nest. */
+    private double biomass;
 
     public EntityVortex(EntityType<? extends Monster> type, Level level) {
         super(type, level);
@@ -63,9 +68,10 @@ public class EntityVortex extends EntityKrawl {
         this.goalSelector.addGoal(0, new AttackSpectrobeMasterGoal(this, true, true));
         this.goalSelector.addGoal(0, new AttackSpectrobeGoal(this, true, true));
         this.goalSelector.addGoal(1, new SpawnWaveGoal(this));
-        this.goalSelector.addGoal(1, new KrawlVortexFormXellesGoal(this));
-        this.goalSelector.addGoal(2, new RandomStrollGoal(this, 0.5D));
+        this.goalSelector.addGoal(2, new VortexMigrateGoal(this));
         this.goalSelector.addGoal(3, new FleeSunGoal(this, 1.0D));
+        this.goalSelector.addGoal(4, new VortexForageGoal(this));
+        this.goalSelector.addGoal(5, new RandomStrollGoal(this, 0.5D));
     }
 
     @Override
@@ -76,14 +82,10 @@ public class EntityVortex extends EntityKrawl {
         builder.define(AGE_IN_TICKS, 0);
     }
 
+    /** Vortexes carrying biomass stay loaded so the biomass is not lost; empty ones despawn like other mobs. */
     @Override
     public boolean requiresCustomPersistence() {
-        if (this.level() instanceof ServerLevel serverLevel) {
-            SpectrobesWorldSaveData worldData = SpectrobesWorldSaveData.getWorldData(serverLevel);
-            return worldData.canSpawnNest(blockPosition());
-        }
-
-        return super.requiresCustomPersistence();
+        return this.biomass > 0 || super.requiresCustomPersistence();
     }
 
     @Override
@@ -98,11 +100,47 @@ public class EntityVortex extends EntityKrawl {
         this.entityData.set(AGE_IN_TICKS, this.entityData.get(AGE_IN_TICKS) + 1);
     }
 
+    public int getAgeTicks() {
+        return this.entityData.get(AGE_IN_TICKS);
+    }
+
     /**
      * Returns the vortex age in Minecraft days.
      */
-    public int getAge() {
-        return this.entityData.get(AGE_IN_TICKS) / 24000;
+    public float getAge() {
+        return getAgeTicks() / 24000.0F;
+    }
+
+    // ---------------------------------------------------------------- biomass and nests
+
+    public double getBiomass() {
+        return this.biomass;
+    }
+
+    public void addBiomass(double amount) {
+        this.biomass += Math.max(0, amount);
+    }
+
+    public boolean isAged() {
+        return getAgeTicks() >= KrawlConfig.VORTEX_MAX_AGE_TICKS.get();
+    }
+
+    /** Ready to head for a nest: full of biomass, or old enough. */
+    public boolean isReadyToMerge() {
+        return (this.biomass >= KrawlConfig.VORTEX_MERGE_THRESHOLD.get() || isAged());
+    }
+
+    /** What this vortex is worth to a nest when it merges. Aged vortexes are worth at least a fixed amount. */
+    public double getMergeValue() {
+        return isAged() ? Math.max(this.biomass, KrawlConfig.VORTEX_AGED_BIOMASS_VALUE.get()) : this.biomass;
+    }
+
+    /** Merges into a nest: deposits its biomass and disappears. */
+    public void mergeInto(ServerLevel level, com.spectrobes.spectrobesmod.common.save_data.KrawlNest nest) {
+        KrawlInfectionManager.depositBiomass(level, nest, getMergeValue());
+        KrawlInfectionManager.puff(level, this);
+        this.biomass = 0;
+        this.discard();
     }
 
     @Override
@@ -242,17 +280,65 @@ public class EntityVortex extends EntityKrawl {
         return this.entityData.get(WAVES_REMAINING);
     }
 
-    public void validateWave() {
+    public boolean isWaveInProgress() {
+        return this.waveInProgress;
+    }
+
+    public void setWaveInProgress(boolean waveInProgress) {
+        this.waveInProgress = waveInProgress;
+    }
+
+    /**
+     * Drops dead krawl from the current wave. When a wave in progress is wiped out, counts it as beaten
+     * and returns true.
+     */
+    public boolean validateWave() {
         this.children.removeIf(entityKrawl -> !entityKrawl.isAlive() || entityKrawl.getHealth() <= 0.0F);
 
-        if (this.children.isEmpty()) {
+        if (this.waveInProgress && this.children.isEmpty()) {
+            this.waveInProgress = false;
             this.entityData.set(WAVES_REMAINING, getWaves() - 1);
+            return true;
         }
+
+        return false;
+    }
+
+    /** All waves beaten: the vortex breaks apart and drops its reward. */
+    public void onWavesDefeated() {
+        if (!(this.level() instanceof ServerLevel serverLevel)) {
+            return;
+        }
+
+        dropMineralReward();
+
+        KrawlInfectionManager.puff(serverLevel, this);
+        this.biomass = 0;
+        this.remove(RemovalReason.KILLED);
     }
 
     public void addKrawl(EntityKrawl entityKrawl) {
-        this.level().addFreshEntity(entityKrawl);
-        entityKrawl.teleportTo(getX(), getY(), getZ());
         this.children.add(entityKrawl);
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+
+        compound.putInt("waves_remaining", getWaves());
+        compound.putInt("age_ticks", getAgeTicks());
+        compound.putDouble("biomass", this.biomass);
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+
+        if(compound.contains("waves_remaining")) {
+            this.entityData.set(WAVES_REMAINING, compound.getInt("waves_remaining"));
+        }
+
+        this.entityData.set(AGE_IN_TICKS, compound.getInt("age_ticks"));
+        this.biomass = compound.getDouble("biomass");
     }
 }

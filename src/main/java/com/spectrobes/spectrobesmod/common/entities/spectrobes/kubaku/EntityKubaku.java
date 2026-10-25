@@ -4,7 +4,7 @@ import com.spectrobes.spectrobesmod.client.entity.spectrobes.SpectrobesEntities;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntityMammalSpectrobe;
 import com.spectrobes.spectrobesmod.common.entities.spectrobes.EntitySpectrobe;
 import com.spectrobes.spectrobesmod.common.items.fossils.FossilBlockItem;
-import com.spectrobes.spectrobesmod.common.registry.SpectrobeRegistry;
+import com.spectrobes.spectrobesmod.common.registry.data.SpectrobeRegistry;
 import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesFossilsRegistry;
 import com.spectrobes.spectrobesmod.common.spectrobes.Spectrobe;
 import net.minecraft.world.entity.EntityType;

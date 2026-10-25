@@ -1,8 +1,9 @@
 package com.spectrobes.spectrobesmod.common.blocks.krawl;
 
 import com.mojang.serialization.MapCodec;
-import com.spectrobes.spectrobesmod.common.blocks.SpectrobesTileEntityBlock;
+import com.spectrobes.spectrobesmod.common.blocks.api.SpectrobesTileEntityBlock;
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
+import com.spectrobes.spectrobesmod.common.krawl.KrawlInfectionManager;
 import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesBlocks;
 import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesTileRegistry;
 import net.minecraft.core.BlockPos;
@@ -19,6 +20,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
@@ -64,6 +66,8 @@ public class MiniXellesBlock extends SpectrobesTileEntityBlock {
     public static final int COOLDOWN_TICKS = 1;
     public static final EnumProperty<SculkSensorPhase> PHASE = BlockStateProperties.SCULK_SENSOR_PHASE;
     public static final IntegerProperty POWER = BlockStateProperties.POWER;
+    /** A dead mini xelles no longer listens or summons, and can be mined. */
+    public static final BooleanProperty DEAD = BooleanProperty.create("dead");
 
     protected static final VoxelShape SHAPE = Block.box(
             0.0D,
@@ -92,7 +96,8 @@ public class MiniXellesBlock extends SpectrobesTileEntityBlock {
                 .setValue(POWER, 0)
                 .setValue(PULSE, false)
                 .setValue(SUMMONING, false)
-                .setValue(CAN_SUMMON, false));
+                .setValue(CAN_SUMMON, false)
+                .setValue(DEAD, false));
 
         this.listenerRange = listenerRange;
     }
@@ -168,6 +173,11 @@ public class MiniXellesBlock extends SpectrobesTileEntityBlock {
 
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (level instanceof ServerLevel serverLevel && !state.is(newState.getBlock())
+                && level.getBlockEntity(pos) instanceof MiniXellesBlockEntity miniXelles) {
+            KrawlInfectionManager.onMiniXellesRemoved(serverLevel, miniXelles.getNestId(), pos);
+        }
+
         if (level instanceof ServerLevel serverLevel) {
             if (state.getValue(SUMMONING) && !state.is(newState.getBlock())) {
                 serverLevel.getBlockEntity(pos, SpectrobesTileRegistry.MINI_XELLES_TILE.get()).ifPresent(xelles -> {
@@ -249,7 +259,26 @@ public class MiniXellesBlock extends SpectrobesTileEntityBlock {
     }
 
     public static boolean canActivate(BlockState state) {
-        return getPhase(state) == SculkSensorPhase.INACTIVE;
+        return getPhase(state) == SculkSensorPhase.INACTIVE && !isDead(state);
+    }
+
+    public static boolean isDead(BlockState state) {
+        return state.hasProperty(DEAD) && state.getValue(DEAD);
+    }
+
+    /** Alive mini xelles cannot be mined; they must be beaten through their defence vortexes. */
+    @Override
+    protected float getDestroyProgress(BlockState state, Player player, BlockGetter level, BlockPos pos) {
+        if (!isDead(state) && !player.isCreative()) {
+            return 0.0F;
+        }
+
+        return super.getDestroyProgress(state, player, level, pos);
+    }
+
+    @Override
+    public float getExplosionResistance(BlockState state, BlockGetter level, BlockPos pos, Explosion explosion) {
+        return isDead(state) ? super.getExplosionResistance(state, level, pos, explosion) : 3600000.0F;
     }
 
     public static void deactivate(Level level, BlockPos pos, BlockState state) {
@@ -314,7 +343,7 @@ public class MiniXellesBlock extends SpectrobesTileEntityBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(PHASE, POWER, PULSE, SUMMONING, CAN_SUMMON);
+        builder.add(PHASE, POWER, PULSE, SUMMONING, CAN_SUMMON, DEAD);
     }
 
     @Override

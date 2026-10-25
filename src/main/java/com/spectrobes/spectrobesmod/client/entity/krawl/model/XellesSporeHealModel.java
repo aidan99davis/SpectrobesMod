@@ -5,8 +5,7 @@
 package com.spectrobes.spectrobesmod.client.entity.krawl.model;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
-import com.spectrobes.spectrobesmod.common.entities.krawl.EntityHealingSpore;
-import com.spectrobes.spectrobesmod.common.entities.krawl.EntityXelles;
+import com.spectrobes.spectrobesmod.common.entities.krawl.moves.EntityHealingSpore;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 

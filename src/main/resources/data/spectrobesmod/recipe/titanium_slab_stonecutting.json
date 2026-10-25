@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "spectrobesmod:titanium_block"
+  },
+  "result": { "id": "spectrobesmod:titanium_slab", "count": 2 }
+}

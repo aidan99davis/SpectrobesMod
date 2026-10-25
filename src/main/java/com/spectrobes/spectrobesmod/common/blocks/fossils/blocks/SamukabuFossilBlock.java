@@ -1,7 +1,7 @@
 package com.spectrobes.spectrobesmod.common.blocks.fossils.blocks;
 
 import com.mojang.serialization.MapCodec;
-import com.spectrobes.spectrobesmod.common.blocks.DirectionalBlock;
+import com.spectrobes.spectrobesmod.common.blocks.api.DirectionalBlock;
 import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesTileRegistry;
 import com.spectrobes.spectrobesmod.common.registry.items.SpectrobesFossilsRegistry;
 import net.minecraft.core.BlockPos;
