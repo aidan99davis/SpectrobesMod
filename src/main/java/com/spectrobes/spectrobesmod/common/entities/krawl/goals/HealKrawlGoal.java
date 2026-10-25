@@ -1,7 +1,7 @@
 package com.spectrobes.spectrobesmod.common.entities.krawl.goals;
 
 import com.spectrobes.spectrobesmod.common.entities.krawl.EntityKrawl;
-import com.spectrobes.spectrobesmod.common.entities.krawl.EntityXelles;
+import com.spectrobes.spectrobesmod.common.entities.krawl.bosses.EntityXelles;
 import net.minecraft.world.entity.ai.goal.Goal;
 
 import java.util.List;

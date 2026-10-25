@@ -9,18 +9,18 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.UUID;
+import java.util.function.Predicate;
 
+/**
+ * Per-dimension save data. Each level has its own instance, so nests are implicitly per dimension.
+ */
 public class SpectrobesWorldSaveData extends SavedData {
 
     public static final String NAME = SpectrobesInfo.MOD_ID + "_data";
-
-    // Kept for compatibility if other code still references SpectrobesWorldSaveData.name.
-    public static final String name = NAME;
-
-    private static final double NEST_MIN_DISTANCE = 2000.0D;
 
     private static final SavedData.Factory<SpectrobesWorldSaveData> FACTORY =
             new SavedData.Factory<>(SpectrobesWorldSaveData::new, SpectrobesWorldSaveData::load);
@@ -41,51 +41,69 @@ public class SpectrobesWorldSaveData extends SavedData {
         setDirty();
     }
 
-    public boolean canSpawnNest(BlockPos position) {
-        for (KrawlNest krawlNest : nests) {
-            if (position.closerThan(krawlNest.position, NEST_MIN_DISTANCE)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     public List<KrawlNest> getNests() {
         return nests;
     }
 
-    public List<KrawlNest> getNestsAlive() {
-        return nests.stream()
-                .filter(KrawlNest::isAlive)
-                .collect(Collectors.toList());
-    }
+    @Nullable
+    public KrawlNest getNest(@Nullable UUID id) {
+        if (id == null) {
+            return null;
+        }
 
-    public List<KrawlNest> getNestsDead() {
-        return nests.stream()
-                .filter(krawlNest -> !krawlNest.isAlive())
-                .collect(Collectors.toList());
-    }
-
-    public KrawlNest getNest(BlockPos position) {
-        for (KrawlNest krawlNest : nests) {
-            if (position.closerThan(krawlNest.position, NEST_MIN_DISTANCE)) {
-                return krawlNest;
+        for (KrawlNest nest : nests) {
+            if (nest.id.equals(id)) {
+                return nest;
             }
         }
 
         return null;
     }
 
+    /** Nearest nest whose heart is within {@code range} blocks of {@code pos}. */
+    @Nullable
+    public KrawlNest findNearest(BlockPos pos, double range, Predicate<KrawlNest> filter) {
+        KrawlNest nearest = null;
+        double nearestDist = range * range;
+
+        for (KrawlNest nest : nests) {
+            if (!filter.test(nest)) {
+                continue;
+            }
+
+            double dist = nest.heart.distSqr(pos);
+
+            if (dist <= nearestDist) {
+                nearest = nest;
+                nearestDist = dist;
+            }
+        }
+
+        return nearest;
+    }
+
     public static SpectrobesWorldSaveData load(CompoundTag tag, HolderLookup.Provider provider) {
         SpectrobesWorldSaveData data = new SpectrobesWorldSaveData();
 
         ListTag nestList = tag.getList("nests", Tag.TAG_COMPOUND);
+        int legacy = 0;
 
         for (Tag nestTag : nestList) {
+            CompoundTag compound = (CompoundTag) nestTag;
+
+            if (KrawlNest.isLegacyTag(compound)) {
+                legacy++;
+                continue;
+            }
+
             KrawlNest nest = new KrawlNest();
-            nest.deserializeNBT(provider, nestTag);
+            nest.deserializeNBT(provider, compound);
             data.nests.add(nest);
+        }
+
+        if (legacy > 0) {
+            SpectrobesInfo.LOGGER.info("Discarded {} krawl nest(s) from the old infection system", legacy);
+            data.setDirty();
         }
 
         return data;

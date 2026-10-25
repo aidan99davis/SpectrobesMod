@@ -15,6 +15,10 @@ public class MiniXellesBlockModel extends GeoModel<MiniXellesBlockEntity> {
 
     @Override
     public ResourceLocation getTextureResource(MiniXellesBlockEntity grildaFossilBlock) {
+        if (grildaFossilBlock.isDead()) {
+            return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "textures/models/krawl/xelles_dead.png");
+        }
+
         return ResourceLocation.fromNamespaceAndPath(SpectrobesInfo.MOD_ID, "textures/models/krawl/xelles.png");
     }
 

@@ -1,6 +1,6 @@
 package com.spectrobes.spectrobesmod.common.blocks.krawl;
 
-import com.spectrobes.spectrobesmod.common.blocks.SpectrobesBlock;
+import com.spectrobes.spectrobesmod.common.blocks.api.SpectrobesBlock;
 import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesBlocks;
 import com.spectrobes.spectrobesmod.common.world.krawl.KrawlBehaviour;
 import com.spectrobes.spectrobesmod.common.world.krawl.KrawlSpreader;
@@ -25,7 +25,7 @@ public class SpreadingKrawlNestBlock extends SpectrobesBlock implements KrawlBeh
         int i = pCursor.getCharge();
         if (i != 0 && pRandom.nextInt(pSpreader.chargeDecayRate()) == 0) {
             BlockPos blockpos = pCursor.getPos();
-            boolean flag = blockpos.closerThan(pPos, (double)pSpreader.noGrowthRadius());
+            boolean flag = blockpos.closerThan(pPos, pSpreader.noGrowthRadius());
             if (!flag && canPlaceGrowth(pLevel, blockpos)) {
                 int j = pSpreader.growthSpawnCost();
                 if (pRandom.nextInt(j) < i) {
