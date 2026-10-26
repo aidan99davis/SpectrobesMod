@@ -106,7 +106,7 @@ public abstract class EntityKrawl extends Monster implements GeoAnimatable, IHas
             int powerScale = 1;
             float scaledAmount = DamageUtils.getFinalDamageAmount(typeBonus, atkPower, powerScale, defPower);
 
-            super.actuallyHurt(damageSrc, scaledAmount);
+            hurtFor(damageSrc, scaledAmount);
         }
         else if(damageSrc.getDirectEntity() instanceof Player playerEntity) {
             if(playerEntity.getMainHandItem().getItem() != null
@@ -119,7 +119,7 @@ public abstract class EntityKrawl extends Monster implements GeoAnimatable, IHas
                 int powerScale = 1; //todo this can be used to create secondary attacks for weapons which deal extra damage.
 
                 float scaledAmount = DamageUtils.getFinalDamageAmount(typeBonus, atkPower, powerScale, defPower);
-                super.actuallyHurt(damageSrc, scaledAmount);
+                hurtFor(damageSrc, scaledAmount);
             }
             else if(playerEntity.getOffhandItem().getItem() != null
                     && playerEntity.getOffhandItem().getItem() instanceof SpectrobesWeapon) {
@@ -130,13 +130,44 @@ public abstract class EntityKrawl extends Monster implements GeoAnimatable, IHas
                 int defPower = GetKrawlProperties().getDefLevel();
                 int powerScale = 1; //todo this can be used to create secondary attacks for weapons which deal extra damage.
                 float scaledAmount = DamageUtils.getFinalDamageAmount(typeBonus, atkPower, powerScale, defPower);
-                super.actuallyHurt(damageSrc, scaledAmount);
+                hurtFor(damageSrc, scaledAmount);
             }
             else {
-                super.actuallyHurt(damageSrc, 0);
+                hurtFor(damageSrc, 0);
             }
         }else {
             super.actuallyHurt(damageSrc, damageAmount);
+        }
+    }
+
+    /** NeoForge takes the damage from the damage container and ignores the amount passed to actuallyHurt, so the scaled amount goes in there. */
+    private void hurtFor(DamageSource damageSrc, float amount) {
+        if (!this.damageContainers.isEmpty()) {
+            this.damageContainers.peek().setNewDamage(amount);
+        }
+
+        super.actuallyHurt(damageSrc, amount);
+    }
+
+    /** Set while a krawl or spectrobe hit is being applied, so the vanilla knockback from it can be skipped. */
+    private boolean hitByCombatant;
+
+    @Override
+    public boolean hurt(DamageSource source, float amount) {
+        this.hitByCombatant = source.getEntity() instanceof EntityKrawl || source.getEntity() instanceof EntitySpectrobe;
+
+        try {
+            return super.hurt(source, amount);
+        } finally {
+            this.hitByCombatant = false;
+        }
+    }
+
+    @Override
+    public void knockback(double strength, double x, double z) {
+        // Knockback between krawl and spectrobes sends them flying and drags fights across huge distances.
+        if (!this.hitByCombatant) {
+            super.knockback(strength, x, z);
         }
     }
 
