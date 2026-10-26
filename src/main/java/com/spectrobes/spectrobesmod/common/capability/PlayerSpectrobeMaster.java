@@ -30,6 +30,9 @@ public class PlayerSpectrobeMaster implements IPlayerSpectrobeMaster {
     private List<Spectrobe>
         ownedSpectrobes;
 
+    // Prizmod case contents, keyed by item registry name.
+    private Map<String, Long> caseContents = new LinkedHashMap<>();
+
     public Spectrobe getCurrentTeamMember() {
         UUID selectedUUID = getCurrentTeamUuids().get(currentSelected);
 
@@ -128,6 +131,12 @@ public class PlayerSpectrobeMaster implements IPlayerSpectrobeMaster {
         myData.putInt("maxHealth", maxHealth);
         myData.put("spectrobesOwned", spectrobes);
         myData.put("currentTeam", currentTeamNbt);
+
+        CompoundTag caseNbt = new CompoundTag();
+        caseContents.forEach((item, count) -> {
+            if(count > 0) caseNbt.putLong(item, count);
+        });
+        myData.put("case", caseNbt);
         return myData;
     }
 
@@ -138,6 +147,14 @@ public class PlayerSpectrobeMaster implements IPlayerSpectrobeMaster {
         for(int i = 0; i < 7; i++) {
             this.currentTeam.put(i, null);
         }
+
+        this.caseContents = new LinkedHashMap<>();
+        CompoundTag caseNbt = nbt.getCompound("case");
+        for(String item : caseNbt.getAllKeys()) {
+            long count = caseNbt.getLong(item);
+            if(count > 0) caseContents.put(item, count);
+        }
+
         ListTag ownedSpectrobesNbt = (ListTag) nbt.get("spectrobesOwned");
         CompoundTag currentTeamNbt = (CompoundTag) nbt.get("currentTeam");
 
@@ -221,6 +238,30 @@ public class PlayerSpectrobeMaster implements IPlayerSpectrobeMaster {
         currentXp = oldStore.currentXp;
         currentHealth = oldStore.currentHealth;
         maxHealth = oldStore.maxHealth;
+        caseContents = oldStore.caseContents;
+    }
+
+    public long getCaseCount(String item) {
+        return caseContents.getOrDefault(item, 0L);
+    }
+
+    public void addToCase(String item, long amount) {
+        if(amount <= 0) return;
+        caseContents.merge(item, amount, Long::sum);
+    }
+
+    /**
+     * Removes up to the given amount and returns how many were actually taken.
+     */
+    public long takeFromCase(String item, long amount) {
+        long stored = getCaseCount(item);
+        long taken = Math.min(stored, Math.max(0, amount));
+        if(stored - taken > 0) {
+            caseContents.put(item, stored - taken);
+        } else {
+            caseContents.remove(item);
+        }
+        return taken;
     }
 
     public int getOwnedSpectrobesCount() {

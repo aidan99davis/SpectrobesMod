@@ -4,6 +4,7 @@ import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.common.blocks.fossils.tile.*;
 import com.spectrobes.spectrobesmod.common.blocks.krawl.MiniXellesBlockEntity;
 import com.spectrobes.spectrobesmod.common.blocks.machines.shop.CyrusShopBlockEntity;
+import com.spectrobes.spectrobesmod.common.blocks.machines.lab.LabSystemBlockEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -38,6 +39,7 @@ public class SpectrobesTileRegistry {
         public static final Supplier<BlockEntityType<FossilBlockTileEntity>> FOSSIL_TILE = TILES.register("fossiltile", () -> BlockEntityType.Builder.of(FossilBlockTileEntity::new, SpectrobesBlocks.fossil_block.get()).build(null));
         public static final Supplier<BlockEntityType<HealerBlockTileEntity>> HEALER_TILE = TILES.register("healertile", () -> BlockEntityType.Builder.of(HealerBlockTileEntity::new, SpectrobesBlocks.healer_block.get()).build(null));
         public static final Supplier<BlockEntityType<CyrusShopBlockEntity>> CYRUS_SHOP_TILE = TILES.register("cyrusshoptile", () -> BlockEntityType.Builder.of(CyrusShopBlockEntity::new, SpectrobesBlocks.cyrus_shop_block.get()).build(null));
+        public static final Supplier<BlockEntityType<LabSystemBlockEntity>> LAB_SYSTEM_TILE = TILES.register("labsystemtile", () -> BlockEntityType.Builder.of(LabSystemBlockEntity::new, SpectrobesBlocks.lab_system_block.get()).build(null));
         public static final Supplier<BlockEntityType<XellesTrophyBlockTileEntity>> XELLES_TROPHY_TILE = TILES.register("xellestrophytile", () -> BlockEntityType.Builder.of(XellesTrophyBlockTileEntity::new, SpectrobesBlocks.xelles_trophy.get()).build(null));
         public static final Supplier<BlockEntityType<MiniXellesBlockEntity>> MINI_XELLES_TILE = TILES.register("minixellestile", () -> BlockEntityType.Builder.of(MiniXellesBlockEntity::new, SpectrobesBlocks.mini_xelles_block.get()).build(null));
 }

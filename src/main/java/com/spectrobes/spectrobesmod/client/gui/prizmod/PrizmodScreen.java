@@ -2,7 +2,7 @@ package com.spectrobes.spectrobesmod.client.gui.prizmod;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.container.PrizmodContainer;
-import com.spectrobes.spectrobesmod.client.gui.prizmod.Pages.LineUpPage;
+import com.spectrobes.spectrobesmod.client.gui.prizmod.Pages.MenuPage;
 import com.spectrobes.spectrobesmod.client.gui.prizmod.Pages.PrizmodPage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -51,7 +51,14 @@ public class PrizmodScreen extends AbstractContainerScreen<PrizmodContainer> {
         this.topPos = 0;
 
         updatePagePosition();
-        setMenuPage(new LineUpPage(this));
+        setMenuPage(createInitialPage());
+    }
+
+    /**
+     * The page shown when the screen opens: the Prizmod menu (Line Up and Case).
+     */
+    protected PrizmodPage createInitialPage() {
+        return new MenuPage(this);
     }
 
     @Override

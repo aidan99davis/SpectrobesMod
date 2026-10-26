@@ -20,11 +20,21 @@ public class LineUpPage extends PrizmodPage {
     private final AllSpectrobesList allSpectrobesGrid;
     private final TeamSpectrobesList teamSpectrobesGrid;
 
+    // When true, only the team grid is shown so existing party members can be rearranged.
+    private final boolean partyOnly;
+    private final Runnable onBack;
+
     private SpectrobePiece selectedSlot;
 
     public LineUpPage(PrizmodScreen parent) {
+        this(parent, false, null);
+    }
+
+    public LineUpPage(PrizmodScreen parent, boolean partyOnly, Runnable onBack) {
         super(parent);
 
+        this.partyOnly = partyOnly;
+        this.onBack = onBack;
         this.allSpectrobesGrid = new AllSpectrobesList(this, this::onAllSpectrobeSlotPressed);
         this.teamSpectrobesGrid = new TeamSpectrobesList(this, this::onTeamSpectrobeSlotPressed);
     }
@@ -36,8 +46,22 @@ public class LineUpPage extends PrizmodPage {
         this.selectedSlot = null;
         this.clearButtons();
 
-        this.addButton(this.allSpectrobesGrid);
         this.addButton(this.teamSpectrobesGrid);
+
+        if (this.onBack != null) {
+            this.addButton(
+                    Button.builder(Component.literal("Back"), button -> this.onBack.run())
+                            .bounds(10, 10, 60, 20)
+                            .build()
+            );
+        }
+
+        if (this.partyOnly) {
+            refreshLineUpData();
+            return;
+        }
+
+        this.addButton(this.allSpectrobesGrid);
 
         this.addButton(
                 Button.builder(Component.literal("Prev"), button -> {

@@ -3,6 +3,7 @@ package com.spectrobes.spectrobesmod.common.registry.gui;
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
 import com.spectrobes.spectrobesmod.client.container.CyrusShopContainer;
 import com.spectrobes.spectrobesmod.client.container.HealerContainer;
+import com.spectrobes.spectrobesmod.client.container.LabSystemContainer;
 import com.spectrobes.spectrobesmod.client.container.PrizmodContainer;
 import com.spectrobes.spectrobesmod.client.container.SpectrobeDetailsContainer;
 import net.minecraft.core.registries.Registries;
@@ -38,6 +39,13 @@ public class Containers {
         CyrusShopContainer.CYRUS_SHOP = CONTAINERS.register(
                 "cyrusshop",
                 () -> new MenuType<>(CyrusShopContainer::new, FeatureFlags.DEFAULT_FLAGS)
+        );
+
+        LabSystemContainer.LAB_SYSTEM = CONTAINERS.register(
+                "lab_system",
+                () -> new MenuType<PrizmodContainer>(
+                        (containerId, inventory) -> new LabSystemContainer(containerId, inventory.player),
+                        FeatureFlags.DEFAULT_FLAGS)
         );
     }
 }

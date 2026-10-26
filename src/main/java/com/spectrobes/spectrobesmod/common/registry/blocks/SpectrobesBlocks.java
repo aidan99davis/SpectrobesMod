@@ -12,6 +12,7 @@ import com.spectrobes.spectrobesmod.common.blocks.krawl.MiniXellesBlock;
 import com.spectrobes.spectrobesmod.common.blocks.krawl.SpreadingKrawlNestBlock;
 import com.spectrobes.spectrobesmod.common.blocks.machines.HealerBlock;
 import com.spectrobes.spectrobesmod.common.blocks.machines.shop.CyrusShopBlock;
+import com.spectrobes.spectrobesmod.common.blocks.machines.lab.LabSystemBlock;
 import com.spectrobes.spectrobesmod.common.blocks.fossils.blocks.FossilBlock;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
@@ -49,6 +50,7 @@ public class SpectrobesBlocks {
     public static final Supplier<KasumiFossilBlock> kasumi_fossil = BLOCKS.register("kasumi_fossil", KasumiFossilBlock::new);
     public static final Supplier<HealerBlock> healer_block = BLOCKS.register("healer_block", HealerBlock::new);
     public static final Supplier<CyrusShopBlock> cyrus_shop_block = BLOCKS.register("cyrus_shop", CyrusShopBlock::new);
+    public static final Supplier<LabSystemBlock> lab_system_block = BLOCKS.register("lab_system", LabSystemBlock::new);
     public static final Supplier<XellesTrophyBlock> xelles_trophy = BLOCKS.register("xelles_trophy", XellesTrophyBlock::new);
     public static final Supplier<MiniXellesBlock> mini_xelles_block = BLOCKS.register("mini_xelles", MiniXellesBlock::new);
 

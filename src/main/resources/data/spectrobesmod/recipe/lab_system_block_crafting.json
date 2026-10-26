@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    "yyy",
+    "zxz",
+    "zwz"
+  ],
+  "key":
+  {
+    "x":
+    {
+      "item": "spectrobesmod:metalium"
+    },
+    "y":
+    {
+      "tag": "c:glass_panes"
+    },
+    "z":
+    {
+      "item": "minecraft:iron_ingot"
+    },
+    "w":
+    {
+      "item": "minecraft:lapis_lazuli"
+    }
+  },
+  "result":
+  {
+    "id": "spectrobesmod:lab_system_block_item",
+    "count": 1
+  }
+}

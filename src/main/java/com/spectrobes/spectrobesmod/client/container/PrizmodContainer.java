@@ -27,7 +27,11 @@ public class PrizmodContainer extends AbstractContainerMenu {
     public static Supplier<MenuType<PrizmodContainer>> PRIZMOD = null;
 
     public PrizmodContainer(int id, Player player) {
-        super(PRIZMOD.get(), id);
+        this(PRIZMOD.get(), id, player);
+    }
+
+    protected PrizmodContainer(MenuType<?> type, int id, Player player) {
+        super(type, id);
         this.player = player;
         capability = this.player.getCapability(SpectrobeMaster.INSTANCE);
     }
@@ -118,5 +122,9 @@ public class PrizmodContainer extends AbstractContainerMenu {
 
     public int getGuraBalance() {
         return capability.getCurrentGuraBalance();
+    }
+
+    public long getCaseCount(String item) {
+        return capability.getCaseCount(item);
     }
 }

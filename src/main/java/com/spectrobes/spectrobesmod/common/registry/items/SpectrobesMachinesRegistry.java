@@ -5,6 +5,7 @@ import com.spectrobes.spectrobesmod.client.items.machines.renderer.CyrusShopBloc
 import com.spectrobes.spectrobesmod.client.items.machines.renderer.HealerBlockItemRenderer;
 import com.spectrobes.spectrobesmod.common.items.machines.CyrusShopBlockItem;
 import com.spectrobes.spectrobesmod.common.items.machines.HealerBlockItem;
+import com.spectrobes.spectrobesmod.common.items.machines.LabSystemBlockItem;
 import com.spectrobes.spectrobesmod.common.registry.blocks.SpectrobesBlocks;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.registries.Registries;
@@ -29,5 +30,10 @@ public class SpectrobesMachinesRegistry {
     public static final Supplier<BlockItem> cyrus_shop_block_item =
             ITEMS.register("cyrus_shop_block_item",
                     () -> new CyrusShopBlockItem(SpectrobesBlocks.cyrus_shop_block.get(),
+                            new Item.Properties()));
+
+    public static final Supplier<BlockItem> lab_system_block_item =
+            ITEMS.register("lab_system_block_item",
+                    () -> new LabSystemBlockItem(SpectrobesBlocks.lab_system_block.get(),
                             new Item.Properties()));
 }

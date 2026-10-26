@@ -1,6 +1,7 @@
 package com.spectrobes.spectrobesmod.common.networking;
 
 import com.spectrobes.spectrobesmod.SpectrobesInfo;
+import com.spectrobes.spectrobesmod.common.networking.server.SCaseTransferPacket;
 import com.spectrobes.spectrobesmod.common.networking.server.SSellMineralPacket;
 import com.spectrobes.spectrobesmod.common.networking.server.SSpectrobeAttackPacket;
 import com.spectrobes.spectrobesmod.common.networking.client.CUpdateSpectrobeSlotPacket;
@@ -111,6 +112,12 @@ public final class SpectrobesNetwork {
                 SConsumeMineralPacket.TYPE,
                 SConsumeMineralPacket.STREAM_CODEC,
                 SConsumeMineralPacket::handle
+        );
+
+        registrar.playToServer(
+                SCaseTransferPacket.TYPE,
+                SCaseTransferPacket.STREAM_CODEC,
+                SCaseTransferPacket::handle
         );
 
         registrar.playToClient(
