@@ -120,19 +120,16 @@ public class HUDHandler {
 
             SpectrobeIconInfo iconInfo = spectrobe.getIcon();
 
-            float scaleX = 32.0F / iconInfo.getWidth();
-            float scaleY = 32.0F / iconInfo.getHeight();
+            // Match the Prizmod slot: keep aspect ratio, only shrink icons larger than the slot,
+            // and centre using the size actually drawn.
+            int maxDimension = Math.max(iconInfo.getWidth(), iconInfo.getHeight());
+            float scale = maxDimension <= 32 ? 1.0F : 32.0F / maxDimension;
 
-            int iconWidth = Math.round(iconInfo.getWidth() * scaleX);
-            int iconHeight = Math.round(iconInfo.getHeight() * scaleY);
+            int iconWidth = Math.round(iconInfo.getWidth() * scale);
+            int iconHeight = Math.round(iconInfo.getHeight() * scale);
 
-            int marginLeft = iconInfo.getWidth() < 31
-                    ? (32 - iconInfo.getWidth()) / 2
-                    : 0;
-
-            int marginTop = iconInfo.getHeight() < 31
-                    ? (32 - iconInfo.getHeight()) / 2
-                    : 0;
+            int marginLeft = (32 - iconWidth) / 2;
+            int marginTop = (32 - iconHeight) / 2;
 
             guiGraphics.blit(
                     iconInfo.icon(),
@@ -226,7 +223,8 @@ public class HUDHandler {
                 "HP",
                 finalX,
                 y - 10,
-                BLACK
+                BLACK,
+                false
         );
 
         guiGraphics.drawString(
@@ -234,7 +232,8 @@ public class HUDHandler {
                 healthText,
                 x,
                 y + height + 10,
-                BLACK
+                BLACK,
+                false
         );
 
         return finalX + minecraft.font.width(healthText);
@@ -293,7 +292,8 @@ public class HUDHandler {
                 levelText,
                 finalX - (minecraft.font.width(levelText) / 2) + (width / 2),
                 y - 10,
-                BLACK
+                BLACK,
+                false
         );
 
         guiGraphics.drawString(
@@ -301,7 +301,8 @@ public class HUDHandler {
                 xpText,
                 x,
                 y + height + 10,
-                BLACK
+                BLACK,
+                false
         );
     }
-}
+}

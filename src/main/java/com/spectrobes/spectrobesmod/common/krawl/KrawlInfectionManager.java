@@ -203,7 +203,9 @@ public final class KrawlInfectionManager {
 
         for (MiniXellesRecord record : nest.miniXelles.values()) {
             if (record.dead) {
-                record.reviveAt = record.tier == 0 ? now : now + reviveTicks(record);
+                // Every dead mini xelles waits the full revive time, so a vortex returning to a nest that was just
+                // cleared cannot bring the surface one straight back.
+                record.reviveAt = now + reviveTicks(record);
             }
         }
 
@@ -286,6 +288,11 @@ public final class KrawlInfectionManager {
             return false;
         }
 
+        // While the Xelles is defeated its mini xelles stay dead; they come back once it has regrown.
+        if (nest.bossState == KrawlNest.BossState.DEFEATED) {
+            return false;
+        }
+
         long now = level.getGameTime();
         boolean changed = false;
 
@@ -336,8 +343,7 @@ public final class KrawlInfectionManager {
         if (nest.bossState == KrawlNest.BossState.ALIVE) {
             // Removed without dying (e.g. peaceful difficulty): treat it as defeated so it can regrow.
             if (nest.bossUuid != null && level.isPositionEntityTicking(spawnPos) && level.getEntity(nest.bossUuid) == null) {
-                nest.bossState = KrawlNest.BossState.DEFEATED;
-                nest.bossUuid = null;
+                onBossDefeated(level, nest);
                 return true;
             }
 
@@ -381,10 +387,31 @@ public final class KrawlInfectionManager {
             return;
         }
 
+        onBossDefeated(level, nest);
+        SpectrobesWorldSaveData.getWorldData(level).setDirty();
+    }
+
+    /** The Xelles is gone: every mini xelles in the nest dies with it and stays dead until it regrows. */
+    private static void onBossDefeated(ServerLevel level, KrawlNest nest) {
         nest.bossState = KrawlNest.BossState.DEFEATED;
         nest.bossUuid = null;
+        long now = level.getGameTime();
+
+        for (MiniXellesRecord record : nest.miniXelles.values()) {
+            if (record.dead) {
+                continue;
+            }
+
+            record.dead = true;
+            record.reviveAt = now + reviveTicks(record);
+
+            // Unloaded ones catch up through their sync with the nest once their chunk loads.
+            if (level.isLoaded(record.pos) && level.getBlockEntity(record.pos) instanceof MiniXellesBlockEntity blockEntity) {
+                blockEntity.kill(level);
+            }
+        }
+
         checkInactive(level, nest);
-        SpectrobesWorldSaveData.getWorldData(level).setDirty();
     }
 
     // ---------------------------------------------------------------- construction

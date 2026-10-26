@@ -233,7 +233,7 @@ public class MiniXellesBlockEntity extends BlockEntity implements GameEventListe
     }
 
     private int wavesPerLife() {
-        return KrawlConfig.MINI_XELLES_WAVES_PER_LIFE.get() + this.tier;
+        return KrawlConfig.MINI_XELLES_WAVES_PER_LIFE.get();
     }
 
     /** Minimum level of the krawl this mini xelles summons: deeper chambers send stronger krawl. */
@@ -357,6 +357,13 @@ public class MiniXellesBlockEntity extends BlockEntity implements GameEventListe
         }
     }
 
+    /** Kills this mini xelles outright (its nest's Xelles was defeated). */
+    public void kill(ServerLevel level) {
+        if (!isDead()) {
+            die(level);
+        }
+    }
+
     private void die(ServerLevel level) {
         level.setBlock(this.worldPosition, this.getBlockState()
                 .setValue(MiniXellesBlock.DEAD, true)
@@ -370,12 +377,18 @@ public class MiniXellesBlockEntity extends BlockEntity implements GameEventListe
         KrawlInfectionManager.onMiniXellesDefeated(level, this.nestId, this.worldPosition);
     }
 
-    /** Keeps the block in step with its nest record (e.g. it revived while this chunk was unloaded). */
+    /** Keeps the block in step with its nest record (e.g. it revived or was killed while this chunk was unloaded). */
     private void syncWithNest(ServerLevel level) {
         KrawlNest.MiniXellesRecord record = KrawlInfectionManager.getMiniXellesRecord(level, this.nestId, this.worldPosition);
 
-        if (record != null && !record.dead && isDead()) {
+        if (record == null) {
+            return;
+        }
+
+        if (!record.dead && isDead()) {
             revive();
+        } else if (record.dead && !isDead()) {
+            die(level);
         }
     }
 

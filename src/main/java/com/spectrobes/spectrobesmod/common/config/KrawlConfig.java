@@ -104,7 +104,7 @@ public final class KrawlConfig {
                 .comment("Ticks between krawl waves a mini xelles summons.")
                 .defineInRange("summonCooldown", 600, 20, 72000);
         MINI_XELLES_WAVES_PER_LIFE = builder
-                .comment("Krawl waves that must be wiped out to kill a surface mini xelles (deeper tiers add one per tier).")
+                .comment("Krawl waves that must be wiped out to kill a mini xelles.")
                 .defineInRange("wavesPerLife", 3, 1, 100);
         MINI_XELLES_WAVE_RESET_TICKS = builder
                 .comment("Ticks a living mini xelles must go untriggered before its lost waves are restored.")

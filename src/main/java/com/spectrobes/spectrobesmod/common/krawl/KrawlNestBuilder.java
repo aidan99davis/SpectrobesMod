@@ -69,7 +69,8 @@ public final class KrawlNestBuilder {
     }
 
     public static int miniXellesCount(int tier, boolean grand) {
-        return grand ? 5 : Math.min(5, tier + 1);
+        // The grand chamber belongs to the Xelles alone.
+        return grand ? 0 : Math.min(5, tier + 1);
     }
 
     private static int surfaceFloorY(KrawlNest nest) {

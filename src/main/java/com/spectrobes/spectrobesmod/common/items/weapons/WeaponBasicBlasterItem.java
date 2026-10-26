@@ -34,8 +34,6 @@ public class WeaponBasicBlasterItem extends AbstractSpectrobesRangedWeapon {
 
             @Override
             public BlockEntityWithoutLevelRenderer getGeoItemRenderer() {
-                System.out.println("Getting renderer");
-
                 if (this.renderer == null) {
                     this.renderer = new WeaponBasicBlasterItemRenderer();
                 }

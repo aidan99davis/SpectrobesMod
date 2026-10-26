@@ -143,7 +143,7 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityWi
                 .add(Attributes.ATTACK_DAMAGE, 5.0D)
                 .add(Attributes.ATTACK_SPEED, 1.0D)
                 .add(Attributes.FOLLOW_RANGE, 10.0D)
-                .add(Attributes.ATTACK_KNOCKBACK, 1.0D);
+                .add(Attributes.ATTACK_KNOCKBACK, 0.0D);
     }
 
     @Override
@@ -728,7 +728,7 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityWi
     @Override
     protected void actuallyHurt(DamageSource damageSource, float damageAmount) {
         if (getOwner() != null && getSpectrobeData().properties.getStage() == Stage.CHILD) {
-            super.actuallyHurt(damageSource, 0.0F);
+            hurtFor(damageSource, 0.0F);
             return;
         }
 
@@ -746,7 +746,7 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityWi
             updatedSpectrobe.damage(Math.round(scaledAmount));
             setSpectrobeData(updatedSpectrobe);
 
-            super.actuallyHurt(damageSource, scaledAmount);
+            hurtFor(damageSource, scaledAmount);
         } else {
             Spectrobe updatedSpectrobe = this.getSpectrobeData().copy(true);
             updatedSpectrobe.damage(Math.round(damageAmount));
@@ -769,6 +769,37 @@ public abstract class EntitySpectrobe extends TamableAnimal implements IEntityWi
                     SpectrobesNetwork.sendToClient(new CSyncSpectrobeMasterPacket(spectrobeMaster), serverPlayer);
                 }
             }
+        }
+    }
+
+    /** NeoForge takes the damage from the damage container and ignores the amount passed to actuallyHurt, so the scaled amount goes in there. */
+    private void hurtFor(DamageSource damageSource, float amount) {
+        if (!this.damageContainers.isEmpty()) {
+            this.damageContainers.peek().setNewDamage(amount);
+        }
+
+        super.actuallyHurt(damageSource, amount);
+    }
+
+    /** Set while a krawl or spectrobe hit is being applied, so the vanilla knockback from it can be skipped. */
+    private boolean hitByCombatant;
+
+    @Override
+    public boolean hurt(DamageSource source, float amount) {
+        this.hitByCombatant = source.getEntity() instanceof EntityKrawl || source.getEntity() instanceof EntitySpectrobe;
+
+        try {
+            return super.hurt(source, amount);
+        } finally {
+            this.hitByCombatant = false;
+        }
+    }
+
+    @Override
+    public void knockback(double strength, double x, double z) {
+        // Knockback between krawl and spectrobes sends them flying and drags fights across huge distances.
+        if (!this.hitByCombatant) {
+            super.knockback(strength, x, z);
         }
     }
 
